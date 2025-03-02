@@ -5,8 +5,9 @@ import {
 
 export type Animation = {
   fps: number;
+  id: string;
+  indices: number[];
   name: string;
-  spriteIndices: number[];
 };
 
 export type Sprite = {
@@ -24,7 +25,7 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
   "spriteSheet",
   {
     animations: Animation[];
-    createAnimation: AsyncFunc;
+    createAnimation: AsyncFunc<string>;
     imageURL: string;
     reset: AsyncFunc;
     selected: number[];
