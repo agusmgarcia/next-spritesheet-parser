@@ -1,0 +1,4 @@
+{
+  "overrides": [{ "files": [".eslintrc"], "options": { "parser": "json" } }],
+  "plugins": ["prettier-plugin-tailwindcss"]
+}

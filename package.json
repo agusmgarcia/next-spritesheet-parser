@@ -1,0 +1,23 @@
+{
+  "name": "@agusmgarcia/next-spritesheet-parser",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Agus Garcia",
+  "description": "Web application to parse spritesheets into JSON file",
+  "scripts": {
+    "build": "agusmgarcia-react-core-build",
+    "check": "agusmgarcia-react-core-check",
+    "deploy": "agusmgarcia-react-core-deploy",
+    "format": "agusmgarcia-react-core-format",
+    "postpack": "agusmgarcia-react-core-postpack",
+    "prepack": "agusmgarcia-react-core-prepack",
+    "start": "agusmgarcia-react-core-start",
+    "regenerate": "agusmgarcia-react-core-regenerate",
+    "test": "agusmgarcia-react-core-test"
+  },
+  "dependencies": {
+    "@agusmgarcia/react-core": "3.8.0",
+    "react": "18.3.1",
+    "tailwind-merge": "2.6.0"
+  }
+}
