@@ -1,0 +1,37 @@
+import {
+  type AsyncFunc,
+  type CreateGlobalSliceTypes,
+} from "@agusmgarcia/react-core";
+
+export type Animation = {
+  fps: number;
+  name: string;
+  spriteIndices: number[];
+};
+
+export type Sprite = {
+  bottom: number;
+  focusX: number;
+  focusY: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  width: number;
+};
+
+type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
+  "spriteSheet",
+  {
+    animations: Animation[];
+    createAnimation: AsyncFunc;
+    imageURL: string;
+    reset: AsyncFunc;
+    selected: number[];
+    set: AsyncFunc<void, [input: File]>;
+    sprites: Sprite[];
+    toggleSelect: AsyncFunc<void, [spriteIndex: number]>;
+  }
+>;
+
+export default SpriteSheetSlice;
