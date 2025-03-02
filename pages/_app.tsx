@@ -3,6 +3,8 @@ import "./_app.css";
 import { type AppProps } from "next/app";
 import Head from "next/head";
 
+import { StoreProvider } from "#src/store";
+
 export default function App({ Component }: AppProps<any>) {
   return (
     <>
@@ -11,7 +13,9 @@ export default function App({ Component }: AppProps<any>) {
         <title>Spritesheet Parser</title>
       </Head>
 
-      <Component />
+      <StoreProvider>
+        <Component />
+      </StoreProvider>
     </>
   );
 }
