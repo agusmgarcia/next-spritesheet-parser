@@ -1,5 +1,5 @@
 type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
-  variant: "spinner";
+  variant: "spinner" | "uploadFile";
 };
 
 export default IconProps;
