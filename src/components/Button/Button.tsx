@@ -20,5 +20,19 @@ export default function Button(props: ButtonProps) {
           )}
         />
       );
+
+    case "secondary":
+      return (
+        <button
+          {...rest}
+          className={twMerge(
+            "rounded-lg border border-black bg-white p-2 text-black",
+            "transition-colors",
+            "enabled:hover:bg-cranberry-300",
+            "disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-400",
+            className,
+          )}
+        />
+      );
   }
 }
