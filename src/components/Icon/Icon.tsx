@@ -7,6 +7,13 @@ export default function Icon(props: IconProps) {
   const { variant, ...rest } = useIcon(props);
 
   switch (variant) {
+    case "backward":
+      return (
+        <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
+          <path d="M7 4c0.55228 0 1 0.44772 1 1v6.3333l10.2227 -6.81507c0.2297 -0.15317 0.5401 -0.09109 0.6933 0.13868 0.0548 0.08213 0.084 0.17864 0.084 0.27735V19.0657c0 0.2762 -0.2239 0.5 -0.5 0.5 -0.0987 0 -0.1952 -0.0292 -0.2773 -0.0839L8 12.6667V19c0 0.5523 -0.44772 1 -1 1s-1 -0.4477 -1 -1V5c0 -0.55228 0.44772 -1 1 -1Zm10 3.73703L10.6056 12 17 16.263V7.73703Z" />
+        </svg>
+      );
+
     case "pause":
       return (
         <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
