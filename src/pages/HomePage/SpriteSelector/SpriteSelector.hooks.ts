@@ -3,11 +3,13 @@ import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
-import { getImageData } from "#src/utils";
+import { getImageData, useViewport } from "#src/utils";
 
 import type SpriteSelectorProps from "./SpriteSelector.types";
 
 export default function useSpriteSelector(props: SpriteSelectorProps) {
+  const viewport = useViewport();
+
   const { imageURL, selected, sprites, toggleSelect } = useSpriteSheet();
 
   const imageCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -74,6 +76,8 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
 
   const onMouseMove = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
+      if (viewport === "Mobile") return;
+
       const button = event.currentTarget;
       const rect = button.getBoundingClientRect();
 
@@ -83,7 +87,7 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
 
       button.style.cursor = !!spriteIndex ? "pointer" : "default";
     },
-    [getSpriteIndex],
+    [getSpriteIndex, viewport],
   );
 
   useEffect(() => {

@@ -13,6 +13,7 @@ export default function ToolBar(props: ToolBarProps) {
     uploadFileDisabled,
     uploadFileLoading,
     uploadFileOnClick,
+    viewport,
   } = useToolBar(props);
 
   return (
@@ -37,7 +38,7 @@ export default function ToolBar(props: ToolBarProps) {
         onClick={createAnimationOnClick}
         variant="primary"
       >
-        Create
+        {viewport !== "Mobile" ? "Create" : ""}
         <Icon variant="play" />
       </Button>
     </div>

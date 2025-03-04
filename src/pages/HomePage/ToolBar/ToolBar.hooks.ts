@@ -2,11 +2,13 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
+import { useViewport } from "#src/utils";
 
 import type ToolBarProps from "./ToolBar.types";
 
 export default function useToolBar(props: ToolBarProps) {
   const { push } = useRouter();
+  const viewport = useViewport();
 
   const { createAnimation, selected, set } = useSpriteSheet();
 
@@ -39,6 +41,7 @@ export default function useToolBar(props: ToolBarProps) {
     uploadFileDisabled: loading,
     uploadFileLoading: loading,
     uploadFileOnClick,
+    viewport,
   };
 }
 
