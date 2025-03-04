@@ -7,12 +7,12 @@ export default function HomePage(props: HomePageProps) {
   const {} = useHomePage(props);
 
   return (
-    <div className="relative h-dvh w-screen overflow-auto">
+    <div className="size-full">
       {/* SPRITE SELECTOR */}
       <SpriteSelector />
 
       {/* TOOLBAR */}
-      <ToolBar className="fixed inset-x-4 bottom-8 z-30" />
+      <ToolBar className="fixed inset-x-4 bottom-8" />
     </div>
   );
 }

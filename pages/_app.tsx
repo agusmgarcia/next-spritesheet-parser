@@ -3,6 +3,7 @@ import "./_app.css";
 import { type AppProps } from "next/app";
 import Head from "next/head";
 
+import { AppPage } from "#src/pages";
 import { StoreProvider } from "#src/store";
 
 export default function App({ Component }: AppProps<any>) {
@@ -14,7 +15,9 @@ export default function App({ Component }: AppProps<any>) {
       </Head>
 
       <StoreProvider>
-        <Component />
+        <AppPage>
+          <Component />
+        </AppPage>
       </StoreProvider>
     </>
   );

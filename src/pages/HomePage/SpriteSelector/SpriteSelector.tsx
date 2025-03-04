@@ -13,10 +13,10 @@ export default function SpriteSelector(props: SpriteSelectorProps) {
 
   return (
     <div className="relative size-full">
-      <canvas ref={imageCanvasRef} className="absolute z-10" />
+      <canvas ref={imageCanvasRef} className="absolute" />
       <canvas
         ref={selectionCanvasRef}
-        className="absolute z-20"
+        className="absolute"
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
