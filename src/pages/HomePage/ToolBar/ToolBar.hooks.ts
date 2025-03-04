@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
@@ -5,6 +6,8 @@ import { useSpriteSheet } from "#src/store";
 import type ToolBarProps from "./ToolBar.types";
 
 export default function useToolBar(props: ToolBarProps) {
+  const { push } = useRouter();
+
   const { createAnimation, selected, set } = useSpriteSheet();
 
   const [loading, setLoading] = useState(false);
@@ -22,7 +25,12 @@ export default function useToolBar(props: ToolBarProps) {
 
   const createAnimationOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
-  >(() => createAnimation(), [createAnimation]);
+  >(() => {
+    setLoading(true);
+    createAnimation()
+      .then((id) => push(`/animations/${id}`))
+      .finally(() => setLoading(false));
+  }, [createAnimation, push]);
 
   return {
     ...props,
