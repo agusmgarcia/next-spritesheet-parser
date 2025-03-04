@@ -39,7 +39,7 @@ export default function ToolBar(props: ToolBarProps) {
         variant="primary"
       >
         {viewport !== "Mobile" ? "Create" : ""}
-        <Icon variant="play" />
+        <Icon variant="roundedPlay" />
       </Button>
     </div>
   );
