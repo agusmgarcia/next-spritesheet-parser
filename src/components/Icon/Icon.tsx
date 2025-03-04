@@ -7,6 +7,13 @@ export default function Icon(props: IconProps) {
   const { variant, ...rest } = useIcon(props);
 
   switch (variant) {
+    case "play":
+      return (
+        <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
+          <path d="M8 18.3915V5.60846L18.2264 12 8 18.3915ZM6 3.80421V20.1957c0 0.7855 0.86395 1.2643 1.53 0.848l13.1132 -8.1957c0.6267 -0.3917 0.6267 -1.3044 0 -1.696L7.53 2.95621c-0.66605 -0.41628 -1.53 0.06257 -1.53 0.848Z" />
+        </svg>
+      );
+
     case "roundedPlay":
       return (
         <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
