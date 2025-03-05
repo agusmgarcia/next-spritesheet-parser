@@ -12,6 +12,7 @@ import { type Sprite } from "./SpriteSheetSlice.types";
 
 export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
   animations: [],
+  backgroundColor: [],
   createAnimation,
   imageURL: "",
   reset,
@@ -60,6 +61,7 @@ async function reset(
   URL.revokeObjectURL(context.get().spriteSheet.imageURL);
   context.set(() => ({
     animations: [],
+    backgroundColor: [],
     imageURL: "",
     selected: [],
     sprites: [],
@@ -129,7 +131,17 @@ async function set(
   try {
     const imageData = await getImageData(imageURL);
     const sprites = getSprites(imageData);
-    context.set({ animations: [], imageURL, selected: [], sprites });
+    context.set({
+      animations: [],
+      backgroundColor: [
+        imageData.data[0],
+        imageData.data[1],
+        imageData.data[2],
+      ],
+      imageURL,
+      selected: [],
+      sprites,
+    });
   } catch {
     URL.revokeObjectURL(imageURL);
   }

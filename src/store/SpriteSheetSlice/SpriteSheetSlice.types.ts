@@ -1,6 +1,7 @@
 import {
   type AsyncFunc,
   type CreateGlobalSliceTypes,
+  type Tuple,
 } from "@agusmgarcia/react-core";
 
 export type Animation = {
@@ -25,6 +26,7 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
   "spriteSheet",
   {
     animations: Animation[];
+    backgroundColor: Tuple<number, 3> | [];
     createAnimation: AsyncFunc<string>;
     imageURL: string;
     reset: AsyncFunc;

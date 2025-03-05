@@ -12,6 +12,7 @@ export const StoreProvider = reactStore.StoreProvider;
 
 export function useSpriteSheet() {
   return {
+    backgroundColor: useSelector((state) => state.spriteSheet.backgroundColor),
     createAnimation: useSelector((state) => state.spriteSheet.createAnimation),
     imageURL: useSelector((state) => state.spriteSheet.imageURL),
     reset: useSelector((state) => state.spriteSheet.reset),
