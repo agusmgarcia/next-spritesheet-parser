@@ -4,19 +4,18 @@ import useInput from "./Input.hooks";
 import type InputProps from "./Input.types";
 
 export default function Input(props: InputProps) {
-  const { className, label, ...rest } = useInput(props);
+  const { className, ...rest } = useInput(props);
 
   return (
     <input
       {...rest}
-      aria-label={label}
       className={twMerge(
-        "rounded-lg border border-black p-2 focus-visible:outline-cranberry-600",
+        "size-full cursor-text rounded-lg border border-black p-2 text-black",
         "transition-colors",
-        "disabled:cursor-not-allowed disabled:bg-gray-300 disabled:placeholder:text-gray-500",
+        "focus-visible:outline-cranberry-600",
+        "disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-400",
         className,
       )}
-      placeholder={label}
     />
   );
 }
