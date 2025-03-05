@@ -24,6 +24,7 @@ export default function ToolBar(props: ToolBarProps) {
         className,
       )}
     >
+      {/* UPLOAD FILE */}
       <Button
         disabled={uploadFileDisabled}
         onClick={uploadFileOnClick}
@@ -32,6 +33,7 @@ export default function ToolBar(props: ToolBarProps) {
         <Icon variant={!uploadFileLoading ? "uploadFile" : "spinner"} />
       </Button>
 
+      {/* CREATE ANIMATION */}
       <Button
         className="flex items-center gap-1"
         disabled={createAnimationDisabled}

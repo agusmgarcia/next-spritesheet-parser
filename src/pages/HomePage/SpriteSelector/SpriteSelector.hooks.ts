@@ -12,7 +12,7 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
 
   const { imageURL, selected, sprites, toggleSelect } = useSpriteSheet();
 
-  const imageCanvasRef = useRef<HTMLCanvasElement>(null);
+  const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [imageData, setImageData] = useState<ImageData>();
@@ -106,16 +106,16 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
   useEffect(() => {
     if (!imageData) return;
 
-    const imageCanvas = imageCanvasRef.current;
-    if (!imageCanvas) return;
+    const spriteSheetCanvas = spriteSheetCanvasRef.current;
+    if (!spriteSheetCanvas) return;
 
-    imageCanvas.width = imageData.width;
-    imageCanvas.height = imageData.height;
+    spriteSheetCanvas.width = imageData.width;
+    spriteSheetCanvas.height = imageData.height;
 
-    const context = imageCanvas.getContext("2d");
+    const context = spriteSheetCanvas.getContext("2d");
     if (!context) return;
 
-    context.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+    context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.putImageData(imageData, 0, 0);
 
     sprites.forEach((r) => {
@@ -152,11 +152,11 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
 
   return {
     ...props,
-    imageCanvasRef,
     onClick,
     onMouseEnter,
     onMouseLeave,
     onMouseMove,
     selectionCanvasRef,
+    spriteSheetCanvasRef,
   };
 }
