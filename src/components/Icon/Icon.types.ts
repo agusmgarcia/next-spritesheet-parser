@@ -7,7 +7,8 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
     | "roundedPlay"
     | "spinner"
     | "uploadFile"
-    | "zoomIn";
+    | "zoomIn"
+    | "zoomOut";
 };
 
 export default IconProps;
