@@ -1,12 +1,16 @@
 import { twMerge } from "tailwind-merge";
 
-import { Button, Icon } from "#src/components";
+import { Button, Carousel, Icon, Select } from "#src/components";
 
 import useToolBar from "./ToolBar.hooks";
 import type ToolBarProps from "./ToolBar.types";
 
 export default function ToolBar(props: ToolBarProps) {
   const {
+    animationSelectorDisabled,
+    animationSelectorOnChange,
+    animationSelectorOptions,
+    animationSelectorValue,
     className,
     createAnimationDisabled,
     createAnimationOnClick,
@@ -24,63 +28,81 @@ export default function ToolBar(props: ToolBarProps) {
   return (
     <div
       className={twMerge(
-        "mx-auto flex max-w-screen-md items-center justify-between gap-2",
+        "mx-auto max-w-screen-md",
         "rounded-lg border border-black bg-white p-4 shadow-lg",
         className,
       )}
     >
-      {/* UPLOAD FILE */}
-      <Button
-        className="flex items-center gap-1"
-        disabled={uploadFileDisabled}
-        onClick={uploadFileOnClick}
-        variant="secondary"
-      >
-        {viewport !== "Mobile" ? "Import" : ""}
-        <Icon
-          className={!uploadFileLoading ? undefined : "animate-spin"}
-          variant={!uploadFileLoading ? "uploadFile" : "spinner"}
-        />
-      </Button>
+      <Carousel pageGap={8} pageSize={viewport === "Mobile" ? 1 : 3}>
+        <div className="flex size-full justify-between gap-2 md:justify-start">
+          {/* UPLOAD FILE */}
+          <Button
+            className="flex items-center justify-center gap-1"
+            disabled={uploadFileDisabled}
+            onClick={uploadFileOnClick}
+            variant="secondary"
+          >
+            Import
+            <Icon
+              className={!uploadFileLoading ? undefined : "animate-spin"}
+              variant={!uploadFileLoading ? "uploadFile" : "spinner"}
+            />
+          </Button>
 
-      {/* DOWNLOAD FILE */}
-      <Button
-        className="flex items-center gap-1"
-        disabled={downloadFileDisabled}
-        onClick={downloadFileOnClick}
-        variant="secondary"
-      >
-        {viewport !== "Mobile" ? "Export" : ""}
-        <Icon
-          className={!downloadFileLoading ? undefined : "animate-spin"}
-          variant={!downloadFileLoading ? "downloadFile" : "spinner"}
-        />
-      </Button>
+          {/* DOWNLOAD FILE */}
+          <Button
+            className="flex items-center justify-center gap-1"
+            disabled={downloadFileDisabled}
+            onClick={downloadFileOnClick}
+            variant="secondary"
+          >
+            Export
+            <Icon
+              className={!downloadFileLoading ? undefined : "animate-spin"}
+              variant={!downloadFileLoading ? "downloadFile" : "spinner"}
+            />
+          </Button>
+        </div>
 
-      {/* ANIMATION SELECTOR */}
-      <div className="flex-1">{/* // TODO: ANIMATION SELECTOR */}</div>
+        <div className="flex size-full justify-center">
+          {/* ANIMATION SELECTOR */}
+          <Select
+            disabled={animationSelectorDisabled}
+            onChange={animationSelectorOnChange}
+            value={animationSelectorValue}
+          >
+            {animationSelectorOptions.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.name}
+              </option>
+            ))}
+          </Select>
+        </div>
 
-      {/* CREATE ANIMATION */}
-      <Button
-        className="flex items-center gap-1"
-        disabled={createAnimationDisabled}
-        onClick={createAnimationOnClick}
-        variant="primary"
-      >
-        {viewport !== "Mobile" ? "Create" : "Create"}
-        <Icon variant="roundedPlay" />
-      </Button>
+        <div className="flex size-full justify-between gap-2 md:justify-end">
+          {/* CREATE ANIMATION */}
+          <Button
+            className="flex items-center justify-center gap-1"
+            disabled={createAnimationDisabled}
+            onClick={createAnimationOnClick}
+            variant="primary"
+          >
+            Create
+            <Icon variant="roundedPlay" />
+          </Button>
 
-      {/* RESET */}
-      <Button
-        className="flex items-center gap-1"
-        disabled={resetSelectionDisabled}
-        onClick={resetSelectionOnClick}
-        variant="secondary"
-      >
-        {viewport !== "Mobile" ? "Reset" : ""}
-        <Icon variant="reset" />
-      </Button>
+          {/* RESET */}
+          <Button
+            className="flex items-center justify-center gap-1"
+            disabled={resetSelectionDisabled}
+            onClick={resetSelectionOnClick}
+            variant="secondary"
+          >
+            Reset
+            <Icon variant="reset" />
+          </Button>
+        </div>
+      </Carousel>
     </div>
   );
 }

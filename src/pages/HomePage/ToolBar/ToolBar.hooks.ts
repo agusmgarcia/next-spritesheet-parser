@@ -1,6 +1,6 @@
 import { delay } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
 import { useViewport } from "#src/utils";
@@ -11,12 +11,27 @@ export default function useToolBar(props: ToolBarProps) {
   const { push } = useRouter();
   const viewport = useViewport();
 
-  const { createAnimation, selected, set, sprites, unselectAll } =
+  const { animations, createAnimation, selected, set, sprites, unselectAll } =
     useSpriteSheet();
 
+  const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
   const [uploadFileLoading, setUploadFileLoading] = useState(false);
   const [downloadFileLoading, setDownloadFileLoading] = useState(false);
   const [createAnimationLoading, setCreateAnimationLoading] = useState(false);
+  const [animationSelectorLoading, setAnimationSelectorLoading] =
+    useState(false);
+
+  const animationSelectorOptions = useMemo(
+    () => [
+      { id: "sheet", name: "Sprite Sheet" },
+      ...animations.map((a) => ({ id: a.id, name: a.name })),
+    ],
+    [animations],
+  );
+
+  const animationSelectorOnChange = useCallback<
+    React.ChangeEventHandler<HTMLSelectElement>
+  >((event) => setAnimationSelectorValue(event.target.value), []);
 
   const uploadFileOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
@@ -51,15 +66,39 @@ export default function useToolBar(props: ToolBarProps) {
     React.MouseEventHandler<HTMLButtonElement>
   >(() => unselectAll(), [unselectAll]);
 
+  useEffect(() => {
+    if (animationSelectorValue === "sheet") return;
+
+    const animation = animations.find((a) => a.id === animationSelectorValue);
+    if (!animation) return;
+
+    setAnimationSelectorLoading(true);
+    try {
+      push(`/animations/${animation.id}`);
+    } finally {
+      setAnimationSelectorLoading(false);
+    }
+  }, [animationSelectorValue, animations, push]);
+
   return {
     ...props,
+    animationSelectorDisabled:
+      animationSelectorLoading ||
+      uploadFileLoading ||
+      createAnimationLoading ||
+      downloadFileLoading,
+    animationSelectorOnChange,
+    animationSelectorOptions,
+    animationSelectorValue,
     createAnimationDisabled:
+      animationSelectorLoading ||
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
       !selected.length,
     createAnimationOnClick,
     downloadFileDisabled:
+      animationSelectorLoading ||
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
@@ -67,13 +106,17 @@ export default function useToolBar(props: ToolBarProps) {
     downloadFileLoading,
     downloadFileOnClick,
     resetSelectionDisabled:
+      animationSelectorLoading ||
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
       !selected.length,
     resetSelectionOnClick,
     uploadFileDisabled:
-      uploadFileLoading || createAnimationLoading || downloadFileLoading,
+      animationSelectorLoading ||
+      uploadFileLoading ||
+      createAnimationLoading ||
+      downloadFileLoading,
     uploadFileLoading,
     uploadFileOnClick,
     viewport,
