@@ -10,7 +10,7 @@ export default function useToolBar(props: ToolBarProps) {
   const { push } = useRouter();
   const viewport = useViewport();
 
-  const { createAnimation, selected, set } = useSpriteSheet();
+  const { createAnimation, selected, set, unselectAll } = useSpriteSheet();
 
   const [loading, setLoading] = useState(false);
 
@@ -34,10 +34,16 @@ export default function useToolBar(props: ToolBarProps) {
       .finally(() => setLoading(false));
   }, [createAnimation, push]);
 
+  const resetSelectionOnClick = useCallback<
+    React.MouseEventHandler<HTMLButtonElement>
+  >(() => unselectAll(), [unselectAll]);
+
   return {
     ...props,
     createAnimationDisabled: loading || !selected.length,
     createAnimationOnClick,
+    resetSelectionDisabled: loading || !selected.length,
+    resetSelectionOnClick,
     uploadFileDisabled: loading,
     uploadFileLoading: loading,
     uploadFileOnClick,

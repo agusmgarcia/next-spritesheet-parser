@@ -10,6 +10,8 @@ export default function ToolBar(props: ToolBarProps) {
     className,
     createAnimationDisabled,
     createAnimationOnClick,
+    resetSelectionDisabled,
+    resetSelectionOnClick,
     uploadFileDisabled,
     uploadFileLoading,
     uploadFileOnClick,
@@ -26,23 +28,38 @@ export default function ToolBar(props: ToolBarProps) {
     >
       {/* UPLOAD FILE */}
       <Button
+        className="flex items-center gap-1"
         disabled={uploadFileDisabled}
         onClick={uploadFileOnClick}
         variant="secondary"
       >
+        {viewport !== "Mobile" ? "Import" : ""}
         <Icon variant={!uploadFileLoading ? "uploadFile" : "spinner"} />
       </Button>
 
-      {/* CREATE ANIMATION */}
-      <Button
-        className="flex items-center gap-1"
-        disabled={createAnimationDisabled}
-        onClick={createAnimationOnClick}
-        variant="primary"
-      >
-        {viewport !== "Mobile" ? "Create" : ""}
-        <Icon variant="roundedPlay" />
-      </Button>
+      <div className="flex items-center gap-2">
+        {/* CREATE ANIMATION */}
+        <Button
+          className="flex items-center gap-1"
+          disabled={createAnimationDisabled}
+          onClick={createAnimationOnClick}
+          variant="primary"
+        >
+          {viewport !== "Mobile" ? "Create Animation" : "Create"}
+          <Icon variant="roundedPlay" />
+        </Button>
+
+        {/* RESET */}
+        <Button
+          className="flex items-center gap-1"
+          disabled={resetSelectionDisabled}
+          onClick={resetSelectionOnClick}
+          variant="secondary"
+        >
+          {viewport !== "Mobile" ? "Reset" : ""}
+          <Icon variant="reset" />
+        </Button>
+      </div>
     </div>
   );
 }
