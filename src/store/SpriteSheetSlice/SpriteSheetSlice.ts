@@ -5,7 +5,7 @@ import {
 import MSER from "blob-detection-ts";
 import { v4 as createUUID } from "uuid";
 
-import { getImageData } from "#src/utils";
+import { loadImage } from "#src/utils";
 
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 import { type Sprite } from "./SpriteSheetSlice.types";
@@ -75,6 +75,18 @@ async function set(
   URL.revokeObjectURL(context.get().spriteSheet.imageURL);
   const imageURL = URL.createObjectURL(input);
 
+  function getImageData(image: HTMLImageElement): ImageData {
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Context is not available");
+
+    context.drawImage(image, 0, 0);
+    return context.getImageData(0, 0, canvas.width, canvas.height);
+  }
+
   function getSprites(imageData: ImageData): Sprite[] {
     const auxImageData = new ImageData(
       new Uint8ClampedArray(imageData.data),
@@ -129,7 +141,7 @@ async function set(
   }
 
   try {
-    const imageData = await getImageData(imageURL);
+    const imageData = getImageData(await loadImage(imageURL));
     const sprites = getSprites(imageData);
     context.set({
       animations: [],

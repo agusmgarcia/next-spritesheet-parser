@@ -3,26 +3,27 @@ import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
-import { getImageData, useViewport } from "#src/utils";
+import { loadImage, useViewport } from "#src/utils";
 
 import type SpriteSelectorProps from "./SpriteSelector.types";
 
 export default function useSpriteSelector(props: SpriteSelectorProps) {
   const viewport = useViewport();
 
-  const { imageURL, selected, sprites, toggleSelect } = useSpriteSheet();
+  const { backgroundColor, imageURL, selected, sprites, toggleSelect } =
+    useSpriteSheet();
 
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [imageData, setImageData] = useState<ImageData>();
+  const [image, setImage] = useState<HTMLImageElement>();
 
   const color = useMemo(
     () =>
-      !imageData
+      !backgroundColor.length
         ? ""
-        : invert([imageData.data[0], imageData.data[1], imageData.data[2]]),
-    [imageData],
+        : invert([backgroundColor[0], backgroundColor[1], backgroundColor[2]]),
+    [backgroundColor],
   );
 
   const getSpriteIndex = useCallback<
@@ -93,45 +94,54 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
   useEffect(() => {
     const controller = new AbortController();
 
-    getImageData(imageURL)
+    loadImage(imageURL)
       .then((image) => {
         if (controller.signal.aborted) return;
-        setImageData(image);
+        setImage(image);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (controller.signal.aborted) return;
+        // TODO: handle error
+      });
 
     return () => controller.abort();
   }, [imageURL, sprites]);
 
   useEffect(() => {
-    if (!imageData) return;
+    if (!image) return;
 
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
 
-    spriteSheetCanvas.width = imageData.width;
-    spriteSheetCanvas.height = imageData.height;
+    spriteSheetCanvas.width = image.naturalWidth;
+    spriteSheetCanvas.height = image.naturalHeight;
 
     const context = spriteSheetCanvas.getContext("2d");
     if (!context) return;
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.putImageData(imageData, 0, 0);
+    context.drawImage(
+      image,
+      0,
+      0,
+      spriteSheetCanvas.width,
+      spriteSheetCanvas.height,
+    );
 
     sprites.forEach((r) => {
       context.strokeStyle = color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
-  }, [color, imageData, sprites]);
+  }, [color, image, sprites]);
 
   useEffect(() => {
-    if (!imageData) return;
+    if (!image) return;
 
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
-    selectionCanvas.width = imageData.width;
-    selectionCanvas.height = imageData.height;
+    selectionCanvas.width = image.width;
+    selectionCanvas.height = image.height;
 
     const context = selectionCanvas.getContext("2d");
     if (!context) return;
@@ -148,7 +158,7 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
-  }, [color, imageData, selected, sprites]);
+  }, [color, image, selected, sprites]);
 
   return {
     ...props,
