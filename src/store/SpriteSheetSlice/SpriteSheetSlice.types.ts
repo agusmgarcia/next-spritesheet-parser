@@ -35,6 +35,7 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
     setAnimationName: AsyncFunc<void, [id: string, name: string]>;
     sprites: Sprite[];
     toggleSelect: AsyncFunc<void, [spriteIndex: number]>;
+    unselectAll: AsyncFunc;
   }
 >;
 

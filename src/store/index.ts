@@ -24,5 +24,6 @@ export function useSpriteSheet() {
     ),
     sprites: useSelector((state) => state.spriteSheet.sprites),
     toggleSelect: useSelector((state) => state.spriteSheet.toggleSelect),
+    unselectAll: useSelector((state) => state.spriteSheet.unselectAll),
   };
 }

@@ -21,6 +21,7 @@ export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
   setAnimationName,
   sprites: [],
   toggleSelect,
+  unselectAll,
 }));
 
 async function createAnimation(
@@ -184,4 +185,10 @@ async function toggleSelect(
           ? prev.selected.filter((sI) => sI !== spriteIndex)
           : [...prev.selected, spriteIndex],
   }));
+}
+
+async function unselectAll(
+  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+): Promise<void> {
+  context.set((prev) => ({ ...prev, selected: [] }));
 }
