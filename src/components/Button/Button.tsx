@@ -12,7 +12,7 @@ export default function Button(props: ButtonProps) {
         <button
           {...rest}
           className={twMerge(
-            "rounded-lg border border-cranberry-600 bg-cranberry-600 p-2 text-white",
+            "size-full cursor-pointer rounded-lg border border-cranberry-600 bg-cranberry-600 p-2 text-white",
             "transition-colors",
             "enabled:hover:bg-cranberry-500",
             "disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-400",
@@ -26,7 +26,7 @@ export default function Button(props: ButtonProps) {
         <button
           {...rest}
           className={twMerge(
-            "rounded-lg border border-black bg-white p-2 text-black",
+            "size-full cursor-pointer rounded-lg border border-black bg-white p-2 text-black",
             "transition-colors",
             "enabled:hover:bg-cranberry-300",
             "disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-400",
