@@ -34,7 +34,10 @@ export default function ToolBar(props: ToolBarProps) {
         variant="secondary"
       >
         {viewport !== "Mobile" ? "Import" : ""}
-        <Icon variant={!uploadFileLoading ? "uploadFile" : "spinner"} />
+        <Icon
+          className={!uploadFileLoading ? undefined : "animate-spin"}
+          variant={!uploadFileLoading ? "uploadFile" : "spinner"}
+        />
       </Button>
 
       <div className="flex items-center gap-2">
