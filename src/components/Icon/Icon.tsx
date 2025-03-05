@@ -14,6 +14,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "downloadFile":
+      return (
+        <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
+          <path d="M9 2v2H5l-0.001 10h14L19 4h-4V2h5c0.5523 0 1 0.44772 1 1v18c0 0.5523 -0.4477 1 -1 1H4c-0.55228 0 -1 -0.4477 -1 -1V3c0 -0.55228 0.44772 -1 1 -1h5Zm9.999 14h-14L5 20h14l-0.001 -4ZM17 17v2h-2v-2h2ZM13 2v5h3l-4 4 -4 -4h3V2h2Z" />
+        </svg>
+      );
+
     case "forward":
       return (
         <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
