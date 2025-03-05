@@ -19,6 +19,9 @@ export function useSpriteSheet() {
     reset: useSelector((state) => state.spriteSheet.reset),
     selected: useSelector((state) => state.spriteSheet.selected),
     set: useSelector((state) => state.spriteSheet.set),
+    setAnimationName: useSelector(
+      (state) => state.spriteSheet.setAnimationName,
+    ),
     sprites: useSelector((state) => state.spriteSheet.sprites),
     toggleSelect: useSelector((state) => state.spriteSheet.toggleSelect),
   };

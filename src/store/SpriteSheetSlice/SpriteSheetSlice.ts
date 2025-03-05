@@ -18,6 +18,7 @@ export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
   reset,
   selected: [],
   set,
+  setAnimationName,
   sprites: [],
   toggleSelect,
 }));
@@ -157,6 +158,17 @@ async function set(
   } catch {
     URL.revokeObjectURL(imageURL);
   }
+}
+
+async function setAnimationName(
+  id: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[0][0],
+  name: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[0][1],
+  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    ...prev,
+    animations: prev.animations.map((a) => (a.id === id ? { ...a, name } : a)),
+  }));
 }
 
 async function toggleSelect(
