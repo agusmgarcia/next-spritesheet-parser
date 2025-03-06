@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.3.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.3.0)
+
+> March 6, 2025
+
+- **Carousel**: add arrows
+- **Icon**: move some properties into the hook
+- **Icon**: add arrowRight variant
+- **Icon**: add arrowLeft variant
+- **Button**: add raw variant
+- **HomePage**: add animation selector
+- **Select**: add component
+- **Input**: adjust styles
+- **Button**: addjust styles
+- **HomePage**: add export method
+- **Icon**: stop applying spinning behavior to the spinner
+- **Icon**: add downloadFile variant
+
 ## [v0.2.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.2.0)
 
 > March 5, 2025
