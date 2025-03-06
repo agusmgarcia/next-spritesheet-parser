@@ -4,6 +4,7 @@ import { type SetValue } from "#src/utils";
 
 type CarouselProps = {
   children?: React.ReactNode;
+  hideArrows?: boolean;
   index?: number;
   onIndexChange?: Func<void, [nextIndex: SetValue<number>]>;
   pageGap?: number;

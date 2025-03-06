@@ -5,6 +5,7 @@ import { type SetValue } from "#src/utils";
 import type CarouselProps from "./Carousel.types";
 
 export default function useCarousel({
+  hideArrows: hideArrowsFromProps,
   index: indexFromProps,
   onIndexChange,
   pageGap: pageGapFromProps,
@@ -27,6 +28,19 @@ export default function useCarousel({
 
   const pageSize = useMemo(() => pageSizeFromProps || 1, [pageSizeFromProps]);
 
+  const hideArrows = useMemo(
+    () => !!hideArrowsFromProps || childrenLength <= pageSize,
+    [childrenLength, hideArrowsFromProps, pageSize],
+  );
+
+  const rootStyle = useMemo<React.CSSProperties>(
+    () => ({
+      paddingLeft: !hideArrows ? `${24 + pageGap}px` : undefined,
+      paddingRight: !hideArrows ? `${24 + pageGap}px` : undefined,
+    }),
+    [hideArrows, pageGap],
+  );
+
   const bodyStyle = useMemo<React.CSSProperties>(
     () => ({ gap: `${pageGap}px` }),
     [pageGap],
@@ -39,10 +53,27 @@ export default function useCarousel({
     [pageGap, pageSize],
   );
 
+  const previousDisabled = useMemo(() => index <= 0, [index]);
+
+  const nextDisabled = useMemo(
+    () => index >= childrenLength - 1,
+    [childrenLength, index],
+  );
+
   const setIndex = useCallback(
     (newIndex: SetValue<number>) =>
       !!onIndexChange ? onIndexChange(newIndex) : rawSetIndex(newIndex),
     [onIndexChange],
+  );
+
+  const previousOnClick = useCallback(
+    () => setIndex((prev) => prev - 1),
+    [setIndex],
+  );
+
+  const nextOnClick = useCallback(
+    () => setIndex((prev) => prev + 1),
+    [setIndex],
   );
 
   useEffect(() => {
@@ -67,5 +98,16 @@ export default function useCarousel({
     return () => observer.unobserve(body);
   }, [index, pageGap]);
 
-  return { ...props, bodyRef, bodyStyle, childStyle };
+  return {
+    ...props,
+    bodyRef,
+    bodyStyle,
+    childStyle,
+    hideArrows,
+    nextDisabled,
+    nextOnClick,
+    previousDisabled,
+    previousOnClick,
+    rootStyle,
+  };
 }
