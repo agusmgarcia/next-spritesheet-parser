@@ -40,6 +40,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "home":
+      return (
+        <svg {...rest}>
+          <path d="M19 21H5c-0.55228 0 -1 -0.4477 -1 -1v-9l-3 0 10.3273 -9.3885c0.3814 -0.34675 0.964 -0.34675 1.3454 0L23 11l-3 0v9c0 0.5523 -0.4477 1 -1 1Zm-6 -2h5V9.15745L12 3.7029 6 9.15745V19h5v-6h2v6Z" />
+        </svg>
+      );
+
     case "pause":
       return (
         <svg {...rest}>
