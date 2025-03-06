@@ -12,6 +12,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "arrowRight":
+      return (
+        <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
+          <path d="M13.1717 12.0007 8.22192 7.05093l1.41422 -1.41421 6.36396 6.36398 -6.36396 6.3639 -1.41422 -1.4142 4.94978 -4.9497Z" />
+        </svg>
+      );
+
     case "backward":
       return (
         <svg {...rest} height={24} viewBox="0 0 24 24" width={24}>
