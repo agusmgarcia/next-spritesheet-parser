@@ -34,5 +34,20 @@ export default function Button(props: ButtonProps) {
           )}
         />
       );
+
+    case "raw":
+    default:
+      return (
+        <button
+          {...rest}
+          className={twMerge(
+            "size-full cursor-pointer",
+            "transition-colors",
+            "enabled:hover:text-cranberry-300",
+            "disabled:cursor-not-allowed disabled:text-gray-400",
+            className,
+          )}
+        />
+      );
   }
 }
