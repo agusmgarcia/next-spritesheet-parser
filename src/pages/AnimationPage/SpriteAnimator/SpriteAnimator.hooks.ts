@@ -18,8 +18,8 @@ export default function useSpriteAnimator({
   const [image, setImage] = useState<HTMLImageElement>();
 
   const sprites = useMemo(
-    () => animation.indices.map((i) => spritesFromStore[i]),
-    [animation.indices, spritesFromStore],
+    () => animation.sprites.map((i) => spritesFromStore[i]),
+    [animation.sprites, spritesFromStore],
   );
 
   const currentSprite = useMemo(() => sprites[index], [index, sprites]);

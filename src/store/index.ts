@@ -17,13 +17,13 @@ export function useSpriteSheet() {
     createAnimation: useSelector((state) => state.spriteSheet.createAnimation),
     imageURL: useSelector((state) => state.spriteSheet.imageURL),
     reset: useSelector((state) => state.spriteSheet.reset),
-    selected: useSelector((state) => state.spriteSheet.selected),
+    selected: useSelector((state) => state.spriteSheet.spritesSelected),
     set: useSelector((state) => state.spriteSheet.set),
     setAnimationName: useSelector(
       (state) => state.spriteSheet.setAnimationName,
     ),
     sprites: useSelector((state) => state.spriteSheet.sprites),
-    toggleSelect: useSelector((state) => state.spriteSheet.toggleSelect),
-    unselectAll: useSelector((state) => state.spriteSheet.unselectAll),
+    toggleSelect: useSelector((state) => state.spriteSheet.toggleSelectSprite),
+    unselectAll: useSelector((state) => state.spriteSheet.unselectAllSprites),
   };
 }

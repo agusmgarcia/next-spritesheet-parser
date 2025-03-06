@@ -4,17 +4,18 @@ import {
   type Tuple,
 } from "@agusmgarcia/react-core";
 
+import { type SetValue } from "#src/utils";
+
 export type Animation = {
   fps: number;
   id: string;
-  indices: number[];
   name: string;
+  sprites: { index: number; offsetX: number; offsetY: number }[];
+  zoom: number;
 };
 
 export type Sprite = {
   bottom: number;
-  focusX: number;
-  focusY: number;
   height: number;
   left: number;
   right: number;
@@ -30,12 +31,19 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
     createAnimation: AsyncFunc<string>;
     imageURL: string;
     reset: AsyncFunc;
-    selected: number[];
     set: AsyncFunc<void, [input: File]>;
-    setAnimationName: AsyncFunc<void, [id: string, name: string]>;
+    setAnimationName: AsyncFunc<
+      void,
+      [animationId: string, name: SetValue<string>]
+    >;
+    setAnimationZoom: AsyncFunc<
+      void,
+      [animationId: string, zoom: SetValue<number>]
+    >;
     sprites: Sprite[];
-    toggleSelect: AsyncFunc<void, [spriteIndex: number]>;
-    unselectAll: AsyncFunc;
+    spritesSelected: number[];
+    toggleSelectSprite: AsyncFunc<void, [spriteIndex: number]>;
+    unselectAllSprites: AsyncFunc;
   }
 >;
 

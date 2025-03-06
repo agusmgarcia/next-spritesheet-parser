@@ -1,5 +1,6 @@
 import {
   createGlobalSlice,
+  Func,
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-core";
 import MSER from "blob-detection-ts";
@@ -16,18 +17,39 @@ export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
   createAnimation,
   imageURL: "",
   reset,
-  selected: [],
   set,
   setAnimationName,
+  setAnimationZoom,
   sprites: [],
-  toggleSelect,
-  unselectAll,
+  spritesSelected: [],
+  toggleSelectSprite,
+  unselectAllSprites,
 }));
 
 async function createAnimation(
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<string> {
-  if (!context.get().spriteSheet.selected.length) return "";
+  if (!context.get().spriteSheet.spritesSelected.length) return "";
+
+  function mapSprites(
+    sprites: SpriteSheetSlice["spriteSheet"]["sprites"],
+    spritesIndexSelected: SpriteSheetSlice["spriteSheet"]["spritesSelected"],
+  ): Func<
+    SpriteSheetSlice["spriteSheet"]["animations"][number]["sprites"][number],
+    [spriteIndex: number]
+  > {
+    const spritesSelected = spritesIndexSelected.map((i) => sprites[i]);
+    const baseline = Math.max(...spritesSelected.map((s) => s.height));
+
+    // return (spriteIndex) => {
+    //   const sprite = sprites[spriteIndex];
+    //   return {
+    //     index: spriteIndex,
+    //     focusX: (r.right - r.left) / 2,
+    //     focusY: (r.bottom - r.top) / 2,
+    //   };
+    // };
+  }
 
   function sortSprites(spriteIndex1: number, spriteIndex2: number): number {
     const sprite1 = context.get().spriteSheet.sprites[spriteIndex1];
@@ -47,11 +69,14 @@ async function createAnimation(
       {
         fps: 12,
         id,
-        indices: prev.selected.sort(sortSprites),
         name: "New animation",
+        sprites: prev.spritesSelected
+          .sort(sortSprites)
+          .map(mapSprites(prev.sprites, prev.spritesSelected)),
+        zoom: 1,
       },
     ],
-    selected: [],
+    spritesSelected: [],
   }));
 
   return id;
@@ -65,8 +90,8 @@ async function reset(
     animations: [],
     backgroundColor: [],
     imageURL: "",
-    selected: [],
     sprites: [],
+    spritesSelected: [],
   }));
 }
 
@@ -132,8 +157,6 @@ async function set(
       .mergeRects(mser.extract(binaryImage).map((r) => r.rect))
       .map((r) => ({
         bottom: r.bottom,
-        focusX: (r.right - r.left) / 2,
-        focusY: (r.bottom - r.top) / 2,
         height: r.bottom - r.top,
         left: r.left,
         right: r.right,
@@ -153,8 +176,8 @@ async function set(
         imageData.data[2],
       ],
       imageURL,
-      selected: [],
       sprites,
+      spritesSelected: [],
     });
   } catch {
     URL.revokeObjectURL(imageURL);
@@ -162,33 +185,58 @@ async function set(
 }
 
 async function setAnimationName(
-  id: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[0][0],
-  name: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[0][1],
+  animationId: Parameters<
+    SpriteSheetSlice["spriteSheet"]["setAnimationName"]
+  >[0],
+  name: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[1],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
   context.set((prev) => ({
     ...prev,
-    animations: prev.animations.map((a) => (a.id === id ? { ...a, name } : a)),
+    animations: prev.animations.map((a) =>
+      a.id === animationId
+        ? { ...a, name: name instanceof Function ? name(a.name) : name }
+        : a,
+    ),
   }));
 }
 
-async function toggleSelect(
-  spriteIndex: Parameters<SpriteSheetSlice["spriteSheet"]["toggleSelect"]>[0],
+async function setAnimationZoom(
+  animationId: Parameters<
+    SpriteSheetSlice["spriteSheet"]["setAnimationZoom"]
+  >[0],
+  zoom: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationZoom"]>[1],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
   context.set((prev) => ({
     ...prev,
-    selected:
+    animations: prev.animations.map((a) =>
+      a.id === animationId
+        ? { ...a, zoom: zoom instanceof Function ? zoom(a.zoom) : zoom }
+        : a,
+    ),
+  }));
+}
+
+async function toggleSelectSprite(
+  spriteIndex: Parameters<
+    SpriteSheetSlice["spriteSheet"]["toggleSelectSprite"]
+  >[0],
+  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    ...prev,
+    spritesSelected:
       spriteIndex < 0 || spriteIndex >= prev.sprites.length
-        ? prev.selected
-        : prev.selected.includes(spriteIndex)
-          ? prev.selected.filter((sI) => sI !== spriteIndex)
-          : [...prev.selected, spriteIndex],
+        ? prev.spritesSelected
+        : prev.spritesSelected.includes(spriteIndex)
+          ? prev.spritesSelected.filter((sI) => sI !== spriteIndex)
+          : [...prev.spritesSelected, spriteIndex],
   }));
 }
 
-async function unselectAll(
+async function unselectAllSprites(
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
-  context.set((prev) => ({ ...prev, selected: [] }));
+  context.set((prev) => ({ ...prev, spritesSelected: [] }));
 }
