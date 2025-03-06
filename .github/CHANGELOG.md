@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.4.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.4.0)
+
+> March 6, 2025
+
+- **AnimationPage**: add page
+- **Icon**: add home variant
+- **README.md**: update file
+
 ## [v0.3.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.3.0)
 
 > March 6, 2025
