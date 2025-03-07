@@ -47,6 +47,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "minus":
+      return (
+        <svg {...rest}>
+          <path d="M5 11v2h14v-2H5Z" />
+        </svg>
+      );
+
     case "pause":
       return (
         <svg {...rest}>
