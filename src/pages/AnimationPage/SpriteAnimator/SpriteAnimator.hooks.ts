@@ -74,7 +74,9 @@ export default function useSpriteAnimator({
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
 
+    context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+
     context.scale(scale, scale);
     context.drawImage(
       image,

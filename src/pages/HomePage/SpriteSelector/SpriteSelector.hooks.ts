@@ -133,6 +133,7 @@ export default function useSpriteSelector({
     const context = spriteSheetCanvas.getContext("2d");
     if (!context) return;
 
+    context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.drawImage(
       image,
@@ -163,6 +164,7 @@ export default function useSpriteSelector({
     const context = selectionCanvas.getContext("2d");
     if (!context) return;
 
+    context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
 
     indices.forEach((index) => {
