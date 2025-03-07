@@ -8,14 +8,24 @@ import { v4 as createUUID } from "uuid";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type AnimationsSlice from "./AnimationsSlice.types";
 
-export default createGlobalSlice<AnimationsSlice>("animations", () => ({
-  animations: [],
-  createAnimation,
-  resetAnimations,
-  setAnimationFPS,
-  setAnimationName,
-  setAnimationScale,
-}));
+export default createGlobalSlice<
+  AnimationsSlice,
+  SpriteSheetSliceTypes.default
+>("animations", (subscribe) => {
+  subscribe(
+    (_, context) => resetAnimations(context),
+    (state) => state.spriteSheet.spriteSheet,
+  );
+
+  return {
+    animations: [],
+    createAnimation,
+    resetAnimations,
+    setAnimationFPS,
+    setAnimationName,
+    setAnimationScale,
+  };
+});
 
 async function createAnimation(
   indices: Parameters<AnimationsSlice["animations"]["createAnimation"]>[0],
