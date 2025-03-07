@@ -16,21 +16,21 @@ export default function useCarousel({
 
   const [index, rawSetIndex] = useState(indexFromProps || 0);
 
-  const childrenLength = useMemo(
-    () =>
-      Array.isArray(props.children)
-        ? props.children.filter((c) => !!c).length
-        : 0,
-    [props.children],
-  );
-
   const pageGap = useMemo(() => pageGapFromProps || 64, [pageGapFromProps]);
 
   const pageSize = useMemo(() => pageSizeFromProps || 1, [pageSizeFromProps]);
 
+  const pagesCount = useMemo(
+    () =>
+      Array.isArray(props.children)
+        ? Math.ceil(props.children.filter((c) => !!c).length / pageSize)
+        : 1,
+    [props.children, pageSize],
+  );
+
   const hideArrows = useMemo(
-    () => !!hideArrowsFromProps || childrenLength <= pageSize,
-    [childrenLength, hideArrowsFromProps, pageSize],
+    () => !!hideArrowsFromProps || pagesCount <= 1,
+    [hideArrowsFromProps, pagesCount],
   );
 
   const rootStyle = useMemo<React.CSSProperties>(
@@ -56,8 +56,8 @@ export default function useCarousel({
   const previousDisabled = useMemo(() => index <= 0, [index]);
 
   const nextDisabled = useMemo(
-    () => index >= childrenLength - 1,
-    [childrenLength, index],
+    () => index >= pagesCount - 1,
+    [index, pagesCount],
   );
 
   const setIndex = useCallback(
@@ -81,8 +81,8 @@ export default function useCarousel({
   }, [indexFromProps]);
 
   useEffect(() => {
-    setIndex((prev) => (prev < childrenLength ? prev : childrenLength));
-  }, [childrenLength, setIndex]);
+    setIndex((prev) => (prev < pagesCount ? prev : pagesCount));
+  }, [pagesCount, setIndex]);
 
   useEffect(() => {
     const body = bodyRef.current;
