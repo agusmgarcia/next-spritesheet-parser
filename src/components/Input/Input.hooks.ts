@@ -1,5 +1,5 @@
 import type InputProps from "./Input.types";
 
-export default function useInput(props: InputProps) {
-  return { ...props };
+export default function useInput({ type, ...props }: InputProps) {
+  return { ...props, type: type || "text" };
 }
