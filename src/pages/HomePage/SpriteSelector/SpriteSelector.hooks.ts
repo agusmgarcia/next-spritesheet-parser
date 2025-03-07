@@ -7,11 +7,14 @@ import { loadImage, useViewport } from "#src/utils";
 
 import type SpriteSelectorProps from "./SpriteSelector.types";
 
-export default function useSpriteSelector(props: SpriteSelectorProps) {
+export default function useSpriteSelector({
+  indices,
+  toggleSelection,
+  ...props
+}: SpriteSelectorProps) {
   const viewport = useViewport();
 
-  const { backgroundColor, imageURL, selected, sprites, toggleSelect } =
-    useSpriteSheet();
+  const { spriteSheet } = useSpriteSheet();
 
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,16 +23,23 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
 
   const color = useMemo(
     () =>
-      !backgroundColor.length
+      !spriteSheet?.backgroundColor.length
         ? ""
-        : invert([backgroundColor[0], backgroundColor[1], backgroundColor[2]]),
-    [backgroundColor],
+        : invert([
+            spriteSheet.backgroundColor[0],
+            spriteSheet.backgroundColor[1],
+            spriteSheet.backgroundColor[2],
+          ]),
+    [spriteSheet?.backgroundColor],
   );
 
   const getSpriteIndex = useCallback<
     Func<number | undefined, [x: number, y: number]>
   >(
     (x, y) => {
+      const sprites = spriteSheet?.sprites;
+      if (!sprites) return undefined;
+
       const index = sprites.findIndex(
         (sprite) =>
           sprite.left < x &&
@@ -40,7 +50,7 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
 
       return index !== -1 ? index : undefined;
     },
-    [sprites],
+    [spriteSheet?.sprites],
   );
 
   const onClick = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -52,9 +62,9 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
       const spriteIndex = getSpriteIndex(x, y);
 
       if (!spriteIndex) return;
-      toggleSelect(spriteIndex);
+      toggleSelection(spriteIndex);
     },
-    [getSpriteIndex, toggleSelect],
+    [getSpriteIndex, toggleSelection],
   );
 
   const onMouseEnter = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -92,9 +102,10 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
   );
 
   useEffect(() => {
+    if (!spriteSheet?.imageURL) return;
     const controller = new AbortController();
 
-    loadImage(imageURL)
+    loadImage(spriteSheet.imageURL)
       .then((image) => {
         if (controller.signal.aborted) return;
         setImage(image);
@@ -105,10 +116,13 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
       });
 
     return () => controller.abort();
-  }, [imageURL, sprites]);
+  }, [spriteSheet?.imageURL]);
 
   useEffect(() => {
     if (!image) return;
+
+    const sprites = spriteSheet?.sprites;
+    if (!sprites) return;
 
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
@@ -132,10 +146,13 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
       context.strokeStyle = color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
-  }, [color, image, sprites]);
+  }, [color, image, spriteSheet?.sprites]);
 
   useEffect(() => {
     if (!image) return;
+
+    const sprites = spriteSheet?.sprites;
+    if (!sprites) return;
 
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
@@ -147,10 +164,9 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
     if (!context) return;
 
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
-    if (!selected.length) return;
 
-    selected.forEach((spriteIndex) => {
-      const sprite = sprites.at(spriteIndex);
+    indices.forEach((index) => {
+      const sprite = sprites.at(index);
       if (!sprite) return;
 
       context.globalAlpha = 0.4;
@@ -158,7 +174,7 @@ export default function useSpriteSelector(props: SpriteSelectorProps) {
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
-  }, [color, image, selected, sprites]);
+  }, [color, image, indices, spriteSheet?.sprites]);
 
   return {
     ...props,

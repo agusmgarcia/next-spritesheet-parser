@@ -1,7 +1,7 @@
-import { type SpriteSheet } from "#src/store";
+import { type Animations } from "#src/store";
 
 type SpriteAnimatorProps = {
-  animation: SpriteSheet["animations"][number];
+  animation: Animations[number];
   index: number;
   scale: number;
 };

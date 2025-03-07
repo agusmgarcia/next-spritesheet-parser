@@ -1,29 +1,42 @@
 import { createStore } from "@agusmgarcia/react-core";
 
+import createAnimationsSlice, {
+  type AnimationsSliceTypes,
+} from "./AnimationsSlice";
 import createSpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
 
-export type SpriteSheet = SpriteSheetSliceTypes.default["spriteSheet"];
+export type Animations =
+  AnimationsSliceTypes.default["animations"]["animations"];
+export type SpriteSheet = NonNullable<
+  SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
+>;
 
-const { useSelector, ...reactStore } = createStore(createSpriteSheetSlice);
+const { useSelector, ...reactStore } = createStore(
+  createAnimationsSlice,
+  createSpriteSheetSlice,
+);
 
 export const StoreProvider = reactStore.StoreProvider;
 
+export function useAnimations() {
+  return {
+    animations: useSelector((state) => state.animations.animations),
+    createAnimation: useSelector((state) => state.animations.createAnimation),
+    resetAnimations: useSelector((state) => state.animations.resetAnimations),
+    setAnimationName: useSelector((state) => state.animations.setAnimationName),
+  };
+}
+
 export function useSpriteSheet() {
   return {
-    animations: useSelector((state) => state.spriteSheet.animations),
-    backgroundColor: useSelector((state) => state.spriteSheet.backgroundColor),
-    createAnimation: useSelector((state) => state.spriteSheet.createAnimation),
-    imageURL: useSelector((state) => state.spriteSheet.imageURL),
-    reset: useSelector((state) => state.spriteSheet.reset),
-    selected: useSelector((state) => state.spriteSheet.selected),
-    set: useSelector((state) => state.spriteSheet.set),
-    setAnimationName: useSelector(
-      (state) => state.spriteSheet.setAnimationName,
+    createSpriteSheet: useSelector(
+      (state) => state.spriteSheet.createSpriteSheet,
     ),
-    sprites: useSelector((state) => state.spriteSheet.sprites),
-    toggleSelect: useSelector((state) => state.spriteSheet.toggleSelect),
-    unselectAll: useSelector((state) => state.spriteSheet.unselectAll),
+    resetSpriteSheet: useSelector(
+      (state) => state.spriteSheet.resetSpriteSheet,
+    ),
+    spriteSheet: useSelector((state) => state.spriteSheet.spriteSheet),
   };
 }

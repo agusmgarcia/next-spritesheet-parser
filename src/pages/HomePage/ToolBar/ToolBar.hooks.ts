@@ -2,17 +2,21 @@ import { delay } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useSpriteSheet } from "#src/store";
+import { useAnimations, useSpriteSheet } from "#src/store";
 import { useViewport } from "#src/utils";
 
 import type ToolBarProps from "./ToolBar.types";
 
-export default function useToolBar(props: ToolBarProps) {
+export default function useToolBar({
+  indices,
+  unselectAll,
+  ...props
+}: ToolBarProps) {
   const { push } = useRouter();
   const viewport = useViewport();
 
-  const { animations, createAnimation, selected, set, sprites, unselectAll } =
-    useSpriteSheet();
+  const { animations, createAnimation } = useAnimations();
+  const { createSpriteSheet } = useSpriteSheet();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
   const [uploadFileLoading, setUploadFileLoading] = useState(false);
@@ -40,18 +44,19 @@ export default function useToolBar(props: ToolBarProps) {
     openFile().then((file) => {
       if (!file) return;
       setUploadFileLoading(true);
-      set(file).finally(() => setUploadFileLoading(false));
+      createSpriteSheet(file).finally(() => setUploadFileLoading(false));
     });
-  }, [set]);
+  }, [createSpriteSheet]);
 
   const createAnimationOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
+    if (!indices.length) return;
     setCreateAnimationLoading(true);
-    createAnimation()
+    createAnimation(indices)
       .then((id) => push(`/animations/${id}`))
       .finally(() => setCreateAnimationLoading(false));
-  }, [createAnimation, push]);
+  }, [createAnimation, indices, push]);
 
   const downloadFileOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
@@ -95,14 +100,14 @@ export default function useToolBar(props: ToolBarProps) {
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
-      !selected.length,
+      !indices.length,
     createAnimationOnClick,
     downloadFileDisabled:
       animationSelectorLoading ||
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
-      !sprites.length,
+      !indices.length,
     downloadFileLoading,
     downloadFileOnClick,
     resetSelectionDisabled:
@@ -110,7 +115,7 @@ export default function useToolBar(props: ToolBarProps) {
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
-      !selected.length,
+      !indices.length,
     resetSelectionOnClick,
     uploadFileDisabled:
       animationSelectorLoading ||

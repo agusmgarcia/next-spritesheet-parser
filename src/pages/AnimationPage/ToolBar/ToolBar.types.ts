@@ -1,10 +1,10 @@
 import { type Func } from "@agusmgarcia/react-core";
 
-import { type SpriteSheet } from "#src/store";
+import { type Animations } from "#src/store";
 import { type SetValue } from "#src/utils";
 
 type ToolBarProps = {
-  animation: SpriteSheet["animations"][number];
+  animation: Animations[number];
   className?: string;
   onIndexChange: Func<void, [newIndex: SetValue<number>]>;
   onScaleChange: Func<void, [newScale: SetValue<number>]>;

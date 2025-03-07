@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useSpriteSheet } from "#src/store";
+import { useAnimations } from "#src/store";
 import { useViewport } from "#src/utils";
 
 import type ToolBarProps from "./ToolBar.types";
@@ -58,7 +58,7 @@ export default function useToolBar({
 }
 
 function useName({ animation }: Pick<ToolBarProps, "animation">) {
-  const { setAnimationName } = useSpriteSheet();
+  const { setAnimationName } = useAnimations();
 
   const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setAnimationName(animation.id, event.target.value),
@@ -72,35 +72,35 @@ function usePlaying({
   animation,
   onIndexChange,
 }: Pick<ToolBarProps, "animation" | "onIndexChange">) {
-  const [playing, setPlaying] = useState(animation.indices.length > 1);
+  const [playing, setPlaying] = useState(animation.sprites.length > 1);
 
   const playingDisabled = useMemo(
-    () => animation.indices.length <= 1,
-    [animation.indices.length],
+    () => animation.sprites.length <= 1,
+    [animation.sprites.length],
   );
 
   const backwardOnClick = useCallback(() => {
-    const animationLength = animation.indices.length;
+    const animationLength = animation.sprites.length;
     setPlaying(false);
     onIndexChange((prev) => (prev > 0 ? prev - 1 : animationLength - 1));
-  }, [animation.indices.length, onIndexChange]);
+  }, [animation.sprites.length, onIndexChange]);
 
   const playOnClick = useCallback(() => setPlaying((prev) => !prev), []);
 
   const forwardOnClick = useCallback(() => {
-    const animationLength = animation.indices.length;
+    const animationLength = animation.sprites.length;
     setPlaying(false);
     onIndexChange((prev) => (prev < animationLength - 1 ? prev + 1 : 0));
-  }, [animation.indices.length, onIndexChange]);
+  }, [animation.sprites.length, onIndexChange]);
 
   useEffect(() => {
-    setPlaying(animation.indices.length > 1);
-  }, [animation.indices.length]);
+    setPlaying(animation.sprites.length > 1);
+  }, [animation.sprites.length]);
 
   useEffect(() => {
     if (!playing) return;
 
-    const animationLength = animation.indices.length;
+    const animationLength = animation.sprites.length;
     const handler = setInterval(
       () =>
         onIndexChange((prev) => (prev < animationLength - 1 ? prev + 1 : 0)),
@@ -108,7 +108,7 @@ function usePlaying({
     );
 
     return () => clearInterval(handler);
-  }, [animation.fps, animation.indices.length, onIndexChange, playing]);
+  }, [animation.fps, animation.sprites.length, onIndexChange, playing]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {

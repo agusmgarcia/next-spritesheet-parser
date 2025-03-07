@@ -11,38 +11,38 @@ export default function useSpriteAnimator({
   scale,
   ...props
 }: SpriteAnimatorProps) {
-  const { imageURL, sprites: spritesFromStore } = useSpriteSheet();
+  const { spriteSheet } = useSpriteSheet();
 
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [image, setImage] = useState<HTMLImageElement>();
 
   const sprites = useMemo(
-    () => animation.indices.map((i) => spritesFromStore[i]),
-    [animation.indices, spritesFromStore],
+    () =>
+      animation.sprites.map((s) => ({
+        ...spriteSheet?.sprites[s.index],
+        ...s,
+      })),
+    [animation.sprites, spriteSheet?.sprites],
   );
 
-  const currentSprite = useMemo(() => sprites[index], [index, sprites]);
+  const currentSprite = useMemo(() => sprites.at(index), [index, sprites]);
 
   const spriteCanvasStyle = useMemo<React.CSSProperties>(
     () => ({
-      left: `calc(50% + ${currentSprite.width / 2 - currentSprite.focusX}px)`,
+      left: `calc(50% + ${currentSprite?.offsetX || 0}px)`,
       position: "absolute",
-      top: `calc(50% + ${currentSprite.height / 2 - currentSprite.focusY}px)`,
+      top: `calc(50% + ${currentSprite?.offsetY || 0}px)`,
       transform: "translate(-50%, -50%)",
     }),
-    [
-      currentSprite.focusX,
-      currentSprite.focusY,
-      currentSprite.height,
-      currentSprite.width,
-    ],
+    [currentSprite?.offsetX, currentSprite?.offsetY],
   );
 
   useEffect(() => {
+    if (!spriteSheet?.imageURL) return;
     const controller = new AbortController();
 
-    loadImage(imageURL)
+    loadImage(spriteSheet.imageURL)
       .then((image) => {
         if (controller.signal.aborted) return;
         setImage(image);
@@ -53,10 +53,17 @@ export default function useSpriteAnimator({
       });
 
     return () => controller.abort();
-  }, [imageURL, sprites]);
+  }, [spriteSheet?.imageURL]);
 
   useEffect(() => {
     if (!image) return;
+    if (
+      !currentSprite?.height ||
+      !currentSprite?.left ||
+      !currentSprite?.top ||
+      !currentSprite?.width
+    )
+      return;
 
     const spriteCanvas = spriteCanvasRef.current;
     if (!spriteCanvas) return;
@@ -81,10 +88,10 @@ export default function useSpriteAnimator({
       currentSprite.height,
     );
   }, [
-    currentSprite.height,
-    currentSprite.left,
-    currentSprite.top,
-    currentSprite.width,
+    currentSprite?.height,
+    currentSprite?.left,
+    currentSprite?.top,
+    currentSprite?.width,
     image,
     scale,
   ]);

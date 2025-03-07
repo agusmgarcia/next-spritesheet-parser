@@ -5,16 +5,16 @@ import { useSpriteSheet } from "#src/store";
 import type AppPageProps from "./AppPage.types";
 
 export default function useAppPage(props: AppPageProps) {
-  const { backgroundColor } = useSpriteSheet();
+  const { spriteSheet } = useSpriteSheet();
 
   const backgroundStyle = useMemo(
     () =>
-      !!backgroundColor.length
+      !!spriteSheet?.backgroundColor
         ? {
-            backgroundColor: `rgb(${backgroundColor[0]}, ${backgroundColor[1]}, ${backgroundColor[2]})`,
+            backgroundColor: `rgb(${spriteSheet.backgroundColor[0]}, ${spriteSheet.backgroundColor[1]}, ${spriteSheet.backgroundColor[2]})`,
           }
         : undefined,
-    [backgroundColor],
+    [spriteSheet?.backgroundColor],
   );
 
   const version = useMemo(() => {

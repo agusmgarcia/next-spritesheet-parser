@@ -3,78 +3,22 @@ import {
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-core";
 import MSER from "blob-detection-ts";
-import { v4 as createUUID } from "uuid";
 
 import { loadImage } from "#src/utils";
 
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
-import { type Sprite } from "./SpriteSheetSlice.types";
 
 export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
-  animations: [],
-  backgroundColor: [],
-  createAnimation,
-  imageURL: "",
-  reset,
-  selected: [],
-  set,
-  setAnimationName,
-  sprites: [],
-  toggleSelect,
-  unselectAll,
+  createSpriteSheet,
+  resetSpriteSheet,
+  spriteSheet: undefined,
 }));
 
-async function createAnimation(
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<string> {
-  if (!context.get().spriteSheet.selected.length) return "";
-
-  function sortSprites(spriteIndex1: number, spriteIndex2: number): number {
-    const sprite1 = context.get().spriteSheet.sprites[spriteIndex1];
-    const sprite2 = context.get().spriteSheet.sprites[spriteIndex2];
-
-    return sprite1.top <= sprite2.top + sprite2.height &&
-      sprite1.top + sprite1.height >= sprite2.top
-      ? sprite1.left - sprite2.left
-      : sprite1.top - sprite2.top;
-  }
-
-  const id = createUUID();
-  context.set((prev) => ({
-    ...prev,
-    animations: [
-      ...prev.animations,
-      {
-        fps: 12,
-        id,
-        indices: prev.selected.sort(sortSprites),
-        name: "New animation",
-      },
-    ],
-    selected: [],
-  }));
-
-  return id;
-}
-
-async function reset(
+async function createSpriteSheet(
+  input: Parameters<SpriteSheetSlice["spriteSheet"]["createSpriteSheet"]>[0],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
-  URL.revokeObjectURL(context.get().spriteSheet.imageURL);
-  context.set(() => ({
-    animations: [],
-    backgroundColor: [],
-    imageURL: "",
-    selected: [],
-    sprites: [],
-  }));
-}
-
-async function set(
-  input: Parameters<SpriteSheetSlice["spriteSheet"]["set"]>[0],
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
-  URL.revokeObjectURL(context.get().spriteSheet.imageURL);
+  URL.revokeObjectURL(context.get().spriteSheet.spriteSheet?.imageURL || "");
   const imageURL = URL.createObjectURL(input);
 
   function getImageData(image: HTMLImageElement): ImageData {
@@ -89,7 +33,9 @@ async function set(
     return context.getImageData(0, 0, canvas.width, canvas.height);
   }
 
-  function getSprites(imageData: ImageData): Sprite[] {
+  function getSprites(
+    imageData: ImageData,
+  ): NonNullable<SpriteSheetSlice["spriteSheet"]["spriteSheet"]>["sprites"] {
     const auxImageData = new ImageData(
       new Uint8ClampedArray(imageData.data),
       imageData.width,
@@ -132,8 +78,6 @@ async function set(
       .mergeRects(mser.extract(binaryImage).map((r) => r.rect))
       .map((r) => ({
         bottom: r.bottom,
-        focusX: (r.right - r.left) / 2,
-        focusY: (r.bottom - r.top) / 2,
         height: r.bottom - r.top,
         left: r.left,
         right: r.right,
@@ -145,50 +89,27 @@ async function set(
   try {
     const imageData = getImageData(await loadImage(imageURL));
     const sprites = getSprites(imageData);
+
     context.set({
-      animations: [],
-      backgroundColor: [
-        imageData.data[0],
-        imageData.data[1],
-        imageData.data[2],
-      ],
-      imageURL,
-      selected: [],
-      sprites,
+      spriteSheet: {
+        backgroundColor: [
+          imageData.data[0],
+          imageData.data[1],
+          imageData.data[2],
+        ],
+        imageURL,
+        sprites,
+      },
     });
   } catch {
     URL.revokeObjectURL(imageURL);
   }
 }
 
-async function setAnimationName(
-  id: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[0][0],
-  name: Parameters<SpriteSheetSlice["spriteSheet"]["setAnimationName"]>[0][1],
+async function resetSpriteSheet(
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
-  context.set((prev) => ({
-    ...prev,
-    animations: prev.animations.map((a) => (a.id === id ? { ...a, name } : a)),
-  }));
-}
+  URL.revokeObjectURL(context.get().spriteSheet.spriteSheet?.imageURL || "");
 
-async function toggleSelect(
-  spriteIndex: Parameters<SpriteSheetSlice["spriteSheet"]["toggleSelect"]>[0],
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
-  context.set((prev) => ({
-    ...prev,
-    selected:
-      spriteIndex < 0 || spriteIndex >= prev.sprites.length
-        ? prev.selected
-        : prev.selected.includes(spriteIndex)
-          ? prev.selected.filter((sI) => sI !== spriteIndex)
-          : [...prev.selected, spriteIndex],
-  }));
-}
-
-async function unselectAll(
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
-  context.set((prev) => ({ ...prev, selected: [] }));
+  context.set({ spriteSheet: undefined });
 }
