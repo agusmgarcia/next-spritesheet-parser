@@ -1,7 +1,7 @@
 import {
   createGlobalSlice,
-  Func,
   type CreateGlobalSliceTypes,
+  type Func,
 } from "@agusmgarcia/react-core";
 import MSER from "blob-detection-ts";
 import { v4 as createUUID } from "uuid";
@@ -38,17 +38,20 @@ async function createAnimation(
     SpriteSheetSlice["spriteSheet"]["animations"][number]["sprites"][number],
     [spriteIndex: number]
   > {
-    const spritesSelected = spritesIndexSelected.map((i) => sprites[i]);
-    const baseline = Math.max(...spritesSelected.map((s) => s.height));
+    const spritesSelected = spritesIndexSelected.map((i) => ({
+      index: i,
+      ...sprites[i],
+    }));
 
-    // return (spriteIndex) => {
-    //   const sprite = sprites[spriteIndex];
-    //   return {
-    //     index: spriteIndex,
-    //     focusX: (r.right - r.left) / 2,
-    //     focusY: (r.bottom - r.top) / 2,
-    //   };
-    // };
+    const maxHeight = Math.max(...spritesSelected.map((s) => s.height));
+
+    const result = spritesSelected.map((s) => ({
+      index: s.index,
+      offsetX: 0,
+      offsetY: maxHeight - s.height,
+    }));
+
+    return (spriteIndex) => result[spriteIndex];
   }
 
   function sortSprites(spriteIndex1: number, spriteIndex2: number): number {
