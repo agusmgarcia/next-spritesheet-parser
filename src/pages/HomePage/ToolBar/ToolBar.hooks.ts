@@ -25,7 +25,7 @@ export default function useToolBar({
   const [animationSelectorLoading, setAnimationSelectorLoading] =
     useState(false);
 
-  const animationSelectorOptions = useMemo(
+  const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
       { id: "sheet", name: "Sprite Sheet" },
       ...animations.map((a) => ({ id: a.id, name: a.name })),

@@ -1,3 +1,4 @@
+import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { type SetValue } from "#src/utils";
@@ -16,11 +17,17 @@ export default function useCarousel({
 
   const [index, rawSetIndex] = useState(indexFromProps || 0);
 
-  const pageGap = useMemo(() => pageGapFromProps || 64, [pageGapFromProps]);
+  const pageGap = useMemo<number>(
+    () => pageGapFromProps || 64,
+    [pageGapFromProps],
+  );
 
-  const pageSize = useMemo(() => pageSizeFromProps || 1, [pageSizeFromProps]);
+  const pageSize = useMemo<number>(
+    () => pageSizeFromProps || 1,
+    [pageSizeFromProps],
+  );
 
-  const pagesCount = useMemo(
+  const pagesCount = useMemo<number>(
     () =>
       Array.isArray(props.children)
         ? Math.ceil(props.children.filter((c) => !!c).length / pageSize)
@@ -28,7 +35,7 @@ export default function useCarousel({
     [props.children, pageSize],
   );
 
-  const hideArrows = useMemo(
+  const hideArrows = useMemo<boolean>(
     () => !!hideArrowsFromProps || pagesCount <= 1,
     [hideArrowsFromProps, pagesCount],
   );
@@ -53,25 +60,25 @@ export default function useCarousel({
     [pageGap, pageSize],
   );
 
-  const previousDisabled = useMemo(() => index <= 0, [index]);
+  const previousDisabled = useMemo<boolean>(() => index <= 0, [index]);
 
-  const nextDisabled = useMemo(
+  const nextDisabled = useMemo<boolean>(
     () => index >= pagesCount - 1,
     [index, pagesCount],
   );
 
-  const setIndex = useCallback(
-    (newIndex: SetValue<number>) =>
+  const setIndex = useCallback<Func<void, [newIndex: SetValue<number>]>>(
+    (newIndex) =>
       !!onIndexChange ? onIndexChange(newIndex) : rawSetIndex(newIndex),
     [onIndexChange],
   );
 
-  const previousOnClick = useCallback(
+  const previousOnClick = useCallback<Func>(
     () => setIndex((prev) => prev - 1),
     [setIndex],
   );
 
-  const nextOnClick = useCallback(
+  const nextOnClick = useCallback<Func>(
     () => setIndex((prev) => prev + 1),
     [setIndex],
   );

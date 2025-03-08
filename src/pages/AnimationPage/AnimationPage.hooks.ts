@@ -1,7 +1,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { useAnimations } from "#src/store";
+import { type Animations, useAnimations } from "#src/store";
 
 import type AnimationPageProps from "./AnimationPage.types";
 
@@ -13,7 +13,7 @@ export default function useAnimationPage(props: AnimationPageProps) {
 
   const [index, setIndex] = useState(0);
 
-  const animation = useMemo(
+  const animation = useMemo<Animations[number] | undefined>(
     () => animations.find((a) => a.id === params?.id),
     [animations, params?.id],
   );

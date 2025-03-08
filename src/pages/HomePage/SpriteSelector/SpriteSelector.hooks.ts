@@ -21,7 +21,7 @@ export default function useSpriteSelector({
 
   const [image, setImage] = useState<HTMLImageElement>();
 
-  const color = useMemo(
+  const color = useMemo<string>(
     () =>
       !spriteSheet?.backgroundColor.length
         ? ""

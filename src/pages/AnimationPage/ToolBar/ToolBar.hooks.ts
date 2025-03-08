@@ -1,3 +1,4 @@
+import { type Func } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -16,7 +17,7 @@ export default function useToolBar({
 
   const { name, nameOnChange } = useName({ animation });
 
-  const homeOnClick = useCallback(() => replace("/"), [replace]);
+  const homeOnClick = useCallback<Func>(() => replace("/"), [replace]);
 
   const {
     backwardOnClick,
@@ -87,20 +88,20 @@ function usePlaying({
 }: Pick<ToolBarProps, "animation" | "onIndexChange">) {
   const [playing, setPlaying] = useState(animation.sprites.length > 1);
 
-  const playingDisabled = useMemo(
+  const playingDisabled = useMemo<boolean>(
     () => animation.sprites.length <= 1,
     [animation.sprites.length],
   );
 
-  const backwardOnClick = useCallback(() => {
+  const backwardOnClick = useCallback<Func>(() => {
     const animationLength = animation.sprites.length;
     setPlaying(false);
     onIndexChange((prev) => (prev > 0 ? prev - 1 : animationLength - 1));
   }, [animation.sprites.length, onIndexChange]);
 
-  const playOnClick = useCallback(() => setPlaying((prev) => !prev), []);
+  const playOnClick = useCallback<Func>(() => setPlaying((prev) => !prev), []);
 
-  const forwardOnClick = useCallback(() => {
+  const forwardOnClick = useCallback<Func>(() => {
     const animationLength = animation.sprites.length;
     setPlaying(false);
     onIndexChange((prev) => (prev < animationLength - 1 ? prev + 1 : 0));
@@ -135,12 +136,12 @@ function usePlaying({
 function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
   const { setAnimationScale } = useAnimations();
 
-  const zoomOutDisabled = useMemo(
+  const zoomOutDisabled = useMemo<boolean>(
     () => animation.scale <= 1,
     [animation.scale],
   );
 
-  const zoomOutOnClick = useCallback(
+  const zoomOutOnClick = useCallback<Func>(
     () =>
       setAnimationScale(
         animation.id,
@@ -149,9 +150,9 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
     [animation.id, setAnimationScale],
   );
 
-  const zoomInDisabled = useMemo(() => false, []);
+  const zoomInDisabled = useMemo<boolean>(() => false, []);
 
-  const zoomInOnClick = useCallback(
+  const zoomInOnClick = useCallback<Func>(
     () =>
       setAnimationScale(
         animation.id,
@@ -160,9 +161,9 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
     [animation.id, setAnimationScale],
   );
 
-  const resetDisabled = useMemo(() => false, []);
+  const resetDisabled = useMemo<boolean>(() => false, []);
 
-  const resetOnClick = useCallback(
+  const resetOnClick = useCallback<Func>(
     () => setAnimationScale(animation.id, window.devicePixelRatio),
     [animation.id, setAnimationScale],
   );
@@ -184,23 +185,26 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
 function useFPS({ animation }: Pick<ToolBarProps, "animation">) {
   const { setAnimationFPS } = useAnimations();
 
-  const minusFPSDisabled = useMemo(() => animation.fps <= 1, [animation.fps]);
+  const minusFPSDisabled = useMemo<boolean>(
+    () => animation.fps <= 1,
+    [animation.fps],
+  );
 
-  const minusFPSOnClick = useCallback(
+  const minusFPSOnClick = useCallback<Func>(
     () => setAnimationFPS(animation.id, (fps) => fps - 1),
     [animation.id, setAnimationFPS],
   );
 
-  const fps = useMemo(() => animation.fps, [animation.fps]);
+  const fps = useMemo<number>(() => animation.fps, [animation.fps]);
 
   const fpsOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setAnimationFPS(animation.id, event.target.valueAsNumber),
     [animation.id, setAnimationFPS],
   );
 
-  const plusFPSDisabled = useMemo(() => false, []);
+  const plusFPSDisabled = useMemo<boolean>(() => false, []);
 
-  const plusFPSOnClick = useCallback(
+  const plusFPSOnClick = useCallback<Func>(
     () => setAnimationFPS(animation.id, (fps) => fps + 1),
     [animation.id, setAnimationFPS],
   );

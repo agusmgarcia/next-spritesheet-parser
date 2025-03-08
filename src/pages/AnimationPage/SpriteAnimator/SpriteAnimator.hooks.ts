@@ -25,7 +25,10 @@ export default function useSpriteAnimator({
     [animation.sprites, spriteSheet?.sprites],
   );
 
-  const currentSprite = useMemo(() => sprites.at(index), [index, sprites]);
+  const currentSprite = useMemo<(typeof sprites)[number] | undefined>(
+    () => sprites.at(index),
+    [index, sprites],
+  );
 
   const spriteCanvasStyle = useMemo<React.CSSProperties>(
     () => ({
