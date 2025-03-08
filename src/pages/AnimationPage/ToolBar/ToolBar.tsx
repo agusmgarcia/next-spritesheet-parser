@@ -147,9 +147,9 @@ export default function ToolBar(props: ToolBarProps) {
           </Button>
         </div>
 
-        <div className="invisible size-full" />
+        {viewport !== "Mobile" && <div className="invisible size-full" />}
 
-        <div className="invisible size-full" />
+        {viewport !== "Mobile" && <div className="invisible size-full" />}
       </Carousel>
     </div>
   );
