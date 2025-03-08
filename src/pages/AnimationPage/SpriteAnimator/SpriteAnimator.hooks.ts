@@ -79,8 +79,8 @@ export default function useSpriteAnimator({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
-
     context.scale(animation.scale, animation.scale);
+
     context.drawImage(
       image,
       currentSprite.left,
@@ -92,6 +92,16 @@ export default function useSpriteAnimator({
       currentSprite.width,
       currentSprite.height,
     );
+
+    context.beginPath();
+    context.strokeStyle = "red";
+    const centerX = currentSprite.width / 2 + currentSprite.offsetX;
+    const centerY = currentSprite.height / 2 + currentSprite.offsetY;
+    context.moveTo(centerX, centerY - 6);
+    context.lineTo(centerX, centerY + 6);
+    context.moveTo(centerX - 6, centerY);
+    context.lineTo(centerX + 6, centerY);
+    context.stroke();
   }, [animation.scale, currentSprite, image]);
 
   return { ...props, spriteCanvasRef, spriteCanvasStyle };
