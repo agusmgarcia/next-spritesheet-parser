@@ -40,7 +40,7 @@ export default function ToolBar(props: ToolBarProps) {
       )}
     >
       <Carousel pageGap={8} pageSize={viewport === "Mobile" ? 1 : 3}>
-        <div className="flex size-full justify-between gap-2 md:justify-start">
+        <div className="flex size-full justify-center gap-2 md:justify-start">
           {/* HOME */}
           <Button
             className="flex w-fit items-center justify-center"
@@ -84,7 +84,7 @@ export default function ToolBar(props: ToolBarProps) {
           </Button>
         </div>
 
-        <div className="flex size-full justify-between gap-2 md:justify-end">
+        <div className="flex size-full justify-center gap-2 md:justify-end">
           {/* MINUS FPS */}
           <Button
             className="flex w-fit items-center justify-center"
@@ -98,6 +98,7 @@ export default function ToolBar(props: ToolBarProps) {
           {/* FPS */}
           <Input
             aria-label="FPS"
+            className="text-center"
             min={1}
             onChange={fpsOnChange}
             type="number"
@@ -115,7 +116,7 @@ export default function ToolBar(props: ToolBarProps) {
           </Button>
         </div>
 
-        <div className="flex size-full justify-between gap-2 md:justify-start">
+        <div className="flex size-full justify-center gap-2 md:justify-start">
           {/* ZOOM OUT */}
           <Button
             className="flex items-center justify-center md:w-fit"
