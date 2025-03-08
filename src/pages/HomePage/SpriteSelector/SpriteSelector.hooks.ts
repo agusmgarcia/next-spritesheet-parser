@@ -93,8 +93,8 @@ export default function useSpriteSelector({
       }
 
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const x = (event.clientX - rect.left) / window.devicePixelRatio;
+      const y = (event.clientY - rect.top) / window.devicePixelRatio;
 
       const spriteIndex = getSpriteIndex(x, y);
       if (!spriteIndex) return;
@@ -109,8 +109,8 @@ export default function useSpriteSelector({
       if (viewport === "Mobile") return;
 
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const x = (event.clientX - rect.left) / window.devicePixelRatio;
+      const y = (event.clientY - rect.top) / window.devicePixelRatio;
 
       setInitialCursor([x, y, x, y]);
     },
@@ -146,8 +146,8 @@ export default function useSpriteSelector({
       const button = event.currentTarget;
       const rect = button.getBoundingClientRect();
 
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const x = (event.clientX - rect.left) / window.devicePixelRatio;
+      const y = (event.clientY - rect.top) / window.devicePixelRatio;
 
       if (initialCursor === undefined) {
         const spriteIndex = getSpriteIndex(x, y);
@@ -197,14 +197,15 @@ export default function useSpriteSelector({
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
 
-    spriteSheetCanvas.width = image.naturalWidth;
-    spriteSheetCanvas.height = image.naturalHeight;
+    spriteSheetCanvas.width = image.naturalWidth * window.devicePixelRatio;
+    spriteSheetCanvas.height = image.naturalHeight * window.devicePixelRatio;
 
     const context = spriteSheetCanvas.getContext("2d");
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
+    context.scale(window.devicePixelRatio, window.devicePixelRatio);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
@@ -222,14 +223,15 @@ export default function useSpriteSelector({
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
-    selectionCanvas.width = image.width;
-    selectionCanvas.height = image.height;
+    selectionCanvas.width = image.width * window.devicePixelRatio;
+    selectionCanvas.height = image.height * window.devicePixelRatio;
 
     const context = selectionCanvas.getContext("2d");
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
+    context.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     indices.forEach((index) => {
       const sprite = sprites.at(index);
