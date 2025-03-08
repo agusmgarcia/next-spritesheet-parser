@@ -1,8 +1,12 @@
-import { delay } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useAnimations, useSpriteSheet } from "#src/store";
+import {
+  type Animations,
+  type SpriteSheet,
+  useAnimations,
+  useSpriteSheet,
+} from "#src/store";
 import { useViewport } from "#src/utils";
 
 import type ToolBarProps from "./ToolBar.types";
@@ -41,7 +45,7 @@ export default function useToolBar({
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
     // TODO: handle errors.
-    openFile().then((file) => {
+    importFile().then((file) => {
       if (!file) return;
       setUploadFileLoading(true);
       createSpriteSheet(file).finally(() => setUploadFileLoading(false));
@@ -61,11 +65,14 @@ export default function useToolBar({
   const downloadFileOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
+    if (!spriteSheet) return;
+
     // TODO: handle errors.
     setDownloadFileLoading(true);
-    // TODO: export it all.
-    delay(5000).finally(() => setDownloadFileLoading(false));
-  }, []);
+    exportFile(spriteSheet, animations).finally(() =>
+      setDownloadFileLoading(false),
+    );
+  }, [animations, spriteSheet]);
 
   const resetSelectionOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
@@ -128,7 +135,7 @@ export default function useToolBar({
   };
 }
 
-function openFile(): Promise<File | undefined> {
+function importFile(): Promise<File | undefined> {
   return new Promise((resolve) => {
     const input = document.createElement("input");
 
@@ -145,5 +152,27 @@ function openFile(): Promise<File | undefined> {
     input.type = "file";
     input.accept = "image/*";
     input.click();
+  });
+}
+
+function exportFile(
+  spriteSheet: SpriteSheet,
+  animations: Animations,
+): Promise<void> {
+  return new Promise((resolve) => {
+    const anchor = document.createElement("a");
+
+    anchor.href =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify({ ...spriteSheet, animations }));
+
+    anchor.setAttribute(
+      "download",
+      `${spriteSheet.name.split(".").slice(0, -1).join(".") || spriteSheet.name}.json`,
+    );
+
+    anchor.click();
+
+    resolve();
   });
 }
