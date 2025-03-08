@@ -7,6 +7,7 @@ import {
 type SpriteSheet = {
   backgroundColor: Tuple<number, 3>;
   imageURL: string;
+  name: string;
   sprites: {
     bottom: number;
     height: number;

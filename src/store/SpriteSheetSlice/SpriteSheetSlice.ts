@@ -98,6 +98,7 @@ async function createSpriteSheet(
           imageData.data[2],
         ],
         imageURL,
+        name: input.name,
         sprites,
       },
     });
