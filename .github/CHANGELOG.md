@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.5.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.0)
+
+> March 7, 2025
+
+- **AnimationsSlice**: reset when new sprite sheet is loaded
+- add fps into the animation
+- add scale into the animation
+- **Input**: add number variant
+- **Icon**: add plus variant
+- **Icon**: add minus variant
+- **Carousel**: adjust page calculation
+- disabled imageSmoothing feature
+- **store**: split slices
+
 ## [v0.4.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.4.0)
 
 > March 6, 2025
