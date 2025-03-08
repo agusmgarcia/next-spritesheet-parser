@@ -63,7 +63,6 @@ export default function useSpriteAnimator({
   useEffect(() => {
     if (!image) return;
     if (!currentSprite) return;
-    if (!spriteSheet?.color) return;
 
     const spriteCanvas = spriteCanvasRef.current;
     if (!spriteCanvas) return;
@@ -95,7 +94,7 @@ export default function useSpriteAnimator({
     );
 
     context.beginPath();
-    context.strokeStyle = spriteSheet.color;
+    context.strokeStyle = animation.color;
     const centerX = currentSprite.width / 2 + currentSprite.offsetX;
     const centerY = currentSprite.height / 2 + currentSprite.offsetY;
     context.moveTo(centerX, centerY - 6);
@@ -103,7 +102,7 @@ export default function useSpriteAnimator({
     context.moveTo(centerX - 6, centerY);
     context.lineTo(centerX + 6, centerY);
     context.stroke();
-  }, [animation.scale, currentSprite, image, spriteSheet?.color]);
+  }, [animation.color, animation.scale, currentSprite, image]);
 
   return { ...props, spriteCanvasRef, spriteCanvasStyle };
 }

@@ -9,6 +9,8 @@ export default function ToolBar(props: ToolBarProps) {
   const {
     backwardOnClick,
     className,
+    color,
+    colorOnChange,
     forwardOnClick,
     fps,
     fpsOnChange,
@@ -148,7 +150,10 @@ export default function ToolBar(props: ToolBarProps) {
           </Button>
         </div>
 
-        {viewport !== "Mobile" && <div className="invisible size-full" />}
+        <div className="flex size-full justify-center gap-2">
+          {/* COLOR */}
+          <Input onChange={colorOnChange} type="color" value={color} />
+        </div>
 
         {viewport !== "Mobile" && <div className="invisible size-full" />}
       </Carousel>

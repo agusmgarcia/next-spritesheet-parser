@@ -45,9 +45,13 @@ export default function useToolBar({
     plusFPSOnClick,
   } = useFPS({ animation });
 
+  const { color, colorOnChange } = useColor({ animation });
+
   return {
     ...props,
     backwardOnClick,
+    color,
+    colorOnChange,
     forwardOnClick,
     fps,
     fpsOnChange,
@@ -215,4 +219,17 @@ function useFPS({ animation }: Pick<ToolBarProps, "animation">) {
     plusFPSDisabled,
     plusFPSOnClick,
   };
+}
+
+function useColor({ animation }: Pick<ToolBarProps, "animation">) {
+  const { setAnimationColor } = useAnimations();
+
+  const color = useMemo(() => animation.color, [animation.color]);
+
+  const colorOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (event) => setAnimationColor(animation.id, event.target.value),
+    [animation.id, setAnimationColor],
+  );
+
+  return { color, colorOnChange };
 }
