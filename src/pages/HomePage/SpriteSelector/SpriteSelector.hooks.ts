@@ -218,6 +218,8 @@ export default function useSpriteSelector({
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
+    context.imageSmoothingQuality = "high";
+
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
@@ -244,6 +246,8 @@ export default function useSpriteSelector({
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
+    context.imageSmoothingQuality = "high";
+
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
 

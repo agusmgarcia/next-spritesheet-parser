@@ -76,6 +76,8 @@ export default function useSpriteAnimator({
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
+    context.imageSmoothingQuality = "high";
+
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
 
     context.scale(animation.scale, animation.scale);
