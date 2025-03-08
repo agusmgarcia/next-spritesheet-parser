@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.5.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.1)
+
+> Invalid Date
+
+- define types for useCallback and useMemo
+- bump dependencies
+- **AnimationPage**: stop listening for keys
+
 ## [v0.5.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.0)
 
 > March 7, 2025
