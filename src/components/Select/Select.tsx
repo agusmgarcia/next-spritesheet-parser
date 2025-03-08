@@ -10,9 +10,9 @@ export default function Select(props: SelectProps) {
     <select
       {...rest}
       className={twMerge(
-        "size-full cursor-pointer rounded-lg border border-black p-2 text-black",
+        "size-full cursor-pointer appearance-none rounded-lg border border-black bg-white p-2 text-black outline outline-1 outline-offset-0 outline-transparent",
         "transition-colors",
-        "focus-within:outline-cranberry-600",
+        "focus-within:-outline-offset-2 focus-within:outline-cranberry-600",
         "disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-400",
         className,
       )}
