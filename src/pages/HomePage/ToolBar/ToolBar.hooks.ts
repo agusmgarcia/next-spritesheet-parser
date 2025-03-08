@@ -19,7 +19,7 @@ export default function useToolBar({
   const { push } = useRouter();
   const viewport = useViewport();
 
-  const { animations, createAnimation } = useAnimations();
+  const { animations, createAnimation, setAnimations } = useAnimations();
   const { createSpriteSheet, spriteSheet } = useSpriteSheet();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
@@ -45,12 +45,23 @@ export default function useToolBar({
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
     // TODO: handle errors.
-    importFile().then((file) => {
-      if (!file) return;
-      setUploadFileLoading(true);
-      createSpriteSheet(file).finally(() => setUploadFileLoading(false));
-    });
-  }, [createSpriteSheet]);
+    importFile(!spriteSheet ? "image/*" : "image/*,application/json").then(
+      (file) => {
+        if (!file) return;
+
+        setUploadFileLoading(true);
+
+        if (file.type.startsWith("image/"))
+          createSpriteSheet(file).finally(() => setUploadFileLoading(false));
+        else
+          file
+            .text()
+            .then((text) => JSON.parse(text))
+            .then((json) => setAnimations(json.animations))
+            .finally(() => setUploadFileLoading(false));
+      },
+    );
+  }, [createSpriteSheet, setAnimations, spriteSheet]);
 
   const createAnimationOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
@@ -135,7 +146,7 @@ export default function useToolBar({
   };
 }
 
-function importFile(): Promise<File | undefined> {
+function importFile(accept: string): Promise<File | undefined> {
   return new Promise((resolve) => {
     const input = document.createElement("input");
 
@@ -150,7 +161,7 @@ function importFile(): Promise<File | undefined> {
     input.addEventListener("change", handleChange);
 
     input.type = "file";
-    input.accept = "image/*";
+    input.accept = accept;
     input.click();
   });
 }
