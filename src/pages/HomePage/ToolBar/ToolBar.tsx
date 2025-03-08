@@ -80,17 +80,6 @@ export default function ToolBar(props: ToolBarProps) {
         </div>
 
         <div className="flex size-full justify-between gap-2 md:justify-end">
-          {/* CREATE ANIMATION */}
-          <Button
-            className="flex items-center justify-center gap-1"
-            disabled={createAnimationDisabled}
-            onClick={createAnimationOnClick}
-            variant="primary"
-          >
-            Create
-            <Icon variant="roundedPlay" />
-          </Button>
-
           {/* RESET */}
           <Button
             className="flex items-center justify-center gap-1"
@@ -100,6 +89,17 @@ export default function ToolBar(props: ToolBarProps) {
           >
             Reset
             <Icon variant="reset" />
+          </Button>
+
+          {/* CREATE ANIMATION */}
+          <Button
+            className="flex items-center justify-center gap-1"
+            disabled={createAnimationDisabled}
+            onClick={createAnimationOnClick}
+            variant="primary"
+          >
+            Create
+            <Icon variant="roundedPlay" />
           </Button>
         </div>
       </Carousel>

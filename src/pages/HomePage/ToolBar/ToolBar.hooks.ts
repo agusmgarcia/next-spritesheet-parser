@@ -16,7 +16,7 @@ export default function useToolBar({
   const viewport = useViewport();
 
   const { animations, createAnimation } = useAnimations();
-  const { createSpriteSheet } = useSpriteSheet();
+  const { createSpriteSheet, spriteSheet } = useSpriteSheet();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
   const [uploadFileLoading, setUploadFileLoading] = useState(false);
@@ -107,7 +107,7 @@ export default function useToolBar({
       uploadFileLoading ||
       createAnimationLoading ||
       downloadFileLoading ||
-      !indices.length,
+      !spriteSheet,
     downloadFileLoading,
     downloadFileOnClick,
     resetSelectionDisabled:
