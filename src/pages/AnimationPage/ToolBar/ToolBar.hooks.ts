@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAnimations } from "#src/store";
-import { useViewport } from "#src/utils";
+import { useDevicePixelRatio, useViewport } from "#src/utils";
 
 import type ToolBarProps from "./ToolBar.types";
 
@@ -134,38 +134,34 @@ function usePlaying({
 }
 
 function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
+  const devicePixelRatio = useDevicePixelRatio();
+
   const { setAnimationScale } = useAnimations();
 
   const zoomOutDisabled = useMemo<boolean>(
-    () => animation.scale <= window.devicePixelRatio,
-    [animation.scale],
+    () => animation.scale <= devicePixelRatio,
+    [animation.scale, devicePixelRatio],
   );
 
   const zoomOutOnClick = useCallback<Func>(
     () =>
-      setAnimationScale(
-        animation.id,
-        (prev) => prev - window.devicePixelRatio / 5,
-      ),
-    [animation.id, setAnimationScale],
+      setAnimationScale(animation.id, (prev) => prev - devicePixelRatio / 5),
+    [animation.id, devicePixelRatio, setAnimationScale],
   );
 
   const zoomInDisabled = useMemo<boolean>(() => false, []);
 
   const zoomInOnClick = useCallback<Func>(
     () =>
-      setAnimationScale(
-        animation.id,
-        (prev) => prev + window.devicePixelRatio / 5,
-      ),
-    [animation.id, setAnimationScale],
+      setAnimationScale(animation.id, (prev) => prev + devicePixelRatio / 5),
+    [animation.id, devicePixelRatio, setAnimationScale],
   );
 
   const resetDisabled = useMemo<boolean>(() => false, []);
 
   const resetOnClick = useCallback<Func>(
-    () => setAnimationScale(animation.id, window.devicePixelRatio),
-    [animation.id, setAnimationScale],
+    () => setAnimationScale(animation.id, devicePixelRatio),
+    [animation.id, devicePixelRatio, setAnimationScale],
   );
 
   useEffect(() => {

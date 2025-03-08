@@ -3,7 +3,7 @@ import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
-import { loadImage, useViewport } from "#src/utils";
+import { loadImage, useDevicePixelRatio, useViewport } from "#src/utils";
 
 import type SpriteSelectorProps from "./SpriteSelector.types";
 
@@ -23,6 +23,8 @@ export default function useSpriteSelector({
   const [image, setImage] = useState<HTMLImageElement>();
   const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
   const [preSelectedSprites, setPreSelectedSprites] = useState<number[]>();
+
+  const devicePixelRatio = useDevicePixelRatio();
 
   const color = useMemo<string>(
     () =>
@@ -93,15 +95,21 @@ export default function useSpriteSelector({
       }
 
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / window.devicePixelRatio;
-      const y = (event.clientY - rect.top) / window.devicePixelRatio;
+      const x = (event.clientX - rect.left) / devicePixelRatio;
+      const y = (event.clientY - rect.top) / devicePixelRatio;
 
       const spriteIndex = getSpriteIndex(x, y);
       if (!spriteIndex) return;
 
       toggleSelection(spriteIndex);
     },
-    [getSpriteIndex, preSelectedSprites, select, toggleSelection],
+    [
+      devicePixelRatio,
+      getSpriteIndex,
+      preSelectedSprites,
+      select,
+      toggleSelection,
+    ],
   );
 
   const onMouseDown = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -109,12 +117,12 @@ export default function useSpriteSelector({
       if (viewport === "Mobile") return;
 
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / window.devicePixelRatio;
-      const y = (event.clientY - rect.top) / window.devicePixelRatio;
+      const x = (event.clientX - rect.left) / devicePixelRatio;
+      const y = (event.clientY - rect.top) / devicePixelRatio;
 
       setInitialCursor([x, y, x, y]);
     },
-    [viewport],
+    [devicePixelRatio, viewport],
   );
 
   const onMouseEnter = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -146,8 +154,8 @@ export default function useSpriteSelector({
       const button = event.currentTarget;
       const rect = button.getBoundingClientRect();
 
-      const x = (event.clientX - rect.left) / window.devicePixelRatio;
-      const y = (event.clientY - rect.top) / window.devicePixelRatio;
+      const x = (event.clientX - rect.left) / devicePixelRatio;
+      const y = (event.clientY - rect.top) / devicePixelRatio;
 
       if (initialCursor === undefined) {
         const spriteIndex = getSpriteIndex(x, y);
@@ -168,7 +176,13 @@ export default function useSpriteSelector({
         !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
       );
     },
-    [getSpriteIndex, getSpritesIndex, initialCursor, viewport],
+    [
+      devicePixelRatio,
+      getSpriteIndex,
+      getSpritesIndex,
+      initialCursor,
+      viewport,
+    ],
   );
 
   useEffect(() => {
@@ -197,22 +211,22 @@ export default function useSpriteSelector({
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
 
-    spriteSheetCanvas.width = image.naturalWidth * window.devicePixelRatio;
-    spriteSheetCanvas.height = image.naturalHeight * window.devicePixelRatio;
+    spriteSheetCanvas.width = image.naturalWidth * devicePixelRatio;
+    spriteSheetCanvas.height = image.naturalHeight * devicePixelRatio;
 
     const context = spriteSheetCanvas.getContext("2d");
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.scale(window.devicePixelRatio, window.devicePixelRatio);
+    context.scale(devicePixelRatio, devicePixelRatio);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
       context.strokeStyle = color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
-  }, [color, image, spriteSheet?.sprites]);
+  }, [color, devicePixelRatio, image, spriteSheet?.sprites]);
 
   useEffect(() => {
     if (!image) return;
@@ -223,15 +237,15 @@ export default function useSpriteSelector({
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
-    selectionCanvas.width = image.width * window.devicePixelRatio;
-    selectionCanvas.height = image.height * window.devicePixelRatio;
+    selectionCanvas.width = image.width * devicePixelRatio;
+    selectionCanvas.height = image.height * devicePixelRatio;
 
     const context = selectionCanvas.getContext("2d");
     if (!context) return;
 
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
-    context.scale(window.devicePixelRatio, window.devicePixelRatio);
+    context.scale(devicePixelRatio, devicePixelRatio);
 
     indices.forEach((index) => {
       const sprite = sprites.at(index);
@@ -267,6 +281,7 @@ export default function useSpriteSelector({
     }
   }, [
     color,
+    devicePixelRatio,
     image,
     indices,
     initialCursor,
