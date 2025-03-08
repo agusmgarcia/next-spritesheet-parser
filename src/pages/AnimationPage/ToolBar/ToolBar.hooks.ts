@@ -9,8 +9,6 @@ import type ToolBarProps from "./ToolBar.types";
 export default function useToolBar({
   animation,
   onIndexChange,
-  onScaleChange,
-  scale,
   ...props
 }: ToolBarProps) {
   const viewport = useViewport();
@@ -35,7 +33,7 @@ export default function useToolBar({
     zoomInOnClick,
     zoomOutDisabled,
     zoomOutOnClick,
-  } = useScaling({ onScaleChange, scale });
+  } = useScaling({ animation });
 
   return {
     ...props,
@@ -140,27 +138,44 @@ function usePlaying({
   };
 }
 
-function useScaling({
-  onScaleChange,
-  scale,
-}: Pick<ToolBarProps, "onScaleChange" | "scale">) {
-  const zoomOutDisabled = useMemo(() => scale <= 1, [scale]);
+function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
+  const { setAnimationScale } = useAnimations();
+
+  const zoomOutDisabled = useMemo(
+    () => animation.scale <= 1,
+    [animation.scale],
+  );
 
   const zoomOutOnClick = useCallback(
-    () => onScaleChange((prev) => prev - 0.2),
-    [onScaleChange],
+    () =>
+      setAnimationScale(
+        animation.id,
+        (prev) => prev - window.devicePixelRatio / 5,
+      ),
+    [animation.id, setAnimationScale],
   );
 
   const zoomInDisabled = useMemo(() => false, []);
 
   const zoomInOnClick = useCallback(
-    () => onScaleChange((prev) => prev + 0.2),
-    [onScaleChange],
+    () =>
+      setAnimationScale(
+        animation.id,
+        (prev) => prev + window.devicePixelRatio / 5,
+      ),
+    [animation.id, setAnimationScale],
   );
 
   const resetDisabled = useMemo(() => false, []);
 
-  const resetOnClick = useCallback(() => onScaleChange(1), [onScaleChange]);
+  const resetOnClick = useCallback(
+    () => setAnimationScale(animation.id, window.devicePixelRatio),
+    [animation.id, setAnimationScale],
+  );
+
+  useEffect(() => {
+    resetOnClick();
+  }, [resetOnClick]);
 
   return {
     resetDisabled,

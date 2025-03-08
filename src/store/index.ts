@@ -26,6 +26,9 @@ export function useAnimations() {
     createAnimation: useSelector((state) => state.animations.createAnimation),
     resetAnimations: useSelector((state) => state.animations.resetAnimations),
     setAnimationName: useSelector((state) => state.animations.setAnimationName),
+    setAnimationScale: useSelector(
+      (state) => state.animations.setAnimationScale,
+    ),
   };
 }
 

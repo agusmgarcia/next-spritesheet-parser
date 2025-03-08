@@ -8,7 +8,6 @@ import type SpriteAnimatorProps from "./SpriteAnimator.types";
 export default function useSpriteAnimator({
   animation,
   index,
-  scale,
   ...props
 }: SpriteAnimatorProps) {
   const { spriteSheet } = useSpriteSheet();
@@ -68,8 +67,8 @@ export default function useSpriteAnimator({
     const spriteCanvas = spriteCanvasRef.current;
     if (!spriteCanvas) return;
 
-    spriteCanvas.width = currentSprite.width * scale;
-    spriteCanvas.height = currentSprite.height * scale;
+    spriteCanvas.width = currentSprite.width * animation.scale;
+    spriteCanvas.height = currentSprite.height * animation.scale;
 
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
@@ -77,7 +76,7 @@ export default function useSpriteAnimator({
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
 
-    context.scale(scale, scale);
+    context.scale(animation.scale, animation.scale);
     context.drawImage(
       image,
       currentSprite.left,
@@ -90,12 +89,12 @@ export default function useSpriteAnimator({
       currentSprite.height,
     );
   }, [
+    animation.scale,
     currentSprite?.height,
     currentSprite?.left,
     currentSprite?.top,
     currentSprite?.width,
     image,
-    scale,
   ]);
 
   return { ...props, spriteCanvasRef, spriteCanvasStyle };

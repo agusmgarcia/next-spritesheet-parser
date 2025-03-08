@@ -7,8 +7,6 @@ type ToolBarProps = {
   animation: Animations[number];
   className?: string;
   onIndexChange: Func<void, [newIndex: SetValue<number>]>;
-  onScaleChange: Func<void, [newScale: SetValue<number>]>;
-  scale: number;
 };
 
 export default ToolBarProps;

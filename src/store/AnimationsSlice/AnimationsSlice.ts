@@ -13,6 +13,7 @@ export default createGlobalSlice<AnimationsSlice>("animations", () => ({
   createAnimation,
   resetAnimations,
   setAnimationName,
+  setAnimationScale,
 }));
 
 async function createAnimation(
@@ -79,6 +80,7 @@ async function createAnimation(
         fps: 12,
         id,
         name: "New animation",
+        scale: 1,
         sprites: indices.sort(sortSprites()).map(mapSprites()),
       },
     ],
@@ -102,6 +104,20 @@ async function setAnimationName(
     animations: prev.animations.map((a) =>
       a.id === id
         ? { ...a, name: name instanceof Function ? name(a.name) : name }
+        : a,
+    ),
+  }));
+}
+
+async function setAnimationScale(
+  id: Parameters<AnimationsSlice["animations"]["setAnimationScale"]>[0],
+  scale: Parameters<AnimationsSlice["animations"]["setAnimationScale"]>[1],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? { ...a, scale: scale instanceof Function ? scale(a.scale) : scale }
         : a,
     ),
   }));
