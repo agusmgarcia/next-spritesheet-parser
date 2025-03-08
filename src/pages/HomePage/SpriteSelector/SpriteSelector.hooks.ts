@@ -1,6 +1,5 @@
 import { type Func, type Tuple } from "@agusmgarcia/react-core";
-import invert from "invert-color";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
 import { loadImage, useDevicePixelRatio, useViewport } from "#src/utils";
@@ -25,18 +24,6 @@ export default function useSpriteSelector({
   const [preSelectedSprites, setPreSelectedSprites] = useState<number[]>();
 
   const devicePixelRatio = useDevicePixelRatio();
-
-  const color = useMemo<string>(
-    () =>
-      !spriteSheet?.backgroundColor.length
-        ? ""
-        : invert([
-            spriteSheet.backgroundColor[0],
-            spriteSheet.backgroundColor[1],
-            spriteSheet.backgroundColor[2],
-          ]),
-    [spriteSheet?.backgroundColor],
-  );
 
   const getSpriteIndex = useCallback<
     Func<number | undefined, [x: number, y: number]>
@@ -225,10 +212,10 @@ export default function useSpriteSelector({
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
-      context.strokeStyle = color;
+      context.strokeStyle = spriteSheet.color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
-  }, [color, devicePixelRatio, image, spriteSheet?.sprites]);
+  }, [devicePixelRatio, image, spriteSheet?.color, spriteSheet?.sprites]);
 
   useEffect(() => {
     if (!image) return;
@@ -256,7 +243,7 @@ export default function useSpriteSelector({
       if (!sprite) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = color;
+      context.fillStyle = spriteSheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
@@ -268,14 +255,14 @@ export default function useSpriteSelector({
       if (indices.includes(index)) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = color;
+      context.fillStyle = spriteSheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
 
     if (!!initialCursor) {
       context.globalAlpha = 0.2;
-      context.fillStyle = color;
+      context.fillStyle = spriteSheet.color;
       context.fillRect(
         Math.min(initialCursor[2], initialCursor[0]),
         Math.min(initialCursor[3], initialCursor[1]),
@@ -284,12 +271,12 @@ export default function useSpriteSelector({
       );
     }
   }, [
-    color,
     devicePixelRatio,
     image,
     indices,
     initialCursor,
     preSelectedSprites,
+    spriteSheet?.color,
     spriteSheet?.sprites,
   ]);
 

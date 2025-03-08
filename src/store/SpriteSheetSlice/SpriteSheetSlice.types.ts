@@ -1,11 +1,11 @@
 import {
   type AsyncFunc,
   type CreateGlobalSliceTypes,
-  type Tuple,
 } from "@agusmgarcia/react-core";
 
 type SpriteSheet = {
-  backgroundColor: Tuple<number, 3>;
+  backgroundColor: string;
+  color: string;
   imageURL: string;
   name: string;
   sprites: {

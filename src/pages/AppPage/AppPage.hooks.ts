@@ -8,11 +8,7 @@ export default function useAppPage(props: AppPageProps) {
   const { spriteSheet } = useSpriteSheet();
 
   const backgroundStyle = useMemo<React.CSSProperties>(
-    () => ({
-      backgroundColor: !!spriteSheet?.backgroundColor
-        ? `rgb(${spriteSheet.backgroundColor[0]}, ${spriteSheet.backgroundColor[1]}, ${spriteSheet.backgroundColor[2]})`
-        : undefined,
-    }),
+    () => ({ backgroundColor: spriteSheet?.backgroundColor }),
     [spriteSheet?.backgroundColor],
   );
 
