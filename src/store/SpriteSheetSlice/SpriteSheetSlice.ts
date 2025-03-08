@@ -1,6 +1,7 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
+  type Tuple,
 } from "@agusmgarcia/react-core";
 import MSER from "blob-detection-ts";
 
@@ -35,34 +36,23 @@ async function createSpriteSheet(
 
   function getSprites(
     imageData: ImageData,
+    backgroundColor: Tuple<number, 3>,
   ): NonNullable<SpriteSheetSlice["spriteSheet"]["spriteSheet"]>["sprites"] {
-    const auxImageData = new ImageData(
-      new Uint8ClampedArray(imageData.data),
-      imageData.width,
-      imageData.height,
-    );
-
-    const binaryImage = new ImageData(
-      new Uint8ClampedArray(auxImageData.data),
-      auxImageData.width,
-      auxImageData.height,
-    );
-
-    for (let i = 0; i < binaryImage.data.length; i += 4) {
+    for (let i = 0; i < imageData.data.length; i += 4) {
       if (
-        binaryImage.data[i] === imageData.data[0] &&
-        binaryImage.data[i + 1] === imageData.data[1] &&
-        binaryImage.data[i + 2] === imageData.data[2]
+        imageData.data[i] === backgroundColor[0] &&
+        imageData.data[i + 1] === backgroundColor[1] &&
+        imageData.data[i + 2] === backgroundColor[2]
       ) {
-        binaryImage.data[i] = 255;
-        binaryImage.data[i + 1] = 255;
-        binaryImage.data[i + 2] = 255;
-        binaryImage.data[i + 3] = 255;
+        imageData.data[i] = 255;
+        imageData.data[i + 1] = 255;
+        imageData.data[i + 2] = 255;
+        imageData.data[i + 3] = 255;
       } else {
-        binaryImage.data[i] = 0;
-        binaryImage.data[i + 1] = 0;
-        binaryImage.data[i + 2] = 0;
-        binaryImage.data[i + 3] = 255;
+        imageData.data[i] = 0;
+        imageData.data[i + 1] = 0;
+        imageData.data[i + 2] = 0;
+        imageData.data[i + 3] = 255;
       }
     }
 
@@ -75,7 +65,7 @@ async function createSpriteSheet(
     });
 
     return mser
-      .mergeRects(mser.extract(binaryImage).map((r) => r.rect))
+      .mergeRects(mser.extract(imageData).map((r) => r.rect))
       .map((r) => ({
         bottom: r.bottom,
         height: r.bottom - r.top,
@@ -88,15 +78,18 @@ async function createSpriteSheet(
 
   try {
     const imageData = getImageData(await loadImage(imageURL));
-    const sprites = getSprites(imageData);
+
+    const backgroundColor: Tuple<number, 3> = [
+      imageData.data[0],
+      imageData.data[1],
+      imageData.data[2],
+    ];
+
+    const sprites = getSprites(imageData, backgroundColor);
 
     context.set({
       spriteSheet: {
-        backgroundColor: [
-          imageData.data[0],
-          imageData.data[1],
-          imageData.data[2],
-        ],
+        backgroundColor,
         imageURL,
         name: input.name,
         sprites,
