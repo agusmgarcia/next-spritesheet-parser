@@ -9,7 +9,7 @@ export default function useHomePage(props: HomePageProps) {
   const [indices, setIndices] = useState(emptyArray);
 
   const toggleSelection = useCallback<Func<void, [index: number]>>(
-    (index: number) =>
+    (index) =>
       setIndices((prev) =>
         prev.includes(index)
           ? prev.filter((i) => i !== index)
@@ -18,7 +18,13 @@ export default function useHomePage(props: HomePageProps) {
     [],
   );
 
+  const select = useCallback<Func<void, [index: number]>>(
+    (index) =>
+      setIndices((prev) => (prev.includes(index) ? prev : [...prev, index])),
+    [],
+  );
+
   const unselectAll = useCallback<Func>(() => setIndices(emptyArray), []);
 
-  return { ...props, indices, toggleSelection, unselectAll };
+  return { ...props, indices, select, toggleSelection, unselectAll };
 }

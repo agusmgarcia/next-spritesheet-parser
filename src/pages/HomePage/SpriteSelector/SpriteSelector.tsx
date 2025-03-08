@@ -4,6 +4,7 @@ import type SpriteSelectorProps from "./SpriteSelector.types";
 export default function SpriteSelector(props: SpriteSelectorProps) {
   const {
     onClick,
+    onMouseDown,
     onMouseEnter,
     onMouseLeave,
     onMouseMove,
@@ -21,6 +22,7 @@ export default function SpriteSelector(props: SpriteSelectorProps) {
         ref={selectionCanvasRef}
         className="absolute"
         onClick={onClick}
+        onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}

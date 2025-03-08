@@ -4,12 +4,16 @@ import SpriteSelector from "./SpriteSelector";
 import ToolBar from "./ToolBar";
 
 export default function HomePage(props: HomePageProps) {
-  const { indices, toggleSelection, unselectAll } = useHomePage(props);
+  const { indices, select, toggleSelection, unselectAll } = useHomePage(props);
 
   return (
     <div className="size-full">
       {/* SPRITE SELECTOR */}
-      <SpriteSelector indices={indices} toggleSelection={toggleSelection} />
+      <SpriteSelector
+        indices={indices}
+        select={select}
+        toggleSelection={toggleSelection}
+      />
 
       {/* TOOLBAR */}
       <ToolBar

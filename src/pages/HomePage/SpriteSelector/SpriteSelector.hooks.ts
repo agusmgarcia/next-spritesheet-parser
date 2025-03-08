@@ -1,4 +1,4 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Func, type Tuple } from "@agusmgarcia/react-core";
 import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -9,6 +9,7 @@ import type SpriteSelectorProps from "./SpriteSelector.types";
 
 export default function useSpriteSelector({
   indices,
+  select,
   toggleSelection,
   ...props
 }: SpriteSelectorProps) {
@@ -20,6 +21,8 @@ export default function useSpriteSelector({
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [image, setImage] = useState<HTMLImageElement>();
+  const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
+  const [preSelectedSprites, setPreSelectedSprites] = useState<number[]>();
 
   const color = useMemo<string>(
     () =>
@@ -53,36 +56,87 @@ export default function useSpriteSelector({
     [spriteSheet?.sprites],
   );
 
+  const getSpritesIndex = useCallback<
+    Func<number[], [x: number, y: number, width: number, height: number]>
+  >(
+    (x, y, width, height) => {
+      const sprites = spriteSheet?.sprites;
+      if (!sprites) return [];
+
+      const left = x;
+      const right = x + width;
+      const top = y;
+      const bottom = y + height;
+
+      return sprites
+        .map((sprite, index) =>
+          sprite.left < right &&
+          sprite.right > left &&
+          sprite.top < bottom &&
+          sprite.bottom > top
+            ? index
+            : -1,
+        )
+        .filter((index) => index !== -1);
+    },
+    [spriteSheet?.sprites],
+  );
+
   const onClick = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      const rect = event.currentTarget.getBoundingClientRect();
+      setInitialCursor(undefined);
 
+      if (!!preSelectedSprites) {
+        preSelectedSprites.forEach(select);
+        setPreSelectedSprites(undefined);
+        return;
+      }
+
+      const rect = event.currentTarget.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      const spriteIndex = getSpriteIndex(x, y);
 
+      const spriteIndex = getSpriteIndex(x, y);
       if (!spriteIndex) return;
+
       toggleSelection(spriteIndex);
     },
-    [getSpriteIndex, toggleSelection],
+    [getSpriteIndex, preSelectedSprites, select, toggleSelection],
+  );
+
+  const onMouseDown = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
+    (event) => {
+      if (viewport === "Mobile") return;
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      setInitialCursor([x, y, x, y]);
+    },
+    [viewport],
   );
 
   const onMouseEnter = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
+      if (viewport === "Mobile") return;
+
       const button = event.currentTarget;
       button.dataset.prevCursor = button.style.cursor;
       button.style.cursor = "default";
     },
-    [],
+    [viewport],
   );
 
   const onMouseLeave = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
+      if (viewport === "Mobile") return;
+
       const button = event.currentTarget;
       button.style.cursor = button.dataset.prevCursor || "";
       delete button.dataset.prevCursor;
     },
-    [],
+    [viewport],
   );
 
   const onMouseMove = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -94,11 +148,27 @@ export default function useSpriteSelector({
 
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      const spriteIndex = getSpriteIndex(x, y);
 
-      button.style.cursor = !!spriteIndex ? "pointer" : "default";
+      if (initialCursor === undefined) {
+        const spriteIndex = getSpriteIndex(x, y);
+        button.style.cursor = !!spriteIndex ? "pointer" : "default";
+        return;
+      }
+
+      setPreSelectedSprites(
+        getSpritesIndex(
+          Math.min(x, initialCursor[0]),
+          Math.min(y, initialCursor[1]),
+          Math.abs(x - initialCursor[0]),
+          Math.abs(y - initialCursor[1]),
+        ),
+      );
+
+      setInitialCursor((prev) =>
+        !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
+      );
     },
-    [getSpriteIndex, viewport],
+    [getSpriteIndex, getSpritesIndex, initialCursor, viewport],
   );
 
   useEffect(() => {
@@ -135,13 +205,7 @@ export default function useSpriteSelector({
 
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.drawImage(
-      image,
-      0,
-      0,
-      spriteSheetCanvas.width,
-      spriteSheetCanvas.height,
-    );
+    context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
       context.strokeStyle = color;
@@ -176,11 +240,42 @@ export default function useSpriteSelector({
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
-  }, [color, image, indices, spriteSheet?.sprites]);
+
+    preSelectedSprites?.forEach((index) => {
+      const sprite = sprites.at(index);
+      if (!sprite) return;
+
+      if (indices.includes(index)) return;
+
+      context.globalAlpha = 0.4;
+      context.fillStyle = color;
+      context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
+      context.globalAlpha = 1;
+    });
+
+    if (!!initialCursor) {
+      context.globalAlpha = 0.2;
+      context.fillStyle = color;
+      context.fillRect(
+        Math.min(initialCursor[2], initialCursor[0]),
+        Math.min(initialCursor[3], initialCursor[1]),
+        Math.abs(initialCursor[2] - initialCursor[0]),
+        Math.abs(initialCursor[3] - initialCursor[1]),
+      );
+    }
+  }, [
+    color,
+    image,
+    indices,
+    initialCursor,
+    preSelectedSprites,
+    spriteSheet?.sprites,
+  ]);
 
   return {
     ...props,
     onClick,
+    onMouseDown,
     onMouseEnter,
     onMouseLeave,
     onMouseMove,
