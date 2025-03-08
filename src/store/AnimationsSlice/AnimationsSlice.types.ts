@@ -6,6 +6,7 @@ import {
 import { type SetValue } from "#src/utils";
 
 type Animation = {
+  color: string;
   fps: number;
   id: string;
   name: string;
@@ -19,6 +20,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     animations: Animation[];
     createAnimation: AsyncFunc<string, [indices: number[]]>;
     resetAnimations: AsyncFunc;
+    setAnimationColor: AsyncFunc<void, [id: string, color: SetValue<string>]>;
     setAnimationFPS: AsyncFunc<void, [id: string, fps: SetValue<number>]>;
     setAnimationName: AsyncFunc<void, [id: string, name: SetValue<string>]>;
     setAnimations: AsyncFunc<void, [animations: Animation[]]>;

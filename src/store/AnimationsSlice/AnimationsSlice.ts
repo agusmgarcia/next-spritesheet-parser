@@ -21,6 +21,7 @@ export default createGlobalSlice<
     animations: [],
     createAnimation,
     resetAnimations,
+    setAnimationColor,
     setAnimationFPS,
     setAnimationName,
     setAnimations,
@@ -89,6 +90,7 @@ async function createAnimation(
     animations: [
       ...prev.animations,
       {
+        color: spriteSheet.color,
         fps: 12,
         id,
         name: "New animation",
@@ -116,6 +118,20 @@ async function setAnimationFPS(
     animations: prev.animations.map((a) =>
       a.id === id
         ? { ...a, fps: (fps instanceof Function ? fps(a.fps) : fps) || 1 }
+        : a,
+    ),
+  }));
+}
+
+async function setAnimationColor(
+  id: Parameters<AnimationsSlice["animations"]["setAnimationColor"]>[0],
+  color: Parameters<AnimationsSlice["animations"]["setAnimationColor"]>[1],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? { ...a, color: color instanceof Function ? color(a.color) : color }
         : a,
     ),
   }));
