@@ -137,7 +137,7 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
   const { setAnimationScale } = useAnimations();
 
   const zoomOutDisabled = useMemo<boolean>(
-    () => animation.scale <= 1,
+    () => animation.scale <= window.devicePixelRatio,
     [animation.scale],
   );
 
