@@ -12,6 +12,7 @@ export default createGlobalSlice<AnimationsSlice>("animations", () => ({
   animations: [],
   createAnimation,
   resetAnimations,
+  setAnimationFPS,
   setAnimationName,
   setAnimationScale,
 }));
@@ -93,6 +94,20 @@ async function resetAnimations(
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
 ): Promise<void> {
   context.set({ animations: [] });
+}
+
+async function setAnimationFPS(
+  id: Parameters<AnimationsSlice["animations"]["setAnimationFPS"]>[0],
+  fps: Parameters<AnimationsSlice["animations"]["setAnimationFPS"]>[1],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? { ...a, fps: (fps instanceof Function ? fps(a.fps) : fps) || 1 }
+        : a,
+    ),
+  }));
 }
 
 async function setAnimationName(

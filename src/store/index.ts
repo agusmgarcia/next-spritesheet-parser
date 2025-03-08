@@ -25,6 +25,7 @@ export function useAnimations() {
     animations: useSelector((state) => state.animations.animations),
     createAnimation: useSelector((state) => state.animations.createAnimation),
     resetAnimations: useSelector((state) => state.animations.resetAnimations),
+    setAnimationFPS: useSelector((state) => state.animations.setAnimationFPS),
     setAnimationName: useSelector((state) => state.animations.setAnimationName),
     setAnimationScale: useSelector(
       (state) => state.animations.setAnimationScale,

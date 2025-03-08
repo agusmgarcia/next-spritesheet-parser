@@ -35,16 +35,31 @@ export default function useToolBar({
     zoomOutOnClick,
   } = useScaling({ animation });
 
+  const {
+    fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
+  } = useFPS({ animation });
+
   return {
     ...props,
     backwardOnClick,
     forwardOnClick,
+    fps,
+    fpsOnChange,
     homeOnClick,
+    minusFPSDisabled,
+    minusFPSOnClick,
     name,
     nameOnChange,
     playing,
     playingDisabled,
     playOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
     resetDisabled,
     resetOnClick,
     viewport,
@@ -184,5 +199,39 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
     zoomInOnClick,
     zoomOutDisabled,
     zoomOutOnClick,
+  };
+}
+
+function useFPS({ animation }: Pick<ToolBarProps, "animation">) {
+  const { setAnimationFPS } = useAnimations();
+
+  const minusFPSDisabled = useMemo(() => animation.fps <= 1, [animation.fps]);
+
+  const minusFPSOnClick = useCallback(
+    () => setAnimationFPS(animation.id, (fps) => fps - 1),
+    [animation.id, setAnimationFPS],
+  );
+
+  const fps = useMemo(() => animation.fps, [animation.fps]);
+
+  const fpsOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (event) => setAnimationFPS(animation.id, event.target.valueAsNumber),
+    [animation.id, setAnimationFPS],
+  );
+
+  const plusFPSDisabled = useMemo(() => false, []);
+
+  const plusFPSOnClick = useCallback(
+    () => setAnimationFPS(animation.id, (fps) => fps + 1),
+    [animation.id, setAnimationFPS],
+  );
+
+  return {
+    fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
   };
 }

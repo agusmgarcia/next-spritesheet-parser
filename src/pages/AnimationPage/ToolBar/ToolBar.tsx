@@ -10,12 +10,18 @@ export default function ToolBar(props: ToolBarProps) {
     backwardOnClick,
     className,
     forwardOnClick,
+    fps,
+    fpsOnChange,
     homeOnClick,
+    minusFPSDisabled,
+    minusFPSOnClick,
     name,
     nameOnChange,
     playing,
     playingDisabled,
     playOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
     resetDisabled,
     resetOnClick,
     viewport,
@@ -45,7 +51,7 @@ export default function ToolBar(props: ToolBarProps) {
           </Button>
 
           {/* NAME */}
-          <Input label="Name" onChange={nameOnChange} value={name} />
+          <Input aria-label="Name" onChange={nameOnChange} value={name} />
         </div>
 
         <div className="flex size-full justify-center gap-2">
@@ -79,6 +85,37 @@ export default function ToolBar(props: ToolBarProps) {
         </div>
 
         <div className="flex size-full justify-between gap-2 md:justify-end">
+          {/* MINUS FPS */}
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={minusFPSDisabled}
+            onClick={minusFPSOnClick}
+            variant="secondary"
+          >
+            <Icon variant="minus" />
+          </Button>
+
+          {/* FPS */}
+          <Input
+            aria-label="FPS"
+            min={1}
+            onChange={fpsOnChange}
+            type="number"
+            value={fps}
+          />
+
+          {/* PLUS FPS */}
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={plusFPSDisabled}
+            onClick={plusFPSOnClick}
+            variant="secondary"
+          >
+            <Icon variant="plus" />
+          </Button>
+        </div>
+
+        <div className="flex size-full justify-between gap-2 md:justify-start">
           {/* ZOOM OUT */}
           <Button
             className="flex items-center justify-center md:w-fit"
@@ -109,6 +146,10 @@ export default function ToolBar(props: ToolBarProps) {
             <Icon variant="reset" />
           </Button>
         </div>
+
+        <div className="invisible size-full" />
+
+        <div className="invisible size-full" />
       </Carousel>
     </div>
   );
