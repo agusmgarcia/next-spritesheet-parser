@@ -23,6 +23,7 @@ export default createGlobalSlice<
     resetAnimations,
     setAnimationFPS,
     setAnimationName,
+    setAnimations,
     setAnimationScale,
   };
 });
@@ -132,6 +133,13 @@ async function setAnimationName(
         : a,
     ),
   }));
+}
+
+async function setAnimations(
+  animations: Parameters<AnimationsSlice["animations"]["setAnimations"]>[0],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set({ animations });
 }
 
 async function setAnimationScale(

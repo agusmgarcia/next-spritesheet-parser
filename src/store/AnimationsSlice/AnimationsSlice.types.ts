@@ -21,6 +21,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     resetAnimations: AsyncFunc;
     setAnimationFPS: AsyncFunc<void, [id: string, fps: SetValue<number>]>;
     setAnimationName: AsyncFunc<void, [id: string, name: SetValue<string>]>;
+    setAnimations: AsyncFunc<void, [animations: Animation[]]>;
     setAnimationScale: AsyncFunc<void, [id: string, name: SetValue<number>]>;
   }
 >;
