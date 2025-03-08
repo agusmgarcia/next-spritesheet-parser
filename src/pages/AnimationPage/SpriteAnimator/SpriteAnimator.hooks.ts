@@ -18,10 +18,13 @@ export default function useSpriteAnimator({
 
   const sprites = useMemo(
     () =>
-      animation.sprites.map((s) => ({
-        ...spriteSheet?.sprites[s.index],
-        ...s,
-      })),
+      animation.sprites
+        .map((s) => {
+          const sprite = spriteSheet?.sprites.at(s.index);
+          if (!sprite) return undefined;
+          return { ...sprite, ...s };
+        })
+        .filter((s) => s !== undefined),
     [animation.sprites, spriteSheet?.sprites],
   );
 
@@ -32,12 +35,12 @@ export default function useSpriteAnimator({
 
   const spriteCanvasStyle = useMemo<React.CSSProperties>(
     () => ({
-      left: `calc(50% + ${currentSprite?.offsetX || 0}px)`,
+      left: "50%",
       position: "absolute",
-      top: `calc(50% + ${currentSprite?.offsetY || 0}px)`,
+      top: "50%",
       transform: "translate(-50%, -50%)",
     }),
-    [currentSprite?.offsetX, currentSprite?.offsetY],
+    [],
   );
 
   useEffect(() => {
@@ -59,19 +62,15 @@ export default function useSpriteAnimator({
 
   useEffect(() => {
     if (!image) return;
-    if (
-      !currentSprite?.height ||
-      !currentSprite?.left ||
-      !currentSprite?.top ||
-      !currentSprite?.width
-    )
-      return;
+    if (!currentSprite) return;
 
     const spriteCanvas = spriteCanvasRef.current;
     if (!spriteCanvas) return;
 
-    spriteCanvas.width = currentSprite.width * animation.scale;
-    spriteCanvas.height = currentSprite.height * animation.scale;
+    spriteCanvas.width =
+      (currentSprite.width + currentSprite.offsetX) * animation.scale;
+    spriteCanvas.height =
+      (currentSprite.height + currentSprite.offsetY) * animation.scale;
 
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
@@ -86,19 +85,12 @@ export default function useSpriteAnimator({
       currentSprite.top,
       currentSprite.width,
       currentSprite.height,
-      0,
-      0,
+      currentSprite.offsetX,
+      currentSprite.offsetY,
       currentSprite.width,
       currentSprite.height,
     );
-  }, [
-    animation.scale,
-    currentSprite?.height,
-    currentSprite?.left,
-    currentSprite?.top,
-    currentSprite?.width,
-    image,
-  ]);
+  }, [animation.scale, currentSprite, image]);
 
   return { ...props, spriteCanvasRef, spriteCanvasStyle };
 }
