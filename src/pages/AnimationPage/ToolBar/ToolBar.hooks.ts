@@ -123,27 +123,6 @@ function usePlaying({
     return () => clearInterval(handler);
   }, [animation.fps, animation.sprites.length, onIndexChange, playing]);
 
-  useEffect(() => {
-    const handleKey = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case " ":
-          playOnClick();
-          return;
-
-        case "arrowRight":
-          forwardOnClick();
-          return;
-
-        case "arrowLeft":
-          backwardOnClick();
-          return;
-      }
-    };
-
-    window.addEventListener("keyup", handleKey);
-    return () => window.removeEventListener("keyup", handleKey);
-  }, [backwardOnClick, forwardOnClick, onIndexChange, playOnClick]);
-
   return {
     backwardOnClick,
     forwardOnClick,
