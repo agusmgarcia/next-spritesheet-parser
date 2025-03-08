@@ -91,7 +91,7 @@ async function createAnimation(
         fps: 12,
         id,
         name: "New animation",
-        scale: 1,
+        scale: 0,
         sprites: indices.sort(sortSprites()).map(mapSprites()),
       },
     ],

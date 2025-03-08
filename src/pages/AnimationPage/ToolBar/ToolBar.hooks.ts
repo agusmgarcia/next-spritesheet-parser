@@ -165,8 +165,10 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
   );
 
   useEffect(() => {
-    resetOnClick();
-  }, [resetOnClick]);
+    setAnimationScale(animation.id, (prev) =>
+      prev >= devicePixelRatio ? prev : devicePixelRatio,
+    );
+  }, [animation.id, devicePixelRatio, setAnimationScale]);
 
   return {
     resetDisabled,
