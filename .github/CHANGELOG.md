@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.6.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.6.0)
 
-> Invalid Date
+> March 9, 2025
 
 - **AnimationPage**: handle color property
 - **AnimationSlice**: add color property
@@ -31,7 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.5.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.1)
 
-> March 7, 2025
+> March 8, 2025
 
 - define types for useCallback and useMemo
 - bump dependencies
@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.5.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.0)
 
-> March 7, 2025
+> March 8, 2025
 
 - **AnimationsSlice**: reset when new sprite sheet is loaded
 - add fps into the animation
@@ -105,7 +105,7 @@ All notable changes to this project will be documented in this file.
 
 ## [v0.1.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.1.0)
 
-> March 3, 2025
+> March 4, 2025
 
 - **HomePage**: add page
 - **SpriteSheetSlice**: add slice
