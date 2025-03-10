@@ -11,7 +11,13 @@ type Animation = {
   id: string;
   name: string;
   scale: number;
-  sprites: { index: number; offsetX: number; offsetY: number }[];
+  sprites: {
+    index: number;
+    initialOffsetX: number;
+    initialOffsetY: number;
+    offsetX: number;
+    offsetY: number;
+  }[];
 };
 
 type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
@@ -19,6 +25,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
   {
     animations: Animation[];
     createAnimation: AsyncFunc<string, [indices: number[]]>;
+    resetAnimationOffset: AsyncFunc<void, [id: string, index: number]>;
     resetAnimations: AsyncFunc;
     setAnimationColor: AsyncFunc<void, [id: string, color: SetValue<string>]>;
     setAnimationFPS: AsyncFunc<void, [id: string, fps: SetValue<number>]>;

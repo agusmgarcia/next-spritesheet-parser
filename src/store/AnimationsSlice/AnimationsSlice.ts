@@ -20,6 +20,7 @@ export default createGlobalSlice<
   return {
     animations: [],
     createAnimation,
+    resetAnimationOffset,
     resetAnimations,
     setAnimationColor,
     setAnimationFPS,
@@ -71,6 +72,8 @@ async function createAnimation(
       (result, s) => {
         result[s.index] = {
           index: s.index,
+          initialOffsetX: 0,
+          initialOffsetY: -(maxHeight - s.height) / 2,
           offsetX: 0,
           offsetY: -(maxHeight - s.height) / 2,
         };
@@ -102,6 +105,31 @@ async function createAnimation(
   }));
 
   return id;
+}
+
+async function resetAnimationOffset(
+  id: Parameters<AnimationsSlice["animations"]["resetAnimationOffset"]>[0],
+  index: Parameters<AnimationsSlice["animations"]["resetAnimationOffset"]>[1],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s, i) =>
+              i === index
+                ? {
+                    ...s,
+                    offsetX: s.initialOffsetX,
+                    offsetY: s.initialOffsetY,
+                  }
+                : s,
+            ),
+          }
+        : a,
+    ),
+  }));
 }
 
 async function resetAnimations(
