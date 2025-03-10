@@ -2,7 +2,7 @@
 
 The app is deployed here: <https://agusmgarcia.github.io/next-spritesheet-parser/>
 
-[![Deploy application](https://github.com/agusmgarcia/spritesheet-parser/actions/workflows/deploy-app.yml/badge.svg)](https://github.com/agusmgarcia/spritesheet-parser/actions/deploy-app.yml)
+[![Deploy application](https://github.com/agusmgarcia/next-spritesheet-parser/actions/workflows/deploy-app.yml/badge.svg)](https://github.com/agusmgarcia/next-spritesheet-parser/actions/workflows/deploy-app.yml)
 
 This is a personal web site to show the technologies I have worked for and the technologies I use
 
