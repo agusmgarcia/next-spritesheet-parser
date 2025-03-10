@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.7.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.7.0)
+
+> March 10, 2025
+
+- **README.md**: update file
+- **AnimationPage**: add ability to reset animation offset
+- **AnimationSlice**: add resetAnimationOffset method
+- **AnimationPage**: rename reset by reset zoom
+- **AnimationPage**: add ability to set offset with keyboard
+- **Input**: set hover and focus styles for color variant
+- **AnimationSlice**: add setAnimationOffset method
+- **SpriteAnimator**: fix center
+- **SpriteSheetSlice**: set background color as rgb
+- bump dependencies
+
 ## [v0.6.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.6.0)
 
 > March 9, 2025
