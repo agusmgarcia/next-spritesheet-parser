@@ -25,8 +25,8 @@ export default function ToolBar(props: ToolBarProps) {
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
-    resetDisabled,
-    resetOnClick,
+    resetZoomDisabled,
+    resetZoomOnClick,
     viewport,
     zoomInDisabled,
     zoomInOnClick,
@@ -118,11 +118,11 @@ export default function ToolBar(props: ToolBarProps) {
             <Icon variant="zoomIn" />
           </Button>
 
-          {/* RESET */}
+          {/* RESET ZOOM */}
           <Button
             className="flex items-center justify-center md:w-fit"
-            disabled={resetDisabled}
-            onClick={resetOnClick}
+            disabled={resetZoomDisabled}
+            onClick={resetZoomOnClick}
             variant="secondary"
           >
             <Icon variant="reset" />

@@ -29,8 +29,8 @@ export default function useToolBar({
   } = usePlaying({ animation, onIndexChange });
 
   const {
-    resetDisabled,
-    resetOnClick,
+    resetZoomDisabled,
+    resetZoomOnClick,
     zoomInDisabled,
     zoomInOnClick,
     zoomOutDisabled,
@@ -71,8 +71,8 @@ export default function useToolBar({
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
-    resetDisabled,
-    resetOnClick,
+    resetZoomDisabled,
+    resetZoomOnClick,
     viewport,
     zoomInDisabled,
     zoomInOnClick,
@@ -167,9 +167,9 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
     [animation.id, devicePixelRatio, setAnimationScale],
   );
 
-  const resetDisabled = useMemo<boolean>(() => false, []);
+  const resetZoomDisabled = useMemo<boolean>(() => false, []);
 
-  const resetOnClick = useCallback<Func>(
+  const resetZoomOnClick = useCallback<Func>(
     () => setAnimationScale(animation.id, devicePixelRatio),
     [animation.id, devicePixelRatio, setAnimationScale],
   );
@@ -181,8 +181,8 @@ function useScaling({ animation }: Pick<ToolBarProps, "animation">) {
   }, [animation.id, devicePixelRatio, setAnimationScale]);
 
   return {
-    resetDisabled,
-    resetOnClick,
+    resetZoomDisabled,
+    resetZoomOnClick,
     zoomInDisabled,
     zoomInOnClick,
     zoomOutDisabled,
