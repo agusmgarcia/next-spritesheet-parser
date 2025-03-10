@@ -10,6 +10,7 @@ export default function ToolBar(props: ToolBarProps) {
     backwardOnClick,
     className,
     color,
+    colorDisabled,
     colorOnChange,
     forwardOnClick,
     fps,
@@ -87,35 +88,13 @@ export default function ToolBar(props: ToolBarProps) {
         </div>
 
         <div className="flex size-full justify-center gap-2 md:justify-end">
-          {/* MINUS FPS */}
-          <Button
-            className="flex w-fit items-center justify-center"
-            disabled={minusFPSDisabled}
-            onClick={minusFPSOnClick}
-            variant="secondary"
-          >
-            <Icon variant="minus" />
-          </Button>
-
-          {/* FPS */}
+          {/* COLOR */}
           <Input
-            aria-label="FPS"
-            className="text-center"
-            min={1}
-            onChange={fpsOnChange}
-            type="number"
-            value={fps}
+            disabled={colorDisabled}
+            onChange={colorOnChange}
+            type="color"
+            value={color}
           />
-
-          {/* PLUS FPS */}
-          <Button
-            className="flex w-fit items-center justify-center"
-            disabled={plusFPSDisabled}
-            onClick={plusFPSOnClick}
-            variant="secondary"
-          >
-            <Icon variant="plus" />
-          </Button>
         </div>
 
         <div className="flex size-full justify-center gap-2 md:justify-start">
@@ -151,8 +130,35 @@ export default function ToolBar(props: ToolBarProps) {
         </div>
 
         <div className="flex size-full justify-center gap-2">
-          {/* COLOR */}
-          <Input onChange={colorOnChange} type="color" value={color} />
+          {/* MINUS FPS */}
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={minusFPSDisabled}
+            onClick={minusFPSOnClick}
+            variant="secondary"
+          >
+            <Icon variant="minus" />
+          </Button>
+
+          {/* FPS */}
+          <Input
+            aria-label="FPS"
+            className="text-center"
+            min={1}
+            onChange={fpsOnChange}
+            type="number"
+            value={fps}
+          />
+
+          {/* PLUS FPS */}
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={plusFPSDisabled}
+            onClick={plusFPSOnClick}
+            variant="secondary"
+          >
+            <Icon variant="plus" />
+          </Button>
         </div>
 
         {viewport !== "Mobile" && <div className="invisible size-full" />}

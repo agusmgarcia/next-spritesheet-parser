@@ -17,6 +17,7 @@ export default function AnimationPage(props: AnimationPageProps) {
       <ToolBar
         animation={animation}
         className="fixed inset-x-4 bottom-8"
+        index={index}
         onIndexChange={onIndexChange}
       />
     </div>

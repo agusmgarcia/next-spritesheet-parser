@@ -6,6 +6,7 @@ import { type SetValue } from "#src/utils";
 type ToolBarProps = {
   animation: Animations[number];
   className?: string;
+  index: number;
   onIndexChange: Func<void, [newIndex: SetValue<number>]>;
 };
 

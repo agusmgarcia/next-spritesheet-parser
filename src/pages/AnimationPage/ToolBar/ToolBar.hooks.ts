@@ -9,6 +9,7 @@ import type ToolBarProps from "./ToolBar.types";
 
 export default function useToolBar({
   animation,
+  index,
   onIndexChange,
   ...props
 }: ToolBarProps) {
@@ -45,12 +46,17 @@ export default function useToolBar({
     plusFPSOnClick,
   } = useFPS({ animation });
 
-  const { color, colorOnChange } = useColor({ animation });
+  const { color, colorDisabled, colorOnChange } = useCenter({
+    animation,
+    index,
+    playing,
+  });
 
   return {
     ...props,
     backwardOnClick,
     color,
+    colorDisabled,
     colorOnChange,
     forwardOnClick,
     fps,
@@ -221,15 +227,66 @@ function useFPS({ animation }: Pick<ToolBarProps, "animation">) {
   };
 }
 
-function useColor({ animation }: Pick<ToolBarProps, "animation">) {
-  const { setAnimationColor } = useAnimations();
+function useCenter({
+  animation,
+  index,
+  playing,
+}: Pick<ToolBarProps, "animation" | "index"> & { playing: boolean }) {
+  const { setAnimationColor, setAnimationOffset } = useAnimations();
 
   const color = useMemo(() => animation.color, [animation.color]);
+
+  const colorDisabled = useMemo(() => playing, [playing]);
 
   const colorOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setAnimationColor(animation.id, event.target.value),
     [animation.id, setAnimationColor],
   );
 
-  return { color, colorOnChange };
+  useEffect(() => {
+    if (playing) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!event.altKey) return;
+
+      switch (event.key) {
+        case "ArrowUp":
+          return setAnimationOffset(
+            animation.id,
+            index,
+            (offsetX) => offsetX,
+            (offsetY) => offsetY - window.devicePixelRatio,
+          );
+
+        case "ArrowRight":
+          return setAnimationOffset(
+            animation.id,
+            index,
+            (offsetX) => offsetX + window.devicePixelRatio,
+            (offsetY) => offsetY,
+          );
+
+        case "ArrowDown":
+          return setAnimationOffset(
+            animation.id,
+            index,
+            (offsetX) => offsetX,
+            (offsetY) => offsetY + window.devicePixelRatio,
+          );
+
+        case "ArrowLeft":
+          return setAnimationOffset(
+            animation.id,
+            index,
+            (offsetX) => offsetX - window.devicePixelRatio,
+            (offsetY) => offsetY,
+          );
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [animation.id, index, playing, setAnimationOffset]);
+
+  return { color, colorDisabled, colorOnChange };
 }
