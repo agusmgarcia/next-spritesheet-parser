@@ -25,6 +25,8 @@ export default function ToolBar(props: ToolBarProps) {
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    resetOffsetDisabled,
+    resetOffsetOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     viewport,
@@ -90,11 +92,22 @@ export default function ToolBar(props: ToolBarProps) {
         <div className="flex size-full justify-center gap-2 md:justify-end">
           {/* COLOR */}
           <Input
+            className="md:w-[42px]"
             disabled={colorDisabled}
             onChange={colorOnChange}
             type="color"
             value={color}
           />
+
+          {/* RESET OFFSET */}
+          <Button
+            className="flex items-center justify-center md:w-fit"
+            disabled={resetOffsetDisabled}
+            onClick={resetOffsetOnClick}
+            variant="secondary"
+          >
+            <Icon variant="reset" />
+          </Button>
         </div>
 
         <div className="flex size-full justify-center gap-2 md:justify-start">

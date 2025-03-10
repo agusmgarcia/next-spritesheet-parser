@@ -46,7 +46,13 @@ export default function useToolBar({
     plusFPSOnClick,
   } = useFPS({ animation });
 
-  const { color, colorDisabled, colorOnChange } = useCenter({
+  const {
+    color,
+    colorDisabled,
+    colorOnChange,
+    resetOffsetDisabled,
+    resetOffsetOnClick,
+  } = useCenter({
     animation,
     index,
     playing,
@@ -71,6 +77,8 @@ export default function useToolBar({
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    resetOffsetDisabled,
+    resetOffsetOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     viewport,
@@ -232,15 +240,33 @@ function useCenter({
   index,
   playing,
 }: Pick<ToolBarProps, "animation" | "index"> & { playing: boolean }) {
-  const { setAnimationColor, setAnimationOffset } = useAnimations();
+  const { resetAnimationOffset, setAnimationColor, setAnimationOffset } =
+    useAnimations();
 
-  const color = useMemo(() => animation.color, [animation.color]);
+  const color = useMemo<string>(() => animation.color, [animation.color]);
 
-  const colorDisabled = useMemo(() => playing, [playing]);
+  const colorDisabled = useMemo<boolean>(() => playing, [playing]);
+
+  const resetOffsetDisabled = useMemo<boolean>(
+    () =>
+      playing ||
+      (animation.sprites[index].offsetX ===
+        animation.sprites[index].initialOffsetX &&
+        animation.sprites[index].offsetY ===
+          animation.sprites[index].initialOffsetY),
+    [animation.sprites, index, playing],
+  );
 
   const colorOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setAnimationColor(animation.id, event.target.value),
     [animation.id, setAnimationColor],
+  );
+
+  const resetOffsetOnClick = useCallback<
+    React.MouseEventHandler<HTMLButtonElement>
+  >(
+    () => resetAnimationOffset(animation.id, index),
+    [animation.id, index, resetAnimationOffset],
   );
 
   useEffect(() => {
@@ -288,5 +314,11 @@ function useCenter({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [animation.id, index, playing, setAnimationOffset]);
 
-  return { color, colorDisabled, colorOnChange };
+  return {
+    color,
+    colorDisabled,
+    colorOnChange,
+    resetOffsetDisabled,
+    resetOffsetOnClick,
+  };
 }
