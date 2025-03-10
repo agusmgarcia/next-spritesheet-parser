@@ -37,14 +37,13 @@ async function createSpriteSheet(
 
   function getSprites(
     imageData: ImageData,
-    backgroundColor: Tuple<number, 4>,
+    backgroundColor: Tuple<number, 3>,
   ): NonNullable<SpriteSheetSlice["spriteSheet"]["spriteSheet"]>["sprites"] {
     for (let i = 0; i < imageData.data.length; i += 4) {
       if (
         imageData.data[i] === backgroundColor[0] &&
         imageData.data[i + 1] === backgroundColor[1] &&
-        imageData.data[i + 2] === backgroundColor[2] &&
-        imageData.data[i + 3] === backgroundColor[3]
+        imageData.data[i + 2] === backgroundColor[2]
       ) {
         imageData.data[i] = 255;
         imageData.data[i + 1] = 255;
@@ -81,7 +80,7 @@ async function createSpriteSheet(
   try {
     const imageData = getImageData(await loadImage(imageURL));
 
-    const backgroundColor = `#${imageData.data[0].toString(16)}${imageData.data[1].toString(16)}${imageData.data[2].toString(16)}${imageData.data[3].toString(16)}`;
+    const backgroundColor = `#${imageData.data[0].toString(16)}${imageData.data[1].toString(16)}${imageData.data[2].toString(16)}`;
     const color = invert([
       imageData.data[0],
       imageData.data[1],
@@ -92,7 +91,6 @@ async function createSpriteSheet(
       imageData.data[0],
       imageData.data[1],
       imageData.data[2],
-      imageData.data[3],
     ]);
 
     context.set({
