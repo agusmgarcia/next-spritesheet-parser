@@ -1,3 +1,4 @@
+import { type Tuple } from "@agusmgarcia/react-core";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
@@ -12,8 +13,10 @@ export default function useSpriteAnimator({
 }: SpriteAnimatorProps) {
   const { spriteSheet } = useSpriteSheet();
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
 
+  const [dimension, setDimension] = useState<Tuple<number, 2>>();
   const [image, setImage] = useState<HTMLImageElement>();
 
   const sprites = useMemo(
@@ -31,16 +34,6 @@ export default function useSpriteAnimator({
   const currentSprite = useMemo<(typeof sprites)[number] | undefined>(
     () => sprites.at(index),
     [index, sprites],
-  );
-
-  const spriteCanvasStyle = useMemo<React.CSSProperties>(
-    () => ({
-      left: "50%",
-      position: "absolute",
-      top: "50%",
-      transform: "translate(-50%, -50%)",
-    }),
-    [],
   );
 
   useEffect(() => {
@@ -61,19 +54,33 @@ export default function useSpriteAnimator({
   }, [spriteSheet?.imageURL]);
 
   useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const observer = new ResizeObserver((entries) => {
+      setDimension([
+        entries[0].contentRect.width,
+        entries[0].contentRect.height,
+      ]);
+    });
+
+    observer.observe(root);
+    return () => observer.unobserve(root);
+  }, []);
+
+  useEffect(() => {
     if (!image) return;
     if (!currentSprite) return;
+    if (!dimension) return;
 
     const spriteCanvas = spriteCanvasRef.current;
     if (!spriteCanvas) return;
 
-    spriteCanvas.width =
-      (currentSprite.width + currentSprite.offsetX) * animation.scale;
-    spriteCanvas.height =
-      (currentSprite.height + currentSprite.offsetY) * animation.scale;
-
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
+
+    spriteCanvas.width = dimension[0];
+    spriteCanvas.height = dimension[1];
 
     context.imageSmoothingEnabled = false;
     context.imageSmoothingQuality = "high";
@@ -87,22 +94,26 @@ export default function useSpriteAnimator({
       currentSprite.top,
       currentSprite.width,
       currentSprite.height,
-      currentSprite.offsetX,
-      currentSprite.offsetY,
+      dimension[0] / (2 * animation.scale) -
+        currentSprite.width / 2 -
+        currentSprite.offsetX,
+      dimension[1] / (2 * animation.scale) -
+        currentSprite.height / 2 -
+        currentSprite.offsetY,
       currentSprite.width,
       currentSprite.height,
     );
 
     context.beginPath();
     context.strokeStyle = animation.color;
-    const centerX = currentSprite.width / 2 + currentSprite.offsetX;
-    const centerY = currentSprite.height / 2 + currentSprite.offsetY;
+    const centerX = dimension[0] / (2 * animation.scale);
+    const centerY = dimension[1] / (2 * animation.scale);
     context.moveTo(centerX, centerY - 6);
     context.lineTo(centerX, centerY + 6);
     context.moveTo(centerX - 6, centerY);
     context.lineTo(centerX + 6, centerY);
     context.stroke();
-  }, [animation.color, animation.scale, currentSprite, image]);
+  }, [animation.color, animation.scale, currentSprite, dimension, image]);
 
-  return { ...props, spriteCanvasRef, spriteCanvasStyle };
+  return { ...props, rootRef, spriteCanvasRef };
 }

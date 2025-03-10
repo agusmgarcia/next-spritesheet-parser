@@ -2,12 +2,12 @@ import useSpriteAnimator from "./SpriteAnimator.hooks";
 import type SpriteAnimatorProps from "./SpriteAnimator.types";
 
 export default function SpriteAnimator(props: SpriteAnimatorProps) {
-  const { spriteCanvasRef, spriteCanvasStyle } = useSpriteAnimator(props);
+  const { rootRef, spriteCanvasRef } = useSpriteAnimator(props);
 
   return (
-    <div className="relative size-full">
+    <div ref={rootRef} className="relative size-full">
       {/* SPRITE */}
-      <canvas ref={spriteCanvasRef} style={spriteCanvasStyle} />
+      <canvas ref={spriteCanvasRef} className="absolute" />
     </div>
   );
 }

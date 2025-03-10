@@ -71,7 +71,7 @@ async function createAnimation(
         result[s.index] = {
           index: s.index,
           offsetX: 0,
-          offsetY: maxHeight - s.height,
+          offsetY: -(maxHeight - s.height) / 2,
         };
         return result;
       },
@@ -90,7 +90,7 @@ async function createAnimation(
     animations: [
       ...prev.animations,
       {
-        color: spriteSheet.color,
+        color: spriteSheet.backgroundColor,
         fps: 12,
         id,
         name: "New animation",
