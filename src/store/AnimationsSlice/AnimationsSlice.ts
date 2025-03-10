@@ -24,6 +24,7 @@ export default createGlobalSlice<
     setAnimationColor,
     setAnimationFPS,
     setAnimationName,
+    setAnimationOffset,
     setAnimations,
     setAnimationScale,
   };
@@ -146,6 +147,39 @@ async function setAnimationName(
     animations: prev.animations.map((a) =>
       a.id === id
         ? { ...a, name: name instanceof Function ? name(a.name) : name }
+        : a,
+    ),
+  }));
+}
+
+async function setAnimationOffset(
+  id: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[0],
+  index: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[1],
+  offsetX: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[2],
+  offsetY: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[3],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s, i) =>
+              i === index
+                ? {
+                    ...s,
+                    offsetX:
+                      offsetX instanceof Function
+                        ? offsetX(s.offsetX)
+                        : offsetX,
+                    offsetY:
+                      offsetY instanceof Function
+                        ? offsetY(s.offsetY)
+                        : offsetY,
+                  }
+                : s,
+            ),
+          }
         : a,
     ),
   }));

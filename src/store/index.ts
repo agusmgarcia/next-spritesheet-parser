@@ -30,6 +30,9 @@ export function useAnimations() {
     ),
     setAnimationFPS: useSelector((state) => state.animations.setAnimationFPS),
     setAnimationName: useSelector((state) => state.animations.setAnimationName),
+    setAnimationOffset: useSelector(
+      (state) => state.animations.setAnimationOffset,
+    ),
     setAnimations: useSelector((state) => state.animations.setAnimations),
     setAnimationScale: useSelector(
       (state) => state.animations.setAnimationScale,
