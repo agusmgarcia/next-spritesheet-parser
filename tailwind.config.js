@@ -24,6 +24,7 @@ module.exports = {
         950: "#4e091b",
       },
       current: colors.current,
+      dark: "#212529",
       gray: colors.gray,
       transparent: colors.transparent,
       white: colors.white,
