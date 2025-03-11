@@ -26,6 +26,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "arrowUp":
+      return (
+        <svg {...rest}>
+          <path d="m11.9999 10.8284 -4.9497 4.9498 -1.41421 -1.4142L11.9999 8l6.364 6.364 -1.4142 1.4142 -4.9498 -4.9498Z" />
+        </svg>
+      );
+
     case "backward":
       return (
         <svg {...rest}>
