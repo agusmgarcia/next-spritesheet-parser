@@ -1,3 +1,4 @@
+export { type AccordionProps, default as Accordion } from "./Accordion";
 export { type ButtonProps, default as Button } from "./Button";
 export { type CarouselProps, default as Carousel } from "./Carousel";
 export { default as Icon, type IconProps } from "./Icon";
