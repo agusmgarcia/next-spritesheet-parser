@@ -2,8 +2,7 @@ import { type Func } from "@agusmgarcia/react-core";
 
 import { type SetValue } from "#src/utils";
 
-type CarouselProps = {
-  children?: React.ReactNode;
+type CarouselProps = Pick<React.HTMLAttributes<HTMLDivElement>, "children"> & {
   hideArrows?: boolean;
   index?: number;
   onIndexChange?: Func<void, [nextIndex: SetValue<number>]>;

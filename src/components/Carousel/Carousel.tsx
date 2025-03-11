@@ -1,5 +1,3 @@
-import { twMerge } from "tailwind-merge";
-
 import { Button, Icon } from "#src/components";
 
 import useCarousel from "./Carousel.hooks";
@@ -17,11 +15,13 @@ export default function Carousel(props: CarouselProps) {
     previousDisabled,
     previousOnClick,
     rootStyle,
+    ...rest
   } = useCarousel(props);
 
   return (
     <div
-      className={twMerge("relative size-full overflow-hidden")}
+      {...rest}
+      className="relative size-full overflow-hidden"
       style={rootStyle}
     >
       {!hideArrows && (
