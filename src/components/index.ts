@@ -3,3 +3,4 @@ export { type CarouselProps, default as Carousel } from "./Carousel";
 export { default as Icon, type IconProps } from "./Icon";
 export { default as Input, type InputProps } from "./Input";
 export { default as Select, type SelectProps } from "./Select";
+export { default as Typography, type TypographyProps } from "./Typography";
