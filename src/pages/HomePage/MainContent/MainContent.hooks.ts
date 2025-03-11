@@ -2,20 +2,19 @@ import { type Func, type Tuple } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
-import { loadImage, useDevicePixelRatio, useViewport } from "#src/utils";
+import { loadImage, useDevicePixelRatio, useDimensions } from "#src/utils";
 
-import type SpriteSelectorProps from "./SpriteSelector.types";
+import type MainContentProps from "./MainContent.types";
 
-export default function useSpriteSelector({
+export default function useMainContent({
   indices,
   select,
   toggleSelection,
   ...props
-}: SpriteSelectorProps) {
-  const viewport = useViewport();
-
+}: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
 
+  const rootRef = useRef<HTMLDivElement>(null);
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -23,6 +22,7 @@ export default function useSpriteSelector({
   const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
   const [preSelectedSprites, setPreSelectedSprites] = useState<number[]>();
 
+  const rootDimensions = useDimensions(rootRef);
   const devicePixelRatio = useDevicePixelRatio();
 
   const getSpriteIndex = useCallback<
@@ -101,43 +101,35 @@ export default function useSpriteSelector({
 
   const onMouseDown = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      if (viewport === "Mobile") return;
-
       const rect = event.currentTarget.getBoundingClientRect();
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
       setInitialCursor([x, y, x, y]);
     },
-    [devicePixelRatio, viewport],
+    [devicePixelRatio],
   );
 
   const onMouseEnter = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      if (viewport === "Mobile") return;
-
       const button = event.currentTarget;
       button.dataset.prevCursor = button.style.cursor;
       button.style.cursor = "default";
     },
-    [viewport],
+    [],
   );
 
   const onMouseLeave = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      if (viewport === "Mobile") return;
-
       const button = event.currentTarget;
       button.style.cursor = button.dataset.prevCursor || "";
       delete button.dataset.prevCursor;
     },
-    [viewport],
+    [],
   );
 
   const onMouseMove = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      if (viewport === "Mobile") return;
-
       const button = event.currentTarget;
       const rect = button.getBoundingClientRect();
 
@@ -163,13 +155,7 @@ export default function useSpriteSelector({
         !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
       );
     },
-    [
-      devicePixelRatio,
-      getSpriteIndex,
-      getSpritesIndex,
-      initialCursor,
-      viewport,
-    ],
+    [devicePixelRatio, getSpriteIndex, getSpritesIndex, initialCursor],
   );
 
   useEffect(() => {
@@ -198,8 +184,14 @@ export default function useSpriteSelector({
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
 
-    spriteSheetCanvas.width = image.naturalWidth * devicePixelRatio;
-    spriteSheetCanvas.height = image.naturalHeight * devicePixelRatio;
+    spriteSheetCanvas.width = Math.max(
+      rootDimensions.width,
+      image.width * devicePixelRatio,
+    );
+    spriteSheetCanvas.height = Math.max(
+      rootDimensions.height,
+      image.height * devicePixelRatio,
+    );
 
     const context = spriteSheetCanvas.getContext("2d");
     if (!context) return;
@@ -208,6 +200,8 @@ export default function useSpriteSelector({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
+    context.fillStyle = spriteSheet.backgroundColor;
+    context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
@@ -215,7 +209,15 @@ export default function useSpriteSelector({
       context.strokeStyle = spriteSheet.color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
-  }, [devicePixelRatio, image, spriteSheet?.color, spriteSheet?.sprites]);
+  }, [
+    devicePixelRatio,
+    image,
+    rootDimensions.height,
+    rootDimensions.width,
+    spriteSheet?.backgroundColor,
+    spriteSheet?.color,
+    spriteSheet?.sprites,
+  ]);
 
   useEffect(() => {
     if (!image) return;
@@ -226,8 +228,14 @@ export default function useSpriteSelector({
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
-    selectionCanvas.width = image.width * devicePixelRatio;
-    selectionCanvas.height = image.height * devicePixelRatio;
+    selectionCanvas.width = Math.max(
+      rootDimensions.width,
+      image.width * devicePixelRatio,
+    );
+    selectionCanvas.height = Math.max(
+      rootDimensions.height,
+      image.height * devicePixelRatio,
+    );
 
     const context = selectionCanvas.getContext("2d");
     if (!context) return;
@@ -276,6 +284,8 @@ export default function useSpriteSelector({
     indices,
     initialCursor,
     preSelectedSprites,
+    rootDimensions.height,
+    rootDimensions.width,
     spriteSheet?.color,
     spriteSheet?.sprites,
   ]);
@@ -287,6 +297,7 @@ export default function useSpriteSelector({
     onMouseEnter,
     onMouseLeave,
     onMouseMove,
+    rootRef,
     selectionCanvasRef,
     spriteSheetCanvasRef,
   };

@@ -1,9 +1,9 @@
 import { type Func } from "@agusmgarcia/react-core";
 
-type SpriteSelectorProps = {
+type MainContentProps = {
   indices: number[];
   select: Func<void, [index: number]>;
   toggleSelection: Func<void, [index: number]>;
 };
 
-export default SpriteSelectorProps;
+export default MainContentProps;

@@ -3,10 +3,10 @@ import { useCallback, useState } from "react";
 
 import type HomePageProps from "./HomePage.types";
 
-const emptyArray: number[] = [];
+const initialValue: number[] = [];
 
 export default function useHomePage(props: HomePageProps) {
-  const [indices, setIndices] = useState(emptyArray);
+  const [indices, setIndices] = useState(initialValue);
 
   const toggleSelection = useCallback<Func<void, [index: number]>>(
     (index) =>
@@ -24,7 +24,7 @@ export default function useHomePage(props: HomePageProps) {
     [],
   );
 
-  const unselectAll = useCallback<Func>(() => setIndices(emptyArray), []);
+  const unselectAll = useCallback<Func>(() => setIndices(initialValue), []);
 
   return { ...props, indices, select, toggleSelection, unselectAll };
 }

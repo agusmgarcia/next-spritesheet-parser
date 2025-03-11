@@ -1,26 +1,26 @@
+import { SideBar } from "#src/fragments";
+
 import useHomePage from "./HomePage.hooks";
 import type HomePageProps from "./HomePage.types";
-import SpriteSelector from "./SpriteSelector";
-import ToolBar from "./ToolBar";
+import MainContent from "./MainContent";
+import SideBarContent from "./SideBarContent";
 
 export default function HomePage(props: HomePageProps) {
   const { indices, select, toggleSelection, unselectAll } = useHomePage(props);
 
   return (
-    <div className="size-full">
-      {/* SPRITE SELECTOR */}
-      <SpriteSelector
+    <>
+      {/* MAIN */}
+      <MainContent
         indices={indices}
         select={select}
         toggleSelection={toggleSelection}
       />
 
-      {/* TOOLBAR */}
-      <ToolBar
-        className="fixed inset-x-4 bottom-8"
-        indices={indices}
-        unselectAll={unselectAll}
-      />
-    </div>
+      {/* SIDEBAR */}
+      <SideBar>
+        <SideBarContent indices={indices} unselectAll={unselectAll} />
+      </SideBar>
+    </>
   );
 }

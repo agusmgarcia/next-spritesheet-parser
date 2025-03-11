@@ -1,9 +1,8 @@
 import { type Func } from "@agusmgarcia/react-core";
 
-type ToolBarProps = {
-  className?: string;
+type AnimationsItemProps = {
   indices: number[];
   unselectAll: Func;
 };
 
-export default ToolBarProps;
+export default AnimationsItemProps;

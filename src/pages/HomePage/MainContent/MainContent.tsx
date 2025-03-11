@@ -1,19 +1,20 @@
-import useSpriteSelector from "./SpriteSelector.hooks";
-import type SpriteSelectorProps from "./SpriteSelector.types";
+import useMainContent from "./MainContent.hooks";
+import type MainContentProps from "./MainContent.types";
 
-export default function SpriteSelector(props: SpriteSelectorProps) {
+export default function MainContent(props: MainContentProps) {
   const {
     onClick,
     onMouseDown,
     onMouseEnter,
     onMouseLeave,
     onMouseMove,
+    rootRef,
     selectionCanvasRef,
     spriteSheetCanvasRef,
-  } = useSpriteSelector(props);
+  } = useMainContent(props);
 
   return (
-    <div className="relative size-full">
+    <div ref={rootRef} className="relative size-full">
       {/* SPRITE SHEET */}
       <canvas ref={spriteSheetCanvasRef} className="absolute" />
 
