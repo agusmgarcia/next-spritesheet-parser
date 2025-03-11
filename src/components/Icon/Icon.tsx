@@ -5,6 +5,13 @@ export default function Icon(props: IconProps) {
   const { variant, ...rest } = useIcon(props);
 
   switch (variant) {
+    case "arrowDown":
+      return (
+        <svg {...rest}>
+          <path d="m11.9999 13.1714 4.9498 -4.94972 1.4142 1.41421 -6.364 6.36401 -6.36391 -6.36401L7.0502 8.22168l4.9497 4.94972Z" />
+        </svg>
+      );
+
     case "arrowLeft":
       return (
         <svg {...rest}>
