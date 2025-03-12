@@ -1,25 +1,40 @@
+import { SideBar } from "#src/fragments";
+
 import useAnimationPage from "./AnimationPage.hooks";
 import type AnimationPageProps from "./AnimationPage.types";
-import SpriteAnimator from "./SpriteAnimator";
-import ToolBar from "./ToolBar";
+import MainContent from "./MainContent";
+import SideBarContent from "./SideBarContent";
 
 export default function AnimationPage(props: AnimationPageProps) {
-  const { animation, index, onIndexChange } = useAnimationPage(props);
+  const {
+    animation,
+    backwardOnClick,
+    forwardOnClick,
+    index,
+    playing,
+    playingDisabled,
+    playOnClick,
+  } = useAnimationPage(props);
 
   if (!animation) return <></>;
 
   return (
-    <div className="size-full">
-      {/* SPRITE ANIMATOR */}
-      <SpriteAnimator animation={animation} index={index} />
+    <>
+      {/* MAIN */}
+      <MainContent animation={animation} index={index} playing={playing} />
 
-      {/* TOOLBAR */}
-      <ToolBar
-        animation={animation}
-        className="fixed inset-x-4 bottom-8"
-        index={index}
-        onIndexChange={onIndexChange}
-      />
-    </div>
+      {/* SIDEBAR */}
+      <SideBar>
+        <SideBarContent
+          animation={animation}
+          backwardOnClick={backwardOnClick}
+          forwardOnClick={forwardOnClick}
+          index={index}
+          playOnClick={playOnClick}
+          playing={playing}
+          playingDisabled={playingDisabled}
+        />
+      </SideBar>
+    </>
   );
 }

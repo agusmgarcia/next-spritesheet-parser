@@ -1,8 +1,9 @@
 import { type Animations } from "#src/store";
 
-type SpriteAnimatorProps = {
+type MainContentProps = {
   animation: Animations[number];
   index: number;
+  playing: boolean;
 };
 
-export default SpriteAnimatorProps;
+export default MainContentProps;
