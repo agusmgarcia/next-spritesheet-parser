@@ -5,7 +5,10 @@ import { useAnimations } from "#src/store";
 
 import type FPSItemProps from "./FPSItem.types";
 
-export default function useFPSItem({ animation, ...props }: FPSItemProps) {
+export default function useFPSItem({
+  animation: animationFromProps,
+  ...rest
+}: FPSItemProps) {
   const heading = useMemo<TypographyProps>(
     () => ({ children: "FPS", variant: "h2" }),
     [],
@@ -18,10 +21,10 @@ export default function useFPSItem({ animation, ...props }: FPSItemProps) {
     minusFPSOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
-  } = useFPS({ animation });
+  } = useFPS({ animation: animationFromProps });
 
   return {
-    ...props,
+    ...rest,
     fps,
     fpsOnChange,
     heading,
@@ -32,26 +35,32 @@ export default function useFPSItem({ animation, ...props }: FPSItemProps) {
   };
 }
 
-function useFPS({ animation }: Pick<FPSItemProps, "animation">) {
+function useFPS({
+  animation: animationFromProps,
+}: Pick<FPSItemProps, "animation">) {
   const { setAnimationFPS } = useAnimations();
 
   const minusFPSDisabled = useMemo<boolean>(
-    () => animation.fps <= 1,
-    [animation.fps],
+    () => animationFromProps.fps <= 1,
+    [animationFromProps.fps],
   );
 
   const minusFPSOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(
-    () => setAnimationFPS(animation.id, (fps) => fps - 1),
-    [animation.id, setAnimationFPS],
+    () => setAnimationFPS(animationFromProps.id, (fps) => fps - 1),
+    [animationFromProps.id, setAnimationFPS],
   );
 
-  const fps = useMemo<number>(() => animation.fps, [animation.fps]);
+  const fps = useMemo<number>(
+    () => animationFromProps.fps,
+    [animationFromProps.fps],
+  );
 
   const fpsOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => setAnimationFPS(animation.id, event.target.valueAsNumber),
-    [animation.id, setAnimationFPS],
+    (event) =>
+      setAnimationFPS(animationFromProps.id, event.target.valueAsNumber),
+    [animationFromProps.id, setAnimationFPS],
   );
 
   const plusFPSDisabled = useMemo<boolean>(() => false, []);
@@ -59,8 +68,8 @@ function useFPS({ animation }: Pick<FPSItemProps, "animation">) {
   const plusFPSOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(
-    () => setAnimationFPS(animation.id, (fps) => fps + 1),
-    [animation.id, setAnimationFPS],
+    () => setAnimationFPS(animationFromProps.id, (fps) => fps + 1),
+    [animationFromProps.id, setAnimationFPS],
   );
 
   return {

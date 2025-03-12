@@ -7,8 +7,8 @@ import { useAnimations } from "#src/store";
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
 export default function useConfigurationsItem({
-  animation,
-  ...props
+  animation: animationFromProps,
+  ...rest
 }: ConfigurationsItemProps) {
   const heading = useMemo<TypographyProps>(
     () => ({ children: "Configurations", variant: "h2" }),
@@ -17,10 +17,12 @@ export default function useConfigurationsItem({
 
   const { onClick: homeOnClick } = useHome();
 
-  const { onChange: nameOnChange, value: nameValue } = useName({ animation });
+  const { onChange: nameOnChange, value: nameValue } = useName({
+    animation: animationFromProps,
+  });
 
   return {
-    ...props,
+    ...rest,
     heading,
     homeOnClick,
     nameOnChange,
@@ -39,13 +41,15 @@ function useHome() {
   return { onClick };
 }
 
-function useName({ animation }: Pick<ConfigurationsItemProps, "animation">) {
+function useName({
+  animation: animationFromProps,
+}: Pick<ConfigurationsItemProps, "animation">) {
   const { setAnimationName } = useAnimations();
 
   const onChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => setAnimationName(animation.id, event.target.value),
-    [animation.id, setAnimationName],
+    (event) => setAnimationName(animationFromProps.id, event.target.value),
+    [animationFromProps.id, setAnimationName],
   );
 
-  return { onChange, value: animation.name };
+  return { onChange, value: animationFromProps.name };
 }

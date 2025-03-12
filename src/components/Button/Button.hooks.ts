@@ -2,7 +2,7 @@ import type ButtonProps from "./Button.types";
 
 export default function useButton({
   type: typeFromProps,
-  ...props
+  ...rest
 }: ButtonProps) {
-  return { ...props, type: typeFromProps || "button" };
+  return { ...rest, type: typeFromProps || "button" };
 }

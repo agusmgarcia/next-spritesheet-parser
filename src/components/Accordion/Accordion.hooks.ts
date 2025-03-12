@@ -5,7 +5,7 @@ import type AccordionProps from "./Accordion.types";
 
 export default function useAccordion({
   heading: headingFromProps,
-  ...props
+  ...rest
 }: AccordionProps) {
   const heading = useMemo<TypographyProps>(
     () => ({
@@ -20,5 +20,5 @@ export default function useAccordion({
     [headingFromProps],
   );
 
-  return { ...props, heading };
+  return { ...rest, heading };
 }

@@ -8,10 +8,10 @@ import type CarouselProps from "./Carousel.types";
 export default function useCarousel({
   hideArrows: hideArrowsFromProps,
   index: indexFromProps,
-  onIndexChange,
+  onIndexChange: onIndexChangeFromProps,
   pageGap: pageGapFromProps,
   pageSize: pageSizeFromProps,
-  ...props
+  ...rest
 }: CarouselProps) {
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -29,10 +29,10 @@ export default function useCarousel({
 
   const pagesCount = useMemo<number>(
     () =>
-      Array.isArray(props.children)
-        ? Math.ceil(props.children.filter((c) => !!c).length / pageSize)
+      Array.isArray(rest.children)
+        ? Math.ceil(rest.children.filter((c) => !!c).length / pageSize)
         : 1,
-    [props.children, pageSize],
+    [rest.children, pageSize],
   );
 
   const hideArrows = useMemo<boolean>(
@@ -69,8 +69,10 @@ export default function useCarousel({
 
   const setIndex = useCallback<Func<void, [newIndex: SetValue<number>]>>(
     (newIndex) =>
-      !!onIndexChange ? onIndexChange(newIndex) : rawSetIndex(newIndex),
-    [onIndexChange],
+      !!onIndexChangeFromProps
+        ? onIndexChangeFromProps(newIndex)
+        : rawSetIndex(newIndex),
+    [onIndexChangeFromProps],
   );
 
   const previousOnClick = useCallback<Func>(
@@ -106,7 +108,7 @@ export default function useCarousel({
   }, [index, pageGap]);
 
   return {
-    ...props,
+    ...rest,
     bodyRef,
     bodyStyle,
     childStyle,

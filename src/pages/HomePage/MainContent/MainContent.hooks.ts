@@ -7,10 +7,10 @@ import { loadImage, useDevicePixelRatio, useDimensions } from "#src/utils";
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
-  indices,
-  select,
-  toggleSelection,
-  ...props
+  indices: indicesFromProps,
+  select: selectFromProps,
+  toggleSelection: toggleSelectionFromProps,
+  ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
 
@@ -76,7 +76,7 @@ export default function useMainContent({
       setInitialCursor(undefined);
 
       if (!!preSelectedSprites) {
-        preSelectedSprites.forEach(select);
+        preSelectedSprites.forEach(selectFromProps);
         setPreSelectedSprites(undefined);
         return;
       }
@@ -88,14 +88,14 @@ export default function useMainContent({
       const spriteIndex = getSpriteIndex(x, y);
       if (!spriteIndex) return;
 
-      toggleSelection(spriteIndex);
+      toggleSelectionFromProps(spriteIndex);
     },
     [
       devicePixelRatio,
       getSpriteIndex,
       preSelectedSprites,
-      select,
-      toggleSelection,
+      selectFromProps,
+      toggleSelectionFromProps,
     ],
   );
 
@@ -246,7 +246,7 @@ export default function useMainContent({
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
 
-    indices.forEach((index) => {
+    indicesFromProps.forEach((index) => {
       const sprite = sprites.at(index);
       if (!sprite) return;
 
@@ -260,7 +260,7 @@ export default function useMainContent({
       const sprite = sprites.at(index);
       if (!sprite) return;
 
-      if (indices.includes(index)) return;
+      if (indicesFromProps.includes(index)) return;
 
       context.globalAlpha = 0.4;
       context.fillStyle = spriteSheet.color;
@@ -281,7 +281,7 @@ export default function useMainContent({
   }, [
     devicePixelRatio,
     image,
-    indices,
+    indicesFromProps,
     initialCursor,
     preSelectedSprites,
     rootDimensions.height,
@@ -291,7 +291,7 @@ export default function useMainContent({
   ]);
 
   return {
-    ...props,
+    ...rest,
     onClick,
     onMouseDown,
     onMouseEnter,

@@ -7,9 +7,9 @@ import { useAnimations } from "#src/store";
 import type AnimationsItemProps from "./AnimationsItem.types";
 
 export default function useAnimationsItem({
-  indices,
-  unselectAll,
-  ...props
+  indices: indicesFromProps,
+  unselectAll: unselectAllFromProps,
+  ...rest
 }: AnimationsItemProps) {
   const heading = useMemo<TypographyProps>(
     () => ({ children: "Animations", variant: "h2" }),
@@ -24,13 +24,16 @@ export default function useAnimationsItem({
   } = useAnimationSelector();
 
   const { disabled: resetSelectionDisabled, onClick: resetSelectionOnClick } =
-    useResetSelection({ indices, unselectAll });
+    useResetSelection({
+      indices: indicesFromProps,
+      unselectAll: unselectAllFromProps,
+    });
 
   const { disabled: createAnimationDisabled, onClick: createAnimationOnClick } =
-    useCreateAnimation({ indices });
+    useCreateAnimation({ indices: indicesFromProps });
 
   return {
-    ...props,
+    ...rest,
     animationSelectorDisabled,
     animationSelectorOnChange,
     animationSelectorOptions,
@@ -82,18 +85,20 @@ function useAnimationSelector() {
 }
 
 function useResetSelection({
-  indices,
-  unselectAll,
+  indices: indicesFromProps,
+  unselectAll: unselectAllFromProps,
 }: Pick<AnimationsItemProps, "indices" | "unselectAll">) {
   const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => unselectAll(),
-    [unselectAll],
+    () => unselectAllFromProps(),
+    [unselectAllFromProps],
   );
 
-  return { disabled: !indices.length, onClick };
+  return { disabled: !indicesFromProps.length, onClick };
 }
 
-function useCreateAnimation({ indices }: Pick<AnimationsItemProps, "indices">) {
+function useCreateAnimation({
+  indices: indicesFromProps,
+}: Pick<AnimationsItemProps, "indices">) {
   const { push } = useRouter();
 
   const { createAnimation } = useAnimations();
@@ -103,12 +108,12 @@ function useCreateAnimation({ indices }: Pick<AnimationsItemProps, "indices">) {
   const onClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
-    if (!indices.length) return;
+    if (!indicesFromProps.length) return;
     setLoading(true);
-    createAnimation(indices)
+    createAnimation(indicesFromProps)
       .then((id) => push(`/animations/${id}`))
       .finally(() => setLoading(false));
-  }, [createAnimation, indices, push]);
+  }, [createAnimation, indicesFromProps, push]);
 
-  return { disabled: !indices.length || loading, onClick };
+  return { disabled: !indicesFromProps.length || loading, onClick };
 }
