@@ -11,7 +11,9 @@ export default function Select(props: SelectProps) {
       {...rest}
       className={twMerge(
         "size-full cursor-pointer appearance-none rounded-lg border border-black bg-white p-2 text-black outline outline-1 outline-offset-0 outline-transparent",
+        // TODO: add arrow
         "transition-colors",
+        "enabled:hover:bg-cranberry-300",
         "focus-within:-outline-offset-2 focus-within:outline-cranberry-600",
         "disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-400",
         className,
