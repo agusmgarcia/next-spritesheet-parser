@@ -15,6 +15,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
     | "reset"
     | "roundedPlay"
     | "spinner"
+    | "trash"
     | "uploadFile"
     | "zoomIn"
     | "zoomOut";

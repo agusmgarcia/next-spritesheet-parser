@@ -110,6 +110,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "trash":
+      return (
+        <svg {...rest}>
+          <path d="M7 4V2h10v2h5v2h-2v15c0 0.5523 -0.4477 1 -1 1H5c-0.55228 0 -1 -0.4477 -1 -1V6H2V4h5ZM6 6v14h12V6H6Zm3 3h2v8H9V9Zm4 0h2v8h-2V9Z" />
+        </svg>
+      );
+
     case "uploadFile":
       return (
         <svg {...rest}>
