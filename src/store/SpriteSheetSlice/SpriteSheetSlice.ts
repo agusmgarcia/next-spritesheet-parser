@@ -78,7 +78,7 @@ async function createSpriteSheet(
   }
 
   try {
-    const imageData = getImageData(await loadImage(imageURL));
+    const imageData = getImageData(await loadImage(imageURL, context.signal));
 
     const backgroundColor = `#${imageData.data[0].toString(16)}${imageData.data[1].toString(16)}${imageData.data[2].toString(16)}`;
     const color = invert([

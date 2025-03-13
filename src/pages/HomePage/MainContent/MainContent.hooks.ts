@@ -162,7 +162,7 @@ export default function useMainContent({
     if (!spriteSheet?.imageURL) return;
     const controller = new AbortController();
 
-    loadImage(spriteSheet.imageURL)
+    loadImage(spriteSheet.imageURL, controller.signal)
       .then((image) => {
         if (controller.signal.aborted) return;
         setImage(image);
