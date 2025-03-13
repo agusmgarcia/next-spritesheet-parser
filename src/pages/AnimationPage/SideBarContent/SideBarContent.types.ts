@@ -5,6 +5,9 @@ type SideBarContentProps = {
   backwardOnClick: React.MouseEventHandler<HTMLButtonElement>;
   forwardOnClick: React.MouseEventHandler<HTMLButtonElement>;
   index: number;
+  onionActive: boolean;
+  onionDisabled: boolean;
+  onionOnClick: React.MouseEventHandler<HTMLButtonElement>;
   playing: boolean;
   playingDisabled: boolean;
   playOnClick: React.MouseEventHandler<HTMLButtonElement>;

@@ -15,6 +15,9 @@ export default function SideBarContent(props: SideBarContentProps) {
     forwardOnClick,
     heading,
     index,
+    onionActive,
+    onionDisabled,
+    onionOnClick,
     playing,
     playingDisabled,
     playOnClick,
@@ -32,7 +35,14 @@ export default function SideBarContent(props: SideBarContentProps) {
       />
       <FPSItem animation={animation} />
       <ZoomItem animation={animation} />
-      <CenterItem animation={animation} index={index} playing={playing} />
+      <CenterItem
+        animation={animation}
+        index={index}
+        onionActive={onionActive}
+        onionDisabled={onionDisabled}
+        onionOnClick={onionOnClick}
+        playing={playing}
+      />
     </Accordion>
   );
 }

@@ -9,6 +9,9 @@ export default function CenterItem(props: CenterItemProps) {
     colorOnChange,
     colorValue,
     heading,
+    onionActive,
+    onionDisabled,
+    onionOnClick,
     resetCenterDisabled,
     resetCenterOnClick,
   } = useCenterItem(props);
@@ -23,6 +26,16 @@ export default function CenterItem(props: CenterItemProps) {
         variant="secondary"
       >
         <Icon variant="reset" />
+      </Button>
+
+      {/* ONION */}
+      <Button
+        className="flex w-fit items-center justify-center"
+        disabled={onionDisabled}
+        onClick={onionOnClick}
+        variant={onionActive ? "primary" : "secondary"}
+      >
+        <Icon variant="stack" />
       </Button>
 
       {/* COLOR */}

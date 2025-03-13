@@ -8,6 +8,7 @@ import type MainContentProps from "./MainContent.types";
 export default function useMainContent({
   animation: animationFromProps,
   index: indexFromProps,
+  onionActive: onionActiveFromProps,
   playing: playingFromProps,
   ...rest
 }: MainContentProps) {
@@ -35,6 +36,11 @@ export default function useMainContent({
 
   const currentSprite = useMemo<(typeof sprites)[number] | undefined>(
     () => sprites.at(indexFromProps),
+    [indexFromProps, sprites],
+  );
+
+  const prevSprite = useMemo<(typeof sprites)[number] | undefined>(
+    () => (sprites.length > 1 ? sprites.at(indexFromProps - 1) : undefined),
     [indexFromProps, sprites],
   );
 
@@ -77,6 +83,26 @@ export default function useMainContent({
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
     context.scale(animationFromProps.scale, animationFromProps.scale);
 
+    if (!!prevSprite && onionActiveFromProps) {
+      context.globalAlpha = 0.4;
+      context.drawImage(
+        image,
+        prevSprite.left,
+        prevSprite.top,
+        prevSprite.width,
+        prevSprite.height,
+        dimensions.width / (2 * animationFromProps.scale) -
+          prevSprite.width / 2 -
+          prevSprite.offsetX,
+        dimensions.height / (2 * animationFromProps.scale) -
+          prevSprite.height / 2 -
+          prevSprite.offsetY,
+        prevSprite.width,
+        prevSprite.height,
+      );
+    }
+
+    context.globalAlpha = 1;
     context.drawImage(
       image,
       currentSprite.left,
@@ -109,6 +135,8 @@ export default function useMainContent({
     dimensions.height,
     dimensions.width,
     image,
+    onionActiveFromProps,
+    prevSprite,
     spriteSheet,
   ]);
 

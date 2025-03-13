@@ -18,12 +18,17 @@ export default function useAnimationPage(props: AnimationPageProps) {
     playOnClick,
   } = usePlaying({ animation, onIndexChange });
 
+  const { onionActive, onionDisabled, onionOnClick } = useOnion({ playing });
+
   return {
     ...props,
     animation,
     backwardOnClick,
     forwardOnClick,
     index,
+    onionActive,
+    onionDisabled,
+    onionOnClick,
     playing,
     playingDisabled,
     playOnClick,
@@ -54,6 +59,29 @@ function useIndex() {
   const [index, setIndex] = useState(0);
 
   return { index, onIndexChange: setIndex };
+}
+
+function useOnion({
+  playing: playingFromProps,
+}: Pick<ReturnType<typeof usePlaying>, "playing">) {
+  const [onionActive, setOnionActive] = useState(false);
+
+  const onionDisabled = useMemo<boolean>(
+    () => playingFromProps,
+    [playingFromProps],
+  );
+
+  const onionOnClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+    () => setOnionActive((prev) => !prev),
+    [],
+  );
+
+  useEffect(() => {
+    if (!playingFromProps) return;
+    setOnionActive(false);
+  }, [playingFromProps]);
+
+  return { onionActive, onionDisabled, onionOnClick };
 }
 
 function usePlaying({

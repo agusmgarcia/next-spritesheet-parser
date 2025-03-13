@@ -11,6 +11,9 @@ export default function AnimationPage(props: AnimationPageProps) {
     backwardOnClick,
     forwardOnClick,
     index,
+    onionActive,
+    onionDisabled,
+    onionOnClick,
     playing,
     playingDisabled,
     playOnClick,
@@ -21,7 +24,12 @@ export default function AnimationPage(props: AnimationPageProps) {
   return (
     <>
       {/* MAIN */}
-      <MainContent animation={animation} index={index} playing={playing} />
+      <MainContent
+        animation={animation}
+        index={index}
+        onionActive={onionActive}
+        playing={playing}
+      />
 
       {/* SIDEBAR */}
       <SideBar>
@@ -30,6 +38,9 @@ export default function AnimationPage(props: AnimationPageProps) {
           backwardOnClick={backwardOnClick}
           forwardOnClick={forwardOnClick}
           index={index}
+          onionActive={onionActive}
+          onionDisabled={onionDisabled}
+          onionOnClick={onionOnClick}
           playOnClick={playOnClick}
           playing={playing}
           playingDisabled={playingDisabled}
