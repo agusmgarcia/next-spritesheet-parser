@@ -52,6 +52,9 @@ export function useSpriteSheet() {
     resetSpriteSheet: useSelector(
       (state) => state.spriteSheet.resetSpriteSheet,
     ),
+    setSpriteSheetSettings: useSelector(
+      (state) => state.spriteSheet.setSpriteSheetSettings,
+    ),
     spriteSheet: useSelector((state) => state.spriteSheet.spriteSheet),
   };
 }

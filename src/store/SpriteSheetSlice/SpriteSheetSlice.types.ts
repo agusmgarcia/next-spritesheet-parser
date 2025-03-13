@@ -3,11 +3,20 @@ import {
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-core";
 
+import { type SetValue } from "#src/utils";
+
 type SpriteSheet = {
   backgroundColor: string;
   color: string;
   imageURL: string;
   name: string;
+  settings: {
+    delta: number;
+    maxArea: number;
+    maxVariation: number;
+    minArea: number;
+    minDiversity: number;
+  };
   sprites: {
     bottom: number;
     height: number;
@@ -23,6 +32,10 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
   {
     createSpriteSheet: AsyncFunc<void, [input: File]>;
     resetSpriteSheet: AsyncFunc;
+    setSpriteSheetSettings: AsyncFunc<
+      void,
+      [settings: SetValue<SpriteSheet["settings"]>]
+    >;
     spriteSheet: SpriteSheet | undefined;
   }
 >;
