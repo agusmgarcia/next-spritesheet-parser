@@ -12,6 +12,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
     | "pause"
     | "play"
     | "plus"
+    | "refresh"
     | "reset"
     | "roundedPlay"
     | "spinner"
