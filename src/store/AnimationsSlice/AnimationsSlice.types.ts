@@ -25,6 +25,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
   {
     animations: Animation[];
     createAnimation: AsyncFunc<string, [indices: number[]]>;
+    deleteAnimation: AsyncFunc<void, [id: string]>;
     resetAnimationOffset: AsyncFunc<void, [id: string, index: number]>;
     resetAnimations: AsyncFunc;
     setAnimationColor: AsyncFunc<void, [id: string, color: SetValue<string>]>;

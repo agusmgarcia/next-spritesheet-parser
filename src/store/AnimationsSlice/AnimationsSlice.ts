@@ -20,6 +20,7 @@ export default createGlobalSlice<
   return {
     animations: [],
     createAnimation,
+    deleteAnimation,
     resetAnimationOffset,
     resetAnimations,
     setAnimationColor,
@@ -105,6 +106,15 @@ async function createAnimation(
   }));
 
   return id;
+}
+
+async function deleteAnimation(
+  id: Parameters<AnimationsSlice["animations"]["deleteAnimation"]>[0],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    animations: prev.animations.filter((a) => a.id !== id),
+  }));
 }
 
 async function resetAnimationOffset(

@@ -24,6 +24,7 @@ export function useAnimations() {
   return {
     animations: useSelector((state) => state.animations.animations),
     createAnimation: useSelector((state) => state.animations.createAnimation),
+    deleteAnimation: useSelector((state) => state.animations.deleteAnimation),
     resetAnimationOffset: useSelector(
       (state) => state.animations.resetAnimationOffset,
     ),
