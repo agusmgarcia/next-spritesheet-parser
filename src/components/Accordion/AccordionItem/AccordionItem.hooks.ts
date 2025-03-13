@@ -2,10 +2,13 @@ import { useCallback, useState } from "react";
 
 import type AccordionItemProps from "./AccordionItem.types";
 
-export default function useAccordionItem(props: AccordionItemProps) {
-  const [expanded, setExpanded] = useState(true);
+export default function useAccordionItem({
+  defaultCollapsed,
+  ...rest
+}: AccordionItemProps) {
+  const [expanded, setExpanded] = useState(!defaultCollapsed);
 
   const toggle = useCallback(() => setExpanded((prev) => !prev), []);
 
-  return { ...props, expanded, toggle };
+  return { ...rest, expanded, toggle };
 }
