@@ -21,8 +21,13 @@ export default function useConfigurationsItem({
     animation: animationFromProps,
   });
 
+  const { deleteAnimationOnClick } = useDeleteAnimation({
+    animation: animationFromProps,
+  });
+
   return {
     ...rest,
+    deleteAnimationOnClick,
     heading,
     homeOnClick,
     nameOnChange,
@@ -52,4 +57,21 @@ function useName({
   );
 
   return { onChange, value: animationFromProps.name };
+}
+
+function useDeleteAnimation({
+  animation: animationFromProps,
+}: Pick<ConfigurationsItemProps, "animation">) {
+  const { replace } = useRouter();
+
+  const { deleteAnimation } = useAnimations();
+
+  const deleteAnimationOnClick = useCallback<
+    React.MouseEventHandler<HTMLButtonElement>
+  >(
+    () => deleteAnimation(animationFromProps.id).then(() => replace("/")),
+    [animationFromProps.id, deleteAnimation, replace],
+  );
+
+  return { deleteAnimationOnClick };
 }
