@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.9.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.9.0)
+
+> March 13, 2025
+
+- **HomePage**: add settings section
+- **Accordion**: add defaultCollapsed property
+- **Input**: add placeholder, step and name properties
+- **Icon**: add refresh variant
+- **SpriteSheetSlice**: add setSettings method
+- **loadImage**: make method to receive signal
+- **AnimationPage**: add ability to delete animation
+- **AnimationSlice**: add delete method
+- **Icon**: add trash variant
+
 ## [v0.8.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.8.0)
 
 > March 13, 2025
