@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.8.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.8.0)
+
+> March 13, 2025
+
+- rename properties
+- **AnimationPage**: improve layout and styles
+- **HomePage**: improve layout and styles
+- **useDimensions**: add utility
+- **Accordion**: add component
+- **Input**: adjust styles
+- **Button**: adjust styles
+- **Select**: adjust styles
+- **Icon**: add arrowUp variant
+- **Icon**: add arrowDown variant
+- **AppPage**: readjust the layout
+- **SideBar**: add fragment
+- **Typography**: add component
+- bump dependencies
+- **Carousel**: adjust props definition
+
 ## [v0.7.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.7.0)
 
 > March 10, 2025
