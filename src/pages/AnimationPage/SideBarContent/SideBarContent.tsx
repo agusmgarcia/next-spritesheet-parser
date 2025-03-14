@@ -1,5 +1,6 @@
 import { Accordion } from "#src/components";
 
+import AnimationsItem from "./AnimationsItem";
 import CenterItem from "./CenterItem";
 import ConfigurationsItem from "./ConfigurationsItem";
 import FPSItem from "./FPSItem";
@@ -43,6 +44,7 @@ export default function SideBarContent(props: SideBarContentProps) {
         onionOnClick={onionOnClick}
         playing={playing}
       />
+      <AnimationsItem animation={animation} />
     </Accordion>
   );
 }
