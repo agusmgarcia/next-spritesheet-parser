@@ -24,6 +24,7 @@ type SpriteSheet = {
       height: number;
       left: number;
       right: number;
+      subsprites: SpriteSheet["sprites"];
       top: number;
       width: number;
     }
@@ -34,6 +35,7 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
   "spriteSheet",
   {
     createSpriteSheet: AsyncFunc<void, [input: File]>;
+    mergeSpriteSheetSprites: AsyncFunc<void, [spriteIds: string[]]>;
     setSpriteSheet: AsyncFunc<
       void,
       [spriteSheet: Pick<SpriteSheet, "settings" | "sprites">]

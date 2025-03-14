@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 import { Accordion, Button, Icon, Select } from "#src/components";
 
 import useAnimationsItem from "./AnimationsItem.hooks";
@@ -12,6 +14,9 @@ export default function AnimationsItem(props: AnimationsItemProps) {
     createAnimationDisabled,
     createAnimationOnClick,
     heading,
+    mergeSpritesDisabled,
+    mergeSpritesLoading,
+    mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
   } = useAnimationsItem(props);
@@ -27,6 +32,20 @@ export default function AnimationsItem(props: AnimationsItemProps) {
       >
         Create
         <Icon variant="roundedPlay" />
+      </Button>
+
+      {/* MERGE SPRITES */}
+      <Button
+        className="flex items-center justify-center gap-1"
+        disabled={mergeSpritesDisabled}
+        onClick={mergeSpritesOnClick}
+        variant="secondary"
+      >
+        Merge
+        <Icon
+          className={twMerge(mergeSpritesLoading ? "animate-spin" : undefined)}
+          variant="merge"
+        />
       </Button>
 
       {/* RESET SELECTION */}

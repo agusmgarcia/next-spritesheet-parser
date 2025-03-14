@@ -48,6 +48,9 @@ export function useSpriteSheet() {
     createSpriteSheet: useSelector(
       (state) => state.spriteSheet.createSpriteSheet,
     ),
+    mergeSpriteSheetSprites: useSelector(
+      (state) => state.spriteSheet.mergeSpriteSheetSprites,
+    ),
     setSpriteSheet: useSelector((state) => state.spriteSheet.setSpriteSheet),
     setSpriteSheetSettings: useSelector(
       (state) => state.spriteSheet.setSpriteSheetSettings,

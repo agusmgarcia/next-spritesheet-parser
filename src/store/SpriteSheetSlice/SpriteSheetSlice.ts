@@ -3,7 +3,7 @@ import {
   type CreateGlobalSliceTypes,
   type Tuple,
 } from "@agusmgarcia/react-core";
-import MSER, { type MSEROptions } from "blob-detection-ts";
+import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
 import invert from "invert-color";
 
 import { loadImage } from "#src/utils";
@@ -12,6 +12,7 @@ import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
 export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
   createSpriteSheet,
+  mergeSpriteSheetSprites,
   setSpriteSheet,
   setSpriteSheetSettings,
   spriteSheet: undefined,
@@ -87,6 +88,48 @@ async function createSpriteSheet(
   }
 }
 
+async function mergeSpriteSheetSprites(
+  spriteIds: Parameters<
+    SpriteSheetSlice["spriteSheet"]["mergeSpriteSheetSprites"]
+  >[0],
+  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+): Promise<void> {
+  if (spriteIds.length <= 1) return;
+
+  context.set((prev) => {
+    if (!prev.spriteSheet) return prev;
+
+    const sprites = prev.spriteSheet.sprites;
+
+    const spriteToAdd = toSprite(
+      spriteIds
+        .map((sId) => sprites[sId])
+        .map((s) => new Rect(s.left, s.top, s.width, s.height))
+        .reduce((r1, r2) => {
+          r1.merge(r2);
+          return r1;
+        }),
+      spriteIds.reduce(
+        (result, spriteId) => {
+          result[spriteId] = sprites[spriteId];
+          return result;
+        },
+        {} as NonNullable<
+          SpriteSheetSlice["spriteSheet"]["spriteSheet"]
+        >["sprites"],
+      ),
+    );
+
+    const newSprites = { ...sprites, [spriteToAdd.id]: spriteToAdd };
+    spriteIds.forEach((sId) => delete newSprites[sId]);
+
+    return {
+      ...prev,
+      spriteSheet: { ...prev.spriteSheet, sprites: newSprites },
+    };
+  });
+}
+
 async function setSpriteSheet(
   spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
@@ -150,6 +193,26 @@ function getImageData(image: HTMLImageElement): ImageData {
   return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
+function toSprite(
+  rect: Rect,
+  subsprites?: NonNullable<
+    SpriteSheetSlice["spriteSheet"]["spriteSheet"]
+  >["sprites"],
+): NonNullable<
+  SpriteSheetSlice["spriteSheet"]["spriteSheet"]
+>["sprites"][string] & { id: string } {
+  return {
+    bottom: rect.bottom,
+    height: rect.bottom - rect.top,
+    id: `${rect.top}:${rect.right}:${rect.bottom}:${rect.left}`,
+    left: rect.left,
+    right: rect.right,
+    subsprites: subsprites || {},
+    top: rect.top,
+    width: rect.right - rect.left,
+  };
+}
+
 function getSprites(
   imageData: ImageData,
   backgroundColor: Tuple<number, 3>,
@@ -177,15 +240,7 @@ function getSprites(
 
   return mser
     .mergeRects(mser.extract(imageData).map((r) => r.rect))
-    .map((r) => ({
-      bottom: r.bottom,
-      height: r.bottom - r.top,
-      id: `${r.top}:${r.right}:${r.bottom}:${r.left}`,
-      left: r.left,
-      right: r.right,
-      top: r.top,
-      width: r.right - r.left,
-    }))
+    .map((r) => toSprite(r))
     .reduce(
       (result, current) => {
         result[current.id] = current;
