@@ -41,7 +41,7 @@ export default function useFilesItem(props: FilesItemProps) {
 
 function useImportFile() {
   const { setAnimations } = useAnimations();
-  const { createSpriteSheet, spriteSheet } = useSpriteSheet();
+  const { createSpriteSheet, setSpriteSheet, spriteSheet } = useSpriteSheet();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
 
@@ -87,11 +87,23 @@ function useImportFile() {
           file
             .text()
             .then((text) => JSON.parse(text))
-            .then((json) => setAnimations(json.animations))
+            .then((json) => {
+              setSpriteSheet({
+                settings: json.settings,
+                sprites: json.sprites,
+              });
+              setAnimations(json.animations);
+            })
             .finally(() => setImportFileLoading(false));
       },
     );
-  }, [createSpriteSheet, importFile, setAnimations, spriteSheet]);
+  }, [
+    createSpriteSheet,
+    importFile,
+    setAnimations,
+    setSpriteSheet,
+    spriteSheet,
+  ]);
 
   return { importFileDisabled, importFileLoading, importFileOnClick };
 }

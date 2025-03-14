@@ -12,6 +12,7 @@ import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
 export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
   createSpriteSheet,
+  setSpriteSheet,
   setSpriteSheetSettings,
   spriteSheet: undefined,
 }));
@@ -84,6 +85,18 @@ async function createSpriteSheet(
   } finally {
     URL.revokeObjectURL(rawImageURL);
   }
+}
+
+async function setSpriteSheet(
+  spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
+  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+): Promise<void> {
+  context.set((prev) => ({
+    ...prev,
+    spriteSheet: !!prev.spriteSheet
+      ? { ...prev.spriteSheet, ...spriteSheet }
+      : undefined,
+  }));
 }
 
 async function setSpriteSheetSettings(
