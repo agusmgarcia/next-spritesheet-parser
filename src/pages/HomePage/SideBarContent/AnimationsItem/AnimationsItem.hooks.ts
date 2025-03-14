@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type TypographyProps } from "#src/components";
-import { useAnimations } from "#src/store";
+import { useAnimations, useSpriteSheet } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
@@ -49,6 +49,7 @@ export default function useAnimationsItem({
 function useAnimationSelector() {
   const { push } = useRouter();
 
+  const { spriteSheet } = useSpriteSheet();
   const { animations } = useAnimations();
 
   const [value, setValue] = useState("sheet");
@@ -56,10 +57,10 @@ function useAnimationSelector() {
 
   const options = useMemo<{ id: string; name: string }[]>(
     () => [
-      { id: "sheet", name: "Sprite Sheet" },
+      { id: "sheet", name: spriteSheet?.name || "Sprite sheet" },
       ...animations.map((a) => ({ id: a.id, name: a.name })),
     ],
-    [animations],
+    [animations, spriteSheet?.name],
   );
 
   const onChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>(
