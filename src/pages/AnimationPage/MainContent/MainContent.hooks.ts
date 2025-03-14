@@ -45,10 +45,10 @@ export default function useMainContent({
   );
 
   useEffect(() => {
-    if (!spriteSheet?.imageURL) return;
+    if (!spriteSheet?.sheet.imageURL) return;
     const controller = new AbortController();
 
-    loadImage(spriteSheet.imageURL, controller.signal)
+    loadImage(spriteSheet.sheet.imageURL, controller.signal)
       .then((image) => {
         if (controller.signal.aborted) return;
         setImage(image);
@@ -59,7 +59,7 @@ export default function useMainContent({
       });
 
     return () => controller.abort();
-  }, [spriteSheet?.imageURL]);
+  }, [spriteSheet?.sheet.imageURL]);
 
   useEffect(() => {
     if (!image) return;
@@ -79,7 +79,7 @@ export default function useMainContent({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
-    context.fillStyle = spriteSheet.backgroundColor;
+    context.fillStyle = spriteSheet.sheet.backgroundColor;
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
     context.scale(animationFromProps.scale, animationFromProps.scale);
 

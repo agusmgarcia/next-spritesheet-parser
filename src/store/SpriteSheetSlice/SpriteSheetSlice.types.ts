@@ -6,16 +6,18 @@ import {
 import { type SetValue } from "#src/utils";
 
 type SpriteSheet = {
-  backgroundColor: string;
-  color: string;
-  imageURL: string;
-  name: string;
   settings: {
     delta: number;
     maxArea: number;
     maxVariation: number;
     minArea: number;
     minDiversity: number;
+  };
+  sheet: {
+    backgroundColor: string;
+    color: string;
+    imageURL: string;
+    name: string;
   };
   sprites: {
     bottom: number;

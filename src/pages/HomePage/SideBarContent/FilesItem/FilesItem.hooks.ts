@@ -120,7 +120,7 @@ function useExportFile() {
 
         anchor.setAttribute(
           "download",
-          `${spriteSheet.name.split(".").slice(0, -1).join(".") || spriteSheet.name}.json`,
+          `${spriteSheet.sheet.name.split(".").slice(0, -1).join(".") || spriteSheet.sheet.name}.json`,
         );
 
         anchor.click();

@@ -95,7 +95,7 @@ async function createAnimation(
     animations: [
       ...prev.animations,
       {
-        color: spriteSheet.backgroundColor,
+        color: spriteSheet.sheet.backgroundColor,
         fps: 12,
         id,
         name: "New animation",

@@ -159,10 +159,10 @@ export default function useMainContent({
   );
 
   useEffect(() => {
-    if (!spriteSheet?.imageURL) return;
+    if (!spriteSheet?.sheet.imageURL) return;
     const controller = new AbortController();
 
-    loadImage(spriteSheet.imageURL, controller.signal)
+    loadImage(spriteSheet.sheet.imageURL, controller.signal)
       .then((image) => {
         if (controller.signal.aborted) return;
         setImage(image);
@@ -173,7 +173,7 @@ export default function useMainContent({
       });
 
     return () => controller.abort();
-  }, [spriteSheet?.imageURL]);
+  }, [spriteSheet?.sheet.imageURL]);
 
   useEffect(() => {
     if (!image) return;
@@ -200,13 +200,13 @@ export default function useMainContent({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.fillStyle = spriteSheet.backgroundColor;
+    context.fillStyle = spriteSheet.sheet.backgroundColor;
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
-      context.strokeStyle = spriteSheet.color;
+      context.strokeStyle = spriteSheet.sheet.color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
   }, [
@@ -214,8 +214,8 @@ export default function useMainContent({
     image,
     rootDimensions.height,
     rootDimensions.width,
-    spriteSheet?.backgroundColor,
-    spriteSheet?.color,
+    spriteSheet?.sheet.backgroundColor,
+    spriteSheet?.sheet.color,
     spriteSheet?.sprites,
   ]);
 
@@ -251,7 +251,7 @@ export default function useMainContent({
       if (!sprite) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = spriteSheet.sheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
@@ -263,14 +263,14 @@ export default function useMainContent({
       if (indicesFromProps.includes(index)) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = spriteSheet.sheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
 
     if (!!initialCursor) {
       context.globalAlpha = 0.2;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = spriteSheet.sheet.color;
       context.fillRect(
         Math.min(initialCursor[2], initialCursor[0]),
         Math.min(initialCursor[3], initialCursor[1]),
@@ -286,7 +286,7 @@ export default function useMainContent({
     preSelectedSprites,
     rootDimensions.height,
     rootDimensions.width,
-    spriteSheet?.color,
+    spriteSheet?.sheet.color,
     spriteSheet?.sprites,
   ]);
 

@@ -21,7 +21,10 @@ async function createSpriteSheet(
   input: Parameters<SpriteSheetSlice["spriteSheet"]["createSpriteSheet"]>[0],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
-  URL.revokeObjectURL(context.get().spriteSheet.spriteSheet?.imageURL || "");
+  URL.revokeObjectURL(
+    context.get().spriteSheet.spriteSheet?.sheet.imageURL || "",
+  );
+
   const rawImageURL = URL.createObjectURL(input);
 
   try {
@@ -65,11 +68,13 @@ async function createSpriteSheet(
 
       context.set({
         spriteSheet: {
-          backgroundColor,
-          color,
-          imageURL,
-          name: input.name,
           settings,
+          sheet: {
+            backgroundColor,
+            color,
+            imageURL,
+            name: input.name,
+          },
           sprites,
         },
       });
@@ -85,7 +90,9 @@ async function createSpriteSheet(
 async function resetSpriteSheet(
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
-  URL.revokeObjectURL(context.get().spriteSheet.spriteSheet?.imageURL || "");
+  URL.revokeObjectURL(
+    context.get().spriteSheet.spriteSheet?.sheet.imageURL || "",
+  );
 
   context.set({ spriteSheet: undefined });
 }
@@ -109,7 +116,7 @@ async function setSpriteSheetSettings(
       : prev.spriteSheet,
   }));
 
-  const imageURL = context.get().spriteSheet.spriteSheet?.imageURL;
+  const imageURL = context.get().spriteSheet.spriteSheet?.sheet.imageURL;
   if (!imageURL) return;
   const imageData = getImageData(await loadImage(imageURL, context.signal));
 
