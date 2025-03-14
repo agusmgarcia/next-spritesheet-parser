@@ -17,7 +17,6 @@ export default function useAnimationsItem({
   );
 
   const {
-    animationSelectorDisabled,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
@@ -39,7 +38,6 @@ export default function useAnimationsItem({
 
   return {
     ...rest,
-    animationSelectorDisabled,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
@@ -61,13 +59,6 @@ function useAnimationSelector() {
   const { animations } = useAnimations();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
-  const [animationSelectorLoading, setAnimationSelectorLoading] =
-    useState(false);
-
-  const animationSelectorDisabled = useMemo<boolean>(
-    () => animationSelectorLoading,
-    [animationSelectorLoading],
-  );
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
@@ -87,17 +78,10 @@ function useAnimationSelector() {
     const animation = animations.find((a) => a.id === animationSelectorValue);
     if (!animation) return;
 
-    setAnimationSelectorLoading(true);
-    try {
-      push(`/animations/${animation.id}`);
-    } finally {
-      setAnimationSelectorLoading(false);
-    }
+    push(`/animations/${animation.id}`);
   }, [animationSelectorValue, animations, push]);
 
   return {
-    animationSelectorDisabled,
-    animationSelectorLoading,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
