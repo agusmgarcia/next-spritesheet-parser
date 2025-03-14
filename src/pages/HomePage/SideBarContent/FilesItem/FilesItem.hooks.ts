@@ -128,7 +128,13 @@ function useExportFile() {
 
         anchor.href =
           "data:text/json;charset=utf-8," +
-          encodeURIComponent(JSON.stringify({ ...spriteSheet, animations }));
+          encodeURIComponent(
+            JSON.stringify({
+              ...spriteSheet,
+              animations,
+              version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
+            }),
+          );
 
         anchor.setAttribute(
           "download",
