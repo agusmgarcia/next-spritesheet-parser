@@ -1,8 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { type SetValue } from "#src/utils";
-
 import type CarouselProps from "./Carousel.types";
 
 export default function useCarousel({
@@ -67,7 +65,9 @@ export default function useCarousel({
     [index, pagesCount],
   );
 
-  const setIndex = useCallback<Func<void, [newIndex: SetValue<number>]>>(
+  const setIndex = useCallback<
+    Func<void, [newIndex: React.SetStateAction<number>]>
+  >(
     (newIndex) =>
       !!onIndexChangeFromProps
         ? onIndexChangeFromProps(newIndex)

@@ -3,8 +3,6 @@ import {
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-core";
 
-import { type SetValue } from "#src/utils";
-
 type SpriteSheet = {
   settings: {
     delta: number;
@@ -36,7 +34,7 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
     resetSpriteSheet: AsyncFunc;
     setSpriteSheetSettings: AsyncFunc<
       void,
-      [settings: SetValue<SpriteSheet["settings"]>]
+      [settings: React.SetStateAction<SpriteSheet["settings"]>]
     >;
     spriteSheet: SpriteSheet | undefined;
   }

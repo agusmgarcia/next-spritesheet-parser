@@ -3,8 +3,6 @@ import {
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-core";
 
-import { type SetValue } from "#src/utils";
-
 type Animation = {
   color: string;
   fps: number;
@@ -28,20 +26,32 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     deleteAnimation: AsyncFunc<void, [id: string]>;
     resetAnimationOffset: AsyncFunc<void, [id: string, index: number]>;
     resetAnimations: AsyncFunc;
-    setAnimationColor: AsyncFunc<void, [id: string, color: SetValue<string>]>;
-    setAnimationFPS: AsyncFunc<void, [id: string, fps: SetValue<number>]>;
-    setAnimationName: AsyncFunc<void, [id: string, name: SetValue<string>]>;
+    setAnimationColor: AsyncFunc<
+      void,
+      [id: string, color: React.SetStateAction<string>]
+    >;
+    setAnimationFPS: AsyncFunc<
+      void,
+      [id: string, fps: React.SetStateAction<number>]
+    >;
+    setAnimationName: AsyncFunc<
+      void,
+      [id: string, name: React.SetStateAction<string>]
+    >;
     setAnimationOffset: AsyncFunc<
       void,
       [
         id: string,
         index: number,
-        offsetX: SetValue<number>,
-        offsetY: SetValue<number>,
+        offsetX: React.SetStateAction<number>,
+        offsetY: React.SetStateAction<number>,
       ]
     >;
     setAnimations: AsyncFunc<void, [animations: Animation[]]>;
-    setAnimationScale: AsyncFunc<void, [id: string, name: SetValue<number>]>;
+    setAnimationScale: AsyncFunc<
+      void,
+      [id: string, name: React.SetStateAction<number>]
+    >;
   }
 >;
 
