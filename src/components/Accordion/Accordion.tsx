@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 
-import Typography from "../Typography";
+import { Typography } from "#src/components";
+
 import useAccordion from "./Accordion.hooks";
 import type AccordionProps from "./Accordion.types";
 import AccordionItem from "./AccordionItem";

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
-import { type TypographyProps } from "../Typography";
+import { type TypographyProps } from "#src/components";
+
 import type AccordionProps from "./Accordion.types";
 
 export default function useAccordion({
