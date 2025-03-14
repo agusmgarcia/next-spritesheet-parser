@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.11.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.11.0)
+
+> March 14, 2025
+
+- **AppPage**: style mobile version
+- **HomePage**: include version in the json
+- **HomePage**: remove animationSelectorDisabled property
+- **AnimationPage**: add animation selector
+- **HomePage**: add merge feature
+- **HomePage**: set spriteSheet when importing the json file
+- **AnimationSlice**: update animations on sprites change event
+- **Carousel**: remove component
+- **SpriteSheetSlice**: remove resetSpriteSheet method
+- **Select**: adjust styles
+- **SpriteSheetSlice**: represent slices as records instead of array
+- **SetValue**: stop using it in favor of React.SetStateAction
+- **SpriteSheetSlice**: create sheet object
+- **HomePage**: rename some properties
+
 ## [v0.10.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.10.0)
 
 > March 14, 2025
