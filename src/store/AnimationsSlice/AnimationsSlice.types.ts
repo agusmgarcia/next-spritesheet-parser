@@ -25,7 +25,6 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     createAnimation: AsyncFunc<string, [spriteIds: string[]]>;
     deleteAnimation: AsyncFunc<void, [id: string]>;
     resetAnimationOffset: AsyncFunc<void, [id: string, index: number]>;
-    resetAnimations: AsyncFunc;
     setAnimationColor: AsyncFunc<
       void,
       [id: string, color: React.SetStateAction<string>]

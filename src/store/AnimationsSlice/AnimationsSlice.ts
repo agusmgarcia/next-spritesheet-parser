@@ -13,8 +13,8 @@ export default createGlobalSlice<
   SpriteSheetSliceTypes.default
 >("animations", (subscribe) => {
   subscribe(
-    (_, context) => resetAnimations(context),
-    (state) => state.spriteSheet.spriteSheet,
+    (_, context) => updateAnimations(context),
+    (state) => state.spriteSheet.spriteSheet?.sprites,
   );
 
   return {
@@ -22,7 +22,6 @@ export default createGlobalSlice<
     createAnimation,
     deleteAnimation,
     resetAnimationOffset,
-    resetAnimations,
     setAnimationColor,
     setAnimationFPS,
     setAnimationName,
@@ -146,10 +145,26 @@ async function resetAnimationOffset(
   }));
 }
 
-async function resetAnimations(
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+async function updateAnimations(
+  context: CreateGlobalSliceTypes.Context<
+    AnimationsSlice,
+    SpriteSheetSliceTypes.default
+  >,
 ): Promise<void> {
-  context.set({ animations: [] });
+  context.set((prev) => {
+    const sprites = context.get().spriteSheet.spriteSheet?.sprites;
+    if (!sprites) return { animations: [] };
+
+    return {
+      ...prev,
+      animations: prev.animations
+        .map((a) => ({
+          ...a,
+          sprites: a.sprites.filter((s) => !!sprites[s.id]),
+        }))
+        .filter((a) => !!a.sprites.length),
+    };
+  });
 }
 
 async function setAnimationFPS(

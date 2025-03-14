@@ -28,7 +28,6 @@ export function useAnimations() {
     resetAnimationOffset: useSelector(
       (state) => state.animations.resetAnimationOffset,
     ),
-    resetAnimations: useSelector((state) => state.animations.resetAnimations),
     setAnimationColor: useSelector(
       (state) => state.animations.setAnimationColor,
     ),
@@ -49,6 +48,7 @@ export function useSpriteSheet() {
     createSpriteSheet: useSelector(
       (state) => state.spriteSheet.createSpriteSheet,
     ),
+    setSpriteSheet: useSelector((state) => state.spriteSheet.setSpriteSheet),
     setSpriteSheetSettings: useSelector(
       (state) => state.spriteSheet.setSpriteSheetSettings,
     ),
