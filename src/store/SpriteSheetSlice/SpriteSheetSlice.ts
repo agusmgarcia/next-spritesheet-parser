@@ -22,47 +22,63 @@ async function createSpriteSheet(
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
 ): Promise<void> {
   URL.revokeObjectURL(context.get().spriteSheet.spriteSheet?.imageURL || "");
-  const imageURL = URL.createObjectURL(input);
+  const rawImageURL = URL.createObjectURL(input);
 
   try {
-    const imageData = getImageData(await loadImage(imageURL, context.signal));
-
-    const backgroundColor = `#${imageData.data[0].toString(16)}${imageData.data[1].toString(16)}${imageData.data[2].toString(16)}`;
-    const color = invert([
-      imageData.data[0],
-      imageData.data[1],
-      imageData.data[2],
-    ]);
-
-    const settings: NonNullable<
-      SpriteSheetSlice["spriteSheet"]["spriteSheet"]
-    >["settings"] = {
-      delta: 0,
-      maxArea: 0.5,
-      maxVariation: 0.5,
-      minArea: 0,
-      minDiversity: 0.33,
-    };
-
-    const sprites = getSprites(
-      imageData,
-      [imageData.data[0], imageData.data[1], imageData.data[2]],
-      settings,
+    const rawImageData = getImageData(
+      await loadImage(rawImageURL, context.signal),
     );
 
-    context.set({
-      spriteSheet: {
-        backgroundColor,
-        color,
-        imageURL,
-        name: input.name,
+    const backgroundColor = `#${rawImageData.data[0].toString(16)}${rawImageData.data[1].toString(16)}${rawImageData.data[2].toString(16)}`;
+    const color = invert([
+      rawImageData.data[0],
+      rawImageData.data[1],
+      rawImageData.data[2],
+    ]);
+
+    const newFileImage = await createImageWithoutBackground(
+      rawImageData,
+      [rawImageData.data[0], rawImageData.data[1], rawImageData.data[2]],
+      input.name,
+      input.type,
+      context.signal,
+    );
+
+    const imageURL = URL.createObjectURL(newFileImage);
+
+    try {
+      const settings: NonNullable<
+        SpriteSheetSlice["spriteSheet"]["spriteSheet"]
+      >["settings"] = {
+        delta: 0,
+        maxArea: 0.5,
+        maxVariation: 0.5,
+        minArea: 0,
+        minDiversity: 0.33,
+      };
+
+      const sprites = getSprites(
+        rawImageData,
+        [rawImageData.data[0], rawImageData.data[1], rawImageData.data[2]],
         settings,
-        sprites,
-      },
-    });
-  } catch (error) {
-    URL.revokeObjectURL(imageURL);
-    throw error;
+      );
+
+      context.set({
+        spriteSheet: {
+          backgroundColor,
+          color,
+          imageURL,
+          name: input.name,
+          settings,
+          sprites,
+        },
+      });
+    } catch (error) {
+      URL.revokeObjectURL(imageURL);
+      throw error;
+    }
+  } finally {
+    URL.revokeObjectURL(rawImageURL);
   }
 }
 
@@ -160,4 +176,48 @@ function getSprites(
       top: r.top,
       width: r.right - r.left,
     }));
+}
+
+async function createImageWithoutBackground(
+  imageData: ImageData,
+  backgroundColor: Tuple<number, 3>,
+  name: string,
+  type: string,
+  signal: AbortSignal,
+): Promise<File> {
+  imageData = new ImageData(
+    new Uint8ClampedArray(imageData.data),
+    imageData.width,
+    imageData.height,
+  );
+
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    if (
+      imageData.data[i] === backgroundColor[0] &&
+      imageData.data[i + 1] === backgroundColor[1] &&
+      imageData.data[i + 2] === backgroundColor[2]
+    ) {
+      imageData.data[i] = 0;
+      imageData.data[i + 1] = 0;
+      imageData.data[i + 2] = 0;
+      imageData.data[i + 3] = 0;
+    }
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Context is not available");
+
+  context.putImageData(imageData, 0, 0);
+
+  const blob = await new Promise<Blob | undefined>((resolve) =>
+    canvas.toBlob((blob) => resolve(blob || undefined), type),
+  );
+  signal.throwIfAborted();
+  if (!blob) throw "";
+
+  return new File([blob], name, { type });
 }
