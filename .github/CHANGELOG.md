@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.10.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.10.0)
+
+> March 14, 2025
+
+- **HomePage**: adjust select to show image name
+- **Icon**: add merge variant
+- **AnimationPage**: add onion feature
+- **Icon**: add stack variant
+- **SpriteSheetSlice**: remove background
+- **Accordion**: change imports
+- **HomePage**: set custom style for safari
+- **Select**: add arrow
+
 ## [v0.9.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.9.0)
 
 > March 13, 2025
