@@ -6,20 +6,24 @@ import MainContent from "./MainContent";
 import SideBarContent from "./SideBarContent";
 
 export default function HomePage(props: HomePageProps) {
-  const { indices, select, toggleSelection, unselectAll } = useHomePage(props);
+  const { indices, indicesOnSelect, indicesOnToggle, indicesOnUnselectAll } =
+    useHomePage(props);
 
   return (
     <>
       {/* MAIN */}
       <MainContent
         indices={indices}
-        select={select}
-        toggleSelection={toggleSelection}
+        indicesOnSelect={indicesOnSelect}
+        indicesOnToggle={indicesOnToggle}
       />
 
       {/* SIDEBAR */}
       <SideBar>
-        <SideBarContent indices={indices} unselectAll={unselectAll} />
+        <SideBarContent
+          indices={indices}
+          indicesOnUnselectAll={indicesOnUnselectAll}
+        />
       </SideBar>
     </>
   );

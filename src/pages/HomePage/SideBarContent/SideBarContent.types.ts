@@ -2,7 +2,7 @@ import { type Func } from "@agusmgarcia/react-core";
 
 type SideBarContentProps = {
   indices: number[];
-  unselectAll: Func;
+  indicesOnUnselectAll: Func;
 };
 
 export default SideBarContentProps;

@@ -21,17 +21,11 @@ export default function useFilesItem(props: FilesItemProps) {
     [],
   );
 
-  const {
-    disabled: importFileDisabled,
-    loading: importFileLoading,
-    onClick: importFileOnClick,
-  } = useImportFile();
+  const { importFileDisabled, importFileLoading, importFileOnClick } =
+    useImportFile();
 
-  const {
-    disabled: exportFileDisabled,
-    loading: exportFileLoading,
-    onClick: exportFileOnClick,
-  } = useExportFile();
+  const { exportFileDisabled, exportFileLoading, exportFileOnClick } =
+    useExportFile();
 
   return {
     ...props,
@@ -49,7 +43,12 @@ function useImportFile() {
   const { setAnimations } = useAnimations();
   const { createSpriteSheet, spriteSheet } = useSpriteSheet();
 
-  const [loading, setLoading] = useState(false);
+  const [importFileLoading, setImportFileLoading] = useState(false);
+
+  const importFileDisabled = useMemo<boolean>(
+    () => importFileLoading,
+    [importFileLoading],
+  );
 
   const importFile = useCallback<AsyncFunc<File | undefined, [accept: string]>>(
     (accept) =>
@@ -73,7 +72,7 @@ function useImportFile() {
     [],
   );
 
-  const onClick = useCallback<
+  const importFileOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
     // TODO: handle errors.
@@ -81,27 +80,32 @@ function useImportFile() {
       (file) => {
         if (!file) return;
 
-        setLoading(true);
+        setImportFileLoading(true);
         if (file.type.startsWith("image/"))
-          createSpriteSheet(file).finally(() => setLoading(false));
+          createSpriteSheet(file).finally(() => setImportFileLoading(false));
         else
           file
             .text()
             .then((text) => JSON.parse(text))
             .then((json) => setAnimations(json.animations))
-            .finally(() => setLoading(false));
+            .finally(() => setImportFileLoading(false));
       },
     );
   }, [createSpriteSheet, importFile, setAnimations, spriteSheet]);
 
-  return { disabled: loading, loading, onClick };
+  return { importFileDisabled, importFileLoading, importFileOnClick };
 }
 
 function useExportFile() {
   const { animations } = useAnimations();
   const { spriteSheet } = useSpriteSheet();
 
-  const [loading, setLoading] = useState(false);
+  const [exportFileLoading, setExportFileLoading] = useState(false);
+
+  const exportFileDisabled = useMemo<boolean>(
+    () => exportFileLoading || !spriteSheet,
+    [exportFileLoading, spriteSheet],
+  );
 
   const exportFile = useCallback<
     AsyncFunc<void, [spriteSheet: SpriteSheet, animations: Animations]>
@@ -126,19 +130,17 @@ function useExportFile() {
     [],
   );
 
-  const onClick = useCallback<
+  const exportFileOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
     if (!spriteSheet) return;
 
     // TODO: handle errors.
-    setLoading(true);
-    exportFile(spriteSheet, animations).finally(() => setLoading(false));
+    setExportFileLoading(true);
+    exportFile(spriteSheet, animations).finally(() =>
+      setExportFileLoading(false),
+    );
   }, [animations, exportFile, spriteSheet]);
 
-  return {
-    disabled: loading || !spriteSheet,
-    loading,
-    onClick,
-  };
+  return { exportFileDisabled, exportFileLoading, exportFileOnClick };
 }

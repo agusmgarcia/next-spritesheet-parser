@@ -8,8 +8,8 @@ import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
   indices: indicesFromProps,
-  select: selectFromProps,
-  toggleSelection: toggleSelectionFromProps,
+  indicesOnSelect: indicesOnSelectFromProps,
+  indicesOnToggle: indicesOnToggleFromProps,
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
@@ -76,7 +76,7 @@ export default function useMainContent({
       setInitialCursor(undefined);
 
       if (!!preSelectedSprites) {
-        preSelectedSprites.forEach(selectFromProps);
+        preSelectedSprites.forEach(indicesOnSelectFromProps);
         setPreSelectedSprites(undefined);
         return;
       }
@@ -88,14 +88,14 @@ export default function useMainContent({
       const spriteIndex = getSpriteIndex(x, y);
       if (!spriteIndex) return;
 
-      toggleSelectionFromProps(spriteIndex);
+      indicesOnToggleFromProps(spriteIndex);
     },
     [
       devicePixelRatio,
       getSpriteIndex,
       preSelectedSprites,
-      selectFromProps,
-      toggleSelectionFromProps,
+      indicesOnSelectFromProps,
+      indicesOnToggleFromProps,
     ],
   );
 

@@ -2,7 +2,7 @@ import { type Func } from "@agusmgarcia/react-core";
 
 type AnimationsItemProps = {
   indices: number[];
-  unselectAll: Func;
+  indicesOnUnselectAll: Func;
 };
 
 export default AnimationsItemProps;

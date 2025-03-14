@@ -8,7 +8,7 @@ import type AnimationsItemProps from "./AnimationsItem.types";
 
 export default function useAnimationsItem({
   indices: indicesFromProps,
-  unselectAll: unselectAllFromProps,
+  indicesOnUnselectAll: indicesOnUnselectAllFromProps,
   ...rest
 }: AnimationsItemProps) {
   const heading = useMemo<TypographyProps>(
@@ -17,19 +17,18 @@ export default function useAnimationsItem({
   );
 
   const {
-    disabled: animationSelectorDisabled,
-    onChange: animationSelectorOnChange,
-    options: animationSelectorOptions,
-    value: animationSelectorValue,
+    animationSelectorDisabled,
+    animationSelectorOnChange,
+    animationSelectorOptions,
+    animationSelectorValue,
   } = useAnimationSelector();
 
-  const { disabled: resetSelectionDisabled, onClick: resetSelectionOnClick } =
-    useResetSelection({
-      indices: indicesFromProps,
-      unselectAll: unselectAllFromProps,
-    });
+  const { resetSelectionDisabled, resetSelectionOnClick } = useResetSelection({
+    indices: indicesFromProps,
+    indicesOnUnselectAll: indicesOnUnselectAllFromProps,
+  });
 
-  const { disabled: createAnimationDisabled, onClick: createAnimationOnClick } =
+  const { createAnimationDisabled, createAnimationOnClick } =
     useCreateAnimation({ indices: indicesFromProps });
 
   return {
@@ -52,10 +51,16 @@ function useAnimationSelector() {
   const { spriteSheet } = useSpriteSheet();
   const { animations } = useAnimations();
 
-  const [value, setValue] = useState("sheet");
-  const [loading, setLoading] = useState(false);
+  const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
+  const [animationSelectorLoading, setAnimationSelectorLoading] =
+    useState(false);
 
-  const options = useMemo<{ id: string; name: string }[]>(
+  const animationSelectorDisabled = useMemo<boolean>(
+    () => animationSelectorLoading,
+    [animationSelectorLoading],
+  );
+
+  const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
       { id: "sheet", name: spriteSheet?.name || "Sprite sheet" },
       ...animations.map((a) => ({ id: a.id, name: a.name })),
@@ -63,38 +68,47 @@ function useAnimationSelector() {
     [animations, spriteSheet?.name],
   );
 
-  const onChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>(
-    (event) => setValue(event.target.value),
-    [],
-  );
+  const animationSelectorOnChange = useCallback<
+    React.ChangeEventHandler<HTMLSelectElement>
+  >((event) => setAnimationSelectorValue(event.target.value), []);
 
   useEffect(() => {
-    if (value === "sheet") return;
+    if (animationSelectorValue === "sheet") return;
 
-    const animation = animations.find((a) => a.id === value);
+    const animation = animations.find((a) => a.id === animationSelectorValue);
     if (!animation) return;
 
-    setLoading(true);
+    setAnimationSelectorLoading(true);
     try {
       push(`/animations/${animation.id}`);
     } finally {
-      setLoading(false);
+      setAnimationSelectorLoading(false);
     }
-  }, [value, animations, push]);
+  }, [animationSelectorValue, animations, push]);
 
-  return { disabled: loading, onChange, options, value };
+  return {
+    animationSelectorDisabled,
+    animationSelectorLoading,
+    animationSelectorOnChange,
+    animationSelectorOptions,
+    animationSelectorValue,
+  };
 }
 
 function useResetSelection({
   indices: indicesFromProps,
-  unselectAll: unselectAllFromProps,
-}: Pick<AnimationsItemProps, "indices" | "unselectAll">) {
-  const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => unselectAllFromProps(),
-    [unselectAllFromProps],
+  indicesOnUnselectAll: indicesOnUnselectAllFromProps,
+}: Pick<AnimationsItemProps, "indices" | "indicesOnUnselectAll">) {
+  const resetSelectionDisabled = useMemo<boolean>(
+    () => !indicesFromProps.length,
+    [indicesFromProps.length],
   );
 
-  return { disabled: !indicesFromProps.length, onClick };
+  const resetSelectionOnClick = useCallback<
+    React.MouseEventHandler<HTMLButtonElement>
+  >(() => indicesOnUnselectAllFromProps(), [indicesOnUnselectAllFromProps]);
+
+  return { resetSelectionDisabled, resetSelectionOnClick };
 }
 
 function useCreateAnimation({
@@ -104,17 +118,22 @@ function useCreateAnimation({
 
   const { createAnimation } = useAnimations();
 
-  const [loading, setLoading] = useState(false);
+  const [createAnimationLoading, setCreateAnimationLoading] = useState(false);
 
-  const onClick = useCallback<
+  const createAnimationDisabled = useMemo<boolean>(
+    () => !indicesFromProps.length || createAnimationLoading,
+    [createAnimationLoading, indicesFromProps.length],
+  );
+
+  const createAnimationOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
   >(() => {
     if (!indicesFromProps.length) return;
-    setLoading(true);
+    setCreateAnimationLoading(true);
     createAnimation(indicesFromProps)
       .then((id) => push(`/animations/${id}`))
-      .finally(() => setLoading(false));
+      .finally(() => setCreateAnimationLoading(false));
   }, [createAnimation, indicesFromProps, push]);
 
-  return { disabled: !indicesFromProps.length || loading, onClick };
+  return { createAnimationDisabled, createAnimationOnClick };
 }
