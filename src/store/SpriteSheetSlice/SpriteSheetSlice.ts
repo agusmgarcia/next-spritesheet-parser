@@ -178,11 +178,21 @@ function getSprites(
     .map((r) => ({
       bottom: r.bottom,
       height: r.bottom - r.top,
+      id: `${r.top}:${r.right}:${r.bottom}:${r.left}`,
       left: r.left,
       right: r.right,
       top: r.top,
       width: r.right - r.left,
-    }));
+    }))
+    .reduce(
+      (result, current) => {
+        result[current.id] = current;
+        return result;
+      },
+      {} as NonNullable<
+        SpriteSheetSlice["spriteSheet"]["spriteSheet"]
+      >["sprites"],
+    );
 }
 
 async function createImageWithoutBackground(

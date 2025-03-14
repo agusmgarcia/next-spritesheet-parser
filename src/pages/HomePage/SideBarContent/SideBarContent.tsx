@@ -7,15 +7,16 @@ import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 
 export default function SideBarContent(props: SideBarContentProps) {
-  const { heading, indices, indicesOnUnselectAll } = useSideBarContent(props);
+  const { heading, spriteIds, spriteIdsOnUnselectAll } =
+    useSideBarContent(props);
 
   return (
     <Accordion heading={heading}>
       <FilesItem />
       <SettingsItem />
       <AnimationsItem
-        indices={indices}
-        indicesOnUnselectAll={indicesOnUnselectAll}
+        spriteIds={spriteIds}
+        spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
       />
     </Accordion>
   );

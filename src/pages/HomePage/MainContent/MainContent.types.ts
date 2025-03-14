@@ -1,9 +1,9 @@
 import { type Func } from "@agusmgarcia/react-core";
 
 type MainContentProps = {
-  indices: number[];
-  indicesOnSelect: Func<void, [index: number]>;
-  indicesOnToggle: Func<void, [index: number]>;
+  spriteIds: string[];
+  spriteIdsOnSelect: Func<void, [spriteId: string]>;
+  spriteIdsOnToggle: Func<void, [spriteId: string]>;
 };
 
 export default MainContentProps;

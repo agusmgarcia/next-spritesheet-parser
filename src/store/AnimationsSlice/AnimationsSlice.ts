@@ -33,24 +33,25 @@ export default createGlobalSlice<
 });
 
 async function createAnimation(
-  indices: Parameters<AnimationsSlice["animations"]["createAnimation"]>[0],
+  spriteIds: Parameters<AnimationsSlice["animations"]["createAnimation"]>[0],
   context: CreateGlobalSliceTypes.Context<
     AnimationsSlice,
     SpriteSheetSliceTypes.default
   >,
 ): Promise<string> {
-  if (indices.length <= 0) throw new Error("Indices must be greater than 0");
+  if (spriteIds.length <= 0)
+    throw new Error("Sprite ids must be greater than 0");
 
   const spriteSheet = context.get().spriteSheet.spriteSheet;
   if (!spriteSheet) throw new Error("Sprite sheet is not defined");
 
-  function sortSprites(): Func<number, [index1: number, index2: number]> {
+  function sortSprites(): Func<number, [spriteId1: string, spriteId2: string]> {
     if (!spriteSheet) throw new Error("Sprite sheet is not defined");
     const sprites = spriteSheet.sprites;
 
-    return (index1, index2) => {
-      const sprite1 = sprites[index1];
-      const sprite2 = sprites[index2];
+    return (spriteId1, spriteId2) => {
+      const sprite1 = sprites[spriteId1];
+      const sprite2 = sprites[spriteId2];
 
       return sprite1.top <= sprite2.top + sprite2.height &&
         sprite1.top + sprite1.height >= sprite2.top
@@ -61,18 +62,21 @@ async function createAnimation(
 
   function mapSprites(): Func<
     AnimationsSlice["animations"]["animations"][number]["sprites"][number],
-    [index: number]
+    [spriteId: string]
   > {
     if (!spriteSheet) throw new Error("Sprite sheet is not defined");
     const sprites = spriteSheet.sprites;
 
-    const spritesSelected = indices.map((i) => ({ index: i, ...sprites[i] }));
+    const spritesSelected = spriteIds.map((spriteId) => ({
+      id: spriteId,
+      ...sprites[spriteId],
+    }));
     const maxHeight = Math.max(...spritesSelected.map((s) => s.height));
 
     const result = spritesSelected.reduce(
       (result, s) => {
-        result[s.index] = {
-          index: s.index,
+        result[s.id] = {
+          id: s.id,
           initialOffsetX: 0,
           initialOffsetY: -(maxHeight - s.height) / 2,
           offsetX: 0,
@@ -81,12 +85,12 @@ async function createAnimation(
         return result;
       },
       {} as Record<
-        number,
+        string,
         AnimationsSlice["animations"]["animations"][number]["sprites"][number]
       >,
     );
 
-    return (index) => result[index];
+    return (spriteId) => result[spriteId];
   }
 
   const id = createUUID();
@@ -100,7 +104,7 @@ async function createAnimation(
         id,
         name: "New animation",
         scale: 0,
-        sprites: indices.sort(sortSprites()).map(mapSprites()),
+        sprites: spriteIds.sort(sortSprites()).map(mapSprites()),
       },
     ],
   }));

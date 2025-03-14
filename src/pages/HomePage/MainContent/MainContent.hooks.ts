@@ -1,5 +1,5 @@
 import { type Func, type Tuple } from "@agusmgarcia/react-core";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
 import { loadImage, useDevicePixelRatio, useDimensions } from "#src/utils";
@@ -7,9 +7,9 @@ import { loadImage, useDevicePixelRatio, useDimensions } from "#src/utils";
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
-  indices: indicesFromProps,
-  indicesOnSelect: indicesOnSelectFromProps,
-  indicesOnToggle: indicesOnToggleFromProps,
+  spriteIds: spriteIdsFromProps,
+  spriteIdsOnSelect: spriteIdsOnSelectFromProps,
+  spriteIdsOnToggle: spriteIdsOnToggleFromProps,
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
@@ -20,55 +20,65 @@ export default function useMainContent({
 
   const [image, setImage] = useState<HTMLImageElement>();
   const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
-  const [preSelectedSprites, setPreSelectedSprites] = useState<number[]>();
+  const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
 
   const rootDimensions = useDimensions(rootRef);
   const devicePixelRatio = useDevicePixelRatio();
 
-  const getSpriteIndex = useCallback<
-    Func<number | undefined, [x: number, y: number]>
-  >(
-    (x, y) => {
-      const sprites = spriteSheet?.sprites;
-      if (!sprites) return undefined;
+  const sprites = useMemo(
+    () =>
+      !!spriteSheet?.sprites
+        ? Object.entries(spriteSheet.sprites).map(([id, sprite]) => ({
+            id,
+            ...sprite,
+          }))
+        : undefined,
+    [spriteSheet?.sprites],
+  );
 
-      const index = sprites.findIndex(
+  const findSprite = useCallback<
+    Func<
+      NonNullable<typeof sprites>[number] | undefined,
+      [x: number, y: number]
+    >
+  >(
+    (x, y) =>
+      sprites?.find(
         (sprite) =>
           sprite.left < x &&
           sprite.right > x &&
           sprite.top < y &&
           sprite.bottom > y,
-      );
-
-      return index !== -1 ? index : undefined;
-    },
-    [spriteSheet?.sprites],
+      ),
+    [sprites],
   );
 
-  const getSpritesIndex = useCallback<
-    Func<number[], [x: number, y: number, width: number, height: number]>
+  const findSprites = useCallback<
+    Func<
+      NonNullable<typeof sprites>,
+      [x: number, y: number, width: number, height: number]
+    >
   >(
     (x, y, width, height) => {
-      const sprites = spriteSheet?.sprites;
-      if (!sprites) return [];
-
       const left = x;
       const right = x + width;
       const top = y;
       const bottom = y + height;
 
-      return sprites
-        .map((sprite, index) =>
-          sprite.left < right &&
-          sprite.right > left &&
-          sprite.top < bottom &&
-          sprite.bottom > top
-            ? index
-            : -1,
-        )
-        .filter((index) => index !== -1);
+      return (
+        sprites
+          ?.map((sprite) =>
+            sprite.left < right &&
+            sprite.right > left &&
+            sprite.top < bottom &&
+            sprite.bottom > top
+              ? sprite
+              : undefined,
+          )
+          .filter((sprite) => !!sprite) || []
+      );
     },
-    [spriteSheet?.sprites],
+    [sprites],
   );
 
   const onClick = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -76,7 +86,7 @@ export default function useMainContent({
       setInitialCursor(undefined);
 
       if (!!preSelectedSprites) {
-        preSelectedSprites.forEach(indicesOnSelectFromProps);
+        preSelectedSprites.forEach(spriteIdsOnSelectFromProps);
         setPreSelectedSprites(undefined);
         return;
       }
@@ -85,17 +95,17 @@ export default function useMainContent({
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
-      const spriteIndex = getSpriteIndex(x, y);
-      if (!spriteIndex) return;
+      const sprite = findSprite(x, y);
+      if (!sprite) return;
 
-      indicesOnToggleFromProps(spriteIndex);
+      spriteIdsOnToggleFromProps(sprite.id);
     },
     [
       devicePixelRatio,
-      getSpriteIndex,
+      findSprite,
       preSelectedSprites,
-      indicesOnSelectFromProps,
-      indicesOnToggleFromProps,
+      spriteIdsOnSelectFromProps,
+      spriteIdsOnToggleFromProps,
     ],
   );
 
@@ -137,25 +147,25 @@ export default function useMainContent({
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
       if (initialCursor === undefined) {
-        const spriteIndex = getSpriteIndex(x, y);
-        button.style.cursor = !!spriteIndex ? "pointer" : "default";
+        const sprite = findSprite(x, y);
+        button.style.cursor = !!sprite ? "pointer" : "default";
         return;
       }
 
       setPreSelectedSprites(
-        getSpritesIndex(
+        findSprites(
           Math.min(x, initialCursor[0]),
           Math.min(y, initialCursor[1]),
           Math.abs(x - initialCursor[0]),
           Math.abs(y - initialCursor[1]),
-        ),
+        ).map((s) => s.id),
       );
 
       setInitialCursor((prev) =>
         !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
       );
     },
-    [devicePixelRatio, getSpriteIndex, getSpritesIndex, initialCursor],
+    [devicePixelRatio, findSprite, findSprites, initialCursor],
   );
 
   useEffect(() => {
@@ -177,9 +187,8 @@ export default function useMainContent({
 
   useEffect(() => {
     if (!image) return;
-
-    const sprites = spriteSheet?.sprites;
     if (!sprites) return;
+    if (!spriteSheet) return;
 
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
@@ -214,16 +223,14 @@ export default function useMainContent({
     image,
     rootDimensions.height,
     rootDimensions.width,
-    spriteSheet?.sheet.backgroundColor,
-    spriteSheet?.sheet.color,
-    spriteSheet?.sprites,
+    spriteSheet,
+    sprites,
   ]);
 
   useEffect(() => {
     if (!image) return;
-
-    const sprites = spriteSheet?.sprites;
     if (!sprites) return;
+    if (!spriteSheet) return;
 
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
@@ -246,8 +253,8 @@ export default function useMainContent({
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
 
-    indicesFromProps.forEach((index) => {
-      const sprite = sprites.at(index);
+    spriteIdsFromProps.forEach((spriteId) => {
+      const sprite = spriteSheet.sprites[spriteId];
       if (!sprite) return;
 
       context.globalAlpha = 0.4;
@@ -256,11 +263,11 @@ export default function useMainContent({
       context.globalAlpha = 1;
     });
 
-    preSelectedSprites?.forEach((index) => {
-      const sprite = sprites.at(index);
+    preSelectedSprites?.forEach((spriteId) => {
+      const sprite = spriteSheet.sprites[spriteId];
       if (!sprite) return;
 
-      if (indicesFromProps.includes(index)) return;
+      if (spriteIdsFromProps.includes(spriteId)) return;
 
       context.globalAlpha = 0.4;
       context.fillStyle = spriteSheet.sheet.color;
@@ -281,13 +288,13 @@ export default function useMainContent({
   }, [
     devicePixelRatio,
     image,
-    indicesFromProps,
+    spriteIdsFromProps,
     initialCursor,
     preSelectedSprites,
     rootDimensions.height,
     rootDimensions.width,
-    spriteSheet?.sheet.color,
-    spriteSheet?.sprites,
+    spriteSheet,
+    sprites,
   ]);
 
   return {

@@ -6,49 +6,60 @@ import { useSpriteSheet } from "#src/store";
 import type HomePageProps from "./HomePage.types";
 
 export default function useHomePage(props: HomePageProps) {
-  const { indices, indicesOnSelect, indicesOnToggle, indicesOnUnselectAll } =
-    useIndices();
+  const {
+    spriteIds,
+    spriteIdsOnSelect,
+    spriteIdsOnToggle,
+    spriteIdsOnUnselectAll,
+  } = useSpriteIds();
 
   return {
     ...props,
-    indices,
-    indicesOnSelect,
-    indicesOnToggle,
-    indicesOnUnselectAll,
+    spriteIds,
+    spriteIdsOnSelect,
+    spriteIdsOnToggle,
+    spriteIdsOnUnselectAll,
   };
 }
 
-const initialIndices: number[] = [];
+const initialSpriteIds: string[] = [];
 
-function useIndices() {
+function useSpriteIds() {
   const { spriteSheet } = useSpriteSheet();
 
-  const [indices, setIndices] = useState(initialIndices);
+  const [spriteIds, setSpriteIds] = useState(initialSpriteIds);
 
-  const indicesOnToggle = useCallback<Func<void, [index: number]>>(
-    (index) =>
-      setIndices((prev) =>
-        prev.includes(index)
-          ? prev.filter((i) => i !== index)
-          : [...prev, index],
+  const spriteIdsOnToggle = useCallback<Func<void, [spriteId: string]>>(
+    (spriteId) =>
+      setSpriteIds((prev) =>
+        prev.includes(spriteId)
+          ? prev.filter((sId) => sId !== spriteId)
+          : [...prev, spriteId],
       ),
     [],
   );
 
-  const indicesOnSelect = useCallback<Func<void, [index: number]>>(
-    (index) =>
-      setIndices((prev) => (prev.includes(index) ? prev : [...prev, index])),
+  const spriteIdsOnSelect = useCallback<Func<void, [spriteId: string]>>(
+    (spriteId) =>
+      setSpriteIds((prev) =>
+        prev.includes(spriteId) ? prev : [...prev, spriteId],
+      ),
     [],
   );
 
-  const indicesOnUnselectAll = useCallback<Func>(
-    () => setIndices(initialIndices),
+  const spriteIdsOnUnselectAll = useCallback<Func>(
+    () => setSpriteIds(initialSpriteIds),
     [],
   );
 
   useEffect(() => {
-    setIndices(initialIndices);
+    setSpriteIds(initialSpriteIds);
   }, [spriteSheet]);
 
-  return { indices, indicesOnSelect, indicesOnToggle, indicesOnUnselectAll };
+  return {
+    spriteIds,
+    spriteIdsOnSelect,
+    spriteIdsOnToggle,
+    spriteIdsOnUnselectAll,
+  };
 }

@@ -17,14 +17,17 @@ type SpriteSheet = {
     imageURL: string;
     name: string;
   };
-  sprites: {
-    bottom: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    width: number;
-  }[];
+  sprites: Record<
+    string,
+    {
+      bottom: number;
+      height: number;
+      left: number;
+      right: number;
+      top: number;
+      width: number;
+    }
+  >;
 };
 
 type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
