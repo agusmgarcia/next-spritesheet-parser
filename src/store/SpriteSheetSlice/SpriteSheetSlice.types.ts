@@ -34,7 +34,6 @@ type SpriteSheetSlice = CreateGlobalSliceTypes.SliceOf<
   "spriteSheet",
   {
     createSpriteSheet: AsyncFunc<void, [input: File]>;
-    resetSpriteSheet: AsyncFunc;
     setSpriteSheetSettings: AsyncFunc<
       void,
       [settings: React.SetStateAction<SpriteSheet["settings"]>]
