@@ -66,6 +66,22 @@ export default function useMainContent({
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
     context.scale(animationFromProps.scale, animationFromProps.scale);
 
+    context.drawImage(
+      image,
+      currentSprite.left,
+      currentSprite.top,
+      currentSprite.width,
+      currentSprite.height,
+      dimensions.width / (2 * animationFromProps.scale) -
+        currentSprite.width / 2 -
+        currentSprite.offsetX,
+      dimensions.height / (2 * animationFromProps.scale) -
+        currentSprite.height / 2 -
+        currentSprite.offsetY,
+      currentSprite.width,
+      currentSprite.height,
+    );
+
     if (!!prevSprite && onionActiveFromProps) {
       context.globalAlpha = 0.4;
       context.drawImage(
@@ -83,24 +99,8 @@ export default function useMainContent({
         prevSprite.width,
         prevSprite.height,
       );
+      context.globalAlpha = 1;
     }
-
-    context.globalAlpha = 1;
-    context.drawImage(
-      image,
-      currentSprite.left,
-      currentSprite.top,
-      currentSprite.width,
-      currentSprite.height,
-      dimensions.width / (2 * animationFromProps.scale) -
-        currentSprite.width / 2 -
-        currentSprite.offsetX,
-      dimensions.height / (2 * animationFromProps.scale) -
-        currentSprite.height / 2 -
-        currentSprite.offsetY,
-      currentSprite.width,
-      currentSprite.height,
-    );
 
     context.beginPath();
     context.strokeStyle = animationFromProps.color;
