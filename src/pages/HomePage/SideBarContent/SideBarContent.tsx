@@ -2,6 +2,7 @@ import { Accordion } from "#src/components";
 
 import AnimationsItem from "./AnimationsItem";
 import FilesItem from "./FilesItem";
+import NormalMapItem from "./NormalMapItem";
 import SettingsItem from "./SettingsItem";
 import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
@@ -18,6 +19,7 @@ export default function SideBarContent(props: SideBarContentProps) {
         spriteIds={spriteIds}
         spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
       />
+      <NormalMapItem />
     </Accordion>
   );
 }
