@@ -1,8 +1,13 @@
-import { type Func, type Tuple } from "@agusmgarcia/react-core";
+import {
+  type Func,
+  type Tuple,
+  useDevicePixelRatio,
+  useDimensions,
+} from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
-import { loadImage, useDevicePixelRatio, useDimensions } from "#src/utils";
+import { loadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 

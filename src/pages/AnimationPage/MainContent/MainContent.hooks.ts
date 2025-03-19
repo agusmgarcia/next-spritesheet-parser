@@ -1,7 +1,8 @@
+import { useDimensions } from "@agusmgarcia/react-core";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useAnimations, useSpriteSheet } from "#src/store";
-import { loadImage, useDimensions } from "#src/utils";
+import { loadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 

@@ -1,8 +1,8 @@
+import { useDevicePixelRatio } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo } from "react";
 
 import { type TypographyProps } from "#src/components";
 import { useAnimations } from "#src/store";
-import { useDevicePixelRatio } from "#src/utils";
 
 import type ZoomItemProps from "./ZoomItem.types";
 
