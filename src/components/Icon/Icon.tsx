@@ -40,6 +40,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "box":
+      return (
+        <svg {...rest}>
+          <path d="m12 1 9.5 5.5v11L12 23l-9.5 -5.5v-11L12 1ZM5.49388 7.0777l6.50622 3.7667 6.5061 -3.76666L12 3.311 5.49388 7.0777ZM4.5 8.81329v7.53361l6.5001 3.7632v-7.5336L4.5 8.81329ZM13.0001 20.11 19.5 16.3469V8.81337l-6.4999 3.76313V20.11Z" />
+        </svg>
+      );
+
     case "downloadFile":
       return (
         <svg {...rest}>
