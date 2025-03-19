@@ -1,3 +1,4 @@
+import { type Func } from "@agusmgarcia/react-core";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -98,9 +99,7 @@ function usePlaying({
     [animationFromProps?.sprites.length],
   );
 
-  const backwardOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
+  const backwardOnClick = useCallback<Func>(() => {
     const animationLength = animationFromProps?.sprites.length;
     if (!animationLength) return;
 
@@ -115,9 +114,7 @@ function usePlaying({
     [],
   );
 
-  const forwardOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
+  const forwardOnClick = useCallback<Func>(() => {
     const animationLength = animationFromProps?.sprites.length;
     if (!animationLength) return;
 

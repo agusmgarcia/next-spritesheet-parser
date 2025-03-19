@@ -1,9 +1,11 @@
+import { type Func } from "@agusmgarcia/react-core";
+
 import { type Animations } from "#src/store";
 
 type SideBarContentProps = {
   animation: Animations[number];
-  backwardOnClick: React.MouseEventHandler<HTMLButtonElement>;
-  forwardOnClick: React.MouseEventHandler<HTMLButtonElement>;
+  backwardOnClick: Func;
+  forwardOnClick: Func;
   index: number;
   onionActive: boolean;
   onionDisabled: boolean;

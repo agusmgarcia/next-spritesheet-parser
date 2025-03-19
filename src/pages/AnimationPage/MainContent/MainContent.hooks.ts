@@ -8,6 +8,8 @@ import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
   animation: animationFromProps,
+  backwardOnClick: backwardOnClickFromProps,
+  forwardOnClick: forwardOnClickFromProps,
   index: indexFromProps,
   onionActive: onionActiveFromProps,
   playing: playingFromProps,
@@ -127,10 +129,9 @@ export default function useMainContent({
     if (playingFromProps) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!event.altKey) return;
-
       switch (event.key) {
         case "ArrowUp":
+          if (!event.altKey) return;
           return setAnimationOffset(
             animationFromProps.id,
             indexFromProps,
@@ -139,6 +140,7 @@ export default function useMainContent({
           );
 
         case "ArrowRight":
+          if (!event.altKey) return forwardOnClickFromProps();
           return setAnimationOffset(
             animationFromProps.id,
             indexFromProps,
@@ -147,6 +149,7 @@ export default function useMainContent({
           );
 
         case "ArrowDown":
+          if (!event.altKey) return;
           return setAnimationOffset(
             animationFromProps.id,
             indexFromProps,
@@ -155,6 +158,7 @@ export default function useMainContent({
           );
 
         case "ArrowLeft":
+          if (!event.altKey) return backwardOnClickFromProps();
           return setAnimationOffset(
             animationFromProps.id,
             indexFromProps,
@@ -168,6 +172,8 @@ export default function useMainContent({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     animationFromProps.id,
+    backwardOnClickFromProps,
+    forwardOnClickFromProps,
     indexFromProps,
     playingFromProps,
     setAnimationOffset,

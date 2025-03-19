@@ -1,6 +1,8 @@
+import { type Func } from "@agusmgarcia/react-core";
+
 type PlayingItemProps = {
-  backwardOnClick: React.MouseEventHandler<HTMLButtonElement>;
-  forwardOnClick: React.MouseEventHandler<HTMLButtonElement>;
+  backwardOnClick: Func;
+  forwardOnClick: Func;
   playing: boolean;
   playingDisabled: boolean;
   playOnClick: React.MouseEventHandler<HTMLButtonElement>;

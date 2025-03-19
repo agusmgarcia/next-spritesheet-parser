@@ -26,6 +26,8 @@ export default function AnimationPage(props: AnimationPageProps) {
       {/* MAIN */}
       <MainContent
         animation={animation}
+        backwardOnClick={backwardOnClick}
+        forwardOnClick={forwardOnClick}
         index={index}
         onionActive={onionActive}
         playing={playing}
