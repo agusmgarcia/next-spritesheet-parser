@@ -8,7 +8,7 @@ export default function Typography(props: TypographyProps) {
   const { children, className, variant, ...rest } = useTypography(props);
 
   return React.createElement(
-    variant ?? "p",
+    variant || "p",
     {
       ...rest,
       className: twMerge(
