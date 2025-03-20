@@ -1,7 +1,12 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useAnimations, useSpriteSheet } from "#src/store";
+import {
+  type Animations,
+  type SpriteSheet,
+  useAnimations,
+  useSpriteSheet,
+} from "#src/store";
 
 import type HomePageProps from "./HomePage.types";
 
@@ -16,8 +21,14 @@ export default function useHomePage(props: HomePageProps) {
   const { importFileDisabled, importFileLoading, importFileOnClick } =
     useImportFile();
 
+  const { exportFileDisabled, exportFileLoading, exportFileOnClick } =
+    useExportFile();
+
   return {
     ...props,
+    exportFileDisabled,
+    exportFileLoading,
+    exportFileOnClick,
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
@@ -93,6 +104,59 @@ function useImportFile() {
   ]);
 
   return { importFileDisabled, importFileLoading, importFileOnClick };
+}
+
+function useExportFile() {
+  const { animations } = useAnimations();
+  const { spriteSheet } = useSpriteSheet();
+
+  const [exportFileLoading, setExportFileLoading] = useState(false);
+
+  const exportFileDisabled = useMemo<boolean>(
+    () => exportFileLoading || !spriteSheet,
+    [exportFileLoading, spriteSheet],
+  );
+
+  const exportFile = useCallback<
+    AsyncFunc<void, [spriteSheet: SpriteSheet, animations: Animations]>
+  >(
+    (spriteSheet, animations) =>
+      new Promise((resolve) => {
+        const anchor = document.createElement("a");
+
+        anchor.href =
+          "data:text/json;charset=utf-8," +
+          encodeURIComponent(
+            JSON.stringify({
+              ...spriteSheet,
+              animations,
+              version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
+            }),
+          );
+
+        anchor.setAttribute(
+          "download",
+          `${spriteSheet.sheet.name.split(".").slice(0, -1).join(".") || spriteSheet.sheet.name}.json`,
+        );
+
+        anchor.click();
+
+        resolve();
+      }),
+    [],
+  );
+
+  const exportFileOnClick = useCallback<Func>(() => {
+    if (!spriteSheet) return;
+
+    // TODO: handle errors.
+    setExportFileLoading(true);
+    exportFile(spriteSheet, animations).finally(() =>
+      setExportFileLoading(false),
+    );
+  }, [animations, exportFile, spriteSheet]);
+
+  return { exportFileDisabled, exportFileLoading, exportFileOnClick };
 }
 
 function useSpriteIds() {

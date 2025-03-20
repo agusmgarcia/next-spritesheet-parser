@@ -12,6 +12,8 @@ import { useLoadImage } from "#src/utils";
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
+  exportFileDisabled: exportFileDisabledFromProps,
+  exportFileOnClick: exportFileOnClickFromProps,
   importFileDisabled: importFileDisabledFromProps,
   importFileOnClick: importFileOnClickFromProps,
   spriteIds: spriteIdsFromProps,
@@ -296,12 +298,21 @@ export default function useMainContent({
         case "i":
           if (!!importFileDisabledFromProps) return;
           return importFileOnClickFromProps();
+
+        case "e":
+          if (!!exportFileDisabledFromProps) return;
+          return exportFileOnClickFromProps();
       }
     };
 
     root.addEventListener("keydown", handleKeyDown);
     return () => root.removeEventListener("keydown", handleKeyDown);
-  }, [importFileDisabledFromProps, importFileOnClickFromProps]);
+  }, [
+    exportFileDisabledFromProps,
+    exportFileOnClickFromProps,
+    importFileDisabledFromProps,
+    importFileOnClickFromProps,
+  ]);
 
   return {
     ...rest,

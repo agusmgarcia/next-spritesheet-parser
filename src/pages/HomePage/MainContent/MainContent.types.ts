@@ -1,6 +1,8 @@
 import { type Func } from "@agusmgarcia/react-core";
 
 type MainContentProps = {
+  exportFileDisabled: boolean;
+  exportFileOnClick: Func;
   importFileDisabled: boolean;
   importFileOnClick: Func;
   spriteIds: string[];

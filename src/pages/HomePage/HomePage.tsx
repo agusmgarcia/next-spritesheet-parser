@@ -7,6 +7,9 @@ import SideBarContent from "./SideBarContent";
 
 export default function HomePage(props: HomePageProps) {
   const {
+    exportFileDisabled,
+    exportFileLoading,
+    exportFileOnClick,
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
@@ -20,6 +23,8 @@ export default function HomePage(props: HomePageProps) {
     <>
       {/* MAIN */}
       <MainContent
+        exportFileDisabled={exportFileDisabled}
+        exportFileOnClick={exportFileOnClick}
         importFileDisabled={importFileDisabled}
         importFileOnClick={importFileOnClick}
         spriteIds={spriteIds}
@@ -30,6 +35,9 @@ export default function HomePage(props: HomePageProps) {
       {/* SIDEBAR */}
       <SideBar>
         <SideBarContent
+          exportFileDisabled={exportFileDisabled}
+          exportFileLoading={exportFileLoading}
+          exportFileOnClick={exportFileOnClick}
           importFileDisabled={importFileDisabled}
           importFileLoading={importFileLoading}
           importFileOnClick={importFileOnClick}

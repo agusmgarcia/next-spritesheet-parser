@@ -8,6 +8,9 @@ import type SideBarContentProps from "./SideBarContent.types";
 
 export default function SideBarContent(props: SideBarContentProps) {
   const {
+    exportFileDisabled,
+    exportFileLoading,
+    exportFileOnClick,
     heading,
     importFileDisabled,
     importFileLoading,
@@ -19,6 +22,9 @@ export default function SideBarContent(props: SideBarContentProps) {
   return (
     <Accordion heading={heading}>
       <FilesItem
+        exportFileDisabled={exportFileDisabled}
+        exportFileLoading={exportFileLoading}
+        exportFileOnClick={exportFileOnClick}
         importFileDisabled={importFileDisabled}
         importFileLoading={importFileLoading}
         importFileOnClick={importFileOnClick}
