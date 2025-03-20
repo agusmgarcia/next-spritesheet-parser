@@ -1,8 +1,8 @@
 import { useDimensions } from "@agusmgarcia/react-core";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 import { useAnimations, useSpriteSheet } from "#src/store";
-import { loadImage } from "#src/utils";
+import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
@@ -19,8 +19,7 @@ export default function useMainContent({
   const rootRef = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [image, setImage] = useState<HTMLImageElement>();
-
+  const { image } = useLoadImage(spriteSheet?.sheet.imageURL || "");
   const dimensions = useDimensions(rootRef);
 
   const sprites = useMemo(
@@ -44,23 +43,6 @@ export default function useMainContent({
     () => (sprites.length > 1 ? sprites.at(indexFromProps - 1) : undefined),
     [indexFromProps, sprites],
   );
-
-  useEffect(() => {
-    if (!spriteSheet?.sheet.imageURL) return;
-    const controller = new AbortController();
-
-    loadImage(spriteSheet.sheet.imageURL, controller.signal)
-      .then((image) => {
-        if (controller.signal.aborted) return;
-        setImage(image);
-      })
-      .catch(() => {
-        if (controller.signal.aborted) return;
-        // TODO: handle errors.
-      });
-
-    return () => controller.abort();
-  }, [spriteSheet?.sheet.imageURL]);
 
   useEffect(() => {
     if (!image) return;

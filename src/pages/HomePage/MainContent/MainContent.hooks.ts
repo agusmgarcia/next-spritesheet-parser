@@ -7,7 +7,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
-import { loadImage } from "#src/utils";
+import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
@@ -23,10 +23,10 @@ export default function useMainContent({
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [image, setImage] = useState<HTMLImageElement>();
   const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
   const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
 
+  const { image } = useLoadImage(spriteSheet?.sheet.imageURL || "");
   const rootDimensions = useDimensions(rootRef);
   const devicePixelRatio = useDevicePixelRatio();
 
@@ -172,23 +172,6 @@ export default function useMainContent({
     },
     [devicePixelRatio, findSprite, findSprites, initialCursor],
   );
-
-  useEffect(() => {
-    if (!spriteSheet?.sheet.imageURL) return;
-    const controller = new AbortController();
-
-    loadImage(spriteSheet.sheet.imageURL, controller.signal)
-      .then((image) => {
-        if (controller.signal.aborted) return;
-        setImage(image);
-      })
-      .catch(() => {
-        if (controller.signal.aborted) return;
-        // TODO: handle error
-      });
-
-    return () => controller.abort();
-  }, [spriteSheet?.sheet.imageURL]);
 
   useEffect(() => {
     if (!image) return;
