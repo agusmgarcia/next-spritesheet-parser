@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.12.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.12.0)
+
+> March 20, 2025
+
+- **AnimationPage**: add ability to move across sprites with keyboard
+- add favicon
+- **AnimationPage**: put the onion layer in front current sprite
+- **useLoadImage**: start using the hook
+- **Typography**: adjust logic
+- bump dependencies
+
 ## [v0.11.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.11.0)
 
 > March 14, 2025
