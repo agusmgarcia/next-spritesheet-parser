@@ -27,9 +27,6 @@ export default function useAnimationsItem({
     spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
   });
 
-  const { createAnimationDisabled, createAnimationOnClick } =
-    useCreateAnimation({ spriteIds: spriteIdsFromProps });
-
   const { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick } =
     useMergeSprites({
       spriteIds: spriteIdsFromProps,
@@ -41,8 +38,6 @@ export default function useAnimationsItem({
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
-    createAnimationDisabled,
-    createAnimationOnClick,
     heading,
     mergeSpritesDisabled,
     mergeSpritesLoading,
@@ -102,33 +97,6 @@ function useResetSelection({
   >(() => spriteIdsOnUnselectAllFromProps(), [spriteIdsOnUnselectAllFromProps]);
 
   return { resetSelectionDisabled, resetSelectionOnClick };
-}
-
-function useCreateAnimation({
-  spriteIds: spriteIdsFromProps,
-}: Pick<AnimationsItemProps, "spriteIds">) {
-  const { push } = useRouter();
-
-  const { createAnimation } = useAnimations();
-
-  const [createAnimationLoading, setCreateAnimationLoading] = useState(false);
-
-  const createAnimationDisabled = useMemo<boolean>(
-    () => !spriteIdsFromProps.length || createAnimationLoading,
-    [createAnimationLoading, spriteIdsFromProps.length],
-  );
-
-  const createAnimationOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
-    if (!spriteIdsFromProps.length) return;
-    setCreateAnimationLoading(true);
-    createAnimation(spriteIdsFromProps)
-      .then((id) => push(`/animations/${id}`))
-      .finally(() => setCreateAnimationLoading(false));
-  }, [createAnimation, spriteIdsFromProps, push]);
-
-  return { createAnimationDisabled, createAnimationOnClick };
 }
 
 function useMergeSprites({

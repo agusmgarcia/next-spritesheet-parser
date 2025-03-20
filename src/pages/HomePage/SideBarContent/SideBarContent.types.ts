@@ -1,6 +1,8 @@
 import { type Func } from "@agusmgarcia/react-core";
 
 type SideBarContentProps = {
+  createAnimationDisabled: boolean;
+  createAnimationOnClick: Func;
   exportFileDisabled: boolean;
   exportFileLoading: boolean;
   exportFileOnClick: Func;

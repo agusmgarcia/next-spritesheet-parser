@@ -8,6 +8,8 @@ import type SideBarContentProps from "./SideBarContent.types";
 
 export default function SideBarContent(props: SideBarContentProps) {
   const {
+    createAnimationDisabled,
+    createAnimationOnClick,
     exportFileDisabled,
     exportFileLoading,
     exportFileOnClick,
@@ -31,6 +33,8 @@ export default function SideBarContent(props: SideBarContentProps) {
       />
       <SettingsItem />
       <AnimationsItem
+        createAnimationDisabled={createAnimationDisabled}
+        createAnimationOnClick={createAnimationOnClick}
         spriteIds={spriteIds}
         spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
       />

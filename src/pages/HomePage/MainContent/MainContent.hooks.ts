@@ -12,6 +12,8 @@ import { useLoadImage } from "#src/utils";
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
+  createAnimationDisabled: createAnimationDisabledFromProps,
+  createAnimationOnClick: createAnimationOnClickFromProps,
   exportFileDisabled: exportFileDisabledFromProps,
   exportFileOnClick: exportFileOnClickFromProps,
   importFileDisabled: importFileDisabledFromProps,
@@ -295,19 +297,25 @@ export default function useMainContent({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
-        case "i":
-          if (!!importFileDisabledFromProps) return;
-          return importFileOnClickFromProps();
+        case "c":
+          if (!!createAnimationDisabledFromProps) return;
+          return createAnimationOnClickFromProps();
 
         case "e":
           if (!!exportFileDisabledFromProps) return;
           return exportFileOnClickFromProps();
+
+        case "i":
+          if (!!importFileDisabledFromProps) return;
+          return importFileOnClickFromProps();
       }
     };
 
     root.addEventListener("keydown", handleKeyDown);
     return () => root.removeEventListener("keydown", handleKeyDown);
   }, [
+    createAnimationDisabledFromProps,
+    createAnimationOnClickFromProps,
     exportFileDisabledFromProps,
     exportFileOnClickFromProps,
     importFileDisabledFromProps,

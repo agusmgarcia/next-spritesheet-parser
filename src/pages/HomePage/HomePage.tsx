@@ -7,6 +7,8 @@ import SideBarContent from "./SideBarContent";
 
 export default function HomePage(props: HomePageProps) {
   const {
+    createAnimationDisabled,
+    createAnimationOnClick,
     exportFileDisabled,
     exportFileLoading,
     exportFileOnClick,
@@ -23,6 +25,8 @@ export default function HomePage(props: HomePageProps) {
     <>
       {/* MAIN */}
       <MainContent
+        createAnimationDisabled={createAnimationDisabled}
+        createAnimationOnClick={createAnimationOnClick}
         exportFileDisabled={exportFileDisabled}
         exportFileOnClick={exportFileOnClick}
         importFileDisabled={importFileDisabled}
@@ -35,6 +39,8 @@ export default function HomePage(props: HomePageProps) {
       {/* SIDEBAR */}
       <SideBar>
         <SideBarContent
+          createAnimationDisabled={createAnimationDisabled}
+          createAnimationOnClick={createAnimationOnClick}
           exportFileDisabled={exportFileDisabled}
           exportFileLoading={exportFileLoading}
           exportFileOnClick={exportFileOnClick}

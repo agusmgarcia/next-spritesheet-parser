@@ -1,4 +1,5 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
@@ -11,6 +12,12 @@ import {
 import type HomePageProps from "./HomePage.types";
 
 export default function useHomePage(props: HomePageProps) {
+  const { importFileDisabled, importFileLoading, importFileOnClick } =
+    useImportFile();
+
+  const { exportFileDisabled, exportFileLoading, exportFileOnClick } =
+    useExportFile();
+
   const {
     spriteIds,
     spriteIdsOnSelect,
@@ -18,14 +25,13 @@ export default function useHomePage(props: HomePageProps) {
     spriteIdsOnUnselectAll,
   } = useSpriteIds();
 
-  const { importFileDisabled, importFileLoading, importFileOnClick } =
-    useImportFile();
-
-  const { exportFileDisabled, exportFileLoading, exportFileOnClick } =
-    useExportFile();
+  const { createAnimationDisabled, createAnimationOnClick } =
+    useCreateAnimation({ spriteIds });
 
   return {
     ...props,
+    createAnimationDisabled,
+    createAnimationOnClick,
     exportFileDisabled,
     exportFileLoading,
     exportFileOnClick,
@@ -199,4 +205,29 @@ function useSpriteIds() {
     spriteIdsOnToggle,
     spriteIdsOnUnselectAll,
   };
+}
+
+function useCreateAnimation({
+  spriteIds: spriteIdsFromProps,
+}: Pick<ReturnType<typeof useSpriteIds>, "spriteIds">) {
+  const { push } = useRouter();
+
+  const { createAnimation } = useAnimations();
+
+  const [createAnimationLoading, setCreateAnimationLoading] = useState(false);
+
+  const createAnimationDisabled = useMemo<boolean>(
+    () => !spriteIdsFromProps.length || createAnimationLoading,
+    [createAnimationLoading, spriteIdsFromProps.length],
+  );
+
+  const createAnimationOnClick = useCallback<Func>(() => {
+    if (!spriteIdsFromProps.length) return;
+    setCreateAnimationLoading(true);
+    createAnimation(spriteIdsFromProps)
+      .then((id) => push(`/animations/${id}`))
+      .finally(() => setCreateAnimationLoading(false));
+  }, [createAnimation, spriteIdsFromProps, push]);
+
+  return { createAnimationDisabled, createAnimationOnClick };
 }
