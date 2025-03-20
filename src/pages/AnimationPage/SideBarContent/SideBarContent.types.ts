@@ -12,7 +12,7 @@ type SideBarContentProps = {
   onionOnClick: React.MouseEventHandler<HTMLButtonElement>;
   playing: boolean;
   playingDisabled: boolean;
-  playOnClick: React.MouseEventHandler<HTMLButtonElement>;
+  playOnClick: Func;
 };
 
 export default SideBarContentProps;

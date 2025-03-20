@@ -5,7 +5,7 @@ type PlayingItemProps = {
   forwardOnClick: Func;
   playing: boolean;
   playingDisabled: boolean;
-  playOnClick: React.MouseEventHandler<HTMLButtonElement>;
+  playOnClick: Func;
 };
 
 export default PlayingItemProps;

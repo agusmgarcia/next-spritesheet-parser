@@ -1,4 +1,4 @@
-import { useDimensions } from "@agusmgarcia/react-core";
+import { useDevicePixelRatio, useDimensions } from "@agusmgarcia/react-core";
 import { useEffect, useMemo, useRef } from "react";
 
 import { useAnimations, useSpriteSheet } from "#src/store";
@@ -13,6 +13,8 @@ export default function useMainContent({
   index: indexFromProps,
   onionActive: onionActiveFromProps,
   playing: playingFromProps,
+  playingDisabled: playingDisabledFromProps,
+  playOnClick: playOnClickFromProps,
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
@@ -23,6 +25,7 @@ export default function useMainContent({
 
   const { image } = useLoadImage(spriteSheet?.sheet.imageURL || "");
   const dimensions = useDimensions(rootRef);
+  const devicePixelRatio = useDevicePixelRatio();
 
   const sprites = useMemo(
     () =>
@@ -126,7 +129,26 @@ export default function useMainContent({
   ]);
 
   useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case " ":
+          if (!!playingDisabledFromProps) return;
+          return playOnClickFromProps();
+      }
+    };
+
+    root.addEventListener("keydown", handleKeyDown);
+    return () => root.removeEventListener("keydown", handleKeyDown);
+  }, [playOnClickFromProps, playingDisabledFromProps, playingFromProps]);
+
+  useEffect(() => {
     if (playingFromProps) return;
+
+    const root = rootRef.current;
+    if (!root) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       switch (event.key) {
@@ -136,7 +158,7 @@ export default function useMainContent({
             animationFromProps.id,
             indexFromProps,
             (offsetX) => offsetX,
-            (offsetY) => offsetY - window.devicePixelRatio,
+            (offsetY) => offsetY - devicePixelRatio,
           );
 
         case "ArrowRight":
@@ -144,7 +166,7 @@ export default function useMainContent({
           return setAnimationOffset(
             animationFromProps.id,
             indexFromProps,
-            (offsetX) => offsetX + window.devicePixelRatio,
+            (offsetX) => offsetX + devicePixelRatio,
             (offsetY) => offsetY,
           );
 
@@ -154,7 +176,7 @@ export default function useMainContent({
             animationFromProps.id,
             indexFromProps,
             (offsetX) => offsetX,
-            (offsetY) => offsetY + window.devicePixelRatio,
+            (offsetY) => offsetY + devicePixelRatio,
           );
 
         case "ArrowLeft":
@@ -162,17 +184,18 @@ export default function useMainContent({
           return setAnimationOffset(
             animationFromProps.id,
             indexFromProps,
-            (offsetX) => offsetX - window.devicePixelRatio,
+            (offsetX) => offsetX - devicePixelRatio,
             (offsetY) => offsetY,
           );
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    root.addEventListener("keydown", handleKeyDown);
+    return () => root.removeEventListener("keydown", handleKeyDown);
   }, [
     animationFromProps.id,
     backwardOnClickFromProps,
+    devicePixelRatio,
     forwardOnClickFromProps,
     indexFromProps,
     playingFromProps,

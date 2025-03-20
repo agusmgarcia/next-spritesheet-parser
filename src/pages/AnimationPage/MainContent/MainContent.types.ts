@@ -9,6 +9,8 @@ type MainContentProps = {
   index: number;
   onionActive: boolean;
   playing: boolean;
+  playingDisabled: boolean;
+  playOnClick: Func;
 };
 
 export default MainContentProps;

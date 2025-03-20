@@ -109,10 +109,7 @@ function usePlaying({
     );
   }, [animationFromProps?.sprites.length, onIndexChangeFromProps]);
 
-  const playOnClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => setPlaying((prev) => !prev),
-    [],
-  );
+  const playOnClick = useCallback<Func>(() => setPlaying((prev) => !prev), []);
 
   const forwardOnClick = useCallback<Func>(() => {
     const animationLength = animationFromProps?.sprites.length;

@@ -30,7 +30,9 @@ export default function AnimationPage(props: AnimationPageProps) {
         forwardOnClick={forwardOnClick}
         index={index}
         onionActive={onionActive}
+        playOnClick={playOnClick}
         playing={playing}
+        playingDisabled={playingDisabled}
       />
 
       {/* SIDEBAR */}

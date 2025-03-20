@@ -5,7 +5,7 @@ export default function MainContent(props: MainContentProps) {
   const { rootRef, spriteCanvasRef } = useMainContent(props);
 
   return (
-    <div ref={rootRef} className="relative size-full">
+    <div ref={rootRef} className="relative size-full" tabIndex={-1}>
       {/* SPRITE */}
       <canvas ref={spriteCanvasRef} className="absolute" />
     </div>
