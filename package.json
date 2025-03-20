@@ -21,6 +21,10 @@
     "invert-color": "2.0.0",
     "react": "19.0.0",
     "tailwind-merge": "2.6.0",
+    "three": "0.174.0",
     "uuid": "11.1.0"
+  },
+  "devDependencies": {
+    "@types/three": "0.174.0"
   }
 }
