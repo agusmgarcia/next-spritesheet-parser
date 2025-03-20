@@ -7,6 +7,9 @@ import SideBarContent from "./SideBarContent";
 
 export default function HomePage(props: HomePageProps) {
   const {
+    importFileDisabled,
+    importFileLoading,
+    importFileOnClick,
     spriteIds,
     spriteIdsOnSelect,
     spriteIdsOnToggle,
@@ -17,6 +20,8 @@ export default function HomePage(props: HomePageProps) {
     <>
       {/* MAIN */}
       <MainContent
+        importFileDisabled={importFileDisabled}
+        importFileOnClick={importFileOnClick}
         spriteIds={spriteIds}
         spriteIdsOnSelect={spriteIdsOnSelect}
         spriteIdsOnToggle={spriteIdsOnToggle}
@@ -25,6 +30,9 @@ export default function HomePage(props: HomePageProps) {
       {/* SIDEBAR */}
       <SideBar>
         <SideBarContent
+          importFileDisabled={importFileDisabled}
+          importFileLoading={importFileLoading}
+          importFileOnClick={importFileOnClick}
           spriteIds={spriteIds}
           spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
         />

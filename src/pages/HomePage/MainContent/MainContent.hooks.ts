@@ -12,6 +12,8 @@ import { useLoadImage } from "#src/utils";
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
+  importFileDisabled: importFileDisabledFromProps,
+  importFileOnClick: importFileOnClickFromProps,
   spriteIds: spriteIdsFromProps,
   spriteIdsOnSelect: spriteIdsOnSelectFromProps,
   spriteIdsOnToggle: spriteIdsOnToggleFromProps,
@@ -284,6 +286,22 @@ export default function useMainContent({
     spriteSheet,
     sprites,
   ]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "i":
+          if (!!importFileDisabledFromProps) return;
+          return importFileOnClickFromProps();
+      }
+    };
+
+    root.addEventListener("keydown", handleKeyDown);
+    return () => root.removeEventListener("keydown", handleKeyDown);
+  }, [importFileDisabledFromProps, importFileOnClickFromProps]);
 
   return {
     ...rest,

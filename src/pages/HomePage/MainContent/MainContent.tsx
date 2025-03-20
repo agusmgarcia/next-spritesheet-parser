@@ -14,7 +14,7 @@ export default function MainContent(props: MainContentProps) {
   } = useMainContent(props);
 
   return (
-    <div ref={rootRef} className="relative size-full">
+    <div ref={rootRef} className="relative size-full" tabIndex={-1}>
       {/* SPRITE SHEET */}
       <canvas ref={spriteSheetCanvasRef} className="absolute" />
 

@@ -21,9 +21,6 @@ export default function useFilesItem(props: FilesItemProps) {
     [],
   );
 
-  const { importFileDisabled, importFileLoading, importFileOnClick } =
-    useImportFile();
-
   const { exportFileDisabled, exportFileLoading, exportFileOnClick } =
     useExportFile();
 
@@ -33,79 +30,7 @@ export default function useFilesItem(props: FilesItemProps) {
     exportFileLoading,
     exportFileOnClick,
     heading,
-    importFileDisabled,
-    importFileLoading,
-    importFileOnClick,
   };
-}
-
-function useImportFile() {
-  const { setAnimations } = useAnimations();
-  const { createSpriteSheet, setSpriteSheet, spriteSheet } = useSpriteSheet();
-
-  const [importFileLoading, setImportFileLoading] = useState(false);
-
-  const importFileDisabled = useMemo<boolean>(
-    () => importFileLoading,
-    [importFileLoading],
-  );
-
-  const importFile = useCallback<AsyncFunc<File | undefined, [accept: string]>>(
-    (accept) =>
-      new Promise((resolve) => {
-        const input = document.createElement("input");
-
-        const handleChange = (event: Event) => {
-          input.removeEventListener("change", handleChange);
-
-          const element = event.target as HTMLInputElement;
-          if (!!element.files?.length) resolve(element.files[0]);
-          else resolve(undefined);
-        };
-
-        input.addEventListener("change", handleChange);
-
-        input.type = "file";
-        input.accept = accept;
-        input.click();
-      }),
-    [],
-  );
-
-  const importFileOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
-    // TODO: handle errors.
-    importFile(!spriteSheet ? "image/*" : "image/*,application/json").then(
-      (file) => {
-        if (!file) return;
-
-        setImportFileLoading(true);
-        if (file.type.startsWith("image/"))
-          createSpriteSheet(file).finally(() => setImportFileLoading(false));
-        else
-          file
-            .text()
-            .then((text) => JSON.parse(text))
-            .then((json) => {
-              setSpriteSheet({
-                settings: json.settings,
-                sprites: json.sprites,
-              });
-              setAnimations(json.animations);
-            })
-            .finally(() => setImportFileLoading(false));
-      },
-    );
-  }, [
-    createSpriteSheet,
-    importFile,
-    setAnimations,
-    setSpriteSheet,
-    spriteSheet,
-  ]);
-
-  return { importFileDisabled, importFileLoading, importFileOnClick };
 }
 
 function useExportFile() {
