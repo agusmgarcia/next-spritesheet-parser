@@ -15,9 +15,9 @@ export default function useConfigurationsItem({
     [],
   );
 
-  const { onClick: homeOnClick } = useHome();
+  const { homeOnClick } = useHome();
 
-  const { onChange: nameOnChange, value: nameValue } = useName({
+  const { nameOnChange, nameValue } = useName({
     animation: animationFromProps,
   });
 
@@ -38,12 +38,12 @@ export default function useConfigurationsItem({
 function useHome() {
   const { push } = useRouter();
 
-  const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  const homeOnClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     () => push("/"),
     [push],
   );
 
-  return { onClick };
+  return { homeOnClick };
 }
 
 function useName({
@@ -51,12 +51,12 @@ function useName({
 }: Pick<ConfigurationsItemProps, "animation">) {
   const { setAnimationName } = useAnimations();
 
-  const onChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+  const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setAnimationName(animationFromProps.id, event.target.value),
     [animationFromProps.id, setAnimationName],
   );
 
-  return { onChange, value: animationFromProps.name };
+  return { nameOnChange, nameValue: animationFromProps.name };
 }
 
 function useDeleteAnimation({

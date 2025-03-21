@@ -17,11 +17,9 @@ export default function useCenterItem({
     [],
   );
 
-  const {
-    disabled: colorDisabled,
-    onChange: colorOnChange,
-    value: colorValue,
-  } = useColor({ animation: animationFromProps });
+  const { colorDisabled, colorOnChange, colorValue } = useColor({
+    animation: animationFromProps,
+  });
 
   return {
     ...rest,
@@ -37,17 +35,17 @@ function useColor({
 }: Pick<CenterItemProps, "animation">) {
   const { setAnimationColor } = useAnimations();
 
-  const value = useMemo<string>(
+  const colorValue = useMemo<string>(
     () => animationFromProps.color,
     [animationFromProps.color],
   );
 
-  const disabled = useMemo<boolean>(() => false, []);
+  const colorDisabled = useMemo<boolean>(() => false, []);
 
-  const onChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+  const colorOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setAnimationColor(animationFromProps.id, event.target.value),
     [animationFromProps.id, setAnimationColor],
   );
 
-  return { disabled, onChange, value };
+  return { colorDisabled, colorOnChange, colorValue };
 }
