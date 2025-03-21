@@ -9,6 +9,8 @@ type SideBarContentProps = {
   importFileDisabled: boolean;
   importFileLoading: boolean;
   importFileOnClick: Func;
+  resetSelectionDisabled: boolean;
+  resetSelectionOnClick: Func;
   spriteIds: string[];
   spriteIdsOnUnselectAll: Func;
 };

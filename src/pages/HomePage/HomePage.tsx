@@ -15,6 +15,8 @@ export default function HomePage(props: HomePageProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    resetSelectionDisabled,
+    resetSelectionOnClick,
     spriteIds,
     spriteIdsOnSelect,
     spriteIdsOnToggle,
@@ -31,6 +33,8 @@ export default function HomePage(props: HomePageProps) {
         exportFileOnClick={exportFileOnClick}
         importFileDisabled={importFileDisabled}
         importFileOnClick={importFileOnClick}
+        resetSelectionDisabled={resetSelectionDisabled}
+        resetSelectionOnClick={resetSelectionOnClick}
         spriteIds={spriteIds}
         spriteIdsOnSelect={spriteIdsOnSelect}
         spriteIdsOnToggle={spriteIdsOnToggle}
@@ -47,6 +51,8 @@ export default function HomePage(props: HomePageProps) {
           importFileDisabled={importFileDisabled}
           importFileLoading={importFileLoading}
           importFileOnClick={importFileOnClick}
+          resetSelectionDisabled={resetSelectionDisabled}
+          resetSelectionOnClick={resetSelectionOnClick}
           spriteIds={spriteIds}
           spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
         />

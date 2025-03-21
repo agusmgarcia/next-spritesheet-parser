@@ -17,6 +17,8 @@ export default function SideBarContent(props: SideBarContentProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    resetSelectionDisabled,
+    resetSelectionOnClick,
     spriteIds,
     spriteIdsOnUnselectAll,
   } = useSideBarContent(props);
@@ -35,6 +37,8 @@ export default function SideBarContent(props: SideBarContentProps) {
       <AnimationsItem
         createAnimationDisabled={createAnimationDisabled}
         createAnimationOnClick={createAnimationOnClick}
+        resetSelectionDisabled={resetSelectionDisabled}
+        resetSelectionOnClick={resetSelectionOnClick}
         spriteIds={spriteIds}
         spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
       />

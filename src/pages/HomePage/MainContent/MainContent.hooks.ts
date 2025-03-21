@@ -18,6 +18,8 @@ export default function useMainContent({
   exportFileOnClick: exportFileOnClickFromProps,
   importFileDisabled: importFileDisabledFromProps,
   importFileOnClick: importFileOnClickFromProps,
+  resetSelectionDisabled: resetSelectionDisabledFromProps,
+  resetSelectionOnClick: resetSelectionOnClickFromProps,
   spriteIds: spriteIdsFromProps,
   spriteIdsOnSelect: spriteIdsOnSelectFromProps,
   spriteIdsOnToggle: spriteIdsOnToggleFromProps,
@@ -308,6 +310,10 @@ export default function useMainContent({
         case "i":
           if (!!importFileDisabledFromProps) return;
           return importFileOnClickFromProps();
+
+        case "r":
+          if (!!resetSelectionDisabledFromProps) return;
+          return resetSelectionOnClickFromProps();
       }
     };
 
@@ -320,6 +326,8 @@ export default function useMainContent({
     exportFileOnClickFromProps,
     importFileDisabledFromProps,
     importFileOnClickFromProps,
+    resetSelectionDisabledFromProps,
+    resetSelectionOnClickFromProps,
   ]);
 
   return {

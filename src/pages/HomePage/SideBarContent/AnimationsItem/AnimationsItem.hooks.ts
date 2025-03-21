@@ -22,11 +22,6 @@ export default function useAnimationsItem({
     animationSelectorValue,
   } = useAnimationSelector();
 
-  const { resetSelectionDisabled, resetSelectionOnClick } = useResetSelection({
-    spriteIds: spriteIdsFromProps,
-    spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-  });
-
   const { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick } =
     useMergeSprites({
       spriteIds: spriteIdsFromProps,
@@ -42,8 +37,6 @@ export default function useAnimationsItem({
     mergeSpritesDisabled,
     mergeSpritesLoading,
     mergeSpritesOnClick,
-    resetSelectionDisabled,
-    resetSelectionOnClick,
   };
 }
 
@@ -81,22 +74,6 @@ function useAnimationSelector() {
     animationSelectorOptions,
     animationSelectorValue,
   };
-}
-
-function useResetSelection({
-  spriteIds: spriteIdsFromProps,
-  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-}: Pick<AnimationsItemProps, "spriteIds" | "spriteIdsOnUnselectAll">) {
-  const resetSelectionDisabled = useMemo<boolean>(
-    () => !spriteIdsFromProps.length,
-    [spriteIdsFromProps.length],
-  );
-
-  const resetSelectionOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => spriteIdsOnUnselectAllFromProps(), [spriteIdsOnUnselectAllFromProps]);
-
-  return { resetSelectionDisabled, resetSelectionOnClick };
 }
 
 function useMergeSprites({

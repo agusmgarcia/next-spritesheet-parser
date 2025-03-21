@@ -28,6 +28,11 @@ export default function useHomePage(props: HomePageProps) {
   const { createAnimationDisabled, createAnimationOnClick } =
     useCreateAnimation({ spriteIds });
 
+  const { resetSelectionDisabled, resetSelectionOnClick } = useResetSelection({
+    spriteIds,
+    spriteIdsOnUnselectAll,
+  });
+
   return {
     ...props,
     createAnimationDisabled,
@@ -38,6 +43,8 @@ export default function useHomePage(props: HomePageProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    resetSelectionDisabled,
+    resetSelectionOnClick,
     spriteIds,
     spriteIdsOnSelect,
     spriteIdsOnToggle,
@@ -230,4 +237,24 @@ function useCreateAnimation({
   }, [createAnimation, spriteIdsFromProps, push]);
 
   return { createAnimationDisabled, createAnimationOnClick };
+}
+
+function useResetSelection({
+  spriteIds: spriteIdsFromProps,
+  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
+}: Pick<
+  ReturnType<typeof useSpriteIds>,
+  "spriteIds" | "spriteIdsOnUnselectAll"
+>) {
+  const resetSelectionDisabled = useMemo<boolean>(
+    () => !spriteIdsFromProps.length,
+    [spriteIdsFromProps.length],
+  );
+
+  const resetSelectionOnClick = useCallback<Func>(
+    () => spriteIdsOnUnselectAllFromProps(),
+    [spriteIdsOnUnselectAllFromProps],
+  );
+
+  return { resetSelectionDisabled, resetSelectionOnClick };
 }
