@@ -12,6 +12,8 @@ export default function useMainContent({
   forwardOnClick: forwardOnClickFromProps,
   index: indexFromProps,
   onionActive: onionActiveFromProps,
+  onionDisabled: onionDisabledFromProps,
+  onionOnClick: onionOnClickFromProps,
   playing: playingFromProps,
   playingDisabled: playingDisabledFromProps,
   playOnClick: playOnClickFromProps,
@@ -187,6 +189,10 @@ export default function useMainContent({
             (offsetX) => offsetX - devicePixelRatio,
             (offsetY) => offsetY,
           );
+
+        case "o":
+          if (!!onionDisabledFromProps) return;
+          return onionOnClickFromProps();
       }
     };
 
@@ -198,6 +204,8 @@ export default function useMainContent({
     devicePixelRatio,
     forwardOnClickFromProps,
     indexFromProps,
+    onionDisabledFromProps,
+    onionOnClickFromProps,
     playingFromProps,
     setAnimationOffset,
   ]);

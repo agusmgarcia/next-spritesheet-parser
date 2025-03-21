@@ -9,7 +9,7 @@ type SideBarContentProps = {
   index: number;
   onionActive: boolean;
   onionDisabled: boolean;
-  onionOnClick: React.MouseEventHandler<HTMLButtonElement>;
+  onionOnClick: Func;
   playing: boolean;
   playingDisabled: boolean;
   playOnClick: Func;

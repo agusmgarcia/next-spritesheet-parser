@@ -8,6 +8,8 @@ type MainContentProps = {
   forwardOnClick: Func;
   index: number;
   onionActive: boolean;
+  onionDisabled: boolean;
+  onionOnClick: Func;
   playing: boolean;
   playingDisabled: boolean;
   playOnClick: Func;

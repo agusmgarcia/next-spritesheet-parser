@@ -1,3 +1,5 @@
+import { type Func } from "@agusmgarcia/react-core";
+
 import { type Animations } from "#src/store";
 
 type CenterItemProps = {
@@ -5,7 +7,7 @@ type CenterItemProps = {
   index: number;
   onionActive: boolean;
   onionDisabled: boolean;
-  onionOnClick: React.MouseEventHandler<HTMLButtonElement>;
+  onionOnClick: Func;
   playing: boolean;
 };
 

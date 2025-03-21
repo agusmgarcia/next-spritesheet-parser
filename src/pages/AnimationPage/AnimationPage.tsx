@@ -30,6 +30,8 @@ export default function AnimationPage(props: AnimationPageProps) {
         forwardOnClick={forwardOnClick}
         index={index}
         onionActive={onionActive}
+        onionDisabled={onionDisabled}
+        onionOnClick={onionOnClick}
         playOnClick={playOnClick}
         playing={playing}
         playingDisabled={playingDisabled}

@@ -72,7 +72,7 @@ function useOnion({
     [playingFromProps],
   );
 
-  const onionOnClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
+  const onionOnClick = useCallback<Func>(
     () => setOnionActive((prev) => !prev),
     [],
   );
