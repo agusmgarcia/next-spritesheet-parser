@@ -18,6 +18,8 @@ export default function useMainContent({
   exportFileOnClick: exportFileOnClickFromProps,
   importFileDisabled: importFileDisabledFromProps,
   importFileOnClick: importFileOnClickFromProps,
+  mergeSpritesDisabled: mergeSpritesDisabledFromProps,
+  mergeSpritesOnClick: mergeSpritesOnClickFromProps,
   resetSelectionDisabled: resetSelectionDisabledFromProps,
   resetSelectionOnClick: resetSelectionOnClickFromProps,
   spriteIds: spriteIdsFromProps,
@@ -311,6 +313,10 @@ export default function useMainContent({
           if (!!importFileDisabledFromProps) return;
           return importFileOnClickFromProps();
 
+        case "m":
+          if (!!mergeSpritesDisabledFromProps) return;
+          return mergeSpritesOnClickFromProps();
+
         case "r":
           if (!!resetSelectionDisabledFromProps) return;
           return resetSelectionOnClickFromProps();
@@ -326,6 +332,8 @@ export default function useMainContent({
     exportFileOnClickFromProps,
     importFileDisabledFromProps,
     importFileOnClickFromProps,
+    mergeSpritesDisabledFromProps,
+    mergeSpritesOnClickFromProps,
     resetSelectionDisabledFromProps,
     resetSelectionOnClickFromProps,
   ]);

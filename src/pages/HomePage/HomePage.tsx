@@ -15,12 +15,14 @@ export default function HomePage(props: HomePageProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    mergeSpritesDisabled,
+    mergeSpritesLoading,
+    mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
     spriteIds,
     spriteIdsOnSelect,
     spriteIdsOnToggle,
-    spriteIdsOnUnselectAll,
   } = useHomePage(props);
 
   return (
@@ -33,6 +35,8 @@ export default function HomePage(props: HomePageProps) {
         exportFileOnClick={exportFileOnClick}
         importFileDisabled={importFileDisabled}
         importFileOnClick={importFileOnClick}
+        mergeSpritesDisabled={mergeSpritesDisabled}
+        mergeSpritesOnClick={mergeSpritesOnClick}
         resetSelectionDisabled={resetSelectionDisabled}
         resetSelectionOnClick={resetSelectionOnClick}
         spriteIds={spriteIds}
@@ -51,10 +55,11 @@ export default function HomePage(props: HomePageProps) {
           importFileDisabled={importFileDisabled}
           importFileLoading={importFileLoading}
           importFileOnClick={importFileOnClick}
+          mergeSpritesDisabled={mergeSpritesDisabled}
+          mergeSpritesLoading={mergeSpritesLoading}
+          mergeSpritesOnClick={mergeSpritesOnClick}
           resetSelectionDisabled={resetSelectionDisabled}
           resetSelectionOnClick={resetSelectionOnClick}
-          spriteIds={spriteIds}
-          spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
         />
       </SideBar>
     </>

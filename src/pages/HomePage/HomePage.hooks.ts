@@ -33,6 +33,9 @@ export default function useHomePage(props: HomePageProps) {
     spriteIdsOnUnselectAll,
   });
 
+  const { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick } =
+    useMergeSprites({ spriteIds, spriteIdsOnUnselectAll });
+
   return {
     ...props,
     createAnimationDisabled,
@@ -43,12 +46,14 @@ export default function useHomePage(props: HomePageProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    mergeSpritesDisabled,
+    mergeSpritesLoading,
+    mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
     spriteIds,
     spriteIdsOnSelect,
     spriteIdsOnToggle,
-    spriteIdsOnUnselectAll,
   };
 }
 
@@ -257,4 +262,34 @@ function useResetSelection({
   );
 
   return { resetSelectionDisabled, resetSelectionOnClick };
+}
+
+function useMergeSprites({
+  spriteIds: spriteIdsFromProps,
+  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
+}: Pick<
+  ReturnType<typeof useSpriteIds>,
+  "spriteIds" | "spriteIdsOnUnselectAll"
+>) {
+  const { mergeSpriteSheetSprites } = useSpriteSheet();
+
+  const [mergeSpritesLoading, setMergeSpritesLoading] = useState(false);
+
+  const mergeSpritesDisabled = useMemo<boolean>(
+    () => spriteIdsFromProps.length <= 1 || mergeSpritesLoading,
+    [mergeSpritesLoading, spriteIdsFromProps.length],
+  );
+
+  const mergeSpritesOnClick = useCallback<Func>(() => {
+    setMergeSpritesLoading(true);
+    mergeSpriteSheetSprites(spriteIdsFromProps)
+      .then(spriteIdsOnUnselectAllFromProps)
+      .finally(() => setMergeSpritesLoading(false));
+  }, [
+    mergeSpriteSheetSprites,
+    spriteIdsFromProps,
+    spriteIdsOnUnselectAllFromProps,
+  ]);
+
+  return { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick };
 }

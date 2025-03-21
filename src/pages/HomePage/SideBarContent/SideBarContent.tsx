@@ -17,10 +17,11 @@ export default function SideBarContent(props: SideBarContentProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    mergeSpritesDisabled,
+    mergeSpritesLoading,
+    mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
-    spriteIds,
-    spriteIdsOnUnselectAll,
   } = useSideBarContent(props);
 
   return (
@@ -37,10 +38,11 @@ export default function SideBarContent(props: SideBarContentProps) {
       <AnimationsItem
         createAnimationDisabled={createAnimationDisabled}
         createAnimationOnClick={createAnimationOnClick}
+        mergeSpritesDisabled={mergeSpritesDisabled}
+        mergeSpritesLoading={mergeSpritesLoading}
+        mergeSpritesOnClick={mergeSpritesOnClick}
         resetSelectionDisabled={resetSelectionDisabled}
         resetSelectionOnClick={resetSelectionOnClick}
-        spriteIds={spriteIds}
-        spriteIdsOnUnselectAll={spriteIdsOnUnselectAll}
       />
     </Accordion>
   );

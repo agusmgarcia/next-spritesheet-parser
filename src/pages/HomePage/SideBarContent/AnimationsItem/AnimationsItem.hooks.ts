@@ -6,11 +6,7 @@ import { useAnimations, useSpriteSheet } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
-export default function useAnimationsItem({
-  spriteIds: spriteIdsFromProps,
-  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-  ...rest
-}: AnimationsItemProps) {
+export default function useAnimationsItem(props: AnimationsItemProps) {
   const heading = useMemo<TypographyProps>(
     () => ({ children: "Animations", variant: "h2" }),
     [],
@@ -22,21 +18,12 @@ export default function useAnimationsItem({
     animationSelectorValue,
   } = useAnimationSelector();
 
-  const { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick } =
-    useMergeSprites({
-      spriteIds: spriteIdsFromProps,
-      spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-    });
-
   return {
-    ...rest,
+    ...props,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
     heading,
-    mergeSpritesDisabled,
-    mergeSpritesLoading,
-    mergeSpritesOnClick,
   };
 }
 
@@ -74,33 +61,4 @@ function useAnimationSelector() {
     animationSelectorOptions,
     animationSelectorValue,
   };
-}
-
-function useMergeSprites({
-  spriteIds: spriteIdsFromProps,
-  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-}: Pick<AnimationsItemProps, "spriteIds" | "spriteIdsOnUnselectAll">) {
-  const { mergeSpriteSheetSprites } = useSpriteSheet();
-
-  const [mergeSpritesLoading, setMergeSpritesLoading] = useState(false);
-
-  const mergeSpritesDisabled = useMemo<boolean>(
-    () => spriteIdsFromProps.length <= 1 || mergeSpritesLoading,
-    [mergeSpritesLoading, spriteIdsFromProps.length],
-  );
-
-  const mergeSpritesOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
-    setMergeSpritesLoading(true);
-    mergeSpriteSheetSprites(spriteIdsFromProps)
-      .then(spriteIdsOnUnselectAllFromProps)
-      .finally(() => setMergeSpritesLoading(false));
-  }, [
-    mergeSpriteSheetSprites,
-    spriteIdsFromProps,
-    spriteIdsOnUnselectAllFromProps,
-  ]);
-
-  return { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick };
 }

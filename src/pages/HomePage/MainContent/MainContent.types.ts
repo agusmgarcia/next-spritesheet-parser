@@ -7,6 +7,8 @@ type MainContentProps = {
   exportFileOnClick: Func;
   importFileDisabled: boolean;
   importFileOnClick: Func;
+  mergeSpritesDisabled: boolean;
+  mergeSpritesOnClick: Func;
   resetSelectionDisabled: boolean;
   resetSelectionOnClick: Func;
   spriteIds: string[];
