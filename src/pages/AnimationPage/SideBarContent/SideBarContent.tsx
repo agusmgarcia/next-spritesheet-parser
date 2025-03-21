@@ -22,6 +22,12 @@ export default function SideBarContent(props: SideBarContentProps) {
     playing,
     playingDisabled,
     playOnClick,
+    resetZoomDisabled,
+    resetZoomOnClick,
+    zoomInDisabled,
+    zoomInOnClick,
+    zoomOutDisabled,
+    zoomOutOnClick,
   } = useSideBarContent(props);
 
   return (
@@ -35,7 +41,14 @@ export default function SideBarContent(props: SideBarContentProps) {
         playingDisabled={playingDisabled}
       />
       <FPSItem animation={animation} />
-      <ZoomItem animation={animation} />
+      <ZoomItem
+        resetZoomDisabled={resetZoomDisabled}
+        resetZoomOnClick={resetZoomOnClick}
+        zoomInDisabled={zoomInDisabled}
+        zoomInOnClick={zoomInOnClick}
+        zoomOutDisabled={zoomOutDisabled}
+        zoomOutOnClick={zoomOutOnClick}
+      />
       <CenterItem
         animation={animation}
         index={index}

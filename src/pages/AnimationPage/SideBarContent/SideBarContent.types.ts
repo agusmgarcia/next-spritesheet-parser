@@ -13,6 +13,12 @@ type SideBarContentProps = {
   playing: boolean;
   playingDisabled: boolean;
   playOnClick: Func;
+  resetZoomDisabled: boolean;
+  resetZoomOnClick: Func;
+  zoomInDisabled: boolean;
+  zoomInOnClick: Func;
+  zoomOutDisabled: boolean;
+  zoomOutOnClick: Func;
 };
 
 export default SideBarContentProps;

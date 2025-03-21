@@ -17,6 +17,12 @@ export default function AnimationPage(props: AnimationPageProps) {
     playing,
     playingDisabled,
     playOnClick,
+    resetZoomDisabled,
+    resetZoomOnClick,
+    zoomInDisabled,
+    zoomInOnClick,
+    zoomOutDisabled,
+    zoomOutOnClick,
   } = useAnimationPage(props);
 
   if (!animation) return <></>;
@@ -35,6 +41,12 @@ export default function AnimationPage(props: AnimationPageProps) {
         playOnClick={playOnClick}
         playing={playing}
         playingDisabled={playingDisabled}
+        resetZoomDisabled={resetZoomDisabled}
+        resetZoomOnClick={resetZoomOnClick}
+        zoomInDisabled={zoomInDisabled}
+        zoomInOnClick={zoomInOnClick}
+        zoomOutDisabled={zoomOutDisabled}
+        zoomOutOnClick={zoomOutOnClick}
       />
 
       {/* SIDEBAR */}
@@ -50,6 +62,12 @@ export default function AnimationPage(props: AnimationPageProps) {
           playOnClick={playOnClick}
           playing={playing}
           playingDisabled={playingDisabled}
+          resetZoomDisabled={resetZoomDisabled}
+          resetZoomOnClick={resetZoomOnClick}
+          zoomInDisabled={zoomInDisabled}
+          zoomInOnClick={zoomInOnClick}
+          zoomOutDisabled={zoomOutDisabled}
+          zoomOutOnClick={zoomOutOnClick}
         />
       </SideBar>
     </>

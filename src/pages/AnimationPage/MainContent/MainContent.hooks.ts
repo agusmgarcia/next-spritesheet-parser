@@ -17,6 +17,12 @@ export default function useMainContent({
   playing: playingFromProps,
   playingDisabled: playingDisabledFromProps,
   playOnClick: playOnClickFromProps,
+  resetZoomDisabled: resetZoomDisabledFromProps,
+  resetZoomOnClick: resetZoomOnClickFromProps,
+  zoomInDisabled: zoomInDisabledFromProps,
+  zoomInOnClick: zoomInOnClickFromProps,
+  zoomOutDisabled: zoomOutDisabledFromProps,
+  zoomOutOnClick: zoomOutOnClickFromProps,
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
@@ -139,12 +145,36 @@ export default function useMainContent({
         case " ":
           if (!!playingDisabledFromProps) return;
           return playOnClickFromProps();
+
+        case "ArrowUp":
+          if (!!event.altKey) return;
+          if (!!zoomInDisabledFromProps) return;
+          return zoomInOnClickFromProps();
+
+        case "ArrowDown":
+          if (!!event.altKey) return;
+          if (!!zoomOutDisabledFromProps) return;
+          return zoomOutOnClickFromProps();
+
+        case "z":
+          if (!!resetZoomDisabledFromProps) return;
+          return resetZoomOnClickFromProps();
       }
     };
 
     root.addEventListener("keydown", handleKeyDown);
     return () => root.removeEventListener("keydown", handleKeyDown);
-  }, [playOnClickFromProps, playingDisabledFromProps, playingFromProps]);
+  }, [
+    playOnClickFromProps,
+    playingDisabledFromProps,
+    playingFromProps,
+    resetZoomDisabledFromProps,
+    resetZoomOnClickFromProps,
+    zoomInDisabledFromProps,
+    zoomInOnClickFromProps,
+    zoomOutDisabledFromProps,
+    zoomOutOnClickFromProps,
+  ]);
 
   useEffect(() => {
     if (playingFromProps) return;
