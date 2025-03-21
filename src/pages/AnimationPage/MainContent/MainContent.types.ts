@@ -17,6 +17,8 @@ type MainContentProps = {
   playOnClick: Func;
   plusFPSDisabled: boolean;
   plusFPSOnClick: Func;
+  resetCenterDisabled: boolean;
+  resetCenterOnClick: Func;
   resetZoomDisabled: boolean;
   resetZoomOnClick: Func;
   zoomInDisabled: boolean;

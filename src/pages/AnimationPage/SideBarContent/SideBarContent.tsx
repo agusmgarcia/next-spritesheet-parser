@@ -17,7 +17,6 @@ export default function SideBarContent(props: SideBarContentProps) {
     fps,
     fpsOnChange,
     heading,
-    index,
     minusFPSDisabled,
     minusFPSOnClick,
     onionActive,
@@ -28,6 +27,8 @@ export default function SideBarContent(props: SideBarContentProps) {
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    resetCenterDisabled,
+    resetCenterOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,
@@ -64,11 +65,11 @@ export default function SideBarContent(props: SideBarContentProps) {
       />
       <CenterItem
         animation={animation}
-        index={index}
         onionActive={onionActive}
         onionDisabled={onionDisabled}
         onionOnClick={onionOnClick}
-        playing={playing}
+        resetCenterDisabled={resetCenterDisabled}
+        resetCenterOnClick={resetCenterOnClick}
       />
       <AnimationsItem animation={animation} />
     </Accordion>

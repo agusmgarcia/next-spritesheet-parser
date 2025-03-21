@@ -39,6 +39,12 @@ export default function useAnimationPage(props: AnimationPageProps) {
     zoomOutOnClick,
   } = useZoom({ animation });
 
+  const { resetCenterDisabled, resetCenterOnClick } = useResetCenter({
+    animation,
+    index,
+    playing,
+  });
+
   return {
     ...props,
     animation,
@@ -57,6 +63,8 @@ export default function useAnimationPage(props: AnimationPageProps) {
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    resetCenterDisabled,
+    resetCenterOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,
@@ -290,4 +298,32 @@ function useZoom({
     zoomOutDisabled,
     zoomOutOnClick,
   };
+}
+
+function useResetCenter({
+  animation: animationFromProps,
+  index: indexFromProps,
+  playing: playingFromProps,
+}: Pick<ReturnType<typeof useAnimation>, "animation"> &
+  Pick<ReturnType<typeof useIndex>, "index"> &
+  Pick<ReturnType<typeof usePlaying>, "playing">) {
+  const { resetAnimationOffset } = useAnimations();
+
+  const resetCenterDisabled = useMemo<boolean>(
+    () =>
+      playingFromProps ||
+      !animationFromProps?.sprites ||
+      (animationFromProps.sprites[indexFromProps].offsetX ===
+        animationFromProps.sprites[indexFromProps].initialOffsetX &&
+        animationFromProps.sprites[indexFromProps].offsetY ===
+          animationFromProps.sprites[indexFromProps].initialOffsetY),
+    [animationFromProps?.sprites, indexFromProps, playingFromProps],
+  );
+
+  const resetCenterOnClick = useCallback<Func>(
+    () => resetAnimationOffset(animationFromProps?.id || "", indexFromProps),
+    [animationFromProps?.id, indexFromProps, resetAnimationOffset],
+  );
+
+  return { resetCenterDisabled, resetCenterOnClick };
 }

@@ -23,6 +23,8 @@ export default function AnimationPage(props: AnimationPageProps) {
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    resetCenterDisabled,
+    resetCenterOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,
@@ -51,6 +53,8 @@ export default function AnimationPage(props: AnimationPageProps) {
         playingDisabled={playingDisabled}
         plusFPSDisabled={plusFPSDisabled}
         plusFPSOnClick={plusFPSOnClick}
+        resetCenterDisabled={resetCenterDisabled}
+        resetCenterOnClick={resetCenterOnClick}
         resetZoomDisabled={resetZoomDisabled}
         resetZoomOnClick={resetZoomOnClick}
         zoomInDisabled={zoomInDisabled}
@@ -67,7 +71,6 @@ export default function AnimationPage(props: AnimationPageProps) {
           forwardOnClick={forwardOnClick}
           fps={fps}
           fpsOnChange={fpsOnChange}
-          index={index}
           minusFPSDisabled={minusFPSDisabled}
           minusFPSOnClick={minusFPSOnClick}
           onionActive={onionActive}
@@ -78,6 +81,8 @@ export default function AnimationPage(props: AnimationPageProps) {
           playingDisabled={playingDisabled}
           plusFPSDisabled={plusFPSDisabled}
           plusFPSOnClick={plusFPSOnClick}
+          resetCenterDisabled={resetCenterDisabled}
+          resetCenterOnClick={resetCenterOnClick}
           resetZoomDisabled={resetZoomDisabled}
           resetZoomOnClick={resetZoomOnClick}
           zoomInDisabled={zoomInDisabled}

@@ -8,7 +8,6 @@ type SideBarContentProps = {
   forwardOnClick: Func;
   fps: number;
   fpsOnChange: React.ChangeEventHandler<HTMLInputElement>;
-  index: number;
   minusFPSDisabled: boolean;
   minusFPSOnClick: Func;
   onionActive: boolean;
@@ -19,6 +18,8 @@ type SideBarContentProps = {
   playOnClick: Func;
   plusFPSDisabled: boolean;
   plusFPSOnClick: Func;
+  resetCenterDisabled: boolean;
+  resetCenterOnClick: Func;
   resetZoomDisabled: boolean;
   resetZoomOnClick: Func;
   zoomInDisabled: boolean;

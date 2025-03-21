@@ -7,8 +7,6 @@ import type CenterItemProps from "./CenterItem.types";
 
 export default function useCenterItem({
   animation: animationFromProps,
-  index: indexFromProps,
-  playing: playingFromProps,
   ...rest
 }: CenterItemProps) {
   const heading = useMemo<TypographyProps>(
@@ -18,13 +16,6 @@ export default function useCenterItem({
     }),
     [],
   );
-
-  const { disabled: resetCenterDisabled, onClick: resetCenterOnClick } =
-    useResetCenter({
-      animation: animationFromProps,
-      index: indexFromProps,
-      playing: playingFromProps,
-    });
 
   const {
     disabled: colorDisabled,
@@ -38,34 +29,7 @@ export default function useCenterItem({
     colorOnChange,
     colorValue,
     heading,
-    resetCenterDisabled,
-    resetCenterOnClick,
   };
-}
-
-function useResetCenter({
-  animation: animationFromProps,
-  index: indexFromProps,
-  playing: playingFromProps,
-}: Pick<CenterItemProps, "animation" | "index"> & { playing: boolean }) {
-  const { resetAnimationOffset } = useAnimations();
-
-  const disabled = useMemo<boolean>(
-    () =>
-      playingFromProps ||
-      (animationFromProps.sprites[indexFromProps].offsetX ===
-        animationFromProps.sprites[indexFromProps].initialOffsetX &&
-        animationFromProps.sprites[indexFromProps].offsetY ===
-          animationFromProps.sprites[indexFromProps].initialOffsetY),
-    [animationFromProps.sprites, indexFromProps, playingFromProps],
-  );
-
-  const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => resetAnimationOffset(animationFromProps.id, indexFromProps),
-    [animationFromProps.id, indexFromProps, resetAnimationOffset],
-  );
-
-  return { disabled, onClick };
 }
 
 function useColor({

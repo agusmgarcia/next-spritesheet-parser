@@ -4,11 +4,11 @@ import { type Animations } from "#src/store";
 
 type CenterItemProps = {
   animation: Animations[number];
-  index: number;
   onionActive: boolean;
   onionDisabled: boolean;
   onionOnClick: Func;
-  playing: boolean;
+  resetCenterDisabled: boolean;
+  resetCenterOnClick: Func;
 };
 
 export default CenterItemProps;

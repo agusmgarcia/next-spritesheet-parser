@@ -21,6 +21,8 @@ export default function useMainContent({
   playOnClick: playOnClickFromProps,
   plusFPSDisabled: plusFPSDisabledFromProps,
   plusFPSOnClick: plusFPSOnClickFromProps,
+  resetCenterDisabled: resetCenterDisabledFromProps,
+  resetCenterOnClick: resetCenterOnClickFromProps,
   resetZoomDisabled: resetZoomDisabledFromProps,
   resetZoomOnClick: resetZoomOnClickFromProps,
   zoomInDisabled: zoomInDisabledFromProps,
@@ -171,6 +173,10 @@ export default function useMainContent({
         case "-":
           if (!!minusFPSDisabledFromProps) return;
           return minusFPSOnClickFromProps();
+
+        case "c":
+          if (!!resetCenterDisabledFromProps) return;
+          return resetCenterOnClickFromProps();
       }
     };
 
@@ -184,6 +190,8 @@ export default function useMainContent({
     playingFromProps,
     plusFPSDisabledFromProps,
     plusFPSOnClickFromProps,
+    resetCenterDisabledFromProps,
+    resetCenterOnClickFromProps,
     resetZoomDisabledFromProps,
     resetZoomOnClickFromProps,
     zoomInDisabledFromProps,
