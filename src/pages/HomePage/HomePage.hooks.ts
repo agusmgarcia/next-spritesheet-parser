@@ -1,11 +1,12 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   type Animations,
   type SpriteSheet,
   useAnimations,
+  useSpriteSelection,
   useSpriteSheet,
 } from "#src/store";
 
@@ -18,23 +19,13 @@ export default function useHomePage(props: HomePageProps) {
   const { exportFileDisabled, exportFileLoading, exportFileOnClick } =
     useExportFile();
 
-  const {
-    spriteIds,
-    spriteIdsOnSelect,
-    spriteIdsOnToggle,
-    spriteIdsOnUnselectAll,
-  } = useSpriteIds();
-
   const { createAnimationDisabled, createAnimationOnClick } =
-    useCreateAnimation({ spriteIds });
+    useCreateAnimation();
 
-  const { resetSelectionDisabled, resetSelectionOnClick } = useResetSelection({
-    spriteIds,
-    spriteIdsOnUnselectAll,
-  });
+  const { resetSelectionDisabled, resetSelectionOnClick } = useResetSelection();
 
   const { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick } =
-    useMergeSprites({ spriteIds, spriteIdsOnUnselectAll });
+    useMergeSprites();
 
   return {
     ...props,
@@ -51,9 +42,6 @@ export default function useHomePage(props: HomePageProps) {
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
-    spriteIds,
-    spriteIdsOnSelect,
-    spriteIdsOnToggle,
   };
 }
 
@@ -177,119 +165,63 @@ function useExportFile() {
   return { exportFileDisabled, exportFileLoading, exportFileOnClick };
 }
 
-function useSpriteIds() {
-  const { spriteSheet } = useSpriteSheet();
-
-  const initialSpriteIds = useMemo<string[]>(() => [], []);
-
-  const [spriteIds, setSpriteIds] = useState(initialSpriteIds);
-
-  const spriteIdsOnToggle = useCallback<Func<void, [spriteId: string]>>(
-    (spriteId) =>
-      setSpriteIds((prev) =>
-        prev.includes(spriteId)
-          ? prev.filter((sId) => sId !== spriteId)
-          : [...prev, spriteId],
-      ),
-    [],
-  );
-
-  const spriteIdsOnSelect = useCallback<Func<void, [spriteId: string]>>(
-    (spriteId) =>
-      setSpriteIds((prev) =>
-        prev.includes(spriteId) ? prev : [...prev, spriteId],
-      ),
-    [],
-  );
-
-  const spriteIdsOnUnselectAll = useCallback<Func>(
-    () => setSpriteIds(initialSpriteIds),
-    [initialSpriteIds],
-  );
-
-  useEffect(() => {
-    setSpriteIds(initialSpriteIds);
-  }, [initialSpriteIds, spriteSheet]);
-
-  return {
-    spriteIds,
-    spriteIdsOnSelect,
-    spriteIdsOnToggle,
-    spriteIdsOnUnselectAll,
-  };
-}
-
-function useCreateAnimation({
-  spriteIds: spriteIdsFromProps,
-}: Pick<ReturnType<typeof useSpriteIds>, "spriteIds">) {
+function useCreateAnimation() {
   const { push } = useRouter();
 
   const { createAnimation } = useAnimations();
+  const { spriteSelection } = useSpriteSelection();
 
   const [createAnimationLoading, setCreateAnimationLoading] = useState(false);
 
   const createAnimationDisabled = useMemo<boolean>(
-    () => !spriteIdsFromProps.length || createAnimationLoading,
-    [createAnimationLoading, spriteIdsFromProps.length],
+    () => !spriteSelection.length || createAnimationLoading,
+    [createAnimationLoading, spriteSelection.length],
   );
 
   const createAnimationOnClick = useCallback<Func>(() => {
-    if (!spriteIdsFromProps.length) return;
+    if (!spriteSelection.length) return;
     setCreateAnimationLoading(true);
-    createAnimation(spriteIdsFromProps)
+    createAnimation(spriteSelection)
       .then((id) => push(`/animations/${id}`))
       .finally(() => setCreateAnimationLoading(false));
-  }, [createAnimation, spriteIdsFromProps, push]);
+  }, [createAnimation, spriteSelection, push]);
 
   return { createAnimationDisabled, createAnimationOnClick };
 }
 
-function useResetSelection({
-  spriteIds: spriteIdsFromProps,
-  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-}: Pick<
-  ReturnType<typeof useSpriteIds>,
-  "spriteIds" | "spriteIdsOnUnselectAll"
->) {
+function useResetSelection() {
+  const { spriteSelection, unselectAllSprites } = useSpriteSelection();
+
   const resetSelectionDisabled = useMemo<boolean>(
-    () => !spriteIdsFromProps.length,
-    [spriteIdsFromProps.length],
+    () => !spriteSelection.length,
+    [spriteSelection.length],
   );
 
   const resetSelectionOnClick = useCallback<Func>(
-    () => spriteIdsOnUnselectAllFromProps(),
-    [spriteIdsOnUnselectAllFromProps],
+    () => unselectAllSprites(),
+    [unselectAllSprites],
   );
 
   return { resetSelectionDisabled, resetSelectionOnClick };
 }
 
-function useMergeSprites({
-  spriteIds: spriteIdsFromProps,
-  spriteIdsOnUnselectAll: spriteIdsOnUnselectAllFromProps,
-}: Pick<
-  ReturnType<typeof useSpriteIds>,
-  "spriteIds" | "spriteIdsOnUnselectAll"
->) {
+function useMergeSprites() {
   const { mergeSpriteSheetSprites } = useSpriteSheet();
+  const { spriteSelection, unselectAllSprites } = useSpriteSelection();
 
   const [mergeSpritesLoading, setMergeSpritesLoading] = useState(false);
 
   const mergeSpritesDisabled = useMemo<boolean>(
-    () => spriteIdsFromProps.length <= 1 || mergeSpritesLoading,
-    [mergeSpritesLoading, spriteIdsFromProps.length],
+    () => spriteSelection.length <= 1 || mergeSpritesLoading,
+    [mergeSpritesLoading, spriteSelection.length],
   );
 
   const mergeSpritesOnClick = useCallback<Func>(() => {
     setMergeSpritesLoading(true);
-    mergeSpriteSheetSprites(spriteIdsFromProps)
-      .then(spriteIdsOnUnselectAllFromProps)
+    mergeSpriteSheetSprites(spriteSelection)
+      .then(unselectAllSprites)
       .finally(() => setMergeSpritesLoading(false));
-  }, [
-    mergeSpriteSheetSprites,
-    spriteIdsFromProps,
-    spriteIdsOnUnselectAllFromProps,
-  ]);
+  }, [mergeSpriteSheetSprites, spriteSelection, unselectAllSprites]);
 
   return { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick };
 }

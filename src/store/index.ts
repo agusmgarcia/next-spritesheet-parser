@@ -3,18 +3,24 @@ import { createStore } from "@agusmgarcia/react-core";
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
+import createSpriteSelectionSlice, {
+  type SpriteSelectionSliceTypes,
+} from "./SpriteSelectionSlice";
 import createSpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
 
 export type Animations =
   AnimationsSliceTypes.default["animations"]["animations"];
+export type SpriteSelection =
+  SpriteSelectionSliceTypes.default["spriteSelection"]["spriteSelection"];
 export type SpriteSheet = NonNullable<
   SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
 >;
 
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
+  createSpriteSelectionSlice,
   createSpriteSheetSlice,
 );
 
@@ -39,6 +45,21 @@ export function useAnimations() {
     setAnimations: useSelector((state) => state.animations.setAnimations),
     setAnimationScale: useSelector(
       (state) => state.animations.setAnimationScale,
+    ),
+  };
+}
+
+export function useSpriteSelection() {
+  return {
+    selectSprite: useSelector((state) => state.spriteSelection.selectSprite),
+    spriteSelection: useSelector(
+      (state) => state.spriteSelection.spriteSelection,
+    ),
+    toggleSpriteSelection: useSelector(
+      (state) => state.spriteSelection.toggleSpriteSelection,
+    ),
+    unselectAllSprites: useSelector(
+      (state) => state.spriteSelection.unselectAllSprites,
     ),
   };
 }

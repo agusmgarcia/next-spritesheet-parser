@@ -11,9 +11,6 @@ type MainContentProps = {
   mergeSpritesOnClick: Func;
   resetSelectionDisabled: boolean;
   resetSelectionOnClick: Func;
-  spriteIds: string[];
-  spriteIdsOnSelect: Func<void, [spriteId: string]>;
-  spriteIdsOnToggle: Func<void, [spriteId: string]>;
 };
 
 export default MainContentProps;

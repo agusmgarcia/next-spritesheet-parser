@@ -6,7 +6,7 @@ import {
 } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useSpriteSheet } from "#src/store";
+import { useSpriteSelection, useSpriteSheet } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
@@ -22,12 +22,11 @@ export default function useMainContent({
   mergeSpritesOnClick: mergeSpritesOnClickFromProps,
   resetSelectionDisabled: resetSelectionDisabledFromProps,
   resetSelectionOnClick: resetSelectionOnClickFromProps,
-  spriteIds: spriteIdsFromProps,
-  spriteIdsOnSelect: spriteIdsOnSelectFromProps,
-  spriteIdsOnToggle: spriteIdsOnToggleFromProps,
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
+  const { selectSprite, spriteSelection, toggleSpriteSelection } =
+    useSpriteSelection();
 
   const rootRef = useRef<HTMLDivElement>(null);
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -101,7 +100,7 @@ export default function useMainContent({
       setInitialCursor(undefined);
 
       if (!!preSelectedSprites) {
-        preSelectedSprites.forEach(spriteIdsOnSelectFromProps);
+        preSelectedSprites.forEach(selectSprite);
         setPreSelectedSprites(undefined);
         return;
       }
@@ -113,14 +112,14 @@ export default function useMainContent({
       const sprite = findSprite(x, y);
       if (!sprite) return;
 
-      spriteIdsOnToggleFromProps(sprite.id);
+      toggleSpriteSelection(sprite.id);
     },
     [
       devicePixelRatio,
       findSprite,
       preSelectedSprites,
-      spriteIdsOnSelectFromProps,
-      spriteIdsOnToggleFromProps,
+      selectSprite,
+      toggleSpriteSelection,
     ],
   );
 
@@ -251,7 +250,7 @@ export default function useMainContent({
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
 
-    spriteIdsFromProps.forEach((spriteId) => {
+    spriteSelection.forEach((spriteId) => {
       const sprite = spriteSheet.sprites[spriteId];
       if (!sprite) return;
 
@@ -265,7 +264,7 @@ export default function useMainContent({
       const sprite = spriteSheet.sprites[spriteId];
       if (!sprite) return;
 
-      if (spriteIdsFromProps.includes(spriteId)) return;
+      if (spriteSelection.includes(spriteId)) return;
 
       context.globalAlpha = 0.4;
       context.fillStyle = spriteSheet.sheet.color;
@@ -286,7 +285,7 @@ export default function useMainContent({
   }, [
     devicePixelRatio,
     image,
-    spriteIdsFromProps,
+    spriteSelection,
     initialCursor,
     preSelectedSprites,
     rootDimensions.height,
