@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.13.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.0)
+
+> March 21, 2025
+
+- **AnimationPage**: rename some properties
+- **AnimationPage**: add ability to reset center using keyboard
+- **AnimationPage**: add ability to enable fps using keyboard
+- **AnimationPage**: add ability to enable zoom using keyboard
+- **AnimationPage**: add ability to enable onion using keyboard
+- **AnimationPage**: add ability to play and stop animation using keyboard
+- **HomePage**: adjust useCallback type
+- **HomePage**: add ability to merge sprites selection using keyboard
+- **HomePage**: add ability to reset sprite selection using keyboard
+- **HomePage**: add ability to create animation using keyboard
+- **HomePage**: add ability to export file using keyboard
+- **HomePage**: add ability to import file using keyboard
+
 ## [v0.12.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.12.0)
 
 > March 20, 2025

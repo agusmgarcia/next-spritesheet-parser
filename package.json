@@ -1,6 +1,6 @@
 {
   "name": "@agusmgarcia/next-spritesheet-parser",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": true,
   "author": "Agus Garcia",
   "description": "Web application to parse spritesheets into JSON file",
