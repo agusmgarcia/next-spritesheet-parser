@@ -171,19 +171,15 @@ function useCreateAnimation() {
   const { createAnimation } = useAnimations();
   const { spriteSelection } = useSpriteSelection();
 
-  const [createAnimationLoading, setCreateAnimationLoading] = useState(false);
-
   const createAnimationDisabled = useMemo<boolean>(
-    () => !spriteSelection.length || createAnimationLoading,
-    [createAnimationLoading, spriteSelection.length],
+    () => !spriteSelection.length,
+    [spriteSelection.length],
   );
 
   const createAnimationOnClick = useCallback<Func>(() => {
-    if (!spriteSelection.length) return;
-    setCreateAnimationLoading(true);
-    createAnimation(spriteSelection)
-      .then((id) => push(`/animations/${id}`))
-      .finally(() => setCreateAnimationLoading(false));
+    const animationId = createAnimation(spriteSelection);
+    if (!animationId) return;
+    push(`/animations/${animationId}`);
   }, [createAnimation, spriteSelection, push]);
 
   return { createAnimationDisabled, createAnimationOnClick };

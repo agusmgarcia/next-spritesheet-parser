@@ -1,4 +1,4 @@
-import { type Func, useDevicePixelRatio } from "@agusmgarcia/react-core";
+import { type Func } from "@agusmgarcia/react-core";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -240,22 +240,17 @@ function useFPS({
 function useZoom({
   animation: animationFromProps,
 }: Pick<ReturnType<typeof useAnimation>, "animation">) {
-  const devicePixelRatio = useDevicePixelRatio();
-
   const { setAnimationScale } = useAnimations();
 
   const zoomOutDisabled = useMemo<boolean>(
-    () => (animationFromProps?.scale || 0) <= devicePixelRatio,
-    [animationFromProps?.scale, devicePixelRatio],
+    () => (animationFromProps?.scale || 0) <= 1,
+    [animationFromProps?.scale],
   );
 
   const zoomOutOnClick = useCallback<Func>(
     () =>
-      setAnimationScale(
-        animationFromProps?.id || "",
-        (prev) => prev - devicePixelRatio / 5,
-      ),
-    [animationFromProps?.id, devicePixelRatio, setAnimationScale],
+      setAnimationScale(animationFromProps?.id || "", (prev) => prev - 1 / 5),
+    [animationFromProps?.id, setAnimationScale],
   );
 
   const zoomInDisabled = useMemo<boolean>(
@@ -265,30 +260,25 @@ function useZoom({
 
   const zoomInOnClick = useCallback<Func>(
     () =>
-      setAnimationScale(
-        animationFromProps?.id || "",
-        (prev) => prev + devicePixelRatio / 5,
-      ),
-    [animationFromProps?.id, devicePixelRatio, setAnimationScale],
+      setAnimationScale(animationFromProps?.id || "", (prev) => prev + 1 / 5),
+    [animationFromProps?.id, , setAnimationScale],
   );
 
   const resetZoomDisabled = useMemo<boolean>(
-    () => (animationFromProps?.scale || 0) <= devicePixelRatio,
-    [animationFromProps?.scale, devicePixelRatio],
+    () => (animationFromProps?.scale || 0) <= 1,
+    [animationFromProps?.scale],
   );
 
   const resetZoomOnClick = useCallback<Func>(
-    () => setAnimationScale(animationFromProps?.id || "", devicePixelRatio),
-    [animationFromProps?.id, devicePixelRatio, setAnimationScale],
+    () => setAnimationScale(animationFromProps?.id || "", 1),
+    [animationFromProps?.id, setAnimationScale],
   );
 
   useEffect(() => {
     if (!animationFromProps?.id) return;
 
-    setAnimationScale(animationFromProps.id, (prev) =>
-      prev >= devicePixelRatio ? prev : devicePixelRatio,
-    );
-  }, [animationFromProps?.id, devicePixelRatio, setAnimationScale]);
+    setAnimationScale(animationFromProps.id, (prev) => (prev >= 1 ? prev : 1));
+  }, [animationFromProps?.id, setAnimationScale]);
 
   return {
     resetZoomDisabled,

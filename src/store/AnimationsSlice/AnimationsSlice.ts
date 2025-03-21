@@ -31,23 +31,23 @@ export default createGlobalSlice<
   };
 });
 
-async function createAnimation(
+function createAnimation(
   spriteIds: Parameters<AnimationsSlice["animations"]["createAnimation"]>[0],
   context: CreateGlobalSliceTypes.Context<
     AnimationsSlice,
     SpriteSheetSliceTypes.default
   >,
-): Promise<string> {
-  if (spriteIds.length <= 0)
-    throw new Error("Sprite ids must be greater than 0");
+): string | undefined {
+  if (spriteIds.length <= 0) return undefined;
 
   const spriteSheet = context.get().spriteSheet.spriteSheet;
-  if (!spriteSheet) throw new Error("Sprite sheet is not defined");
+  if (!spriteSheet) return undefined;
 
-  function sortSprites(): Func<number, [spriteId1: string, spriteId2: string]> {
-    if (!spriteSheet) throw new Error("Sprite sheet is not defined");
-    const sprites = spriteSheet.sprites;
-
+  function sortSprites(
+    sprites: NonNullable<
+      SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
+    >["sprites"],
+  ): Func<number, [spriteId1: string, spriteId2: string]> {
     return (spriteId1, spriteId2) => {
       const sprite1 = sprites[spriteId1];
       const sprite2 = sprites[spriteId2];
@@ -59,17 +59,19 @@ async function createAnimation(
     };
   }
 
-  function mapSprites(): Func<
+  function mapSprites(
+    sprites: NonNullable<
+      SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
+    >["sprites"],
+  ): Func<
     AnimationsSlice["animations"]["animations"][number]["sprites"][number],
     [spriteId: string]
   > {
-    if (!spriteSheet) throw new Error("Sprite sheet is not defined");
-    const sprites = spriteSheet.sprites;
-
     const spritesSelected = spriteIds.map((spriteId) => ({
       id: spriteId,
       ...sprites[spriteId],
     }));
+
     const maxHeight = Math.max(...spritesSelected.map((s) => s.height));
 
     const result = spritesSelected.reduce(
@@ -103,7 +105,9 @@ async function createAnimation(
         id,
         name: "New animation",
         scale: 0,
-        sprites: spriteIds.sort(sortSprites()).map(mapSprites()),
+        sprites: spriteIds
+          .sort(sortSprites(spriteSheet.sprites))
+          .map(mapSprites(spriteSheet.sprites)),
       },
     ],
   }));
@@ -111,20 +115,20 @@ async function createAnimation(
   return id;
 }
 
-async function deleteAnimation(
+function deleteAnimation(
   id: Parameters<AnimationsSlice["animations"]["deleteAnimation"]>[0],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.filter((a) => a.id !== id),
   }));
 }
 
-async function resetAnimationOffset(
+function resetAnimationOffset(
   id: Parameters<AnimationsSlice["animations"]["resetAnimationOffset"]>[0],
   index: Parameters<AnimationsSlice["animations"]["resetAnimationOffset"]>[1],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.map((a) =>
       a.id === id
@@ -145,12 +149,12 @@ async function resetAnimationOffset(
   }));
 }
 
-async function updateAnimations(
+function updateAnimations(
   context: CreateGlobalSliceTypes.Context<
     AnimationsSlice,
     SpriteSheetSliceTypes.default
   >,
-): Promise<void> {
+): void {
   context.set((prev) => {
     const sprites = context.get().spriteSheet.spriteSheet?.sprites;
     if (!sprites) return { animations: [] };
@@ -167,25 +171,25 @@ async function updateAnimations(
   });
 }
 
-async function setAnimationFPS(
+function setAnimationFPS(
   id: Parameters<AnimationsSlice["animations"]["setAnimationFPS"]>[0],
   fps: Parameters<AnimationsSlice["animations"]["setAnimationFPS"]>[1],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.map((a) =>
       a.id === id
-        ? { ...a, fps: (fps instanceof Function ? fps(a.fps) : fps) || 1 }
+        ? { ...a, fps: Math.max(fps instanceof Function ? fps(a.fps) : fps, 1) }
         : a,
     ),
   }));
 }
 
-async function setAnimationColor(
+function setAnimationColor(
   id: Parameters<AnimationsSlice["animations"]["setAnimationColor"]>[0],
   color: Parameters<AnimationsSlice["animations"]["setAnimationColor"]>[1],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.map((a) =>
       a.id === id
@@ -195,11 +199,11 @@ async function setAnimationColor(
   }));
 }
 
-async function setAnimationName(
+function setAnimationName(
   id: Parameters<AnimationsSlice["animations"]["setAnimationName"]>[0],
   name: Parameters<AnimationsSlice["animations"]["setAnimationName"]>[1],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.map((a) =>
       a.id === id
@@ -209,13 +213,13 @@ async function setAnimationName(
   }));
 }
 
-async function setAnimationOffset(
+function setAnimationOffset(
   id: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[0],
   index: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[1],
   offsetX: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[2],
   offsetY: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[3],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.map((a) =>
       a.id === id
@@ -242,22 +246,28 @@ async function setAnimationOffset(
   }));
 }
 
-async function setAnimations(
+function setAnimations(
   animations: Parameters<AnimationsSlice["animations"]["setAnimations"]>[0],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set({ animations });
 }
 
-async function setAnimationScale(
+function setAnimationScale(
   id: Parameters<AnimationsSlice["animations"]["setAnimationScale"]>[0],
   scale: Parameters<AnimationsSlice["animations"]["setAnimationScale"]>[1],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
     animations: prev.animations.map((a) =>
       a.id === id
-        ? { ...a, scale: scale instanceof Function ? scale(a.scale) : scale }
+        ? {
+            ...a,
+            scale: Math.max(
+              scale instanceof Function ? scale(a.scale) : scale,
+              1,
+            ),
+          }
         : a,
     ),
   }));

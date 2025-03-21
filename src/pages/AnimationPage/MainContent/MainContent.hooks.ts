@@ -74,6 +74,8 @@ export default function useMainContent({
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
 
+    const scale = animationFromProps.scale * devicePixelRatio;
+
     spriteCanvas.width = dimensions.width;
     spriteCanvas.height = dimensions.height;
 
@@ -83,7 +85,7 @@ export default function useMainContent({
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
     context.fillStyle = spriteSheet.sheet.backgroundColor;
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
-    context.scale(animationFromProps.scale, animationFromProps.scale);
+    context.scale(scale, scale);
 
     context.drawImage(
       image,
@@ -91,10 +93,10 @@ export default function useMainContent({
       currentSprite.top,
       currentSprite.width,
       currentSprite.height,
-      dimensions.width / (2 * animationFromProps.scale) -
+      dimensions.width / (2 * scale) -
         currentSprite.width / 2 -
         currentSprite.offsetX,
-      dimensions.height / (2 * animationFromProps.scale) -
+      dimensions.height / (2 * scale) -
         currentSprite.height / 2 -
         currentSprite.offsetY,
       currentSprite.width,
@@ -109,10 +111,10 @@ export default function useMainContent({
         prevSprite.top,
         prevSprite.width,
         prevSprite.height,
-        dimensions.width / (2 * animationFromProps.scale) -
+        dimensions.width / (2 * scale) -
           prevSprite.width / 2 -
           prevSprite.offsetX,
-        dimensions.height / (2 * animationFromProps.scale) -
+        dimensions.height / (2 * scale) -
           prevSprite.height / 2 -
           prevSprite.offsetY,
         prevSprite.width,
@@ -123,8 +125,8 @@ export default function useMainContent({
 
     context.beginPath();
     context.strokeStyle = animationFromProps.color;
-    const centerX = dimensions.width / (2 * animationFromProps.scale);
-    const centerY = dimensions.height / (2 * animationFromProps.scale);
+    const centerX = dimensions.width / (2 * scale);
+    const centerY = dimensions.height / (2 * scale);
     context.moveTo(centerX, centerY - 6);
     context.lineTo(centerX, centerY + 6);
     context.moveTo(centerX - 6, centerY);
@@ -134,6 +136,7 @@ export default function useMainContent({
     animationFromProps.color,
     animationFromProps.scale,
     currentSprite,
+    devicePixelRatio,
     dimensions.height,
     dimensions.width,
     image,

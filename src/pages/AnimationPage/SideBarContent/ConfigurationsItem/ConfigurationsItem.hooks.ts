@@ -68,10 +68,10 @@ function useDeleteAnimation({
 
   const deleteAnimationOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
-  >(
-    () => deleteAnimation(animationFromProps.id).then(() => replace("/")),
-    [animationFromProps.id, deleteAnimation, replace],
-  );
+  >(() => {
+    deleteAnimation(animationFromProps.id);
+    replace("/");
+  }, [animationFromProps.id, deleteAnimation, replace]);
 
   return { deleteAnimationOnClick };
 }
