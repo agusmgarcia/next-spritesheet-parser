@@ -14,14 +14,20 @@ export default function SideBarContent(props: SideBarContentProps) {
     animation,
     backwardOnClick,
     forwardOnClick,
+    fps,
+    fpsOnChange,
     heading,
     index,
+    minusFPSDisabled,
+    minusFPSOnClick,
     onionActive,
     onionDisabled,
     onionOnClick,
     playing,
     playingDisabled,
     playOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,
@@ -40,7 +46,14 @@ export default function SideBarContent(props: SideBarContentProps) {
         playing={playing}
         playingDisabled={playingDisabled}
       />
-      <FPSItem animation={animation} />
+      <FPSItem
+        fps={fps}
+        fpsOnChange={fpsOnChange}
+        minusFPSDisabled={minusFPSDisabled}
+        minusFPSOnClick={minusFPSOnClick}
+        plusFPSDisabled={plusFPSDisabled}
+        plusFPSOnClick={plusFPSOnClick}
+      />
       <ZoomItem
         resetZoomDisabled={resetZoomDisabled}
         resetZoomOnClick={resetZoomOnClick}

@@ -1,7 +1,12 @@
-import { type Animations } from "#src/store";
+import { type Func } from "@agusmgarcia/react-core";
 
 type FPSItemProps = {
-  animation: Animations[number];
+  fps: number;
+  fpsOnChange: React.ChangeEventHandler<HTMLInputElement>;
+  minusFPSDisabled: boolean;
+  minusFPSOnClick: Func;
+  plusFPSDisabled: boolean;
+  plusFPSOnClick: Func;
 };
 
 export default FPSItemProps;

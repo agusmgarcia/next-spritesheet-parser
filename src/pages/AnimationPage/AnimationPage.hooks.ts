@@ -19,6 +19,15 @@ export default function useAnimationPage(props: AnimationPageProps) {
     playOnClick,
   } = usePlaying({ animation, onIndexChange });
 
+  const {
+    fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
+  } = useFPS({ animation });
+
   const { onionActive, onionDisabled, onionOnClick } = useOnion({ playing });
 
   const {
@@ -35,13 +44,19 @@ export default function useAnimationPage(props: AnimationPageProps) {
     animation,
     backwardOnClick,
     forwardOnClick,
+    fps,
+    fpsOnChange,
     index,
+    minusFPSDisabled,
+    minusFPSOnClick,
     onionActive,
     onionDisabled,
     onionOnClick,
     playing,
     playingDisabled,
     playOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,
@@ -168,6 +183,49 @@ function usePlaying({
     playing,
     playingDisabled,
     playOnClick,
+  };
+}
+
+function useFPS({
+  animation: animationFromProps,
+}: Pick<ReturnType<typeof useAnimation>, "animation">) {
+  const { setAnimationFPS } = useAnimations();
+
+  const minusFPSDisabled = useMemo<boolean>(
+    () => (animationFromProps?.fps || 0) <= 1,
+    [animationFromProps?.fps],
+  );
+
+  const minusFPSOnClick = useCallback<Func>(
+    () => setAnimationFPS(animationFromProps?.id || "", (fps) => fps - 1),
+    [animationFromProps?.id, setAnimationFPS],
+  );
+
+  const fps = useMemo<number>(
+    () => animationFromProps?.fps || 0,
+    [animationFromProps?.fps],
+  );
+
+  const fpsOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (event) =>
+      setAnimationFPS(animationFromProps?.id || "", event.target.valueAsNumber),
+    [animationFromProps?.id, setAnimationFPS],
+  );
+
+  const plusFPSDisabled = useMemo<boolean>(() => false, []);
+
+  const plusFPSOnClick = useCallback<Func>(
+    () => setAnimationFPS(animationFromProps?.id || "", (fps) => fps + 1),
+    [animationFromProps?.id, setAnimationFPS],
+  );
+
+  return {
+    fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
   };
 }
 

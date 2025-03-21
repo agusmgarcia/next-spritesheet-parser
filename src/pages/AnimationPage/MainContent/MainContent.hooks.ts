@@ -11,12 +11,16 @@ export default function useMainContent({
   backwardOnClick: backwardOnClickFromProps,
   forwardOnClick: forwardOnClickFromProps,
   index: indexFromProps,
+  minusFPSDisabled: minusFPSDisabledFromProps,
+  minusFPSOnClick: minusFPSOnClickFromProps,
   onionActive: onionActiveFromProps,
   onionDisabled: onionDisabledFromProps,
   onionOnClick: onionOnClickFromProps,
   playing: playingFromProps,
   playingDisabled: playingDisabledFromProps,
   playOnClick: playOnClickFromProps,
+  plusFPSDisabled: plusFPSDisabledFromProps,
+  plusFPSOnClick: plusFPSOnClickFromProps,
   resetZoomDisabled: resetZoomDisabledFromProps,
   resetZoomOnClick: resetZoomOnClickFromProps,
   zoomInDisabled: zoomInDisabledFromProps,
@@ -159,15 +163,27 @@ export default function useMainContent({
         case "z":
           if (!!resetZoomDisabledFromProps) return;
           return resetZoomOnClickFromProps();
+
+        case "+":
+          if (!!plusFPSDisabledFromProps) return;
+          return plusFPSOnClickFromProps();
+
+        case "-":
+          if (!!minusFPSDisabledFromProps) return;
+          return minusFPSOnClickFromProps();
       }
     };
 
     root.addEventListener("keydown", handleKeyDown);
     return () => root.removeEventListener("keydown", handleKeyDown);
   }, [
+    minusFPSDisabledFromProps,
+    minusFPSOnClickFromProps,
     playOnClickFromProps,
     playingDisabledFromProps,
     playingFromProps,
+    plusFPSDisabledFromProps,
+    plusFPSOnClickFromProps,
     resetZoomDisabledFromProps,
     resetZoomOnClickFromProps,
     zoomInDisabledFromProps,

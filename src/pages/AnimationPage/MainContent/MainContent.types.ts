@@ -7,12 +7,16 @@ type MainContentProps = {
   backwardOnClick: Func;
   forwardOnClick: Func;
   index: number;
+  minusFPSDisabled: boolean;
+  minusFPSOnClick: Func;
   onionActive: boolean;
   onionDisabled: boolean;
   onionOnClick: Func;
   playing: boolean;
   playingDisabled: boolean;
   playOnClick: Func;
+  plusFPSDisabled: boolean;
+  plusFPSOnClick: Func;
   resetZoomDisabled: boolean;
   resetZoomOnClick: Func;
   zoomInDisabled: boolean;
