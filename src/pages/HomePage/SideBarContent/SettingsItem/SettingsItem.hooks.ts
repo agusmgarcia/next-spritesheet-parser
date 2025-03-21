@@ -1,3 +1,4 @@
+import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type TypographyProps } from "#src/components";
@@ -88,9 +89,7 @@ function useSettings() {
     [],
   );
 
-  const settingsOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
+  const settingsOnClick = useCallback<Func>(() => {
     if (!settingsValue) return;
 
     setSettingsLoading(true);
