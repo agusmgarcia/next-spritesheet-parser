@@ -100,9 +100,9 @@ function useIndex({
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (!animationFromProps) return;
+    if (!animationFromProps?.id) return;
     setIndex(0);
-  }, [animationFromProps]);
+  }, [animationFromProps?.id]);
 
   return { index, onIndexChange: setIndex };
 }
