@@ -3,16 +3,22 @@ import {
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-core";
 
+import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type SpriteSelectionSlice from "./SpriteSelectionSlice.types";
 
 export default createGlobalSlice<
   SpriteSelectionSlice,
-  SpriteSheetSliceTypes.default
+  AnimationsSliceTypes.default & SpriteSheetSliceTypes.default
 >("spriteSelection", (subscribe) => {
   subscribe(
     (_, context) => unselectAllSprites(context),
     (state) => state.spriteSheet.data?.sprites,
+  );
+
+  subscribe(
+    (_, context) => unselectAllSprites(context),
+    (state) => state.animations.animations.length,
   );
 
   return {
