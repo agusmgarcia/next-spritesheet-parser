@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.14.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.14.0)
+
+> March 22, 2025
+
+- **HomePage**: start dispatching errors
+- **AppPage**: add ErrorHandler component
+- **ErrorSlice**: add slice
+
 ## [v0.13.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.2)
 
 > March 22, 2025
