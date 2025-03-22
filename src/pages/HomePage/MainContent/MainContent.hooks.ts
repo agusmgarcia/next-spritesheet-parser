@@ -35,7 +35,7 @@ export default function useMainContent({
   const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
   const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
 
-  const { image } = useLoadImage(spriteSheet?.sheet.imageURL || "");
+  const { image } = useLoadImage(spriteSheet?.imageURL || "");
   const rootDimensions = useDimensions(rootRef);
   const devicePixelRatio = useDevicePixelRatio();
 
@@ -100,7 +100,7 @@ export default function useMainContent({
       setInitialCursor(undefined);
 
       if (!!preSelectedSprites) {
-        preSelectedSprites.forEach(selectSprite);
+        preSelectedSprites.forEach((spriteId) => selectSprite(spriteId));
         setPreSelectedSprites(undefined);
         return;
       }
@@ -206,13 +206,13 @@ export default function useMainContent({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.fillStyle = spriteSheet.sheet.backgroundColor;
+    context.fillStyle = spriteSheet.backgroundColor;
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(devicePixelRatio, devicePixelRatio);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
-      context.strokeStyle = spriteSheet.sheet.color;
+      context.strokeStyle = spriteSheet.color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
   }, [
@@ -255,7 +255,7 @@ export default function useMainContent({
       if (!sprite) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = spriteSheet.sheet.color;
+      context.fillStyle = spriteSheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
@@ -267,14 +267,14 @@ export default function useMainContent({
       if (spriteSelection.includes(spriteId)) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = spriteSheet.sheet.color;
+      context.fillStyle = spriteSheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
 
     if (!!initialCursor) {
       context.globalAlpha = 0.2;
-      context.fillStyle = spriteSheet.sheet.color;
+      context.fillStyle = spriteSheet.color;
       context.fillRect(
         Math.min(initialCursor[2], initialCursor[0]),
         Math.min(initialCursor[3], initialCursor[1]),

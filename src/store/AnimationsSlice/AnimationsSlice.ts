@@ -14,7 +14,7 @@ export default createGlobalSlice<
 >("animations", (subscribe) => {
   subscribe(
     (_, context) => updateAnimations(context),
-    (state) => state.spriteSheet.spriteSheet?.sprites,
+    (state) => state.spriteSheet.data?.sprites,
   );
 
   return {
@@ -40,12 +40,12 @@ function createAnimation(
 ): string | undefined {
   if (spriteIds.length <= 0) return undefined;
 
-  const spriteSheet = context.get().spriteSheet.spriteSheet;
+  const spriteSheet = context.get().spriteSheet.data;
   if (!spriteSheet) return undefined;
 
   function sortSprites(
     sprites: NonNullable<
-      SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
+      SpriteSheetSliceTypes.default["spriteSheet"]["data"]
     >["sprites"],
   ): Func<number, [spriteId1: string, spriteId2: string]> {
     return (spriteId1, spriteId2) => {
@@ -61,7 +61,7 @@ function createAnimation(
 
   function mapSprites(
     sprites: NonNullable<
-      SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
+      SpriteSheetSliceTypes.default["spriteSheet"]["data"]
     >["sprites"],
   ): Func<
     AnimationsSlice["animations"]["animations"][number]["sprites"][number],
@@ -100,7 +100,7 @@ function createAnimation(
     animations: [
       ...prev.animations,
       {
-        color: spriteSheet.sheet.backgroundColor,
+        color: spriteSheet.backgroundColor,
         fps: 12,
         id,
         name: "New animation",
@@ -156,7 +156,7 @@ function updateAnimations(
   >,
 ): void {
   context.set((prev) => {
-    const sprites = context.get().spriteSheet.spriteSheet?.sprites;
+    const sprites = context.get().spriteSheet.data?.sprites;
     if (!sprites) return { animations: [] };
 
     return {

@@ -2,7 +2,10 @@ import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type TypographyProps } from "#src/components";
-import { useSpriteSheet } from "#src/store";
+import {
+  useSettings as useSettingsFromStore,
+  useSpriteSheet,
+} from "#src/store";
 
 import type SettingsItemProps from "./SettingsItem.types";
 
@@ -45,19 +48,19 @@ const initialSettings = {
 };
 
 function useSettings() {
-  const { setSpriteSheetSettings, spriteSheet } = useSpriteSheet();
+  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { setSettings, settings } = useSettingsFromStore();
 
-  const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsValue, setSettingsValue] = useState(initialSettings);
 
   const settingsDisabled = useMemo<boolean>(
-    () => !spriteSheet || settingsLoading,
-    [settingsLoading, spriteSheet],
+    () => !spriteSheet || spriteSheetLoading,
+    [spriteSheetLoading, spriteSheet],
   );
 
   const settingsButtonDisabled = useMemo<boolean>(
     () =>
-      settingsLoading ||
+      spriteSheetLoading ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
       !settingsValue.maxArea ||
@@ -69,7 +72,7 @@ function useSettings() {
       !settingsValue.minDiversity ||
       isNaN(+settingsValue.minDiversity),
     [
-      settingsLoading,
+      spriteSheetLoading,
       settingsValue.delta,
       settingsValue.maxArea,
       settingsValue.maxVariation,
@@ -90,32 +93,42 @@ function useSettings() {
   );
 
   const settingsOnClick = useCallback<Func>(() => {
-    if (!settingsValue) return;
-
-    setSettingsLoading(true);
-    setSpriteSheetSettings({
+    setSettings({
       delta: +settingsValue.delta,
       maxArea: +settingsValue.maxArea,
       maxVariation: +settingsValue.maxVariation,
       minArea: +settingsValue.minArea,
       minDiversity: +settingsValue.minDiversity,
-    }).finally(() => setSettingsLoading(false));
-  }, [setSpriteSheetSettings, settingsValue]);
+    });
+  }, [
+    setSettings,
+    settingsValue.delta,
+    settingsValue.maxArea,
+    settingsValue.maxVariation,
+    settingsValue.minArea,
+    settingsValue.minDiversity,
+  ]);
 
   useEffect(() => {
     setSettingsValue({
-      delta: spriteSheet?.settings.delta.toString() || "0",
-      maxArea: spriteSheet?.settings.maxArea.toString() || "0",
-      maxVariation: spriteSheet?.settings.maxVariation.toString() || "0",
-      minArea: spriteSheet?.settings.minArea.toString() || "0",
-      minDiversity: spriteSheet?.settings.minDiversity.toString() || "0",
+      delta: settings.delta.toString() || "0",
+      maxArea: settings.maxArea.toString() || "0",
+      maxVariation: settings.maxVariation.toString() || "0",
+      minArea: settings.minArea.toString() || "0",
+      minDiversity: settings.minDiversity.toString() || "0",
     });
-  }, [spriteSheet?.settings]);
+  }, [
+    settings.delta,
+    settings.maxArea,
+    settings.maxVariation,
+    settings.minArea,
+    settings.minDiversity,
+  ]);
 
   return {
     settingsButtonDisabled,
     settingsDisabled,
-    settingsLoading,
+    settingsLoading: spriteSheetLoading,
     settingsOnChange,
     settingsOnClick,
     settingsValue,

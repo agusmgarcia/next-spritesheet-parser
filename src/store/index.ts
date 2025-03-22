@@ -3,6 +3,7 @@ import { createStore } from "@agusmgarcia/react-core";
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
+import createSettingsSlice, { type SettingsSliceTypes } from "./SettingsSlice";
 import createSpriteSelectionSlice, {
   type SpriteSelectionSliceTypes,
 } from "./SpriteSelectionSlice";
@@ -12,14 +13,16 @@ import createSpriteSheetSlice, {
 
 export type Animations =
   AnimationsSliceTypes.default["animations"]["animations"];
+export type Settings = SettingsSliceTypes.default["settings"]["settings"];
 export type SpriteSelection =
   SpriteSelectionSliceTypes.default["spriteSelection"]["spriteSelection"];
 export type SpriteSheet = NonNullable<
-  SpriteSheetSliceTypes.default["spriteSheet"]["spriteSheet"]
+  SpriteSheetSliceTypes.default["spriteSheet"]["data"]
 >;
 
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
+  createSettingsSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
 );
@@ -49,6 +52,14 @@ export function useAnimations() {
   };
 }
 
+export function useSettings() {
+  return {
+    setImage: useSelector((state) => state.settings.setImage),
+    setSettings: useSelector((state) => state.settings.setSettings),
+    settings: useSelector((state) => state.settings.settings),
+  };
+}
+
 export function useSpriteSelection() {
   return {
     selectSprite: useSelector((state) => state.spriteSelection.selectSprite),
@@ -66,16 +77,9 @@ export function useSpriteSelection() {
 
 export function useSpriteSheet() {
   return {
-    createSpriteSheet: useSelector(
-      (state) => state.spriteSheet.createSpriteSheet,
-    ),
-    mergeSpriteSheetSprites: useSelector(
-      (state) => state.spriteSheet.mergeSpriteSheetSprites,
-    ),
+    mergeSprites: useSelector((state) => state.spriteSheet.mergeSprites),
     setSpriteSheet: useSelector((state) => state.spriteSheet.setSpriteSheet),
-    setSpriteSheetSettings: useSelector(
-      (state) => state.spriteSheet.setSpriteSheetSettings,
-    ),
-    spriteSheet: useSelector((state) => state.spriteSheet.spriteSheet),
+    spriteSheet: useSelector((state) => state.spriteSheet.data),
+    spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),
   };
 }

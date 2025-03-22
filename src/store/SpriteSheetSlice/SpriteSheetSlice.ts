@@ -1,6 +1,6 @@
 import {
-  createGlobalSlice,
   type CreateGlobalSliceTypes,
+  createServerSlice,
   type Tuple,
 } from "@agusmgarcia/react-core";
 import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
@@ -8,32 +8,23 @@ import invert from "invert-color";
 
 import { loadImage } from "#src/utils";
 
+import { type SettingsSliceTypes } from "../SettingsSlice";
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
-export default createGlobalSlice<SpriteSheetSlice>("spriteSheet", () => ({
-  createSpriteSheet,
-  mergeSpriteSheetSprites,
-  setSpriteSheet,
-  setSpriteSheetSettings,
-  spriteSheet: undefined,
-}));
+export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
+  "spriteSheet",
+  async (settings, signal, prevSpriteSheet) => {
+    URL.revokeObjectURL(prevSpriteSheet?.imageURL || "");
 
-async function createSpriteSheet(
-  input: Parameters<SpriteSheetSlice["spriteSheet"]["createSpriteSheet"]>[0],
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
-  URL.revokeObjectURL(
-    context.get().spriteSheet.spriteSheet?.sheet.imageURL || "",
-  );
+    const rawImage = settings.image;
+    if (!rawImage) return undefined;
 
-  const rawImageURL = URL.createObjectURL(input);
-
-  try {
-    const rawImageData = getImageData(
-      await loadImage(rawImageURL, context.signal),
+    const rawImageData = await loadImage(rawImage.url, signal).then(
+      getImageData,
     );
 
     const backgroundColor = `#${rawImageData.data[0].toString(16)}${rawImageData.data[1].toString(16)}${rawImageData.data[2].toString(16)}`;
+
     const color = invert([
       rawImageData.data[0],
       rawImageData.data[1],
@@ -43,63 +34,47 @@ async function createSpriteSheet(
     const newFileImage = await createImageWithoutBackground(
       rawImageData,
       [rawImageData.data[0], rawImageData.data[1], rawImageData.data[2]],
-      input.name,
-      input.type,
-      context.signal,
+      rawImage.name,
+      rawImage.type,
+      signal,
     );
 
     const imageURL = URL.createObjectURL(newFileImage);
 
     try {
-      const settings: NonNullable<
-        SpriteSheetSlice["spriteSheet"]["spriteSheet"]
-      >["settings"] = {
-        delta: 0,
-        maxArea: 0.5,
-        maxVariation: 0.5,
-        minArea: 0,
-        minDiversity: 0.33,
-      };
-
       const sprites = getSprites(
         rawImageData,
         [rawImageData.data[0], rawImageData.data[1], rawImageData.data[2]],
         settings,
       );
 
-      context.set({
-        spriteSheet: {
-          settings,
-          sheet: {
-            backgroundColor,
-            color,
-            imageURL,
-            name: input.name,
-          },
-          sprites,
-        },
-      });
+      return {
+        backgroundColor,
+        color,
+        imageURL,
+        name: rawImage.name,
+        sprites,
+      };
     } catch (error) {
       URL.revokeObjectURL(imageURL);
       throw error;
     }
-  } finally {
-    URL.revokeObjectURL(rawImageURL);
-  }
-}
+  },
+  (state) => state.settings.settings,
+  () => ({ mergeSprites, setSpriteSheet }),
+);
 
-async function mergeSpriteSheetSprites(
-  spriteIds: Parameters<
-    SpriteSheetSlice["spriteSheet"]["mergeSpriteSheetSprites"]
-  >[0],
+function mergeSprites(
+  spriteIds: Parameters<SpriteSheetSlice["spriteSheet"]["mergeSprites"]>[0],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
+): void {
   if (spriteIds.length <= 1) return;
 
   context.set((prev) => {
-    if (!prev.spriteSheet) return prev;
+    if (!prev.data)
+      return { data: undefined, error: undefined, loading: false };
 
-    const sprites = prev.spriteSheet.sprites;
+    const sprites = prev.data.sprites;
 
     const spriteToAdd = toSprite(
       spriteIds
@@ -114,9 +89,7 @@ async function mergeSpriteSheetSprites(
           result[spriteId] = sprites[spriteId];
           return result;
         },
-        {} as NonNullable<
-          SpriteSheetSlice["spriteSheet"]["spriteSheet"]
-        >["sprites"],
+        {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
       ),
     );
 
@@ -125,59 +98,23 @@ async function mergeSpriteSheetSprites(
 
     return {
       ...prev,
-      spriteSheet: { ...prev.spriteSheet, sprites: newSprites },
+      data: { ...prev.data, sprites: newSprites },
+      error: undefined,
+      loading: false,
     };
   });
 }
 
-async function setSpriteSheet(
+function setSpriteSheet(
   spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
   context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
+): void {
   context.set((prev) => ({
-    ...prev,
-    spriteSheet: !!prev.spriteSheet
-      ? { ...prev.spriteSheet, ...spriteSheet }
+    data: !!prev.data
+      ? { ...prev.data, ...spriteSheet, imageURL: prev.data.imageURL }
       : undefined,
-  }));
-}
-
-async function setSpriteSheetSettings(
-  settings: Parameters<
-    SpriteSheetSlice["spriteSheet"]["setSpriteSheetSettings"]
-  >[0],
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
-): Promise<void> {
-  context.set((prev) => ({
-    spriteSheet: !!prev.spriteSheet
-      ? {
-          ...prev.spriteSheet,
-          settings: {
-            ...(settings instanceof Function
-              ? settings(prev.spriteSheet.settings)
-              : settings),
-          },
-        }
-      : prev.spriteSheet,
-  }));
-
-  const imageURL = context.get().spriteSheet.spriteSheet?.sheet.imageURL;
-  if (!imageURL) return;
-  const imageData = getImageData(await loadImage(imageURL, context.signal));
-
-  const newSettings = context.get().spriteSheet.spriteSheet?.settings;
-  if (!newSettings) return;
-
-  const sprites = getSprites(
-    imageData,
-    [imageData.data[0], imageData.data[1], imageData.data[2]],
-    newSettings,
-  );
-
-  context.set((prev) => ({
-    spriteSheet: !!prev.spriteSheet
-      ? { ...prev.spriteSheet, sprites }
-      : prev.spriteSheet,
+    error: undefined,
+    loading: false,
   }));
 }
 
@@ -195,12 +132,10 @@ function getImageData(image: HTMLImageElement): ImageData {
 
 function toSprite(
   rect: Rect,
-  subsprites?: NonNullable<
-    SpriteSheetSlice["spriteSheet"]["spriteSheet"]
-  >["sprites"],
-): NonNullable<
-  SpriteSheetSlice["spriteSheet"]["spriteSheet"]
->["sprites"][string] & { id: string } {
+  subsprites?: NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
+): NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"][string] & {
+  id: string;
+} {
   return {
     bottom: rect.bottom,
     height: rect.bottom - rect.top,
@@ -217,7 +152,7 @@ function getSprites(
   imageData: ImageData,
   backgroundColor: Tuple<number, 3>,
   options: MSEROptions,
-): NonNullable<SpriteSheetSlice["spriteSheet"]["spriteSheet"]>["sprites"] {
+): NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"] {
   for (let i = 0; i < imageData.data.length; i += 4) {
     if (
       imageData.data[i] === backgroundColor[0] &&
@@ -246,9 +181,7 @@ function getSprites(
         result[current.id] = current;
         return result;
       },
-      {} as NonNullable<
-        SpriteSheetSlice["spriteSheet"]["spriteSheet"]
-      >["sprites"],
+      {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
     );
 }
 
@@ -290,8 +223,9 @@ async function createImageWithoutBackground(
   const blob = await new Promise<Blob | undefined>((resolve) =>
     canvas.toBlob((blob) => resolve(blob || undefined), type),
   );
+
   signal.throwIfAborted();
-  if (!blob) throw "";
+  if (!blob) throw new Error("Unexpected scenario");
 
   return new File([blob], name, { type });
 }

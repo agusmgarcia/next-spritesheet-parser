@@ -37,10 +37,10 @@ function useAnimationSelector() {
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
-      { id: "sheet", name: spriteSheet?.sheet.name || "Sprite sheet" },
+      { id: "sheet", name: spriteSheet?.name || "Sprite sheet" },
       ...animations.map((a) => ({ id: a.id, name: a.name })),
     ],
-    [animations, spriteSheet?.sheet.name],
+    [animations, spriteSheet?.name],
   );
 
   const animationSelectorOnChange = useCallback<

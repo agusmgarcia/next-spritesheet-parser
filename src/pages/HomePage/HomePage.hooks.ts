@@ -6,6 +6,7 @@ import {
   type Animations,
   type SpriteSheet,
   useAnimations,
+  useSettings,
   useSpriteSelection,
   useSpriteSheet,
 } from "#src/store";
@@ -47,7 +48,8 @@ export default function useHomePage(props: HomePageProps) {
 
 function useImportFile() {
   const { setAnimations } = useAnimations();
-  const { createSpriteSheet, setSpriteSheet, spriteSheet } = useSpriteSheet();
+  const { setSpriteSheet, spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { setImage, setSettings } = useSettings();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
 
@@ -85,31 +87,37 @@ function useImportFile() {
         if (!file) return;
 
         setImportFileLoading(true);
-        if (file.type.startsWith("image/"))
-          createSpriteSheet(file).finally(() => setImportFileLoading(false));
-        else
+
+        if (file.type.startsWith("image/")) {
+          setImage(file);
+          setImportFileLoading(false);
+        } else {
           file
             .text()
             .then((text) => JSON.parse(text))
             .then((json) => {
-              setSpriteSheet({
-                settings: json.settings,
-                sprites: json.sprites,
-              });
+              setSettings(json.settings);
+              setSpriteSheet(json.spriteSheet);
               setAnimations(json.animations);
             })
             .finally(() => setImportFileLoading(false));
+        }
       },
     );
   }, [
-    createSpriteSheet,
     importFile,
     setAnimations,
+    setImage,
+    setSettings,
     setSpriteSheet,
     spriteSheet,
   ]);
 
-  return { importFileDisabled, importFileLoading, importFileOnClick };
+  return {
+    importFileDisabled,
+    importFileLoading: importFileLoading || spriteSheetLoading,
+    importFileOnClick,
+  };
 }
 
 function useExportFile() {
@@ -134,15 +142,15 @@ function useExportFile() {
           "data:text/json;charset=utf-8," +
           encodeURIComponent(
             JSON.stringify({
-              ...spriteSheet,
               animations,
+              spriteSheet,
               version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
             }),
           );
 
         anchor.setAttribute(
           "download",
-          `${spriteSheet.sheet.name.split(".").slice(0, -1).join(".") || spriteSheet.sheet.name}.json`,
+          `${spriteSheet.name.split(".").slice(0, -1).join(".") || spriteSheet.name}.json`,
         );
 
         anchor.click();
@@ -202,22 +210,21 @@ function useResetSelection() {
 }
 
 function useMergeSprites() {
-  const { mergeSpriteSheetSprites } = useSpriteSheet();
-  const { spriteSelection, unselectAllSprites } = useSpriteSelection();
-
-  const [mergeSpritesLoading, setMergeSpritesLoading] = useState(false);
+  const { mergeSprites, spriteSheetLoading } = useSpriteSheet();
+  const { spriteSelection } = useSpriteSelection();
 
   const mergeSpritesDisabled = useMemo<boolean>(
-    () => spriteSelection.length <= 1 || mergeSpritesLoading,
-    [mergeSpritesLoading, spriteSelection.length],
+    () => spriteSelection.length <= 1,
+    [spriteSelection.length],
   );
 
   const mergeSpritesOnClick = useCallback<Func>(() => {
-    setMergeSpritesLoading(true);
-    mergeSpriteSheetSprites(spriteSelection)
-      .then(unselectAllSprites)
-      .finally(() => setMergeSpritesLoading(false));
-  }, [mergeSpriteSheetSprites, spriteSelection, unselectAllSprites]);
+    mergeSprites(spriteSelection);
+  }, [mergeSprites, spriteSelection]);
 
-  return { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick };
+  return {
+    mergeSpritesDisabled,
+    mergeSpritesLoading: spriteSheetLoading,
+    mergeSpritesOnClick,
+  };
 }

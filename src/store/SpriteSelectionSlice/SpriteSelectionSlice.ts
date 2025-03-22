@@ -12,7 +12,7 @@ export default createGlobalSlice<
 >("spriteSelection", (subscribe) => {
   subscribe(
     (_, context) => unselectAllSprites(context),
-    (state) => state.spriteSheet.spriteSheet?.sprites,
+    (state) => state.spriteSheet.data?.sprites,
   );
 
   return {
@@ -32,7 +32,7 @@ function selectSprite(
     SpriteSheetSliceTypes.default
   >,
 ): void {
-  const spriteSheet = context.get().spriteSheet.spriteSheet;
+  const spriteSheet = context.get().spriteSheet.data;
   if (!spriteSheet?.sprites[spriteId]) return;
 
   context.set((prev) => ({
@@ -51,7 +51,7 @@ function toggleSpriteSelection(
     SpriteSheetSliceTypes.default
   >,
 ): void {
-  const spriteSheet = context.get().spriteSheet.spriteSheet;
+  const spriteSheet = context.get().spriteSheet.data;
   if (!spriteSheet?.sprites[spriteId]) return;
 
   context.set((prev) => ({
