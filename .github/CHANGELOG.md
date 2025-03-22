@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.13.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.2)
+
+> March 22, 2025
+
+- **HomePage**: remove merge loading status
+- **SpriteSelectionSlice**: unselect all sprites on animations length change
+- **AnimationPage**: reset sprite index on animation change
+- bump dependencies
+
 ## [v0.13.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.1)
 
 > March 22, 2025
