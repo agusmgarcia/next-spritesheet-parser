@@ -9,7 +9,7 @@ import type AnimationPageProps from "./AnimationPage.types";
 export default function useAnimationPage(props: AnimationPageProps) {
   const { animation } = useAnimation();
 
-  const { index, onIndexChange } = useIndex();
+  const { index, onIndexChange } = useIndex({ animation });
 
   const {
     backwardOnClick,
@@ -94,8 +94,15 @@ function useAnimation() {
   return { animation };
 }
 
-function useIndex() {
+function useIndex({
+  animation: animationFromProps,
+}: Pick<ReturnType<typeof useAnimation>, "animation">) {
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (!animationFromProps) return;
+    setIndex(0);
+  }, [animationFromProps]);
 
   return { index, onIndexChange: setIndex };
 }
