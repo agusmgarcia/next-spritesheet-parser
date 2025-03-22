@@ -3,6 +3,7 @@ import { SideBar } from "#src/fragments";
 
 import useAppPage from "./AppPage.hooks";
 import type AppPageProps from "./AppPage.types";
+import ErrorHandler from "./ErrorHandler";
 
 export default function AppPage(props: AppPageProps) {
   const { children, version, viewport } = useAppPage(props);
@@ -26,6 +27,9 @@ export default function AppPage(props: AppPageProps) {
 
           {/* SIDEBAR */}
           <SideBar.Container className="h-full max-w-[360px] flex-[1_0_33%] overflow-y-auto overflow-x-hidden bg-gray-800 p-4 pb-8" />
+
+          {/* ERROR HANDLER */}
+          <ErrorHandler />
         </>
       )}
 
