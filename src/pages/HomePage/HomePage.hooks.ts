@@ -6,6 +6,7 @@ import {
   type Animations,
   type SpriteSheet,
   useAnimations,
+  useError,
   useSettings,
   useSpriteSelection,
   useSpriteSheet,
@@ -46,8 +47,9 @@ export default function useHomePage(props: HomePageProps) {
 
 function useImportFile() {
   const { setAnimations } = useAnimations();
-  const { setSpriteSheet, spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { setError } = useError();
   const { setImage, setSettings } = useSettings();
+  const { setSpriteSheet, spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
 
@@ -58,11 +60,18 @@ function useImportFile() {
 
   const importFile = useCallback<AsyncFunc<File | undefined, [accept: string]>>(
     (accept) =>
-      new Promise((resolve) => {
+      new Promise((resolve, reject) => {
         const input = document.createElement("input");
+
+        const handleError = (event: ErrorEvent) => {
+          input.removeEventListener("change", handleChange);
+          input.removeEventListener("error", handleError);
+          reject(event);
+        };
 
         const handleChange = (event: Event) => {
           input.removeEventListener("change", handleChange);
+          input.removeEventListener("error", handleError);
 
           const element = event.target as HTMLInputElement;
           if (!!element.files?.length) resolve(element.files[0]);
@@ -70,6 +79,7 @@ function useImportFile() {
         };
 
         input.addEventListener("change", handleChange);
+        input.addEventListener("error", handleError);
 
         input.type = "file";
         input.accept = accept;
@@ -79,9 +89,8 @@ function useImportFile() {
   );
 
   const importFileOnClick = useCallback<Func>(() => {
-    // TODO: handle errors.
-    importFile(!spriteSheet ? "image/*" : "image/*,application/json").then(
-      (file) => {
+    importFile(!spriteSheet ? "image/*" : "image/*,application/json")
+      .then((file) => {
         if (!file) return;
 
         setImportFileLoading(true);
@@ -98,13 +107,15 @@ function useImportFile() {
               setSpriteSheet(json.spriteSheet);
               setAnimations(json.animations);
             })
+            .catch((error) => setError(error.message))
             .finally(() => setImportFileLoading(false));
         }
-      },
-    );
+      })
+      .catch((error) => setError(error.message));
   }, [
     importFile,
     setAnimations,
+    setError,
     setImage,
     setSettings,
     setSpriteSheet,
@@ -120,6 +131,7 @@ function useImportFile() {
 
 function useExportFile() {
   const { animations } = useAnimations();
+  const { setError } = useError();
   const { spriteSheet } = useSpriteSheet();
 
   const [exportFileLoading, setExportFileLoading] = useState(false);
@@ -161,12 +173,11 @@ function useExportFile() {
   const exportFileOnClick = useCallback<Func>(() => {
     if (!spriteSheet) return;
 
-    // TODO: handle errors.
     setExportFileLoading(true);
-    exportFile(spriteSheet, animations).finally(() =>
-      setExportFileLoading(false),
-    );
-  }, [animations, exportFile, spriteSheet]);
+    exportFile(spriteSheet, animations)
+      .catch((error) => setError(error.message))
+      .finally(() => setExportFileLoading(false));
+  }, [animations, exportFile, setError, spriteSheet]);
 
   return { exportFileDisabled, exportFileLoading, exportFileOnClick };
 }
