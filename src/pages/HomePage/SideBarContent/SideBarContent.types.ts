@@ -10,7 +10,6 @@ type SideBarContentProps = {
   importFileLoading: boolean;
   importFileOnClick: Func;
   mergeSpritesDisabled: boolean;
-  mergeSpritesLoading: boolean;
   mergeSpritesOnClick: Func;
   resetSelectionDisabled: boolean;
   resetSelectionOnClick: Func;

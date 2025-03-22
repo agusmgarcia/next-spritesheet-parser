@@ -16,7 +16,6 @@ export default function HomePage(props: HomePageProps) {
     importFileLoading,
     importFileOnClick,
     mergeSpritesDisabled,
-    mergeSpritesLoading,
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
@@ -50,7 +49,6 @@ export default function HomePage(props: HomePageProps) {
           importFileLoading={importFileLoading}
           importFileOnClick={importFileOnClick}
           mergeSpritesDisabled={mergeSpritesDisabled}
-          mergeSpritesLoading={mergeSpritesLoading}
           mergeSpritesOnClick={mergeSpritesOnClick}
           resetSelectionDisabled={resetSelectionDisabled}
           resetSelectionOnClick={resetSelectionOnClick}

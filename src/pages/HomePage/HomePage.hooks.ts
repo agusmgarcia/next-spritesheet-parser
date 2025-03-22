@@ -25,8 +25,7 @@ export default function useHomePage(props: HomePageProps) {
 
   const { resetSelectionDisabled, resetSelectionOnClick } = useResetSelection();
 
-  const { mergeSpritesDisabled, mergeSpritesLoading, mergeSpritesOnClick } =
-    useMergeSprites();
+  const { mergeSpritesDisabled, mergeSpritesOnClick } = useMergeSprites();
 
   return {
     ...props,
@@ -39,7 +38,6 @@ export default function useHomePage(props: HomePageProps) {
     importFileLoading,
     importFileOnClick,
     mergeSpritesDisabled,
-    mergeSpritesLoading,
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
@@ -210,7 +208,7 @@ function useResetSelection() {
 }
 
 function useMergeSprites() {
-  const { mergeSprites, spriteSheetLoading } = useSpriteSheet();
+  const { mergeSprites } = useSpriteSheet();
   const { spriteSelection } = useSpriteSelection();
 
   const mergeSpritesDisabled = useMemo<boolean>(
@@ -222,9 +220,5 @@ function useMergeSprites() {
     mergeSprites(spriteSelection);
   }, [mergeSprites, spriteSelection]);
 
-  return {
-    mergeSpritesDisabled,
-    mergeSpritesLoading: spriteSheetLoading,
-    mergeSpritesOnClick,
-  };
+  return { mergeSpritesDisabled, mergeSpritesOnClick };
 }

@@ -18,7 +18,6 @@ export default function SideBarContent(props: SideBarContentProps) {
     importFileLoading,
     importFileOnClick,
     mergeSpritesDisabled,
-    mergeSpritesLoading,
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
@@ -39,7 +38,6 @@ export default function SideBarContent(props: SideBarContentProps) {
         createAnimationDisabled={createAnimationDisabled}
         createAnimationOnClick={createAnimationOnClick}
         mergeSpritesDisabled={mergeSpritesDisabled}
-        mergeSpritesLoading={mergeSpritesLoading}
         mergeSpritesOnClick={mergeSpritesOnClick}
         resetSelectionDisabled={resetSelectionDisabled}
         resetSelectionOnClick={resetSelectionOnClick}
