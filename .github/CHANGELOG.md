@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.13.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.1)
+
+> March 22, 2025
+
+- **AnimationPage**: reset sprite index on animation change
+- make SpriteSheet a server slice
+- **AnimationSlice**: make methods sync
+- move sprite selection to store
+
 ## [v0.13.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.0)
 
 > March 21, 2025
