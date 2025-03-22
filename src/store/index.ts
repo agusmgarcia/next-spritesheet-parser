@@ -3,6 +3,7 @@ import { createStore } from "@agusmgarcia/react-core";
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
+import createErrorSlice, { type ErrorSliceTypes } from "./ErrorSlice";
 import createSettingsSlice, { type SettingsSliceTypes } from "./SettingsSlice";
 import createSpriteSelectionSlice, {
   type SpriteSelectionSliceTypes,
@@ -13,6 +14,7 @@ import createSpriteSheetSlice, {
 
 export type Animations =
   AnimationsSliceTypes.default["animations"]["animations"];
+export type Error = NonNullable<ErrorSliceTypes.default["error"]["error"]>;
 export type Settings = SettingsSliceTypes.default["settings"]["settings"];
 export type SpriteSelection =
   SpriteSelectionSliceTypes.default["spriteSelection"]["spriteSelection"];
@@ -22,6 +24,7 @@ export type SpriteSheet = NonNullable<
 
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
+  createErrorSlice,
   createSettingsSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
@@ -49,6 +52,14 @@ export function useAnimations() {
     setAnimationScale: useSelector(
       (state) => state.animations.setAnimationScale,
     ),
+  };
+}
+
+export function useError() {
+  return {
+    clearError: useSelector((state) => state.error.clearError),
+    error: useSelector((state) => state.error.error),
+    setError: useSelector((state) => state.error.setError),
   };
 }
 
