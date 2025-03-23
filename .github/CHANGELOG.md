@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.14.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.14.1)
+
+> March 23, 2025
+
+- add favicon.ico
+
 ## [v0.14.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.14.0)
 
 > March 22, 2025
