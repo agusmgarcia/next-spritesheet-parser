@@ -257,3 +257,4 @@ All notable changes to this project will be documented in this file.
 - **Icon**: add play variant
 - **Icon**: add uploadFile variant
 - **Icon**: add component
+- setup project

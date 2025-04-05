@@ -1,9 +1,10 @@
 {
   "name": "@agusmgarcia/next-spritesheet-parser",
+  "core": "app",
   "version": "0.14.1",
   "private": true,
   "author": "Agus Garcia",
-  "description": "Web application to parse spritesheets into JSON file",
+  "description": "An app to parse sprite sheet into animations. The system can import/export the results",
   "scripts": {
     "build": "agusmgarcia-react-core-build",
     "check": "agusmgarcia-react-core-check",
@@ -11,17 +12,21 @@
     "format": "agusmgarcia-react-core-format",
     "postpack": "agusmgarcia-react-core-postpack",
     "prepack": "agusmgarcia-react-core-prepack",
-    "start": "agusmgarcia-react-core-start",
     "regenerate": "agusmgarcia-react-core-regenerate",
+    "start": "agusmgarcia-react-core-start",
     "test": "agusmgarcia-react-core-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-core": "4.1.1",
+    "@agusmgarcia/react-core": "4.3.3",
     "blob-detection-ts": "0.0.8",
     "invert-color": "2.0.0",
-    "react": "19.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-toastify": "11.0.5",
     "tailwind-merge": "2.6.0",
     "uuid": "11.1.0"
+  },
+  "devDependencies": {
+    "@types/react-dom": "19.1.1"
   }
 }
