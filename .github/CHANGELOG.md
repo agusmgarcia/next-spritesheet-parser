@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.14.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.14.2)
+
+> April 6, 2025
+
+- **\_app**: adjust icon
+- **README.md**: update file
+- bump dependencies
+
 ## [v0.14.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.14.1)
 
 > March 23, 2025
