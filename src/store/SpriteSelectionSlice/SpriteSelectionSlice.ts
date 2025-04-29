@@ -12,12 +12,12 @@ export default createGlobalSlice<
   AnimationsSliceTypes.default & SpriteSheetSliceTypes.default
 >("spriteSelection", (subscribe) => {
   subscribe(
-    (_, context) => unselectAllSprites(context),
+    (context) => unselectAllSprites(context),
     (state) => state.spriteSheet.data?.sprites,
   );
 
   subscribe(
-    (_, context) => unselectAllSprites(context),
+    (context) => unselectAllSprites(context),
     (state) => state.animations.animations.length,
   );
 

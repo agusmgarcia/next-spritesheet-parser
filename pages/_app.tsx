@@ -10,9 +10,13 @@ export default function App({ Component }: AppProps<any>) {
   return (
     <>
       <Head>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link href="favicon.ico" rel="icon" type="image/x-icon" />
         <title>Spritesheet Parser</title>
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link
+          href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/favicon.ico`}
+          rel="icon"
+          type="image/x-icon"
+        />
       </Head>
 
       <StoreProvider>

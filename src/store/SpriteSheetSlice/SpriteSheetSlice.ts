@@ -1,6 +1,6 @@
 import {
-  type CreateGlobalSliceTypes,
   createServerSlice,
+  type CreateServerSliceTypes,
   type Tuple,
 } from "@agusmgarcia/react-core";
 import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
@@ -66,15 +66,14 @@ export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
 
 function mergeSprites(
   spriteIds: Parameters<SpriteSheetSlice["spriteSheet"]["mergeSprites"]>[0],
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
 ): void {
   if (spriteIds.length <= 1) return;
 
   context.set((prev) => {
-    if (!prev.data)
-      return { data: undefined, error: undefined, loading: false };
+    if (!prev) return prev;
 
-    const sprites = prev.data.sprites;
+    const sprites = prev.sprites;
 
     const spriteToAdd = toSprite(
       spriteIds
@@ -96,26 +95,17 @@ function mergeSprites(
     const newSprites = { ...sprites, [spriteToAdd.id]: spriteToAdd };
     spriteIds.forEach((sId) => delete newSprites[sId]);
 
-    return {
-      ...prev,
-      data: { ...prev.data, sprites: newSprites },
-      error: undefined,
-      loading: false,
-    };
+    return { ...prev, sprites: newSprites };
   });
 }
 
 function setSpriteSheet(
   spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
-  context: CreateGlobalSliceTypes.Context<SpriteSheetSlice>,
+  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
 ): void {
-  context.set((prev) => ({
-    data: !!prev.data
-      ? { ...prev.data, ...spriteSheet, imageURL: prev.data.imageURL }
-      : undefined,
-    error: undefined,
-    loading: false,
-  }));
+  context.set((prev) =>
+    !!prev ? { ...prev, ...spriteSheet, imageURL: prev.imageURL } : undefined,
+  );
 }
 
 function getImageData(image: HTMLImageElement): ImageData {

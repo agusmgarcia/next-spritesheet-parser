@@ -13,7 +13,7 @@ export default createGlobalSlice<
   SpriteSheetSliceTypes.default
 >("animations", (subscribe) => {
   subscribe(
-    (_, context) => updateAnimations(context),
+    (context) => updateAnimations(context),
     (state) => state.spriteSheet.data?.sprites,
   );
 
