@@ -19,6 +19,8 @@ export default function HomePage(props: HomePageProps) {
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
+    splitSpriteDisabled,
+    splitSpriteOnClick,
   } = useHomePage(props);
 
   return (
@@ -52,6 +54,8 @@ export default function HomePage(props: HomePageProps) {
           mergeSpritesOnClick={mergeSpritesOnClick}
           resetSelectionDisabled={resetSelectionDisabled}
           resetSelectionOnClick={resetSelectionOnClick}
+          splitSpriteDisabled={splitSpriteDisabled}
+          splitSpriteOnClick={splitSpriteOnClick}
         />
       </SideBar>
     </>

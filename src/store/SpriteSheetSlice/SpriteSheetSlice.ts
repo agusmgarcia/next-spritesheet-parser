@@ -61,7 +61,7 @@ export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
     }
   },
   (state) => state.settings.settings,
-  () => ({ mergeSprites, setSpriteSheet }),
+  () => ({ mergeSprites, setSpriteSheet, splitSprite }),
 );
 
 function mergeSprites(
@@ -106,6 +106,27 @@ function setSpriteSheet(
   context.set((prev) =>
     !!prev ? { ...prev, ...spriteSheet, imageURL: prev.imageURL } : undefined,
   );
+}
+
+function splitSprite(
+  spriteId: Parameters<SpriteSheetSlice["spriteSheet"]["splitSprite"]>[0],
+  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
+): void {
+  context.set((prev) => {
+    if (!prev) return prev;
+
+    const subspriteIds = Object.keys(prev.sprites[spriteId].subsprites);
+    if (!subspriteIds.length) return prev;
+
+    const newSprites = {
+      ...prev.sprites,
+      ...prev.sprites[spriteId].subsprites,
+    };
+
+    delete newSprites[spriteId];
+
+    return { ...prev, sprites: newSprites };
+  });
 }
 
 function getImageData(image: HTMLImageElement): ImageData {

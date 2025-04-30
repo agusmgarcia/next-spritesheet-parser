@@ -21,6 +21,8 @@ export default function SideBarContent(props: SideBarContentProps) {
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
+    splitSpriteDisabled,
+    splitSpriteOnClick,
   } = useSideBarContent(props);
 
   return (
@@ -41,6 +43,8 @@ export default function SideBarContent(props: SideBarContentProps) {
         mergeSpritesOnClick={mergeSpritesOnClick}
         resetSelectionDisabled={resetSelectionDisabled}
         resetSelectionOnClick={resetSelectionOnClick}
+        splitSpriteDisabled={splitSpriteDisabled}
+        splitSpriteOnClick={splitSpriteOnClick}
       />
     </Accordion>
   );

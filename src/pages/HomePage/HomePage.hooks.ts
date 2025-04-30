@@ -28,6 +28,8 @@ export default function useHomePage(props: HomePageProps) {
 
   const { mergeSpritesDisabled, mergeSpritesOnClick } = useMergeSprites();
 
+  const { splitSpriteDisabled, splitSpriteOnClick } = useSplitSprite();
+
   return {
     ...props,
     createAnimationDisabled,
@@ -42,6 +44,8 @@ export default function useHomePage(props: HomePageProps) {
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
+    splitSpriteDisabled,
+    splitSpriteOnClick,
   };
 }
 
@@ -232,4 +236,23 @@ function useMergeSprites() {
   }, [mergeSprites, spriteSelection]);
 
   return { mergeSpritesDisabled, mergeSpritesOnClick };
+}
+
+function useSplitSprite() {
+  const { splitSprite, spriteSheet } = useSpriteSheet();
+  const { spriteSelection } = useSpriteSelection();
+
+  const splitSpriteDisabled = useMemo<boolean>(
+    () =>
+      spriteSelection.length !== 1 ||
+      !Object.keys(spriteSheet?.sprites[spriteSelection[0]].subsprites || {})
+        .length,
+    [spriteSelection, spriteSheet?.sprites],
+  );
+
+  const splitSpriteOnClick = useCallback<Func>(() => {
+    splitSprite(spriteSelection[0]);
+  }, [splitSprite, spriteSelection]);
+
+  return { splitSpriteDisabled, splitSpriteOnClick };
 }

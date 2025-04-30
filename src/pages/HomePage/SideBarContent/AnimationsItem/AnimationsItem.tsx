@@ -15,6 +15,8 @@ export default function AnimationsItem(props: AnimationsItemProps) {
     mergeSpritesOnClick,
     resetSelectionDisabled,
     resetSelectionOnClick,
+    splitSpriteDisabled,
+    splitSpriteOnClick,
   } = useAnimationsItem(props);
 
   return (
@@ -30,16 +32,31 @@ export default function AnimationsItem(props: AnimationsItemProps) {
         <Icon variant="roundedPlay" />
       </Button>
 
+      {/* SPLIT SPRITES */}
+      {!splitSpriteDisabled && (
+        <Button
+          className="flex items-center justify-center gap-1"
+          disabled={splitSpriteDisabled}
+          onClick={splitSpriteOnClick}
+          variant="secondary"
+        >
+          Split
+          <Icon variant="split" />
+        </Button>
+      )}
+
       {/* MERGE SPRITES */}
-      <Button
-        className="flex items-center justify-center gap-1"
-        disabled={mergeSpritesDisabled}
-        onClick={mergeSpritesOnClick}
-        variant="secondary"
-      >
-        Merge
-        <Icon variant="merge" />
-      </Button>
+      {splitSpriteDisabled && (
+        <Button
+          className="flex items-center justify-center gap-1"
+          disabled={mergeSpritesDisabled}
+          onClick={mergeSpritesOnClick}
+          variant="secondary"
+        >
+          Merge
+          <Icon variant="merge" />
+        </Button>
+      )}
 
       {/* RESET SELECTION */}
       <Button

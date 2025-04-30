@@ -7,6 +7,8 @@ type AnimationsItemProps = {
   mergeSpritesOnClick: Func;
   resetSelectionDisabled: boolean;
   resetSelectionOnClick: Func;
+  splitSpriteDisabled: boolean;
+  splitSpriteOnClick: Func;
 };
 
 export default AnimationsItemProps;

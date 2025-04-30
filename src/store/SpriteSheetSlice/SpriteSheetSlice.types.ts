@@ -31,6 +31,7 @@ type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
   {
     mergeSprites: Func<void, [spriteIds: string[]]>;
     setSpriteSheet: Func<void, [sprites: SpriteSheet]>;
+    splitSprite: Func<void, [spriteId: string]>;
   }
 >;
 
