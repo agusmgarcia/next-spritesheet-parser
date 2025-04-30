@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.15.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.15.0)
+
+> April 30, 2025
+
+- **AnimationsSlice**: delete animations when a sprite is missing
+- **HomePage**: add split sprites feature
+- **Icon**: add split variant
+
 ## [v0.14.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.14.3)
 
 > April 29, 2025
