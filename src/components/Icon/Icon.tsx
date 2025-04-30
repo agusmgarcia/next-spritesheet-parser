@@ -124,6 +124,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "split":
+      return (
+        <svg {...rest}>
+          <path d="M20 3c0.5523 0 1 0.44772 1 1v16c0 0.5523 -0.4477 1 -1 1H4c-0.55228 0 -1 -0.4477 -1 -1V4c0 -0.55228 0.44772 -1 1 -1h16Zm-9 2H5v14h6v-4h2v4h6V5h-6v4h-2V5Zm4 4 3 3 -3 3v-2H9v2l-3 -3 3 -3v2h6V9Z" />
+        </svg>
+      );
+
     case "stack":
       return (
         <svg {...rest}>
