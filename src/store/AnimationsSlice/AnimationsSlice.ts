@@ -161,12 +161,9 @@ function updateAnimations(
 
     return {
       ...prev,
-      animations: prev.animations
-        .map((a) => ({
-          ...a,
-          sprites: a.sprites.filter((s) => !!sprites[s.id]),
-        }))
-        .filter((a) => !!a.sprites.length),
+      animations: prev.animations.filter((a) =>
+        a.sprites.every((s) => !!sprites[s.id]),
+      ),
     };
   });
 }
