@@ -9,7 +9,9 @@ module.exports = {
   plugins: [],
   theme: {
     colors: {
+      amber: colors.amber,
       black: colors.black,
+      blue: colors.blue,
       cranberry: {
         50: "#fdf2f7",
         100: "#fce7f0",
@@ -26,6 +28,8 @@ module.exports = {
       current: colors.current,
       dark: "#212529",
       gray: colors.gray,
+      green: colors.green,
+      red: colors.red,
       transparent: colors.transparent,
       white: colors.white,
     },
