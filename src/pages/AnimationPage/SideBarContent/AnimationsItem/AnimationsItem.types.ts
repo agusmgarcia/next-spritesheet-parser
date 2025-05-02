@@ -1,7 +1,7 @@
-import { type Animations } from "#src/store";
+import { type Animation } from "#src/store";
 
 type AnimationsItemProps = {
-  animation: Animations[number];
+  animation: Animation;
 };
 
 export default AnimationsItemProps;

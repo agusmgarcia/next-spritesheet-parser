@@ -1,9 +1,9 @@
 import { type Func } from "@agusmgarcia/react-core";
 
-import { type Animations } from "#src/store";
+import { type Animation } from "#src/store";
 
 type SideBarContentProps = {
-  animation: Animations[number];
+  animation: Animation;
   backwardOnClick: Func;
   forwardOnClick: Func;
   fps: number;

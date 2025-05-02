@@ -2,7 +2,7 @@ import { type Func } from "@agusmgarcia/react-core";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { type Animations, useAnimations } from "#src/store";
+import { type Animation, useAnimations } from "#src/store";
 
 import type AnimationPageProps from "./AnimationPage.types";
 
@@ -80,7 +80,7 @@ function useAnimation() {
 
   const { animations } = useAnimations();
 
-  const animation = useMemo<Animations[number] | undefined>(
+  const animation = useMemo<Animation | undefined>(
     () => animations.find((a) => a.id === params?.id),
     [animations, params?.id],
   );

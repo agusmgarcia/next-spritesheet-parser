@@ -1,9 +1,9 @@
 import { type Func } from "@agusmgarcia/react-core";
 
-import { type Animations } from "#src/store";
+import { type Animation } from "#src/store";
 
 type MainContentProps = {
-  animation: Animations[number];
+  animation: Animation;
   backwardOnClick: Func;
   forwardOnClick: Func;
   index: number;

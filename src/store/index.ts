@@ -5,19 +5,15 @@ import createAnimationsSlice, {
 } from "./AnimationsSlice";
 import createErrorSlice, { type ErrorSliceTypes } from "./ErrorSlice";
 import createSettingsSlice, { type SettingsSliceTypes } from "./SettingsSlice";
-import createSpriteSelectionSlice, {
-  type SpriteSelectionSliceTypes,
-} from "./SpriteSelectionSlice";
+import createSpriteSelectionSlice from "./SpriteSelectionSlice";
 import createSpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
 
-export type Animations =
-  AnimationsSliceTypes.default["animations"]["animations"];
+export type Animation =
+  AnimationsSliceTypes.default["animations"]["animations"][number];
 export type Error = NonNullable<ErrorSliceTypes.default["error"]["error"]>;
 export type Settings = SettingsSliceTypes.default["settings"]["settings"];
-export type SpriteSelection =
-  SpriteSelectionSliceTypes.default["spriteSelection"]["spriteSelection"];
 export type SpriteSheet = NonNullable<
   SpriteSheetSliceTypes.default["spriteSheet"]["data"]
 >;

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  type Animations,
+  type Animation,
   type SpriteSheet,
   useAnimations,
   useError,
@@ -146,7 +146,7 @@ function useExportFile() {
   );
 
   const exportFile = useCallback<
-    AsyncFunc<void, [spriteSheet: SpriteSheet, animations: Animations]>
+    AsyncFunc<void, [spriteSheet: SpriteSheet, animations: Animation[]]>
   >(
     (spriteSheet, animations) =>
       new Promise((resolve) => {
