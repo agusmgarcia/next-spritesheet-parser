@@ -39,17 +39,20 @@ export default function useSettingsItem(props: SettingsItemProps) {
   };
 }
 
-const initialSettings = {
-  delta: "0",
-  maxArea: "0",
-  maxVariation: "0",
-  minArea: "0",
-  minDiversity: "0",
-};
-
 function useSettings() {
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
   const { setSettings, settings } = useSettingsFromStore();
+  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+
+  const initialSettings = useMemo(
+    () => ({
+      delta: "0",
+      maxArea: "0",
+      maxVariation: "0",
+      minArea: "0",
+      minDiversity: "0",
+    }),
+    [],
+  );
 
   const [settingsValue, setSettingsValue] = useState(initialSettings);
 
@@ -60,6 +63,7 @@ function useSettings() {
 
   const settingsButtonDisabled = useMemo<boolean>(
     () =>
+      !spriteSheet ||
       spriteSheetLoading ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
@@ -72,6 +76,7 @@ function useSettings() {
       !settingsValue.minDiversity ||
       isNaN(+settingsValue.minDiversity),
     [
+      spriteSheet,
       spriteSheetLoading,
       settingsValue.delta,
       settingsValue.maxArea,

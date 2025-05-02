@@ -11,19 +11,7 @@ import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
-export default function useMainContent({
-  createAnimationDisabled: createAnimationDisabledFromProps,
-  createAnimationOnClick: createAnimationOnClickFromProps,
-  exportFileDisabled: exportFileDisabledFromProps,
-  exportFileOnClick: exportFileOnClickFromProps,
-  importFileDisabled: importFileDisabledFromProps,
-  importFileOnClick: importFileOnClickFromProps,
-  mergeSpritesDisabled: mergeSpritesDisabledFromProps,
-  mergeSpritesOnClick: mergeSpritesOnClickFromProps,
-  resetSelectionDisabled: resetSelectionDisabledFromProps,
-  resetSelectionOnClick: resetSelectionOnClickFromProps,
-  ...rest
-}: MainContentProps) {
+export default function useMainContent(props: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
   const { selectSprite, spriteSelection, toggleSpriteSelection } =
     useSpriteSelection();
@@ -294,51 +282,8 @@ export default function useMainContent({
     sprites,
   ]);
 
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "c":
-          if (!!createAnimationDisabledFromProps) return;
-          return createAnimationOnClickFromProps();
-
-        case "e":
-          if (!!exportFileDisabledFromProps) return;
-          return exportFileOnClickFromProps();
-
-        case "i":
-          if (!!importFileDisabledFromProps) return;
-          return importFileOnClickFromProps();
-
-        case "m":
-          if (!!mergeSpritesDisabledFromProps) return;
-          return mergeSpritesOnClickFromProps();
-
-        case "r":
-          if (!!resetSelectionDisabledFromProps) return;
-          return resetSelectionOnClickFromProps();
-      }
-    };
-
-    root.addEventListener("keydown", handleKeyDown);
-    return () => root.removeEventListener("keydown", handleKeyDown);
-  }, [
-    createAnimationDisabledFromProps,
-    createAnimationOnClickFromProps,
-    exportFileDisabledFromProps,
-    exportFileOnClickFromProps,
-    importFileDisabledFromProps,
-    importFileOnClickFromProps,
-    mergeSpritesDisabledFromProps,
-    mergeSpritesOnClickFromProps,
-    resetSelectionDisabledFromProps,
-    resetSelectionOnClickFromProps,
-  ]);
-
   return {
-    ...rest,
+    ...props,
     onClick,
     onMouseDown,
     onMouseEnter,

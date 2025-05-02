@@ -6,7 +6,6 @@ import type FilesItemProps from "./FilesItem.types";
 export default function FilesItem(props: FilesItemProps) {
   const {
     exportFileDisabled,
-    exportFileLoading,
     exportFileOnClick,
     heading,
     importFileDisabled,
@@ -38,10 +37,7 @@ export default function FilesItem(props: FilesItemProps) {
         variant="secondary"
       >
         Export
-        <Icon
-          className={!exportFileLoading ? undefined : "animate-spin"}
-          variant={!exportFileLoading ? "downloadFile" : "spinner"}
-        />
+        <Icon variant="downloadFile" />
       </Button>
     </Accordion.Item>
   );

@@ -7,45 +7,13 @@ import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 
 export default function SideBarContent(props: SideBarContentProps) {
-  const {
-    createAnimationDisabled,
-    createAnimationOnClick,
-    exportFileDisabled,
-    exportFileLoading,
-    exportFileOnClick,
-    heading,
-    importFileDisabled,
-    importFileLoading,
-    importFileOnClick,
-    mergeSpritesDisabled,
-    mergeSpritesOnClick,
-    resetSelectionDisabled,
-    resetSelectionOnClick,
-    splitSpriteDisabled,
-    splitSpriteOnClick,
-  } = useSideBarContent(props);
+  const { heading } = useSideBarContent(props);
 
   return (
     <Accordion heading={heading}>
-      <FilesItem
-        exportFileDisabled={exportFileDisabled}
-        exportFileLoading={exportFileLoading}
-        exportFileOnClick={exportFileOnClick}
-        importFileDisabled={importFileDisabled}
-        importFileLoading={importFileLoading}
-        importFileOnClick={importFileOnClick}
-      />
+      <FilesItem />
       <SettingsItem />
-      <AnimationsItem
-        createAnimationDisabled={createAnimationDisabled}
-        createAnimationOnClick={createAnimationOnClick}
-        mergeSpritesDisabled={mergeSpritesDisabled}
-        mergeSpritesOnClick={mergeSpritesOnClick}
-        resetSelectionDisabled={resetSelectionDisabled}
-        resetSelectionOnClick={resetSelectionOnClick}
-        splitSpriteDisabled={splitSpriteDisabled}
-        splitSpriteOnClick={splitSpriteOnClick}
-      />
+      <AnimationsItem />
     </Accordion>
   );
 }

@@ -5,6 +5,7 @@ import type AnimationsItemProps from "./AnimationsItem.types";
 
 export default function AnimationsItem(props: AnimationsItemProps) {
   const {
+    animationSelectorDisabled,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
@@ -72,6 +73,7 @@ export default function AnimationsItem(props: AnimationsItemProps) {
       {/* ANIMATION SELECTOR */}
       <Select
         className="text-center [text-align-last:center]"
+        disabled={animationSelectorDisabled}
         onChange={animationSelectorOnChange}
         value={animationSelectorValue}
       >
