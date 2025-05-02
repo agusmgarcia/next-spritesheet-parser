@@ -23,6 +23,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
     | "stack"
     | "trash"
     | "uploadFile"
+    | "warning"
     | "zoomIn"
     | "zoomOut";
 };
