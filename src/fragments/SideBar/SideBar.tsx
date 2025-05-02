@@ -25,5 +25,5 @@ export default function SideBar(props: SideBarProps) {
 SideBar.Container = function SideBarContainer(
   props: Pick<React.HTMLAttributes<HTMLDivElement>, "className">,
 ) {
-  return <div className={props.className} id="__side_bar_container__" />;
+  return <div className={props.className} id={CONTAINER_ID} />;
 };
