@@ -68,6 +68,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "info":
+      return (
+        <svg {...rest}>
+          <path d="M12 22C6.47715 22 2 17.5228 2 12 2 6.47715 6.47715 2 12 2c5.5228 0 10 4.47715 10 10 0 5.5228 -4.4772 10 -10 10Zm0 -2c4.4183 0 8 -3.5817 8 -8 0 -4.41828 -3.5817 -8 -8 -8 -4.41828 0 -8 3.58172 -8 8 0 4.4183 3.58172 8 8 8Zm-1 -5h2v2h-2v-2Zm0 -8h2v6h-2V7Z" />
+        </svg>
+      );
+
     case "merge":
       return (
         <svg {...rest}>
