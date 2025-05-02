@@ -11,10 +11,10 @@ export default createGlobalSlice<SettingsSlice>("settings", () => ({
   settings: {
     delta: 0,
     image: undefined,
-    maxArea: 0.5,
-    maxVariation: 0.5,
+    maxArea: 0,
+    maxVariation: 0,
     minArea: 0,
-    minDiversity: 0.33,
+    minDiversity: 0,
   },
 }));
 
@@ -26,12 +26,16 @@ function setImage(
 
   const url = typeof image !== "string" ? URL.createObjectURL(image) : image;
 
-  context.set((prev) => ({
+  context.set({
     settings: {
-      ...prev.settings,
+      delta: 0,
       image: { name: image.name, type: image.type, url },
+      maxArea: 0.5,
+      maxVariation: 0.5,
+      minArea: 0,
+      minDiversity: 0.33,
     },
-  }));
+  });
 }
 
 function setSettings(
