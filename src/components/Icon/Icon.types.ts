@@ -6,6 +6,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
     | "arrowUp"
     | "backward"
     | "downloadFile"
+    | "error"
     | "forward"
     | "home"
     | "merge"
