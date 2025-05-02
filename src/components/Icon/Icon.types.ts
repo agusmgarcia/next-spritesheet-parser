@@ -21,6 +21,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
     | "spinner"
     | "split"
     | "stack"
+    | "success"
     | "trash"
     | "uploadFile"
     | "warning"
