@@ -9,12 +9,15 @@ export default function useSelect(props: SelectProps) {
   const style = useMemo<React.CSSProperties>(
     () => ({
       backgroundImage: `url("data:image/svg+xml;utf8,${renderToStaticMarkup(
-        React.createElement(Icon, { variant: "arrowDown" }),
+        React.createElement(Icon, {
+          style: { color: !props.disabled ? "black" : "rgb(156 163 175)" },
+          variant: "arrowDown",
+        }),
       )
         .replaceAll(`"`, `'`)
         .replaceAll("#", "%23")}")`,
     }),
-    [],
+    [props.disabled],
   );
 
   return { ...props, style };
