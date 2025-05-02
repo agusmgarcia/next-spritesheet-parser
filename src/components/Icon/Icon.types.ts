@@ -1,4 +1,4 @@
-type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className"> & {
+type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className" | "style"> & {
   variant:
     | "arrowDown"
     | "arrowLeft"
