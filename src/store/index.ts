@@ -3,7 +3,9 @@ import { createStore } from "@agusmgarcia/react-core";
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
-import createErrorSlice, { type ErrorSliceTypes } from "./ErrorSlice";
+import createNotificationSlice, {
+  type NotificationSliceTypes,
+} from "./NotificationSlice";
 import createSettingsSlice, { type SettingsSliceTypes } from "./SettingsSlice";
 import createSpriteSelectionSlice from "./SpriteSelectionSlice";
 import createSpriteSheetSlice, {
@@ -12,7 +14,9 @@ import createSpriteSheetSlice, {
 
 export type Animation =
   AnimationsSliceTypes.default["animations"]["animations"][number];
-export type Error = NonNullable<ErrorSliceTypes.default["error"]["error"]>;
+export type Notification = NonNullable<
+  NotificationSliceTypes.default["notification"]["notification"]
+>;
 export type Settings = SettingsSliceTypes.default["settings"]["settings"];
 export type SpriteSheet = NonNullable<
   SpriteSheetSliceTypes.default["spriteSheet"]["data"]
@@ -20,7 +24,7 @@ export type SpriteSheet = NonNullable<
 
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
-  createErrorSlice,
+  createNotificationSlice,
   createSettingsSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
@@ -51,11 +55,13 @@ export function useAnimations() {
   };
 }
 
-export function useError() {
+export function useNotification() {
   return {
-    clearError: useSelector((state) => state.error.clearError),
-    error: useSelector((state) => state.error.error),
-    setError: useSelector((state) => state.error.setError),
+    clearNotification: useSelector(
+      (state) => state.notification.clearNotification,
+    ),
+    notification: useSelector((state) => state.notification.notification),
+    setNotification: useSelector((state) => state.notification.setNotification),
   };
 }
 

@@ -6,7 +6,7 @@ import {
   type Animation,
   type SpriteSheet,
   useAnimations,
-  useError,
+  useNotification,
   useSettings,
   useSpriteSelection,
   useSpriteSheet,
@@ -51,7 +51,7 @@ export default function useHomePage(props: HomePageProps) {
 
 function useImportFile() {
   const { setAnimations } = useAnimations();
-  const { setError } = useError();
+  const { setNotification } = useNotification();
   const { setImage, setSettings } = useSettings();
   const { setSpriteSheet, spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
@@ -111,16 +111,16 @@ function useImportFile() {
               setSpriteSheet(json.spriteSheet);
               setAnimations(json.animations);
             })
-            .catch((error) => setError(error.message))
+            .catch((error) => setNotification("error", error.message))
             .finally(() => setImportFileLoading(false));
         }
       })
-      .catch((error) => setError(error.message));
+      .catch((error) => setNotification("error", error.message));
   }, [
     importFile,
     setAnimations,
-    setError,
     setImage,
+    setNotification,
     setSettings,
     setSpriteSheet,
     spriteSheet,
@@ -135,7 +135,7 @@ function useImportFile() {
 
 function useExportFile() {
   const { animations } = useAnimations();
-  const { setError } = useError();
+  const { setNotification } = useNotification();
   const { spriteSheet } = useSpriteSheet();
 
   const [exportFileLoading, setExportFileLoading] = useState(false);
@@ -179,9 +179,9 @@ function useExportFile() {
 
     setExportFileLoading(true);
     exportFile(spriteSheet, animations)
-      .catch((error) => setError(error.message))
+      .catch((error) => setNotification("error", error.message))
       .finally(() => setExportFileLoading(false));
-  }, [animations, exportFile, setError, spriteSheet]);
+  }, [animations, exportFile, setNotification, spriteSheet]);
 
   return { exportFileDisabled, exportFileLoading, exportFileOnClick };
 }
