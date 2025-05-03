@@ -20,7 +20,7 @@ export default function useMainContent(props: MainContentProps) {
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const [initialCursor, setInitialCursor] = useState<Tuple<number, 4>>();
+  const [selectedArea, setSelectedArea] = useState<Tuple<number, 4>>();
   const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
 
   const { image } = useLoadImage(spriteSheet?.imageURL || "");
@@ -85,7 +85,7 @@ export default function useMainContent(props: MainContentProps) {
 
   const onClick = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      setInitialCursor(undefined);
+      setSelectedArea(undefined);
 
       if (!!preSelectedSprites) {
         preSelectedSprites.forEach((spriteId) => selectSprite(spriteId));
@@ -117,7 +117,7 @@ export default function useMainContent(props: MainContentProps) {
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
-      setInitialCursor([x, y, x, y]);
+      setSelectedArea([x, y, x, y]);
     },
     [devicePixelRatio],
   );
@@ -148,7 +148,7 @@ export default function useMainContent(props: MainContentProps) {
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
-      if (initialCursor === undefined) {
+      if (selectedArea === undefined) {
         const sprite = findSprite(x, y);
         button.style.cursor = !!sprite ? "pointer" : "default";
         return;
@@ -156,18 +156,18 @@ export default function useMainContent(props: MainContentProps) {
 
       setPreSelectedSprites(
         findSprites(
-          Math.min(x, initialCursor[0]),
-          Math.min(y, initialCursor[1]),
-          Math.abs(x - initialCursor[0]),
-          Math.abs(y - initialCursor[1]),
+          Math.min(x, selectedArea[0]),
+          Math.min(y, selectedArea[1]),
+          Math.abs(x - selectedArea[0]),
+          Math.abs(y - selectedArea[1]),
         ).map((s) => s.id),
       );
 
-      setInitialCursor((prev) =>
+      setSelectedArea((prev) =>
         !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
       );
     },
-    [devicePixelRatio, findSprite, findSprites, initialCursor],
+    [devicePixelRatio, findSprite, findSprites, selectedArea],
   );
 
   useEffect(() => {
@@ -260,21 +260,21 @@ export default function useMainContent(props: MainContentProps) {
       context.globalAlpha = 1;
     });
 
-    if (!!initialCursor) {
+    if (!!selectedArea) {
       context.globalAlpha = 0.2;
       context.fillStyle = spriteSheet.color;
       context.fillRect(
-        Math.min(initialCursor[2], initialCursor[0]),
-        Math.min(initialCursor[3], initialCursor[1]),
-        Math.abs(initialCursor[2] - initialCursor[0]),
-        Math.abs(initialCursor[3] - initialCursor[1]),
+        Math.min(selectedArea[2], selectedArea[0]),
+        Math.min(selectedArea[3], selectedArea[1]),
+        Math.abs(selectedArea[2] - selectedArea[0]),
+        Math.abs(selectedArea[3] - selectedArea[1]),
       );
     }
   }, [
     devicePixelRatio,
     image,
     spriteSelection,
-    initialCursor,
+    selectedArea,
     preSelectedSprites,
     rootDimensions.height,
     rootDimensions.width,
