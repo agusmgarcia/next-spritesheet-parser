@@ -96,6 +96,17 @@ function createAnimation(
 
   const id = createUUID();
 
+  function getLatestAnimationOrder(
+    animations: AnimationsSlice["animations"]["animations"],
+  ): number {
+    return (
+      animations
+        .map((a) => +(a.name.match(/^New animation (\d+)$/)?.at(1) || "0"))
+        .sort()
+        .at(-1) || 0
+    );
+  }
+
   context.set((prev) => ({
     animations: [
       ...prev.animations,
@@ -103,7 +114,7 @@ function createAnimation(
         color: spriteSheet.backgroundColor,
         fps: 12,
         id,
-        name: "New animation",
+        name: `New animation ${getLatestAnimationOrder(prev.animations) + 1}`,
         scale: 0,
         sprites: spriteIds
           .sort(sortSprites(spriteSheet.sprites))
