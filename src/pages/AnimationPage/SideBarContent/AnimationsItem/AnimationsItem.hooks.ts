@@ -1,3 +1,4 @@
+import { sorts } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -48,7 +49,9 @@ function useAnimationSelector({
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
       { id: "sheet", name: spriteSheet?.name || "Sprite sheet" },
-      ...animations.map((a) => ({ id: a.id, name: a.name })),
+      ...animations
+        .map((a) => ({ id: a.id, name: a.name }))
+        .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
     ],
     [animations, spriteSheet?.name],
   );
