@@ -22,6 +22,7 @@ export default function useMainContent(props: MainContentProps) {
 
   const [selectedArea, setSelectedArea] = useState<Tuple<number, 4>>();
   const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
+  const [spriteHovered, setSpriteHovered] = useState<string>();
 
   const { image } = useLoadImage(spriteSheet?.imageURL || "");
   const rootDimensions = useDimensions(rootRef);
@@ -86,6 +87,7 @@ export default function useMainContent(props: MainContentProps) {
   const onClick = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
       setSelectedArea(undefined);
+      setSpriteHovered(undefined);
 
       if (!!preSelectedSprites) {
         preSelectedSprites.forEach((spriteId) => selectSprite(spriteId));
@@ -151,6 +153,7 @@ export default function useMainContent(props: MainContentProps) {
       if (selectedArea === undefined) {
         const sprite = findSprite(x, y);
         button.style.cursor = !!sprite ? "pointer" : "default";
+        setSpriteHovered(sprite?.id);
         return;
       }
 
@@ -241,12 +244,23 @@ export default function useMainContent(props: MainContentProps) {
     spriteSelection.forEach((spriteId) => {
       const sprite = spriteSheet.sprites[spriteId];
       if (!sprite) return;
+      if (spriteHovered === spriteId) return;
 
       context.globalAlpha = 0.4;
       context.fillStyle = spriteSheet.color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
+
+    if (!!spriteHovered) {
+      const sprite = spriteSheet.sprites[spriteHovered];
+      if (!sprite) return;
+
+      context.globalAlpha = spriteSelection.includes(spriteHovered) ? 0.3 : 0.2;
+      context.fillStyle = spriteSheet.color;
+      context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
+      context.globalAlpha = 1;
+    }
 
     preSelectedSprites?.forEach((spriteId) => {
       const sprite = spriteSheet.sprites[spriteId];
@@ -280,6 +294,7 @@ export default function useMainContent(props: MainContentProps) {
     rootDimensions.width,
     spriteSheet,
     sprites,
+    spriteHovered,
   ]);
 
   return {
