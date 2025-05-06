@@ -1,11 +1,8 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Animation } from "#src/store";
 
 type PlayingItemProps = {
-  backwardOnClick: Func;
-  forwardOnClick: Func;
-  playing: boolean;
-  playingDisabled: boolean;
-  playOnClick: Func;
+  animation: Animation;
+  onIndexChange: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default PlayingItemProps;

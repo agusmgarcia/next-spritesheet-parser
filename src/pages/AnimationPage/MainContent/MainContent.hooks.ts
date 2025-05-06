@@ -1,38 +1,17 @@
 import { useDevicePixelRatio, useDimensions } from "@agusmgarcia/react-core";
 import { useEffect, useMemo, useRef } from "react";
 
-import { useAnimations, useSpriteSheet } from "#src/store";
+import { useSpriteSheet } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent({
   animation: animationFromProps,
-  backwardOnClick: backwardOnClickFromProps,
-  forwardOnClick: forwardOnClickFromProps,
   index: indexFromProps,
-  minusFPSDisabled: minusFPSDisabledFromProps,
-  minusFPSOnClick: minusFPSOnClickFromProps,
-  onionActive: onionActiveFromProps,
-  onionDisabled: onionDisabledFromProps,
-  onionOnClick: onionOnClickFromProps,
-  playing: playingFromProps,
-  playingDisabled: playingDisabledFromProps,
-  playOnClick: playOnClickFromProps,
-  plusFPSDisabled: plusFPSDisabledFromProps,
-  plusFPSOnClick: plusFPSOnClickFromProps,
-  resetCenterDisabled: resetCenterDisabledFromProps,
-  resetCenterOnClick: resetCenterOnClickFromProps,
-  resetZoomDisabled: resetZoomDisabledFromProps,
-  resetZoomOnClick: resetZoomOnClickFromProps,
-  zoomInDisabled: zoomInDisabledFromProps,
-  zoomInOnClick: zoomInOnClickFromProps,
-  zoomOutDisabled: zoomOutDisabledFromProps,
-  zoomOutOnClick: zoomOutOnClickFromProps,
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
-  const { setAnimationOffset } = useAnimations();
 
   const rootRef = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -103,7 +82,7 @@ export default function useMainContent({
       currentSprite.height,
     );
 
-    if (!!prevSprite && onionActiveFromProps) {
+    if (!!prevSprite && animationFromProps.onion) {
       context.globalAlpha = 0.4;
       context.drawImage(
         image,
@@ -134,137 +113,15 @@ export default function useMainContent({
     context.stroke();
   }, [
     animationFromProps.color,
+    animationFromProps.onion,
     animationFromProps.scale,
     currentSprite,
     devicePixelRatio,
     dimensions.height,
     dimensions.width,
     image,
-    onionActiveFromProps,
     prevSprite,
     spriteSheet,
-  ]);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case " ":
-          if (!!playingDisabledFromProps) return;
-          return playOnClickFromProps();
-
-        case "ArrowUp":
-          if (!!event.altKey) return;
-          if (!!zoomInDisabledFromProps) return;
-          return zoomInOnClickFromProps();
-
-        case "ArrowDown":
-          if (!!event.altKey) return;
-          if (!!zoomOutDisabledFromProps) return;
-          return zoomOutOnClickFromProps();
-
-        case "z":
-          if (!!resetZoomDisabledFromProps) return;
-          return resetZoomOnClickFromProps();
-
-        case "+":
-          if (!!plusFPSDisabledFromProps) return;
-          return plusFPSOnClickFromProps();
-
-        case "-":
-          if (!!minusFPSDisabledFromProps) return;
-          return minusFPSOnClickFromProps();
-
-        case "c":
-          if (!!resetCenterDisabledFromProps) return;
-          return resetCenterOnClickFromProps();
-      }
-    };
-
-    root.addEventListener("keydown", handleKeyDown);
-    return () => root.removeEventListener("keydown", handleKeyDown);
-  }, [
-    minusFPSDisabledFromProps,
-    minusFPSOnClickFromProps,
-    playOnClickFromProps,
-    playingDisabledFromProps,
-    playingFromProps,
-    plusFPSDisabledFromProps,
-    plusFPSOnClickFromProps,
-    resetCenterDisabledFromProps,
-    resetCenterOnClickFromProps,
-    resetZoomDisabledFromProps,
-    resetZoomOnClickFromProps,
-    zoomInDisabledFromProps,
-    zoomInOnClickFromProps,
-    zoomOutDisabledFromProps,
-    zoomOutOnClickFromProps,
-  ]);
-
-  useEffect(() => {
-    if (playingFromProps) return;
-
-    const root = rootRef.current;
-    if (!root) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key) {
-        case "ArrowUp":
-          if (!event.altKey) return;
-          return setAnimationOffset(
-            animationFromProps.id,
-            indexFromProps,
-            (offsetX) => offsetX,
-            (offsetY) => offsetY - devicePixelRatio,
-          );
-
-        case "ArrowRight":
-          if (!event.altKey) return forwardOnClickFromProps();
-          return setAnimationOffset(
-            animationFromProps.id,
-            indexFromProps,
-            (offsetX) => offsetX + devicePixelRatio,
-            (offsetY) => offsetY,
-          );
-
-        case "ArrowDown":
-          if (!event.altKey) return;
-          return setAnimationOffset(
-            animationFromProps.id,
-            indexFromProps,
-            (offsetX) => offsetX,
-            (offsetY) => offsetY + devicePixelRatio,
-          );
-
-        case "ArrowLeft":
-          if (!event.altKey) return backwardOnClickFromProps();
-          return setAnimationOffset(
-            animationFromProps.id,
-            indexFromProps,
-            (offsetX) => offsetX - devicePixelRatio,
-            (offsetY) => offsetY,
-          );
-
-        case "o":
-          if (!!onionDisabledFromProps) return;
-          return onionOnClickFromProps();
-      }
-    };
-
-    root.addEventListener("keydown", handleKeyDown);
-    return () => root.removeEventListener("keydown", handleKeyDown);
-  }, [
-    animationFromProps.id,
-    backwardOnClickFromProps,
-    devicePixelRatio,
-    forwardOnClickFromProps,
-    indexFromProps,
-    onionDisabledFromProps,
-    onionOnClickFromProps,
-    playingFromProps,
-    setAnimationOffset,
   ]);
 
   return { ...rest, rootRef, spriteCanvasRef };

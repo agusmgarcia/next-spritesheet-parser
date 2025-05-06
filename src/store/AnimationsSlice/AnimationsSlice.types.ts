@@ -8,6 +8,8 @@ type Animation = {
   fps: number;
   id: string;
   name: string;
+  onion: boolean;
+  playing: boolean;
   scale: number;
   sprites: {
     id: string;
@@ -45,6 +47,14 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
         offsetX: React.SetStateAction<number>,
         offsetY: React.SetStateAction<number>,
       ]
+    >;
+    setAnimationOnion: Func<
+      void,
+      [id: string, onion: React.SetStateAction<boolean>]
+    >;
+    setAnimationPlaying: Func<
+      void,
+      [id: string, playing: React.SetStateAction<boolean>]
     >;
     setAnimations: Func<void, [animations: Animation[]]>;
     setAnimationScale: Func<

@@ -26,6 +26,8 @@ export default createGlobalSlice<
     setAnimationFPS,
     setAnimationName,
     setAnimationOffset,
+    setAnimationOnion,
+    setAnimationPlaying,
     setAnimations,
     setAnimationScale,
   };
@@ -115,6 +117,8 @@ function createAnimation(
         fps: 12,
         id,
         name: `New animation ${getLatestAnimationOrder(prev.animations) + 1}`,
+        onion: false,
+        playing: true,
         scale: 0,
         sprites: spriteIds
           .sort(sortSprites(spriteSheet.sprites))
@@ -248,6 +252,40 @@ function setAnimationOffset(
                   }
                 : s,
             ),
+          }
+        : a,
+    ),
+  }));
+}
+
+function setAnimationOnion(
+  id: Parameters<AnimationsSlice["animations"]["setAnimationOnion"]>[0],
+  onion: Parameters<AnimationsSlice["animations"]["setAnimationOnion"]>[1],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): void {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            onion: onion instanceof Function ? onion(a.onion) : onion,
+          }
+        : a,
+    ),
+  }));
+}
+
+function setAnimationPlaying(
+  id: Parameters<AnimationsSlice["animations"]["setAnimationPlaying"]>[0],
+  playing: Parameters<AnimationsSlice["animations"]["setAnimationPlaying"]>[1],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): void {
+  context.set((prev) => ({
+    animations: prev.animations.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            playing: playing instanceof Function ? playing(a.playing) : playing,
           }
         : a,
     ),

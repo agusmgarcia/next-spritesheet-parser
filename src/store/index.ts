@@ -48,6 +48,12 @@ export function useAnimations() {
     setAnimationOffset: useSelector(
       (state) => state.animations.setAnimationOffset,
     ),
+    setAnimationOnion: useSelector(
+      (state) => state.animations.setAnimationOnion,
+    ),
+    setAnimationPlaying: useSelector(
+      (state) => state.animations.setAnimationPlaying,
+    ),
     setAnimations: useSelector((state) => state.animations.setAnimations),
     setAnimationScale: useSelector(
       (state) => state.animations.setAnimationScale,

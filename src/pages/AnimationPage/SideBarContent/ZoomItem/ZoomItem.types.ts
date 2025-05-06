@@ -1,12 +1,7 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Animation } from "#src/store";
 
 type ZoomItemProps = {
-  resetZoomDisabled: boolean;
-  resetZoomOnClick: Func;
-  zoomInDisabled: boolean;
-  zoomInOnClick: Func;
-  zoomOutDisabled: boolean;
-  zoomOutOnClick: Func;
+  animation: Animation;
 };
 
 export default ZoomItemProps;

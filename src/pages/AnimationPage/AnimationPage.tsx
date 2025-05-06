@@ -6,89 +6,21 @@ import MainContent from "./MainContent";
 import SideBarContent from "./SideBarContent";
 
 export default function AnimationPage(props: AnimationPageProps) {
-  const {
-    animation,
-    backwardOnClick,
-    forwardOnClick,
-    fps,
-    fpsOnChange,
-    index,
-    minusFPSDisabled,
-    minusFPSOnClick,
-    onionActive,
-    onionDisabled,
-    onionOnClick,
-    playing,
-    playingDisabled,
-    playOnClick,
-    plusFPSDisabled,
-    plusFPSOnClick,
-    resetCenterDisabled,
-    resetCenterOnClick,
-    resetZoomDisabled,
-    resetZoomOnClick,
-    zoomInDisabled,
-    zoomInOnClick,
-    zoomOutDisabled,
-    zoomOutOnClick,
-  } = useAnimationPage(props);
+  const { animation, index, onIndexChange } = useAnimationPage(props);
 
   if (!animation) return <></>;
 
   return (
     <>
       {/* MAIN */}
-      <MainContent
-        animation={animation}
-        backwardOnClick={backwardOnClick}
-        forwardOnClick={forwardOnClick}
-        index={index}
-        minusFPSDisabled={minusFPSDisabled}
-        minusFPSOnClick={minusFPSOnClick}
-        onionActive={onionActive}
-        onionDisabled={onionDisabled}
-        onionOnClick={onionOnClick}
-        playOnClick={playOnClick}
-        playing={playing}
-        playingDisabled={playingDisabled}
-        plusFPSDisabled={plusFPSDisabled}
-        plusFPSOnClick={plusFPSOnClick}
-        resetCenterDisabled={resetCenterDisabled}
-        resetCenterOnClick={resetCenterOnClick}
-        resetZoomDisabled={resetZoomDisabled}
-        resetZoomOnClick={resetZoomOnClick}
-        zoomInDisabled={zoomInDisabled}
-        zoomInOnClick={zoomInOnClick}
-        zoomOutDisabled={zoomOutDisabled}
-        zoomOutOnClick={zoomOutOnClick}
-      />
+      <MainContent animation={animation} index={index} />
 
       {/* SIDEBAR */}
       <SideBar>
         <SideBarContent
           animation={animation}
-          backwardOnClick={backwardOnClick}
-          forwardOnClick={forwardOnClick}
-          fps={fps}
-          fpsOnChange={fpsOnChange}
-          minusFPSDisabled={minusFPSDisabled}
-          minusFPSOnClick={minusFPSOnClick}
-          onionActive={onionActive}
-          onionDisabled={onionDisabled}
-          onionOnClick={onionOnClick}
-          playOnClick={playOnClick}
-          playing={playing}
-          playingDisabled={playingDisabled}
-          plusFPSDisabled={plusFPSDisabled}
-          plusFPSOnClick={plusFPSOnClick}
-          resetCenterDisabled={resetCenterDisabled}
-          resetCenterOnClick={resetCenterOnClick}
-          resetZoomDisabled={resetZoomDisabled}
-          resetZoomOnClick={resetZoomOnClick}
-          zoomInDisabled={zoomInDisabled}
-          zoomInOnClick={zoomInOnClick}
-          zoomOutDisabled={zoomOutDisabled}
-          zoomOutOnClick={zoomOutOnClick}
+          index={index}
+          onIndexChange={onIndexChange}
         />
       </SideBar>
     </>
