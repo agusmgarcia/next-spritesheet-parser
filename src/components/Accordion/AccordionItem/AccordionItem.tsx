@@ -14,26 +14,24 @@ export default function AccordionItem(props: AccordionItemProps) {
   return (
     <div {...rest} className="flex flex-col gap-1">
       {/* HEADER */}
-      <div className="relative flex flex-col">
+      <div className="flex flex-col">
         {/* HEADING */}
-        <Typography
-          {...heading}
-          className={twMerge("text-white", heading.className)}
-        >
-          <Button className="text-left" onClick={toggle}>
+        <Typography {...heading}>
+          {/* CHILDREN */}
+          <Button
+            className="group flex items-center justify-between text-white hover:text-[unset]"
+            onClick={toggle}
+          >
             {heading.children}
+            <Icon
+              className="size-8 rounded-t-lg bg-white text-black hover:text-[unset] group-hover:text-[unset]"
+              variant={expanded ? "arrowUp" : "arrowDown"}
+            />
           </Button>
         </Typography>
 
         {/* DIVIDER */}
         <div className="h-[2px] w-full bg-white" />
-
-        {/* COLLAPSE / EXPAND */}
-        <div className="absolute bottom-0 right-0 size-8 rounded-t-lg bg-white">
-          <Button className="flex items-center justify-center" onClick={toggle}>
-            <Icon variant={expanded ? "arrowUp" : "arrowDown"} />
-          </Button>
-        </div>
       </div>
 
       {/* BODY */}
