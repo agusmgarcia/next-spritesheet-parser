@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.16.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.16.0)
+
+> May 9, 2025
+
+- bump library dependencies
+- **Accordion**: adjust styles
+- **AnimationPage**: move hooks to the corresponding components
+- **HomePage**: add sprite hovering
+- **HomePage**: rename properties
+- **AnimationsSlice**: set a dynamic name when creating it
+- sort animations by number
+- **HomePage**: move hooks to the corresponding components
+- **useKeyDown**: add hook
+- **SettingsSlice**: set initial values to 0
+- **Select**: adjust styles for disabled status
+- **Icon**: forward style property
+- support multiple notification types
+- add all tailwind colors
+- **SideBar**: adjust id
+- **Icon**: add success variant
+- **Icon**: add warning variant
+- **Icon**: add info variant
+- **Icon**: add error variant
+- expose Animation type instead of Animations
+
 ## [v0.15.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.15.0)
 
 > April 30, 2025
