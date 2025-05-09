@@ -7,7 +7,7 @@ import type SideBarProps from "./SideBar.types";
 const CONTAINER_ID = "__side_bar_container__";
 
 export default function SideBar(props: SideBarProps) {
-  const { children, className, visible, ...rest } = useSideBar(props);
+  const { children, className, visible } = useSideBar(props);
 
   if (!visible) return <></>;
 
@@ -15,9 +15,7 @@ export default function SideBar(props: SideBarProps) {
   if (!container) return <></>;
 
   return ReactDOM.createPortal(
-    <div {...rest} className={twMerge("size-full", className)}>
-      {children}
-    </div>,
+    <div className={twMerge("size-full", className)}>{children}</div>,
     container,
   );
 }
