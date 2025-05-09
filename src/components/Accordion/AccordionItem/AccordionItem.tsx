@@ -2,33 +2,35 @@ import { twMerge } from "tailwind-merge";
 
 import Button from "#src/components/Button";
 import Icon from "#src/components/Icon";
-import Typography from "#src/components/Typography";
 
 import useAccordionItem from "./AccordionItem.hooks";
 import type AccordionItemProps from "./AccordionItem.types";
 
 export default function AccordionItem(props: AccordionItemProps) {
-  const { children, className, expanded, heading, toggle, ...rest } =
+  const { children, className, expanded, heading, toggle } =
     useAccordionItem(props);
 
   return (
-    <div {...rest} className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1">
       {/* HEADER */}
       <div className="flex flex-col">
-        {/* HEADING */}
-        <Typography {...heading}>
-          {/* CHILDREN */}
+        <div
+          className={twMerge(
+            "flex items-center justify-between",
+            !heading && "justify-end",
+          )}
+        >
+          {/* HEADING */}
+          {heading}
+
           <Button
-            className="group flex items-center justify-between text-white hover:text-[unset]"
+            className="flex size-8 items-center justify-center rounded-b-none"
             onClick={toggle}
+            variant="secondary"
           >
-            {heading.children}
-            <Icon
-              className="size-8 rounded-t-lg bg-white text-black hover:text-[unset] group-hover:text-[unset]"
-              variant={expanded ? "arrowUp" : "arrowDown"}
-            />
+            <Icon variant={expanded ? "arrowUp" : "arrowDown"} />
           </Button>
-        </Typography>
+        </div>
 
         {/* DIVIDER */}
         <div className="h-[2px] w-full bg-white" />

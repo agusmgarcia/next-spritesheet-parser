@@ -1,16 +1,18 @@
-import { Accordion } from "#src/components";
+import { Accordion, Typography } from "#src/components";
 
 import AnimationsItem from "./AnimationsItem";
 import FilesItem from "./FilesItem";
 import SettingsItem from "./SettingsItem";
-import useSideBarContent from "./SideBarContent.hooks";
-import type SideBarContentProps from "./SideBarContent.types";
 
-export default function SideBarContent(props: SideBarContentProps) {
-  const { heading } = useSideBarContent(props);
-
+export default function SideBarContent() {
   return (
-    <Accordion heading={heading}>
+    <Accordion
+      heading={
+        <Typography className="text-white" variant="h1">
+          Home
+        </Typography>
+      }
+    >
       <FilesItem />
       <SettingsItem />
       <AnimationsItem />

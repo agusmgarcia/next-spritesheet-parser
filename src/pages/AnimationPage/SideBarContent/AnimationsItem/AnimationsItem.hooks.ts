@@ -2,7 +2,6 @@ import { sorts } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations, useSpriteSheet } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
@@ -11,14 +10,6 @@ export default function useAnimationsItem({
   animation: animationFromProps,
   ...rest
 }: AnimationsItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({
-      children: "Animations",
-      variant: "h2",
-    }),
-    [],
-  );
-
   const {
     animationSelectorOnChange,
     animationSelectorOptions,
@@ -30,7 +21,6 @@ export default function useAnimationsItem({
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
-    heading,
   };
 }
 

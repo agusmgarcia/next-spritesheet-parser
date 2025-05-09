@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations } from "#src/store";
 
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
@@ -10,11 +9,6 @@ export default function useConfigurationsItem({
   animation: animationFromProps,
   ...rest
 }: ConfigurationsItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({ children: "Configurations", variant: "h2" }),
-    [],
-  );
-
   const { homeOnClick } = useHome();
 
   const { nameOnChange, nameValue } = useName({
@@ -28,7 +22,6 @@ export default function useConfigurationsItem({
   return {
     ...rest,
     deleteAnimationOnClick,
-    heading,
     homeOnClick,
     nameOnChange,
     nameValue,

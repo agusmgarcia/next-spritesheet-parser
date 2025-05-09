@@ -1,7 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
@@ -12,14 +11,6 @@ export default function useCenterItem({
   index: indexFromProps,
   ...rest
 }: CenterItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({
-      children: "Center",
-      variant: "h2",
-    }),
-    [],
-  );
-
   const { colorDisabled, colorOnChange, colorValue } = useColor({
     animation: animationFromProps,
   });
@@ -43,7 +34,6 @@ export default function useCenterItem({
     colorDisabled,
     colorOnChange,
     colorValue,
-    heading,
     onionActive,
     onionDisabled,
     onionOnClick,

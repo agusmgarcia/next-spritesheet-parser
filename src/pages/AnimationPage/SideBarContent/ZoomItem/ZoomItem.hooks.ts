@@ -1,7 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
@@ -11,11 +10,6 @@ export default function useZoomItem({
   animation: animationFromProps,
   ...rest
 }: ZoomItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({ children: "Zoom", variant: "h2" }),
-    [],
-  );
-
   const {
     resetZoomDisabled,
     resetZoomOnClick,
@@ -27,7 +21,6 @@ export default function useZoomItem({
 
   return {
     ...rest,
-    heading,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,

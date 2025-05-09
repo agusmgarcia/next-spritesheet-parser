@@ -1,4 +1,4 @@
-import { Accordion, Button, Icon, Select } from "#src/components";
+import { Accordion, Button, Icon, Select, Typography } from "#src/components";
 
 import useAnimationsItem from "./AnimationsItem.hooks";
 import type AnimationsItemProps from "./AnimationsItem.types";
@@ -11,7 +11,6 @@ export default function AnimationsItem(props: AnimationsItemProps) {
     animationSelectorValue,
     createAnimationDisabled,
     createAnimationOnClick,
-    heading,
     mergeSpritesDisabled,
     mergeSpritesOnClick,
     resetSelectionDisabled,
@@ -21,7 +20,14 @@ export default function AnimationsItem(props: AnimationsItemProps) {
   } = useAnimationsItem(props);
 
   return (
-    <Accordion.Item className="flex flex-col gap-1" heading={heading}>
+    <Accordion.Item
+      className="flex flex-col gap-1"
+      heading={
+        <Typography className="text-white" variant="h2">
+          Configurations
+        </Typography>
+      }
+    >
       {/* CREATE ANIMATION */}
       <Button
         className="flex items-center justify-center gap-1"

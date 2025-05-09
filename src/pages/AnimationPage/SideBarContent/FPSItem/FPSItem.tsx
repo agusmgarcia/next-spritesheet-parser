@@ -1,4 +1,4 @@
-import { Accordion, Button, Icon, Input } from "#src/components";
+import { Accordion, Button, Icon, Input, Typography } from "#src/components";
 
 import useFPSItem from "./FPSItem.hooks";
 import type FPSItemProps from "./FPSItem.types";
@@ -7,7 +7,6 @@ export default function FPSItem(props: FPSItemProps) {
   const {
     fps,
     fpsOnChange,
-    heading,
     minusFPSDisabled,
     minusFPSOnClick,
     plusFPSDisabled,
@@ -15,7 +14,14 @@ export default function FPSItem(props: FPSItemProps) {
   } = useFPSItem(props);
 
   return (
-    <Accordion.Item className="flex gap-1" heading={heading}>
+    <Accordion.Item
+      className="flex gap-1"
+      heading={
+        <Typography className="text-white" variant="h2">
+          FPS
+        </Typography>
+      }
+    >
       {/* MINUS FPS */}
       <Button
         className="flex w-fit items-center justify-center"

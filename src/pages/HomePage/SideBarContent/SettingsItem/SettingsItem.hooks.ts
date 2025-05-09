@@ -1,7 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { type TypographyProps } from "#src/components";
 import {
   useSettings as useSettingsFromStore,
   useSpriteSheet,
@@ -10,14 +9,6 @@ import {
 import type SettingsItemProps from "./SettingsItem.types";
 
 export default function useSettingsItem(props: SettingsItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({
-      children: "Settings",
-      variant: "h2",
-    }),
-    [],
-  );
-
   const {
     settingsButtonDisabled,
     settingsDisabled,
@@ -29,7 +20,6 @@ export default function useSettingsItem(props: SettingsItemProps) {
 
   return {
     ...props,
-    heading,
     settingsButtonDisabled,
     settingsDisabled,
     settingsLoading,

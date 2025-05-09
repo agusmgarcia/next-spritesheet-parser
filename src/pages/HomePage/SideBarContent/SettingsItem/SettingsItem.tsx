@@ -1,13 +1,12 @@
 import { twMerge } from "tailwind-merge";
 
-import { Accordion, Button, Icon, Input } from "#src/components";
+import { Accordion, Button, Icon, Input, Typography } from "#src/components";
 
 import useSettingsItem from "./SettingsItem.hooks";
 import type SettingsItemProps from "./SettingsItem.types";
 
 export default function SettingsItem(props: SettingsItemProps) {
   const {
-    heading,
     settingsButtonDisabled,
     settingsDisabled,
     settingsLoading,
@@ -20,7 +19,11 @@ export default function SettingsItem(props: SettingsItemProps) {
     <Accordion.Item
       className="flex flex-col gap-1"
       defaultCollapsed={true}
-      heading={heading}
+      heading={
+        <Typography className="text-white" variant="h2">
+          Settings
+        </Typography>
+      }
     >
       <label className="flex items-center justify-between gap-2 text-white">
         Delta
