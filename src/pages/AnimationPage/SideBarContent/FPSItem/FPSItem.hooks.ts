@@ -1,7 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useMemo } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
@@ -11,11 +10,6 @@ export default function useFPSItem({
   animation: animationFromProps,
   ...rest
 }: FPSItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({ children: "FPS", variant: "h2" }),
-    [],
-  );
-
   const {
     fps,
     fpsOnChange,
@@ -29,7 +23,6 @@ export default function useFPSItem({
     ...rest,
     fps,
     fpsOnChange,
-    heading,
     minusFPSDisabled,
     minusFPSOnClick,
     plusFPSDisabled,

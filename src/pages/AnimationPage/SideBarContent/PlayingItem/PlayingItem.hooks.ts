@@ -1,7 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
@@ -12,11 +11,6 @@ export default function usePlayingItem({
   onIndexChange: onIndexChangeFromProps,
   ...rest
 }: PlayingItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({ children: "Playing", variant: "h2" }),
-    [],
-  );
-
   const {
     backwardOnClick,
     forwardOnClick,
@@ -32,7 +26,6 @@ export default function usePlayingItem({
     ...rest,
     backwardOnClick,
     forwardOnClick,
-    heading,
     playing,
     playingDisabled,
     playOnClick,

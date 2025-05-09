@@ -1,4 +1,4 @@
-import { Accordion, Button, Icon } from "#src/components";
+import { Accordion, Button, Icon, Typography } from "#src/components";
 
 import usePlayingItem from "./PlayingItem.hooks";
 import type PlayingItemProps from "./PlayingItem.types";
@@ -7,14 +7,20 @@ export default function PlayingItem(props: PlayingItemProps) {
   const {
     backwardOnClick,
     forwardOnClick,
-    heading,
     playing,
     playingDisabled,
     playOnClick,
   } = usePlayingItem(props);
 
   return (
-    <Accordion.Item className="flex gap-1" heading={heading}>
+    <Accordion.Item
+      className="flex gap-1"
+      heading={
+        <Typography className="text-white" variant="h2">
+          Playing
+        </Typography>
+      }
+    >
       {/* BACKWARD */}
       <Button
         className="flex items-center justify-center"

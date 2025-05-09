@@ -1,4 +1,4 @@
-import { Accordion, Button, Icon, Input } from "#src/components";
+import { Accordion, Button, Icon, Input, Typography } from "#src/components";
 
 import useCenterItem from "./CenterItem.hooks";
 import type CenterItemProps from "./CenterItem.types";
@@ -8,7 +8,6 @@ export default function CenterItem(props: CenterItemProps) {
     colorDisabled,
     colorOnChange,
     colorValue,
-    heading,
     onionActive,
     onionDisabled,
     onionOnClick,
@@ -17,7 +16,14 @@ export default function CenterItem(props: CenterItemProps) {
   } = useCenterItem(props);
 
   return (
-    <Accordion.Item className="flex gap-1" heading={heading}>
+    <Accordion.Item
+      className="flex gap-1"
+      heading={
+        <Typography className="text-white" variant="h2">
+          Center
+        </Typography>
+      }
+    >
       {/* RESET CENTER */}
       <Button
         className="flex w-fit items-center justify-center"

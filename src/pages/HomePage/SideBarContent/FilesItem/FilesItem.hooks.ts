@@ -1,7 +1,6 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { type TypographyProps } from "#src/components";
 import {
   type Animation,
   type SpriteSheet,
@@ -15,14 +14,6 @@ import { useKeyDown } from "#src/utils";
 import type FilesItemProps from "./FilesItem.types";
 
 export default function useFilesItem(props: FilesItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({
-      children: "Files",
-      variant: "h2",
-    }),
-    [],
-  );
-
   const { importFileDisabled, importFileLoading, importFileOnClick } =
     useImportFile();
 
@@ -32,7 +23,6 @@ export default function useFilesItem(props: FilesItemProps) {
     ...props,
     exportFileDisabled,
     exportFileOnClick,
-    heading,
     importFileDisabled,
     importFileLoading,
     importFileOnClick,

@@ -2,18 +2,12 @@ import { type Func, sorts } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { type TypographyProps } from "#src/components";
 import { useAnimations, useSpriteSelection, useSpriteSheet } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
 export default function useAnimationsItem(props: AnimationsItemProps) {
-  const heading = useMemo<TypographyProps>(
-    () => ({ children: "Animations", variant: "h2" }),
-    [],
-  );
-
   const { createAnimationDisabled, createAnimationOnClick } =
     useCreateAnimation();
 
@@ -38,7 +32,6 @@ export default function useAnimationsItem(props: AnimationsItemProps) {
     animationSelectorValue,
     createAnimationDisabled,
     createAnimationOnClick,
-    heading,
     mergeSpritesDisabled,
     mergeSpritesOnClick,
     resetSelectionDisabled,

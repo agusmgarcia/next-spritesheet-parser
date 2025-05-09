@@ -1,19 +1,21 @@
-import { Accordion, Button, Icon, Input } from "#src/components";
+import { Accordion, Button, Icon, Input, Typography } from "#src/components";
 
 import useConfigurationsItem from "./ConfigurationsItem.hooks";
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
 export default function ConfigurationsItem(props: ConfigurationsItemProps) {
-  const {
-    deleteAnimationOnClick,
-    heading,
-    homeOnClick,
-    nameOnChange,
-    nameValue,
-  } = useConfigurationsItem(props);
+  const { deleteAnimationOnClick, homeOnClick, nameOnChange, nameValue } =
+    useConfigurationsItem(props);
 
   return (
-    <Accordion.Item className="flex gap-1" heading={heading}>
+    <Accordion.Item
+      className="flex gap-1"
+      heading={
+        <Typography className="text-white" variant="h2">
+          Configurations
+        </Typography>
+      }
+    >
       {/* HOME */}
       <Button
         className="flex w-fit items-center justify-center"
