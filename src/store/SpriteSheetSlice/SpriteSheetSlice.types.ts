@@ -26,7 +26,7 @@ type SpriteSheet = {
 
 type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
   "spriteSheet",
-  SpriteSheet,
+  SpriteSheet | undefined,
   SettingsSliceTypes.default["settings"]["settings"],
   {
     mergeSprites: Func<void, [spriteIds: string[]]>;
