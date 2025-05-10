@@ -118,7 +118,7 @@ function createAnimation(
         id,
         name: `New animation ${getLatestAnimationOrder(prev.animations) + 1}`,
         onion: false,
-        playing: true,
+        playing: spriteIds.length > 1,
         scale: 0,
         sprites: spriteIds
           .sort(sortSprites(spriteSheet.sprites))
