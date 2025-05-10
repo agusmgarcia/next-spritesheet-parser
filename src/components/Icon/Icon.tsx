@@ -47,6 +47,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "close":
+      return (
+        <svg {...rest}>
+          <path d="M10.5859 12 2.79297 4.20706l1.41421 -1.41421 7.79292 7.79285 7.7929 -7.79285 1.4142 1.41421L13.4143 12l7.7929 7.7928 -1.4142 1.4143 -7.7929 -7.7929 -7.79292 7.7929 -1.41421 -1.4143L10.5859 12Z" />
+        </svg>
+      );
+
     case "error":
       return (
         <svg {...rest}>
