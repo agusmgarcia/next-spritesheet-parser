@@ -145,6 +145,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "spaceBar":
+      return (
+        <svg {...rest}>
+          <path d="M4 9v4h16V9h2v5c0 0.5523 -0.4477 1 -1 1H3c-0.55228 0 -1 -0.4477 -1 -1V9h2Z" />
+        </svg>
+      );
+
     case "spinner":
       return (
         <svg {...rest}>
