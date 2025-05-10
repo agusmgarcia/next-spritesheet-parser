@@ -118,41 +118,27 @@ export default function useMainContent(props: MainContentProps) {
       const rect = event.currentTarget.getBoundingClientRect();
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
-
       setSelectedArea([x, y, x, y]);
     },
     [devicePixelRatio],
   );
 
-  const onMouseEnter = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
-    (event) => {
-      const button = event.currentTarget;
-      button.dataset.prevCursor = button.style.cursor;
-      button.style.cursor = "default";
-    },
-    [],
-  );
-
   const onMouseLeave = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
-    (event) => {
-      const button = event.currentTarget;
-      button.style.cursor = button.dataset.prevCursor || "";
-      delete button.dataset.prevCursor;
-    },
+    () => setSpriteHovered(undefined),
     [],
   );
 
   const onMouseMove = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      const button = event.currentTarget;
-      const rect = button.getBoundingClientRect();
+      const canvas = event.currentTarget;
+      const rect = canvas.getBoundingClientRect();
 
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
       if (selectedArea === undefined) {
         const sprite = findSprite(x, y);
-        button.style.cursor = !!sprite ? "pointer" : "default";
+        canvas.style.cursor = !!sprite ? "pointer" : "default";
         setSpriteHovered(sprite?.id);
         return;
       }
@@ -301,7 +287,6 @@ export default function useMainContent(props: MainContentProps) {
     ...props,
     onClick,
     onMouseDown,
-    onMouseEnter,
     onMouseLeave,
     onMouseMove,
     rootRef,

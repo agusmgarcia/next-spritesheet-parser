@@ -5,7 +5,6 @@ export default function MainContent(props: MainContentProps) {
   const {
     onClick,
     onMouseDown,
-    onMouseEnter,
     onMouseLeave,
     onMouseMove,
     rootRef,
@@ -24,7 +23,6 @@ export default function MainContent(props: MainContentProps) {
         className="absolute"
         onClick={onClick}
         onMouseDown={onMouseDown}
-        onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onMouseMove={onMouseMove}
       />
