@@ -16,8 +16,10 @@ export default function Typography(props: TypographyProps) {
         variant === "h1"
           ? "text-3xl"
           : variant === "h2"
-            ? "text-lg"
-            : "text-base",
+            ? "text-xl"
+            : variant === "h3"
+              ? "text-lg"
+              : "text-base",
         className,
       ),
     },
