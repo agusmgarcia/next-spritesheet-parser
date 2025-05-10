@@ -24,8 +24,8 @@ export default function SideBarContent({
       <ConfigurationsItem animation={animation} />
       <PlayingItem animation={animation} onIndexChange={onIndexChange} />
       <FPSItem animation={animation} />
-      <ZoomItem animation={animation} />
       <CenterItem animation={animation} index={index} />
+      <ZoomItem animation={animation} />
       <AnimationsItem animation={animation} />
     </Accordion>
   );
