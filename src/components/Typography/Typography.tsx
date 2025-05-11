@@ -1,12 +1,14 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-import useTypography from "./Typography.hooks";
 import type TypographyProps from "./Typography.types";
 
-export default function Typography(props: TypographyProps) {
-  const { children, className, variant, ...rest } = useTypography(props);
-
+export default function Typography({
+  children,
+  className,
+  variant,
+  ...rest
+}: TypographyProps) {
   return React.createElement(
     variant || "p",
     {
