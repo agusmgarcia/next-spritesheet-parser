@@ -28,7 +28,7 @@ export default function useMainContent({
           if (!sprite) return undefined;
           return { ...sprite, ...s };
         })
-        .filter((s) => s !== undefined),
+        .filter((s) => !!s),
     [animationFromProps.sprites, spriteSheet?.sprites],
   );
 

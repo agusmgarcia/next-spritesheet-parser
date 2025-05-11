@@ -136,7 +136,7 @@ export default function useMainContent(props: MainContentProps) {
       const x = (event.clientX - rect.left) / devicePixelRatio;
       const y = (event.clientY - rect.top) / devicePixelRatio;
 
-      if (selectedArea === undefined) {
+      if (!selectedArea) {
         const sprite = findSprite(x, y);
         canvas.style.cursor = !!sprite ? "pointer" : "default";
         setSpriteHovered(sprite?.id);
