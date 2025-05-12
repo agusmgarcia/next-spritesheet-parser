@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.17.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.17.0)
+
+> May 12, 2025
+
+- **Modal**: adjust styles
+- **HomePage**: add zoom
+- **Typography**: remove hook
+- adjust conditions
+- bump dependencies
+- **AnimationPage**: add instructions
+- **HomePage**: add instructions modal
+- **InstructionsButton**: add fragment
+- **Icon**: add spaceBar variant
+- **Icon**: add interrogation variant
+- **Divisor**: add component
+- **Typography**: add h3 variant
+- **Modal**: add component
+- **Icon**: add close variant
+- **AnimationPage**: re-sort sidebar items
+- **useKeyDown**: remove uneeded options
+- **Accordion**: forward heading component
+- **SideBar**: adjust types
+- **HomePage**: stop hovering sprite when cursor leaves
+- **AnimationsSlice**: adjust default playing state
+
 ## [v0.16.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.16.0)
 
 > May 9, 2025
