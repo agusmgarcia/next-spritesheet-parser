@@ -28,7 +28,7 @@ export default function Modal(props: ModalProps) {
       {(!!headerProps.children || !!headerProps.onClose) && (
         <div
           className={twMerge(
-            "sticky top-0 z-50 flex flex-initial items-center gap-4 bg-white p-4 md:px-6 md:pt-6",
+            "sticky top-0 z-50 flex flex-initial items-center gap-4 bg-white p-6",
             "transition-shadow will-change-[box-shadow]",
 
             !!headerProps.children &&
@@ -56,7 +56,10 @@ export default function Modal(props: ModalProps) {
       )}
 
       {/* CHILDREN */}
-      <div className="flex-auto px-4 pb-6 md:px-6">{children}</div>
+      <div className="flex-auto px-6">{children}</div>
+
+      {/* FOOTER */}
+      <div className="p-6" />
     </dialog>
   );
 }
