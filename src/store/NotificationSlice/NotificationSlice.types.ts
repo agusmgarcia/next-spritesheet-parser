@@ -1,4 +1,5 @@
 import {
+  type AsyncFunc,
   type CreateGlobalSliceTypes,
   type Func,
 } from "@agusmgarcia/react-core";
@@ -6,16 +7,17 @@ import {
 type Notification = {
   id: string;
   message: string;
-  type: "error" | "info" | "success" | "warning";
+  type: "error" | "success" | "warning";
 };
 
 type NotificationSlice = CreateGlobalSliceTypes.SliceOf<
   "notification",
   {
+    acceptNotification: Func<void, [id: string]>;
     clearNotification: Func<void, [id: string]>;
     notification: Notification | undefined;
-    setNotification: Func<
-      string,
+    setNotification: AsyncFunc<
+      boolean,
       [type: Notification["type"], message: string]
     >;
   }
