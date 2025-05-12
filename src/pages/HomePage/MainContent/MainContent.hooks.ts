@@ -26,7 +26,7 @@ export default function useMainContent(props: MainContentProps) {
 
   const { image } = useLoadImage(spriteSheet?.imageURL || "");
   const rootDimensions = useDimensions(rootRef);
-  const devicePixelRatio = useDevicePixelRatio();
+  const scale = useDevicePixelRatio() * (spriteSheet?.scale || 0);
 
   const sprites = useMemo(
     () =>
@@ -96,8 +96,8 @@ export default function useMainContent(props: MainContentProps) {
       }
 
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / devicePixelRatio;
-      const y = (event.clientY - rect.top) / devicePixelRatio;
+      const x = (event.clientX - rect.left) / scale;
+      const y = (event.clientY - rect.top) / scale;
 
       const sprite = findSprite(x, y);
       if (!sprite) return;
@@ -105,7 +105,7 @@ export default function useMainContent(props: MainContentProps) {
       toggleSpriteSelection(sprite.id);
     },
     [
-      devicePixelRatio,
+      scale,
       findSprite,
       preSelectedSprites,
       selectSprite,
@@ -116,11 +116,11 @@ export default function useMainContent(props: MainContentProps) {
   const onMouseDown = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
       const rect = event.currentTarget.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / devicePixelRatio;
-      const y = (event.clientY - rect.top) / devicePixelRatio;
+      const x = (event.clientX - rect.left) / scale;
+      const y = (event.clientY - rect.top) / scale;
       setSelectedArea([x, y, x, y]);
     },
-    [devicePixelRatio],
+    [scale],
   );
 
   const onMouseLeave = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -133,8 +133,8 @@ export default function useMainContent(props: MainContentProps) {
       const canvas = event.currentTarget;
       const rect = canvas.getBoundingClientRect();
 
-      const x = (event.clientX - rect.left) / devicePixelRatio;
-      const y = (event.clientY - rect.top) / devicePixelRatio;
+      const x = (event.clientX - rect.left) / scale;
+      const y = (event.clientY - rect.top) / scale;
 
       if (!selectedArea) {
         const sprite = findSprite(x, y);
@@ -156,7 +156,7 @@ export default function useMainContent(props: MainContentProps) {
         !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
       );
     },
-    [devicePixelRatio, findSprite, findSprites, selectedArea],
+    [scale, findSprite, findSprites, selectedArea],
   );
 
   useEffect(() => {
@@ -169,11 +169,11 @@ export default function useMainContent(props: MainContentProps) {
 
     spriteSheetCanvas.width = Math.max(
       rootDimensions.width,
-      image.width * devicePixelRatio,
+      image.width * scale,
     );
     spriteSheetCanvas.height = Math.max(
       rootDimensions.height,
-      image.height * devicePixelRatio,
+      image.height * scale,
     );
 
     const context = spriteSheetCanvas.getContext("2d");
@@ -185,7 +185,7 @@ export default function useMainContent(props: MainContentProps) {
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.fillStyle = spriteSheet.backgroundColor;
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.scale(devicePixelRatio, devicePixelRatio);
+    context.scale(scale, scale);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
@@ -193,7 +193,7 @@ export default function useMainContent(props: MainContentProps) {
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
   }, [
-    devicePixelRatio,
+    scale,
     image,
     rootDimensions.height,
     rootDimensions.width,
@@ -209,13 +209,10 @@ export default function useMainContent(props: MainContentProps) {
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
-    selectionCanvas.width = Math.max(
-      rootDimensions.width,
-      image.width * devicePixelRatio,
-    );
+    selectionCanvas.width = Math.max(rootDimensions.width, image.width * scale);
     selectionCanvas.height = Math.max(
       rootDimensions.height,
-      image.height * devicePixelRatio,
+      image.height * scale,
     );
 
     const context = selectionCanvas.getContext("2d");
@@ -225,7 +222,7 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
-    context.scale(devicePixelRatio, devicePixelRatio);
+    context.scale(scale, scale);
 
     spriteSelection.forEach((spriteId) => {
       const sprite = spriteSheet.sprites[spriteId];
@@ -271,7 +268,7 @@ export default function useMainContent(props: MainContentProps) {
       );
     }
   }, [
-    devicePixelRatio,
+    scale,
     image,
     spriteSelection,
     selectedArea,

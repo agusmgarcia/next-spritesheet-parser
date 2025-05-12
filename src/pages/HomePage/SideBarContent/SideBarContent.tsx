@@ -3,6 +3,7 @@ import { Accordion, Typography } from "#src/components";
 import AnimationsItem from "./AnimationsItem";
 import FilesItem from "./FilesItem";
 import SettingsItem from "./SettingsItem";
+import ZoomItem from "./ZoomItem";
 
 export default function SideBarContent() {
   return (
@@ -16,6 +17,7 @@ export default function SideBarContent() {
       <FilesItem />
       <SettingsItem />
       <AnimationsItem />
+      <ZoomItem />
     </Accordion>
   );
 }

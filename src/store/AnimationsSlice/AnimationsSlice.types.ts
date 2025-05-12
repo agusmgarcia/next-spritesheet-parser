@@ -59,7 +59,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     setAnimations: Func<void, [animations: Animation[]]>;
     setAnimationScale: Func<
       void,
-      [id: string, name: React.SetStateAction<number>]
+      [id: string, scale: React.SetStateAction<number>]
     >;
   }
 >;

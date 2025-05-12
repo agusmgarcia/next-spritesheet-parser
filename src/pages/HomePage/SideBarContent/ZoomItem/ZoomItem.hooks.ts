@@ -1,15 +1,12 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useMemo } from "react";
 
-import { useAnimations } from "#src/store";
+import { useSpriteSheet } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type ZoomItemProps from "./ZoomItem.types";
 
-export default function useZoomItem({
-  animation: animationFromProps,
-  ...rest
-}: ZoomItemProps) {
+export default function useZoomItem(props: ZoomItemProps) {
   const {
     resetZoomDisabled,
     resetZoomOnClick,
@@ -17,10 +14,10 @@ export default function useZoomItem({
     zoomInOnClick,
     zoomOutDisabled,
     zoomOutOnClick,
-  } = useZoom({ animation: animationFromProps });
+  } = useZoom();
 
   return {
-    ...rest,
+    ...props,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,
@@ -30,37 +27,39 @@ export default function useZoomItem({
   };
 }
 
-function useZoom({
-  animation: animationFromProps,
-}: Pick<ZoomItemProps, "animation">) {
-  const { setAnimationScale } = useAnimations();
+function useZoom() {
+  const { setSpriteSheetScale, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
 
   const zoomOutDisabled = useMemo<boolean>(
-    () => animationFromProps.scale <= 1,
-    [animationFromProps.scale],
+    () => !spriteSheet || spriteSheet.scale <= 1 || spriteSheetLoading,
+    [spriteSheet, spriteSheetLoading],
   );
 
   const zoomOutOnClick = useCallback<Func>(() => {
     if (zoomOutDisabled) return;
-    setAnimationScale(animationFromProps.id, (prev) => prev - 1 / 5);
-  }, [animationFromProps.id, setAnimationScale, zoomOutDisabled]);
+    setSpriteSheetScale((prev) => prev - 1 / 5);
+  }, [setSpriteSheetScale, zoomOutDisabled]);
 
-  const zoomInDisabled = useMemo<boolean>(() => false, []);
+  const zoomInDisabled = useMemo<boolean>(
+    () => !spriteSheet || spriteSheetLoading,
+    [spriteSheet, spriteSheetLoading],
+  );
 
   const zoomInOnClick = useCallback<Func>(() => {
     if (zoomInDisabled) return;
-    setAnimationScale(animationFromProps.id, (prev) => prev + 1 / 5);
-  }, [animationFromProps.id, setAnimationScale, zoomInDisabled]);
+    setSpriteSheetScale((prev) => prev + 1 / 5);
+  }, [setSpriteSheetScale, zoomInDisabled]);
 
   const resetZoomDisabled = useMemo<boolean>(
-    () => animationFromProps.scale <= 1,
-    [animationFromProps.scale],
+    () => !spriteSheet || spriteSheet.scale <= 1 || spriteSheetLoading,
+    [spriteSheet, spriteSheetLoading],
   );
 
   const resetZoomOnClick = useCallback<Func>(() => {
     if (resetZoomDisabled) return;
-    setAnimationScale(animationFromProps.id, 1);
-  }, [animationFromProps.id, resetZoomDisabled, setAnimationScale]);
+    setSpriteSheetScale(1);
+  }, [resetZoomDisabled, setSpriteSheetScale]);
 
   useKeyDown("ArrowUp", zoomInOnClick);
   useKeyDown("ArrowDown", zoomOutOnClick);

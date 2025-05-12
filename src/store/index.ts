@@ -98,6 +98,9 @@ export function useSpriteSheet() {
   return {
     mergeSprites: useSelector((state) => state.spriteSheet.mergeSprites),
     setSpriteSheet: useSelector((state) => state.spriteSheet.setSpriteSheet),
+    setSpriteSheetScale: useSelector(
+      (state) => state.spriteSheet.setSpriteSheetScale,
+    ),
     splitSprite: useSelector((state) => state.spriteSheet.splitSprite),
     spriteSheet: useSelector((state) => state.spriteSheet.data),
     spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),

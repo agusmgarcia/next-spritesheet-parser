@@ -41,6 +41,19 @@ export default function useHomePage(props: HomePageProps) {
         ],
         title: "Animations",
       },
+      {
+        keys: [
+          {
+            description: "Zoom in",
+            key: "ArrowUp",
+          },
+          {
+            description: "Zoom out",
+            key: "ArrowDown",
+          },
+        ],
+        title: "Zoom",
+      },
     ],
     [],
   );

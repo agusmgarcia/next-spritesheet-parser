@@ -53,6 +53,7 @@ export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
         color,
         imageURL,
         name: rawImage.name,
+        scale: 1,
         sprites,
       };
     } catch (error) {
@@ -61,7 +62,7 @@ export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
     }
   },
   (state) => state.settings.settings,
-  () => ({ mergeSprites, setSpriteSheet, splitSprite }),
+  () => ({ mergeSprites, setSpriteSheet, setSpriteSheetScale, splitSprite }),
 );
 
 function mergeSprites(
@@ -99,12 +100,28 @@ function mergeSprites(
   });
 }
 
+function setSpriteSheetScale(
+  scale: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheetScale"]>[0],
+  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
+): void {
+  context.set((prev) =>
+    !!prev
+      ? {
+          ...prev,
+          scale: scale instanceof Function ? scale(prev.scale) : scale,
+        }
+      : undefined,
+  );
+}
+
 function setSpriteSheet(
   spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
   context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
 ): void {
   context.set((prev) =>
-    !!prev ? { ...prev, ...spriteSheet, imageURL: prev.imageURL } : undefined,
+    !!prev
+      ? { ...prev, ...spriteSheet, imageURL: prev.imageURL, scale: 1 }
+      : undefined,
   );
 }
 
