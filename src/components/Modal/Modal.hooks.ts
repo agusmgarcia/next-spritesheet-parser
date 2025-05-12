@@ -1,4 +1,4 @@
-import { useElementAtTop } from "@agusmgarcia/react-core";
+import { useElementAtBottom, useElementAtTop } from "@agusmgarcia/react-core";
 import {
   createContext,
   useCallback,
@@ -16,6 +16,7 @@ const ModalsHandlerContext = createContext(new ModalsHandler());
 
 export default function useModal({
   children: childrenFromProps,
+  footer: footerFromProps,
   heading: headingFromProps,
   onClose: onCloseFromProps,
   open: openFromProps,
@@ -28,6 +29,7 @@ export default function useModal({
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const atTop = useElementAtTop(dialogRef);
+  const atBottom = useElementAtBottom(dialogRef);
 
   const [state, setState] = useState<ModalState>("hidden");
 
@@ -188,6 +190,10 @@ export default function useModal({
       onCancel: dialogOnCancel,
       onKeyDown: dialogOnKeyDown,
       ref: dialogRef,
+    },
+    footerProps: {
+      atBottom,
+      children: footerFromProps,
     },
     headerProps: {
       atTop,

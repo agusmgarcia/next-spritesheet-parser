@@ -6,7 +6,8 @@ import useModal from "./Modal.hooks";
 import type ModalProps from "./Modal.types";
 
 export default function Modal(props: ModalProps) {
-  const { children, dialogProps, headerProps, state } = useModal(props);
+  const { children, dialogProps, footerProps, headerProps, state } =
+    useModal(props);
 
   return (
     <dialog
@@ -25,41 +26,53 @@ export default function Modal(props: ModalProps) {
       )}
     >
       {/* HEADER */}
-      {(!!headerProps.children || !!headerProps.onClose) && (
-        <div
-          className={twMerge(
-            "sticky top-0 z-50 flex flex-initial items-center gap-4 bg-white p-6",
-            "transition-shadow will-change-[box-shadow]",
+      <div
+        className={twMerge(
+          "flex flex-initial items-center gap-4 bg-white p-6",
+          (!!headerProps.children || !!headerProps.onClose) &&
+            "sticky top-0 z-10",
 
-            !!headerProps.children &&
-              !!headerProps.onClose &&
-              "justify-between",
-            !headerProps.children && !!headerProps.onClose && "justify-end",
-            !!headerProps.children && !headerProps.onClose && "justify-start",
+          !!headerProps.children && !!headerProps.onClose && "justify-between",
+          !headerProps.children && !!headerProps.onClose && "justify-end",
+          !!headerProps.children && !headerProps.onClose && "justify-start",
 
-            !headerProps.atTop && "shadow-lg shadow-black/10",
-          )}
-        >
-          {headerProps.children}
+          "transition-shadow will-change-[box-shadow]",
+          (!!headerProps.children || !!headerProps.onClose) &&
+            !headerProps.atTop &&
+            "shadow-[0px_3px_8px_0px] shadow-black/10",
+        )}
+      >
+        {headerProps.children}
 
-          {!!headerProps.onClose && (
-            <Button
-              className="size-6"
-              onClick={headerProps.onClose}
-              type="button"
-              variant="raw"
-            >
-              <Icon variant="close" />
-            </Button>
-          )}
-        </div>
-      )}
+        {!!headerProps.onClose && (
+          <Button
+            className="size-6"
+            onClick={headerProps.onClose}
+            type="button"
+            variant="raw"
+          >
+            <Icon variant="close" />
+          </Button>
+        )}
+      </div>
 
       {/* CHILDREN */}
       <div className="flex-auto px-6">{children}</div>
 
       {/* FOOTER */}
-      <div className="p-6" />
+      <div
+        className={twMerge(
+          "bg-white p-6",
+          !!footerProps.children && "sticky bottom-0 z-10",
+
+          "transition-shadow will-change-[box-shadow]",
+          !!footerProps.children &&
+            !footerProps.atBottom &&
+            "shadow-[0px_-3px_8px_0px] shadow-black/10",
+        )}
+      >
+        {footerProps.children}
+      </div>
     </dialog>
   );
 }
