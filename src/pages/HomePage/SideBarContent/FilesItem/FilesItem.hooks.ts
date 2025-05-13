@@ -9,7 +9,7 @@ import {
   useSettings,
   useSpriteSheet,
 } from "#src/store";
-import { useKeyDown } from "#src/utils";
+import { getErrorMessage, useKeyDown } from "#src/utils";
 
 import type FilesItemProps from "./FilesItem.types";
 
@@ -83,7 +83,7 @@ function useImportFile() {
         if (file.type.startsWith("image/")) {
           setImage(file);
         } else {
-          file
+          return file
             .text()
             .then((text) => JSON.parse(text))
             .then((json) => {
@@ -91,11 +91,10 @@ function useImportFile() {
               setSpriteSheet(json.spriteSheet);
               setAnimations(json.animations);
             })
-            .catch((error) => setNotification("error", error.message))
             .finally(() => setImportFileLoading(false));
         }
       })
-      .catch((error) => setNotification("error", error.message));
+      .catch((error) => setNotification("error", getErrorMessage(error)));
   }, [
     importFile,
     importFileDisabled,

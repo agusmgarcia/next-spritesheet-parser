@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import getErrorMessage from "./getErrorMessage";
 import loadImage from "./loadImage";
 
 type UseLoadImageResult = {
@@ -36,7 +37,7 @@ export default function useLoadImage(imageURL: string): UseLoadImageResult {
         if (controller.signal.aborted) return;
         setResult((prev) => ({
           ...prev,
-          error,
+          error: getErrorMessage(error),
           loading: false,
         }));
       });
