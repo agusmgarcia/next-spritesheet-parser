@@ -1,7 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
-import Button from "#src/components/Button";
-import Icon from "#src/components/Icon";
+import { Button, Icon } from "#src/components";
 
 import useAccordionItem from "./AccordionItem.hooks";
 import type AccordionItemProps from "./AccordionItem.types";
