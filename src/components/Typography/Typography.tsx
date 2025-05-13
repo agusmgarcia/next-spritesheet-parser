@@ -1,6 +1,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
+import Markdown from "../Markdown";
 import type TypographyProps from "./Typography.types";
 
 export default function Typography({
@@ -25,6 +26,6 @@ export default function Typography({
         className,
       ),
     },
-    children,
+    <Markdown>{children}</Markdown>,
   );
 }

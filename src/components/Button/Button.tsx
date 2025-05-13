@@ -1,10 +1,11 @@
 import { twMerge } from "tailwind-merge";
 
+import Markdown from "../Markdown";
 import useButton from "./Button.hooks";
 import type ButtonProps from "./Button.types";
 
 export default function Button(props: ButtonProps) {
-  const { className, variant, ...rest } = useButton(props);
+  const { children, className, variant, ...rest } = useButton(props);
 
   switch (variant) {
     case "primary":
@@ -19,7 +20,9 @@ export default function Button(props: ButtonProps) {
             "disabled:cursor-not-allowed disabled:border-gray-400 disabled:bg-gray-400",
             className,
           )}
-        />
+        >
+          <Markdown>{children}</Markdown>
+        </button>
       );
 
     case "secondary":
@@ -34,7 +37,9 @@ export default function Button(props: ButtonProps) {
             "disabled:cursor-not-allowed disabled:border-gray-400 disabled:text-gray-400",
             className,
           )}
-        />
+        >
+          <Markdown>{children}</Markdown>
+        </button>
       );
 
     case "raw":
@@ -50,7 +55,9 @@ export default function Button(props: ButtonProps) {
             "disabled:cursor-not-allowed disabled:text-gray-400",
             className,
           )}
-        />
+        >
+          <Markdown>{children}</Markdown>
+        </button>
       );
   }
 }
