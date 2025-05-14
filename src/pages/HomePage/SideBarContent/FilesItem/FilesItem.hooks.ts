@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   type Animation,
+  type Settings,
   type SpriteSheet,
   useAnimations,
   useNotification,
@@ -125,6 +126,7 @@ function useImportFile() {
 function useExportFile() {
   const { animations } = useAnimations();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { settings } = useSettings();
 
   const exportFileDisabled = useMemo<boolean>(
     () => !spriteSheet || spriteSheetLoading,
@@ -132,8 +134,11 @@ function useExportFile() {
   );
 
   const exportFile = useCallback<
-    Func<void, [spriteSheet: SpriteSheet, animations: Animation[]]>
-  >((spriteSheet, animations) => {
+    Func<
+      void,
+      [spriteSheet: SpriteSheet, settings: Settings, animations: Animation[]]
+    >
+  >((spriteSheet, settings, animations) => {
     const anchor = document.createElement("a");
 
     anchor.href =
@@ -141,6 +146,7 @@ function useExportFile() {
       encodeURIComponent(
         JSON.stringify({
           animations,
+          settings,
           spriteSheet,
           version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
         }),
@@ -157,8 +163,8 @@ function useExportFile() {
   const exportFileOnClick = useCallback<Func>(() => {
     if (exportFileDisabled) return;
     if (!spriteSheet) return;
-    exportFile(spriteSheet, animations);
-  }, [animations, exportFile, exportFileDisabled, spriteSheet]);
+    exportFile(spriteSheet, settings, animations);
+  }, [animations, exportFile, exportFileDisabled, settings, spriteSheet]);
 
   useKeyDown("e", exportFileOnClick);
 
