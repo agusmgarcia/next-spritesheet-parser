@@ -118,11 +118,10 @@ function setSpriteSheet(
   spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
   context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
 ): void {
-  context.set((prev) =>
-    !!prev
-      ? { ...prev, ...spriteSheet, imageURL: prev.imageURL, scale: 1 }
-      : undefined,
-  );
+  const imageURL = context.get().spriteSheet.data?.imageURL;
+  if (!imageURL) return;
+
+  context.set({ ...spriteSheet, imageURL });
 }
 
 function splitSprite(

@@ -294,8 +294,15 @@ function setAnimationPlaying(
 
 function setAnimations(
   animations: Parameters<AnimationsSlice["animations"]["setAnimations"]>[0],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+  context: CreateGlobalSliceTypes.Context<
+    AnimationsSlice,
+    SpriteSheetSliceTypes.default
+  >,
 ): void {
+  const spriteIds = Object.keys(context.get().spriteSheet.data?.sprites || {});
+  if (animations.some((a) => a.sprites.some((s) => !spriteIds.includes(s.id))))
+    return;
+
   context.set({ animations });
 }
 

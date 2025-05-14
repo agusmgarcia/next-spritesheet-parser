@@ -42,10 +42,13 @@ function setSettings(
   settings: Parameters<SettingsSlice["settings"]["setSettings"]>[0],
   context: CreateGlobalSliceTypes.Context<SettingsSlice>,
 ): void {
+  const image = context.get().settings.settings.image;
+  if (!image) return;
+
   context.set((prev) => ({
     settings: {
-      ...prev.settings,
       ...(settings instanceof Function ? settings(prev.settings) : settings),
+      image,
     },
   }));
 }
