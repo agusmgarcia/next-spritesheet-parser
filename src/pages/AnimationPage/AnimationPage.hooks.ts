@@ -79,11 +79,11 @@ function useInstructions() {
         keys: [
           {
             description: "Increase FPS",
-            key: "+",
+            key: "\\+",
           },
           {
             description: "Decrease FPS",
-            key: "-",
+            key: "\\-",
           },
         ],
         title: "FPS",
