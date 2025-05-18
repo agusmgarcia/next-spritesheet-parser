@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 
 import { Icon } from "#src/components";
+import { isMacOS } from "#src/utils";
 
 import type InstructionsModalProps from "./InstructionsModal.types";
 
@@ -14,7 +15,9 @@ export default function useInstructionsModal({
         ?.map((i) => ({
           keys: i.keys.map((k) => ({
             description: k.description,
-            extraKeys: [!!k.options?.altKey ? "Alt" : ""].filter((k) => !!k),
+            extraKeys: [
+              !!k.options?.altKey ? (isMacOS() ? "Opt" : "Alt") : "",
+            ].filter((k) => !!k),
             id: k.key,
             key: transformKey(k.key),
           })),
