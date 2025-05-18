@@ -7,25 +7,21 @@ import { useKeyDown } from "#src/utils";
 import type NotificationHandlerProps from "./NotificationHandler.types";
 
 export default function useNotificationHandler(_: NotificationHandlerProps) {
-  const { acceptNotification, clearNotification, notification } =
-    useNotification();
+  const { notification } = useNotification();
 
   const open = useMemo<boolean>(() => !!notification?.id, [notification?.id]);
 
   const onAccept = useMemo<Func | undefined>(
-    () =>
-      !!notification?.id
-        ? () => acceptNotification(notification.id)
-        : undefined,
-    [acceptNotification, notification?.id],
+    () => (!!notification ? () => notification.accept() : undefined),
+    [notification],
   );
 
   const onCancel = useMemo<Func | undefined>(
     () =>
       notification?.type === "warning"
-        ? () => clearNotification(notification.id)
+        ? () => notification.cancel()
         : undefined,
-    [clearNotification, notification?.id, notification?.type],
+    [notification],
   );
 
   return {

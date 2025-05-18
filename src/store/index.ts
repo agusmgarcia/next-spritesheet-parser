@@ -69,12 +69,6 @@ export function useAnimations() {
 
 export function useNotification() {
   return {
-    acceptNotification: useSelector(
-      (state) => state.notification.acceptNotification,
-    ),
-    clearNotification: useSelector(
-      (state) => state.notification.clearNotification,
-    ),
     notification: useSelector((state) => state.notification.notification),
     setNotification: useSelector((state) => state.notification.setNotification),
   };

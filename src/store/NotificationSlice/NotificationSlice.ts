@@ -1,7 +1,6 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
-  type Func,
 } from "@agusmgarcia/react-core";
 import { v4 as createUUID } from "uuid";
 
@@ -12,33 +11,9 @@ export default createGlobalSlice<
   NotificationSlice,
   SpriteSheetSliceTypes.default
 >("notification", () => ({
-  acceptNotification,
-  clearNotification,
   notification: undefined,
   setNotification,
 }));
-
-function acceptNotification(
-  id: Parameters<NotificationSlice["notification"]["acceptNotification"]>[0],
-  context: CreateGlobalSliceTypes.Context<NotificationSlice>,
-): void {
-  const notification = context.get().notification.notification;
-  if (!notification || notification.id !== id) return;
-
-  (notification as InternalNotification).resolve(true);
-  context.set({ notification: undefined });
-}
-
-function clearNotification(
-  id: Parameters<NotificationSlice["notification"]["clearNotification"]>[0],
-  context: CreateGlobalSliceTypes.Context<NotificationSlice>,
-): void {
-  const notification = context.get().notification.notification;
-  if (!notification || notification.id !== id) return;
-
-  (notification as InternalNotification).resolve(false);
-  context.set({ notification: undefined });
-}
 
 function setNotification(
   type: Parameters<NotificationSlice["notification"]["setNotification"]>[0],
@@ -46,16 +21,47 @@ function setNotification(
   context: CreateGlobalSliceTypes.Context<NotificationSlice>,
 ): Promise<boolean> {
   const notification = context.get().notification.notification;
-  if (notification) (notification as InternalNotification).resolve(false);
+  if (!!notification) notification.close();
 
   const id = createUUID();
+
   return new Promise<boolean>((resolve) => {
     context.set({
-      notification: { id, message, resolve, type } as InternalNotification,
+      notification: {
+        accept: () => {
+          if (!context.signal.aborted)
+            context.set((prev) =>
+              prev.notification?.id === id ? { notification: undefined } : prev,
+            );
+
+          resolve(true);
+        },
+        close: () => {
+          if (!context.signal.aborted)
+            context.set((prev) =>
+              prev.notification?.id === id ? { notification: undefined } : prev,
+            );
+
+          resolve(false);
+        },
+        id,
+        message,
+        type,
+        ...(type === "warning"
+          ? {
+              cancel: () => {
+                if (!context.signal.aborted)
+                  context.set((prev) =>
+                    prev.notification?.id === id
+                      ? { notification: undefined }
+                      : prev,
+                  );
+
+                resolve(false);
+              },
+            }
+          : {}),
+      } as NotificationSlice["notification"]["notification"],
     });
   });
 }
-
-type InternalNotification = NonNullable<
-  NotificationSlice["notification"]["notification"]
-> & { resolve: Func<void, [value: boolean]> };

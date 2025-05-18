@@ -5,16 +5,15 @@ import {
 } from "@agusmgarcia/react-core";
 
 type Notification = {
+  accept: Func;
+  close: Func;
   id: string;
   message: string;
-  type: "error" | "success" | "warning";
-};
+} & ({ type: "error" | "success" } | { cancel: Func; type: "warning" });
 
 type NotificationSlice = CreateGlobalSliceTypes.SliceOf<
   "notification",
   {
-    acceptNotification: Func<void, [id: string]>;
-    clearNotification: Func<void, [id: string]>;
     notification: Notification | undefined;
     setNotification: AsyncFunc<
       boolean,
