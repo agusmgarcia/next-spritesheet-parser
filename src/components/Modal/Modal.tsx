@@ -28,9 +28,9 @@ export default function Modal(props: ModalProps) {
       {/* HEADER */}
       <div
         className={twMerge(
-          "flex flex-initial items-center gap-4 bg-white p-6",
+          "flex flex-initial items-center gap-4 bg-white",
           (!!headerProps.children || !!headerProps.onClose) &&
-            "sticky top-0 z-10",
+            "sticky top-0 z-10 p-6",
 
           !!headerProps.children && !!headerProps.onClose && "justify-between",
           !headerProps.children && !!headerProps.onClose && "justify-end",
@@ -57,13 +57,21 @@ export default function Modal(props: ModalProps) {
       </div>
 
       {/* CHILDREN */}
-      <div className="flex-auto px-6">{children}</div>
+      <div
+        className={twMerge(
+          "flex-auto px-6",
+          !headerProps.children && !headerProps.onClose && "pt-6",
+          !footerProps.children && "pb-6",
+        )}
+      >
+        {children}
+      </div>
 
       {/* FOOTER */}
       <div
         className={twMerge(
-          "bg-white p-6",
-          !!footerProps.children && "sticky bottom-0 z-10",
+          "bg-white",
+          !!footerProps.children && "sticky bottom-0 z-10 p-6",
 
           "transition-shadow will-change-[box-shadow]",
           !!footerProps.children &&
