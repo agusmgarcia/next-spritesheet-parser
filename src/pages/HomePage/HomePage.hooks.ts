@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 
-import { type InstructionsButtonProps } from "#src/fragments";
+import { type LayoutProps } from "#src/fragments";
 
 import type HomePageProps from "./HomePage.types";
 
 export default function useHomePage(props: HomePageProps) {
-  const instructions = useMemo<InstructionsButtonProps["instructions"]>(
+  const instructions = useMemo<LayoutProps["instructions"]>(
     () => [
       {
         keys: [

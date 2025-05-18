@@ -1,7 +1,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-import { type InstructionsButtonProps } from "#src/fragments";
+import { type LayoutProps } from "#src/fragments";
 import { type Animation, useAnimations } from "#src/store";
 
 import type AnimationPageProps from "./AnimationPage.types";
@@ -56,7 +56,7 @@ function useIndex({
 }
 
 function useInstructions() {
-  const instructions = useMemo<InstructionsButtonProps["instructions"]>(
+  const instructions = useMemo<LayoutProps["instructions"]>(
     () => [
       {
         keys: [

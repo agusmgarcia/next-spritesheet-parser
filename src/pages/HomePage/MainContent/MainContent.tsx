@@ -15,12 +15,12 @@ export default function MainContent(props: MainContentProps) {
   return (
     <div {...rest} className="relative size-full" tabIndex={-1}>
       {/* SPRITE SHEET */}
-      <canvas ref={spriteSheetCanvasRef} className="absolute" />
+      <canvas ref={spriteSheetCanvasRef} />
 
       {/* SELECTION */}
       <canvas
         ref={selectionCanvasRef}
-        className="absolute"
+        className="absolute inset-0"
         onClick={onClick}
         onMouseDown={onMouseDown}
         onMouseLeave={onMouseLeave}

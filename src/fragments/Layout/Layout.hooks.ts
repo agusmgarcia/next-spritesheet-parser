@@ -2,9 +2,9 @@ import { useMemo } from "react";
 
 import { useViewport } from "#src/utils";
 
-import type AppPageProps from "./AppPage.types";
+import type LayoutProps from "./Layout.types";
 
-export default function useAppPage(props: AppPageProps) {
+export default function useLayout(props: LayoutProps) {
   const viewport = useViewport();
 
   const version = useMemo<string>(() => {
