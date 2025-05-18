@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.18.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.0)
+
+> May 18, 2025
+
+- **Modal**: adjust padding when header or footer are not present
+- **AnimationPage**: escape markdown for instructions
+- **NotificationHandler**: move responsability to the slice
+- forward rest parameters
+- **useKeyDown**: prevent executing when notification is open
+- **store**: add error handler
+- **store**: perform some validations
+- include settings within the exported file
+- start using Markdown
+- **Accordion**: adjust import path
+- **getErrorMessage**: add utility
+- stop using Toast in favor of Modal
+- **Modal**: add footer support
+
 ## [v0.17.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.17.0)
 
 > May 12, 2025
