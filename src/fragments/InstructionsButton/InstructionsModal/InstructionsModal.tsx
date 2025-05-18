@@ -27,15 +27,15 @@ export default function InstructionsModal(props: InstructionsModalProps) {
             <div className="flex flex-col gap-1">
               {i.keys.map((k) => (
                 <div key={k.id} className="flex items-center gap-2">
-                  {/* KEY */}
-                  <Key className="text-lg">{k.key}</Key>
-
                   {k.extraKeys.map((e) => (
                     <React.Fragment key={e}>
-                      <Typography>+</Typography>
                       <Key className="text-sm">{e}</Key>
+                      <Typography>{"\\+"}</Typography>
                     </React.Fragment>
                   ))}
+
+                  {/* KEY */}
+                  <Key className="text-lg">{k.key}</Key>
 
                   {/* DESCRIPTION */}
                   <Typography>{k.description}</Typography>
