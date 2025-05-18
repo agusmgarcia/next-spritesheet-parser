@@ -61,7 +61,6 @@ export default createServerSlice<
         color,
         imageURL,
         name: rawImage.name,
-        rawImageURL: rawImage.url,
         scale: 1,
         sprites,
       };
@@ -71,24 +70,12 @@ export default createServerSlice<
     }
   },
   (state) => state.settings.settings,
-  (subscribe) => {
-    subscribe(
-      (context) => {
-        if (!context.get().spriteSheet.data?.rawImageURL) return;
-        context
-          .get()
-          .notification.setNotification("success", "Image loaded succesfully!");
-      },
-      (state) => state.spriteSheet.data?.rawImageURL,
-    );
-
-    return {
-      __setSpriteSheet__,
-      mergeSprites,
-      setSpriteSheetScale,
-      splitSprite,
-    };
-  },
+  () => ({
+    __setSpriteSheet__,
+    mergeSprites,
+    setSpriteSheetScale,
+    splitSprite,
+  }),
 );
 
 function __setSpriteSheet__(
@@ -100,10 +87,7 @@ function __setSpriteSheet__(
   const imageURL = context.get().spriteSheet.data?.imageURL;
   if (!imageURL) throw new Error("You need to provide an image first");
 
-  const rawImageURL = context.get().spriteSheet.data?.rawImageURL;
-  if (!rawImageURL) throw new Error("You need to provide an image first");
-
-  context.set({ ...spriteSheet, imageURL, rawImageURL });
+  context.set({ ...spriteSheet, imageURL });
 }
 
 async function mergeSprites(

@@ -11,7 +11,6 @@ type SpriteSheet = {
   color: string;
   imageURL: string;
   name: string;
-  rawImageURL: string;
   scale: number;
   sprites: Record<
     string,
