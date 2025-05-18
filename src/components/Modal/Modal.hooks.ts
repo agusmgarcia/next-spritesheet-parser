@@ -184,9 +184,9 @@ export default function useModal({
   }, [state]);
 
   return {
-    ...rest,
     children: state !== "hidden" ? childrenFromProps : undefined,
     dialogProps: {
+      ...rest,
       onCancel: dialogOnCancel,
       onKeyDown: dialogOnKeyDown,
       ref: dialogRef,

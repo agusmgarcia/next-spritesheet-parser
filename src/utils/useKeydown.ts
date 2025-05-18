@@ -14,6 +14,7 @@ export default function useKeyDown(
       if (event.ctrlKey) return;
       if (event.metaKey) return;
       if (event.shiftKey) return;
+      if (!!document.querySelector(`[${useKeyDown.dataIgnore}]`)) return;
       callback();
     };
 
@@ -21,3 +22,5 @@ export default function useKeyDown(
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [callback, key, options?.altKey]);
 }
+
+useKeyDown.dataIgnore = "data-use-key-down-ignore" as const;

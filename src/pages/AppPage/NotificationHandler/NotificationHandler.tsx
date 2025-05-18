@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 
 import { Button, Icon, Modal, Typography } from "#src/components";
+import { useKeyDown } from "#src/utils";
 
 import useNotificationHandler from "./NotificationHandler.hooks";
 import type NotificationHandlerProps from "./NotificationHandler.types";
@@ -11,6 +12,7 @@ export default function NotificationHandler(props: NotificationHandlerProps) {
 
   return (
     <Modal
+      {...{ [useKeyDown.dataIgnore]: open ? "" : undefined }}
       footer={
         <div className="flex items-center justify-between gap-2">
           {!!onAccept && (
