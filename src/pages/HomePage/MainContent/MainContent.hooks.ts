@@ -16,7 +16,7 @@ export default function useMainContent(props: MainContentProps) {
   const { selectSprite, spriteSelection, toggleSpriteSelection } =
     useSpriteSelection();
 
-  const rootRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const spriteSheetCanvasRef = useRef<HTMLCanvasElement>(null);
   const selectionCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -25,7 +25,7 @@ export default function useMainContent(props: MainContentProps) {
   const [spriteHovered, setSpriteHovered] = useState<string>();
 
   const { image } = useLoadImage(spriteSheet?.imageURL || "");
-  const rootDimensions = useDimensions(rootRef);
+  const rootDimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * (spriteSheet?.scale || 0);
 
   const sprites = useMemo(
@@ -286,7 +286,7 @@ export default function useMainContent(props: MainContentProps) {
     onMouseDown,
     onMouseLeave,
     onMouseMove,
-    rootRef,
+    ref,
     selectionCanvasRef,
     spriteSheetCanvasRef,
   };

@@ -10,10 +10,12 @@ export default function FilesItem(props: FilesItemProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    ...rest
   } = useFilesItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex flex-col gap-1"
       heading={
         <Typography className="text-white" variant="h2">

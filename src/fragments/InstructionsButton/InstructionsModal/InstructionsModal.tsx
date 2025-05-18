@@ -7,13 +7,12 @@ import useInstructionsModal from "./InstructionsModal.hooks";
 import type InstructionsModalProps from "./InstructionsModal.types";
 
 export default function InstructionsModal(props: InstructionsModalProps) {
-  const { instructions, onClose, open } = useInstructionsModal(props);
+  const { instructions, ...rest } = useInstructionsModal(props);
 
   return (
     <Modal
+      {...rest}
       heading={<Typography variant="h1">Instructions</Typography>}
-      onClose={onClose}
-      open={open}
     >
       <div className="flex flex-col gap-4">
         {instructions?.map((i) => (

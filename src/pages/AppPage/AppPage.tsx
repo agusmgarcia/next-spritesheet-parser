@@ -6,10 +6,13 @@ import type AppPageProps from "./AppPage.types";
 import NotificationHandler from "./NotificationHandler";
 
 export default function AppPage(props: AppPageProps) {
-  const { children, version, viewport } = useAppPage(props);
+  const { children, version, viewport, ...rest } = useAppPage(props);
 
   return (
-    <main className="relative flex h-dvh w-screen border-[16px] border-dark">
+    <main
+      {...rest}
+      className="relative flex h-dvh w-screen border-[16px] border-dark"
+    >
       {viewport === "Mobile" && (
         <div className="size-full bg-gray-800">
           <Typography className="p-2 italic text-white">

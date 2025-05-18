@@ -13,10 +13,12 @@ export default function SettingsItem(props: SettingsItemProps) {
     settingsOnChange,
     settingsOnClick,
     settingsValue,
+    ...rest
   } = useSettingsItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex flex-col gap-1"
       defaultCollapsed={true}
       heading={

@@ -2,6 +2,7 @@ import { type Func } from "@agusmgarcia/react-core";
 import { useMemo } from "react";
 
 import { useNotification } from "#src/store";
+import { useKeyDown } from "#src/utils";
 
 import type NotificationHandlerProps from "./NotificationHandler.types";
 
@@ -27,5 +28,11 @@ export default function useNotificationHandler(_: NotificationHandlerProps) {
     [clearNotification, notification?.id, notification?.type],
   );
 
-  return { notification, onAccept, onCancel, open };
+  return {
+    [`${useKeyDown.dataIgnore}` as const]: open ? "" : undefined,
+    notification,
+    onAccept,
+    onCancel,
+    open,
+  };
 }

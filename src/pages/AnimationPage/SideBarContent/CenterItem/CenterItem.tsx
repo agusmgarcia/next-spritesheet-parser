@@ -13,10 +13,12 @@ export default function CenterItem(props: CenterItemProps) {
     onionOnClick,
     resetCenterDisabled,
     resetCenterOnClick,
+    ...rest
   } = useCenterItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex gap-1"
       heading={
         <Typography className="text-white" variant="h2">

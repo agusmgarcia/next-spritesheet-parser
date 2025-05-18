@@ -184,13 +184,8 @@ export default function useModal({
   }, [state]);
 
   return {
+    ...rest,
     children: state !== "hidden" ? childrenFromProps : undefined,
-    dialogProps: {
-      ...rest,
-      onCancel: dialogOnCancel,
-      onKeyDown: dialogOnKeyDown,
-      ref: dialogRef,
-    },
     footerProps: {
       atBottom,
       children: footerFromProps,
@@ -200,6 +195,9 @@ export default function useModal({
       children: headingFromProps,
       onClose: onCloseFromProps,
     },
+    onCancel: dialogOnCancel,
+    onKeyDown: dialogOnKeyDown,
+    ref: dialogRef,
     state,
   };
 }

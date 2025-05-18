@@ -6,11 +6,11 @@ import useAccordionItem from "./AccordionItem.hooks";
 import type AccordionItemProps from "./AccordionItem.types";
 
 export default function AccordionItem(props: AccordionItemProps) {
-  const { children, className, expanded, heading, toggle } =
+  const { children, className, expanded, heading, toggle, ...rest } =
     useAccordionItem(props);
 
   return (
-    <div className="flex flex-col gap-1">
+    <div {...rest} className="flex flex-col gap-1">
       {/* HEADER */}
       <div className="flex flex-col">
         <div

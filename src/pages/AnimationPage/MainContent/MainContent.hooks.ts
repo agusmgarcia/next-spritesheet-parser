@@ -13,11 +13,11 @@ export default function useMainContent({
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
 
-  const rootRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const { image } = useLoadImage(spriteSheet?.imageURL || "");
-  const dimensions = useDimensions(rootRef);
+  const dimensions = useDimensions(ref);
   const devicePixelRatio = useDevicePixelRatio();
 
   const sprites = useMemo(
@@ -124,5 +124,5 @@ export default function useMainContent({
     spriteSheet,
   ]);
 
-  return { ...rest, rootRef, spriteCanvasRef };
+  return { ...rest, ref, spriteCanvasRef };
 }

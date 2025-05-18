@@ -5,7 +5,10 @@ import { useKeyDown } from "#src/utils";
 
 import type InstructionsButtonProps from "./InstructionsButton.types";
 
-export default function useInstructionsButton(props: InstructionsButtonProps) {
+export default function useInstructionsButton({
+  instructions: instructionsFromProps,
+  ...rest
+}: InstructionsButtonProps) {
   const [open, setOpen] = useState(false);
 
   const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
@@ -19,5 +22,13 @@ export default function useInstructionsButton(props: InstructionsButtonProps) {
 
   useKeyDown("h", onOpen);
 
-  return { ...props, onClick, onClose, open };
+  return {
+    ...rest,
+    instructionsModalProps: {
+      instructions: instructionsFromProps,
+      onClose,
+      open,
+    },
+    onClick,
+  };
 }

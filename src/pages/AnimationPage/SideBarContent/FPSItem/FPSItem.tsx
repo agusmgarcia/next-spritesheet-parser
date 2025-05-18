@@ -11,10 +11,12 @@ export default function FPSItem(props: FPSItemProps) {
     minusFPSOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    ...rest
   } = useFPSItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex gap-1"
       heading={
         <Typography className="text-white" variant="h2">

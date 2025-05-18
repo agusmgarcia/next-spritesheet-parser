@@ -17,10 +17,12 @@ export default function AnimationsItem(props: AnimationsItemProps) {
     resetSelectionOnClick,
     splitSpriteDisabled,
     splitSpriteOnClick,
+    ...rest
   } = useAnimationsItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex flex-col gap-1"
       heading={
         <Typography className="text-white" variant="h2">

@@ -4,11 +4,17 @@ import useConfigurationsItem from "./ConfigurationsItem.hooks";
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
 export default function ConfigurationsItem(props: ConfigurationsItemProps) {
-  const { deleteAnimationOnClick, homeOnClick, nameOnChange, nameValue } =
-    useConfigurationsItem(props);
+  const {
+    deleteAnimationOnClick,
+    homeOnClick,
+    nameOnChange,
+    nameValue,
+    ...rest
+  } = useConfigurationsItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex gap-1"
       heading={
         <Typography className="text-white" variant="h2">

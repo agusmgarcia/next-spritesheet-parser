@@ -12,9 +12,11 @@ export default function SideBarContent({
   animation,
   index,
   onIndexChange,
+  ...rest
 }: SideBarContentProps) {
   return (
     <Accordion
+      {...rest}
       heading={
         <Typography className="text-white" variant="h1">
           {animation.name}

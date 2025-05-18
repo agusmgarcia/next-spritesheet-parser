@@ -7,13 +7,13 @@ export default function MainContent(props: MainContentProps) {
     onMouseDown,
     onMouseLeave,
     onMouseMove,
-    rootRef,
     selectionCanvasRef,
     spriteSheetCanvasRef,
+    ...rest
   } = useMainContent(props);
 
   return (
-    <div ref={rootRef} className="relative size-full" tabIndex={-1}>
+    <div {...rest} className="relative size-full" tabIndex={-1}>
       {/* SPRITE SHEET */}
       <canvas ref={spriteSheetCanvasRef} className="absolute" />
 

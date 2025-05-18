@@ -10,10 +10,12 @@ export default function PlayingItem(props: PlayingItemProps) {
     playing,
     playingDisabled,
     playOnClick,
+    ...rest
   } = usePlayingItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex gap-1"
       heading={
         <Typography className="text-white" variant="h2">

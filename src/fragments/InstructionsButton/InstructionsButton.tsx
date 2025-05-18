@@ -7,29 +7,25 @@ import type InstructionsButtonProps from "./InstructionsButton.types";
 import InstructionsModal from "./InstructionsModal";
 
 export default function InstructionsButton(props: InstructionsButtonProps) {
-  const { className, instructions, onClick, onClose, open } =
+  const { className, instructionsModalProps, ...rest } =
     useInstructionsButton(props);
 
   return (
     <>
-      {/* MODAL */}
-      <InstructionsModal
-        instructions={instructions}
-        onClose={onClose}
-        open={open}
-      />
-
       {/* BUTTON */}
       <Button
+        {...rest}
         className={twMerge(
           "flex size-12 items-center justify-center rounded-full shadow-sm shadow-cranberry-600",
           className,
         )}
-        onClick={onClick}
         variant="secondary"
       >
         <Icon variant="interrogation" />
       </Button>
+
+      {/* MODAL */}
+      <InstructionsModal {...instructionsModalProps} />
     </>
   );
 }

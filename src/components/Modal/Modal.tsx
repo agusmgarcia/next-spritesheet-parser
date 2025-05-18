@@ -6,12 +6,12 @@ import useModal from "./Modal.hooks";
 import type ModalProps from "./Modal.types";
 
 export default function Modal(props: ModalProps) {
-  const { children, dialogProps, footerProps, headerProps, state } =
+  const { children, footerProps, headerProps, state, ...rest } =
     useModal(props);
 
   return (
     <dialog
-      {...dialogProps}
+      {...rest}
       className={twMerge(
         "m-auto flex max-h-[90vh] w-[512px] translate-y-[calc(100vh+100%)] flex-col overflow-auto rounded-2xl",
         "transition-transform will-change-transform",

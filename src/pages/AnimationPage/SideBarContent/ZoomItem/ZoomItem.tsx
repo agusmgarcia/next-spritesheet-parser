@@ -11,10 +11,12 @@ export default function ZoomItem(props: ZoomItemProps) {
     zoomInOnClick,
     zoomOutDisabled,
     zoomOutOnClick,
+    ...rest
   } = useZoomItem(props);
 
   return (
     <Accordion.Item
+      {...rest}
       className="flex gap-1"
       heading={
         <Typography className="text-white" variant="h2">
