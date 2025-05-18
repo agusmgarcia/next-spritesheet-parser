@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.18.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.2)
+
+> May 18, 2025
+
+- **InstructionsButton**: replace Alt by Opt whe is MacOS
+- **isMacOS**: add utility
+- **SpriteSheetSlice**: stop sending alert when new image loaded
+- **AnimationPage**: adjust instructions keys
+
 ## [v0.18.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.1)
 
 > May 18, 2025
