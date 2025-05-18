@@ -113,12 +113,10 @@ function useInstructions() {
           {
             description: "Center the sprite",
             key: "c",
-            options: { altKey: true },
           },
           {
             description: "Enable/Disable onion feature",
             key: "o",
-            options: { altKey: true },
           },
         ],
         title: "Movements",
