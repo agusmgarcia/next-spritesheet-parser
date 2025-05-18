@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.18.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.1)
+
+> May 18, 2025
+
+- **InstructionsButton**: escape markdown and adjust order of keys
+
 ## [v0.18.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.0)
 
 > May 18, 2025
