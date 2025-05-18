@@ -1,4 +1,6 @@
-import { createStore } from "@agusmgarcia/react-core";
+import { catchError, createStore } from "@agusmgarcia/react-core";
+
+import { getErrorMessage } from "#src/utils";
 
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
@@ -28,6 +30,11 @@ const { useSelector, ...reactStore } = createStore(
   createSettingsSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
+)((callback, context) =>
+  catchError(callback, (error) => {
+    if (context.signal.aborted) return;
+    context.get().notification.setNotification("error", getErrorMessage(error));
+  }),
 );
 
 export const StoreProvider = reactStore.StoreProvider;
@@ -54,7 +61,6 @@ export function useAnimations() {
     setAnimationPlaying: useSelector(
       (state) => state.animations.setAnimationPlaying,
     ),
-    setAnimations: useSelector((state) => state.animations.setAnimations),
     setAnimationScale: useSelector(
       (state) => state.animations.setAnimationScale,
     ),
@@ -77,6 +83,7 @@ export function useNotification() {
 export function useSettings() {
   return {
     setImage: useSelector((state) => state.settings.setImage),
+    setJSONFile: useSelector((state) => state.settings.setJSONFile),
     setSettings: useSelector((state) => state.settings.setSettings),
     settings: useSelector((state) => state.settings.settings),
   };
@@ -100,7 +107,6 @@ export function useSpriteSelection() {
 export function useSpriteSheet() {
   return {
     mergeSprites: useSelector((state) => state.spriteSheet.mergeSprites),
-    setSpriteSheet: useSelector((state) => state.spriteSheet.setSpriteSheet),
     setSpriteSheetScale: useSelector(
       (state) => state.spriteSheet.setSpriteSheetScale,
     ),

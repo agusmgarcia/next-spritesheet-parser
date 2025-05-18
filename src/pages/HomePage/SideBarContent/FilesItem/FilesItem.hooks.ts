@@ -1,5 +1,5 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   type Animation,
@@ -31,10 +31,9 @@ export default function useFilesItem(props: FilesItemProps) {
 }
 
 function useImportFile() {
-  const { setAnimations } = useAnimations();
   const { setNotification } = useNotification();
-  const { setImage, setSettings } = useSettings();
-  const { setSpriteSheet, spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { setImage, setJSONFile } = useSettings();
+  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
 
@@ -75,44 +74,28 @@ function useImportFile() {
 
   const importFileOnClick = useCallback<Func>(() => {
     if (importFileDisabled) return;
+
     importFile(!spriteSheet ? "image/*" : "image/*,application/json")
       .then((file) => {
-        if (!file) return;
-
         setImportFileLoading(true);
-
-        if (file.type.startsWith("image/")) {
-          setImage(file);
-        } else {
-          return file
-            .text()
-            .then((text) => JSON.parse(text))
-            .then((json) => {
-              setSettings(json.settings);
-              setSpriteSheet(json.spriteSheet);
-              setAnimations(json.animations);
-            })
-            .finally(() => setImportFileLoading(false));
-        }
+        if (!file) return;
+        return file.type.startsWith("image/")
+          ? setImage(file)
+          : file
+              .text()
+              .then((text) => JSON.parse(text))
+              .then((jsonFile) => setJSONFile(jsonFile));
       })
-      .catch((error) => setNotification("error", getErrorMessage(error)));
+      .catch((error) => setNotification("error", getErrorMessage(error)))
+      .finally(() => setImportFileLoading(false));
   }, [
     importFile,
     importFileDisabled,
-    setAnimations,
     setImage,
+    setJSONFile,
     setNotification,
-    setSettings,
-    setSpriteSheet,
     spriteSheet,
   ]);
-
-  useEffect(() => {
-    if (!importFileLoading) return;
-    if (spriteSheetLoading) return;
-    if (!spriteSheet) return;
-    setImportFileLoading(false);
-  }, [importFileLoading, spriteSheet, spriteSheetLoading]);
 
   useKeyDown("i", importFileOnClick);
 

@@ -12,12 +12,12 @@ export default createGlobalSlice<
   AnimationsSliceTypes.default & SpriteSheetSliceTypes.default
 >("spriteSelection", (subscribe) => {
   subscribe(
-    (context) => unselectAllSprites(context),
+    (context) => context.get().spriteSelection.unselectAllSprites(),
     (state) => state.spriteSheet.data?.sprites,
   );
 
   subscribe(
-    (context) => unselectAllSprites(context),
+    (context) => context.get().spriteSelection.unselectAllSprites(),
     (state) => state.animations.animations.length,
   );
 
@@ -39,7 +39,8 @@ function selectSprite(
   >,
 ): void {
   const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.sprites[spriteId]) return;
+  if (!spriteSheet?.sprites[spriteId])
+    throw new Error("The selected sprite is not present in the sprite sheet");
 
   context.set((prev) => ({
     spriteSelection: prev.spriteSelection.includes(spriteId)
@@ -58,7 +59,8 @@ function toggleSpriteSelection(
   >,
 ): void {
   const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.sprites[spriteId]) return;
+  if (!spriteSheet?.sprites[spriteId])
+    throw new Error("The selected sprite is not present in the sprite sheet");
 
   context.set((prev) => ({
     spriteSelection: prev.spriteSelection.includes(spriteId)

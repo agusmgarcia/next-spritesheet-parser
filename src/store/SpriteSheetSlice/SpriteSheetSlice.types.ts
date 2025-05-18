@@ -1,4 +1,5 @@
 import {
+  type AsyncFunc,
   type CreateServerSliceTypes,
   type Func,
 } from "@agusmgarcia/react-core";
@@ -10,6 +11,7 @@ type SpriteSheet = {
   color: string;
   imageURL: string;
   name: string;
+  rawImageURL: string;
   scale: number;
   sprites: Record<
     string,
@@ -30,10 +32,13 @@ type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
   SpriteSheet | undefined,
   SettingsSliceTypes.default["settings"]["settings"],
   {
-    mergeSprites: Func<void, [spriteIds: string[]]>;
-    setSpriteSheet: Func<void, [sprites: SpriteSheet]>;
+    __setSpriteSheet__: Func<
+      void,
+      [sprites: Omit<SpriteSheet, "imageURL" | "rawImageURL">]
+    >;
+    mergeSprites: AsyncFunc<void, [spriteIds: string[]]>;
     setSpriteSheetScale: Func<void, [scale: React.SetStateAction<number>]>;
-    splitSprite: Func<void, [spriteId: string]>;
+    splitSprite: AsyncFunc<void, [spriteId: string]>;
   }
 >;
 

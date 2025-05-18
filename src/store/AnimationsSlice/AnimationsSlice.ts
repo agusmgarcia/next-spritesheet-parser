@@ -13,11 +13,13 @@ export default createGlobalSlice<
   SpriteSheetSliceTypes.default
 >("animations", (subscribe) => {
   subscribe(
-    (context) => updateAnimations(context),
+    (context) => context.get().animations.__updateAnimations__(),
     (state) => state.spriteSheet.data?.sprites,
   );
 
   return {
+    __setAnimations__,
+    __updateAnimations__,
     animations: [],
     createAnimation,
     deleteAnimation,
@@ -28,10 +30,35 @@ export default createGlobalSlice<
     setAnimationOffset,
     setAnimationOnion,
     setAnimationPlaying,
-    setAnimations,
     setAnimationScale,
   };
 });
+
+function __setAnimations__(
+  animations: Parameters<AnimationsSlice["animations"]["__setAnimations__"]>[0],
+  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
+): void {
+  context.set({ animations });
+}
+
+function __updateAnimations__(
+  context: CreateGlobalSliceTypes.Context<
+    AnimationsSlice,
+    SpriteSheetSliceTypes.default
+  >,
+): void {
+  const sprites = context.get().spriteSheet.data?.sprites;
+  if (!sprites) {
+    context.set({ animations: [] });
+    return;
+  }
+
+  context.set((prev) => ({
+    animations: prev.animations.filter((a) =>
+      a.sprites.every((s) => !!sprites[s.id]),
+    ),
+  }));
+}
 
 function createAnimation(
   spriteIds: Parameters<AnimationsSlice["animations"]["createAnimation"]>[0],
@@ -40,10 +67,13 @@ function createAnimation(
     SpriteSheetSliceTypes.default
   >,
 ): string | undefined {
-  if (spriteIds.length <= 0) return undefined;
+  if (spriteIds.length <= 0)
+    throw new Error(
+      "You need to select at least one sprite to create the animation",
+    );
 
   const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet) return undefined;
+  if (!spriteSheet) throw new Error("Sprite sheet is not defined");
 
   function sortSprites(
     sprites: NonNullable<
@@ -96,8 +126,6 @@ function createAnimation(
     return (spriteId) => result[spriteId];
   }
 
-  const id = createUUID();
-
   function getLatestAnimationOrder(
     animations: AnimationsSlice["animations"]["animations"],
   ): number {
@@ -109,25 +137,22 @@ function createAnimation(
     );
   }
 
-  context.set((prev) => ({
-    animations: [
-      ...prev.animations,
-      {
-        color: spriteSheet.backgroundColor,
-        fps: 12,
-        id,
-        name: `New animation ${getLatestAnimationOrder(prev.animations) + 1}`,
-        onion: false,
-        playing: spriteIds.length > 1,
-        scale: 1,
-        sprites: spriteIds
-          .sort(sortSprites(spriteSheet.sprites))
-          .map(mapSprites(spriteSheet.sprites)),
-      },
-    ],
-  }));
+  const animation: AnimationsSlice["animations"]["animations"][number] = {
+    color: spriteSheet.backgroundColor,
+    fps: 12,
+    id: createUUID(),
+    name: `New animation ${getLatestAnimationOrder(context.get().animations.animations) + 1}`,
+    onion: false,
+    playing: spriteIds.length > 1,
+    scale: 1,
+    sprites: spriteIds
+      .sort(sortSprites(spriteSheet.sprites))
+      .map(mapSprites(spriteSheet.sprites)),
+  };
 
-  return id;
+  context.set((prev) => ({ animations: [...prev.animations, animation] }));
+
+  return animation.id;
 }
 
 function deleteAnimation(
@@ -162,25 +187,6 @@ function resetAnimationOffset(
         : a,
     ),
   }));
-}
-
-function updateAnimations(
-  context: CreateGlobalSliceTypes.Context<
-    AnimationsSlice,
-    SpriteSheetSliceTypes.default
-  >,
-): void {
-  context.set((prev) => {
-    const sprites = context.get().spriteSheet.data?.sprites;
-    if (!sprites) return { animations: [] };
-
-    return {
-      ...prev,
-      animations: prev.animations.filter((a) =>
-        a.sprites.every((s) => !!sprites[s.id]),
-      ),
-    };
-  });
 }
 
 function setAnimationFPS(
@@ -290,20 +296,6 @@ function setAnimationPlaying(
         : a,
     ),
   }));
-}
-
-function setAnimations(
-  animations: Parameters<AnimationsSlice["animations"]["setAnimations"]>[0],
-  context: CreateGlobalSliceTypes.Context<
-    AnimationsSlice,
-    SpriteSheetSliceTypes.default
-  >,
-): void {
-  const spriteIds = Object.keys(context.get().spriteSheet.data?.sprites || {});
-  if (animations.some((a) => a.sprites.some((s) => !spriteIds.includes(s.id))))
-    return;
-
-  context.set({ animations });
 }
 
 function setAnimationScale(

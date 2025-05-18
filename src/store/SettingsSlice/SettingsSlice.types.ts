@@ -1,7 +1,11 @@
 import {
+  type AsyncFunc,
   type CreateGlobalSliceTypes,
   type Func,
 } from "@agusmgarcia/react-core";
+
+import { type AnimationsSliceTypes } from "../AnimationsSlice";
+import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 
 type Settings = {
   delta: number;
@@ -15,7 +19,20 @@ type Settings = {
 type SettingsSlice = CreateGlobalSliceTypes.SliceOf<
   "settings",
   {
-    setImage: Func<void, [image: File]>;
+    setImage: AsyncFunc<void, [image: File]>;
+    setJSONFile: AsyncFunc<
+      void,
+      [
+        jsonFile: {
+          animations: AnimationsSliceTypes.default["animations"]["animations"];
+          settings: Omit<Settings, "image">;
+          spriteSheet: Omit<
+            NonNullable<SpriteSheetSliceTypes.default["spriteSheet"]["data"]>,
+            "imageURL"
+          >;
+        },
+      ]
+    >;
     setSettings: Func<
       void,
       [settings: React.SetStateAction<Omit<Settings, "image">>]

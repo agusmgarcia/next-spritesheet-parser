@@ -1,6 +1,7 @@
 import {
   createServerSlice,
   type CreateServerSliceTypes,
+  replaceString,
   type Tuple,
 } from "@agusmgarcia/react-core";
 import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
@@ -8,10 +9,17 @@ import invert from "invert-color";
 
 import { loadImage } from "#src/utils";
 
+import { type AnimationsSliceTypes } from "../AnimationsSlice";
+import { type NotificationSliceTypes } from "../NotificationSlice";
 import { type SettingsSliceTypes } from "../SettingsSlice";
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
-export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
+export default createServerSlice<
+  SpriteSheetSlice,
+  AnimationsSliceTypes.default &
+    NotificationSliceTypes.default &
+    SettingsSliceTypes.default
+>(
   "spriteSheet",
   async (settings, signal, prevSpriteSheet) => {
     URL.revokeObjectURL(prevSpriteSheet?.imageURL || "");
@@ -53,6 +61,7 @@ export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
         color,
         imageURL,
         name: rawImage.name,
+        rawImageURL: rawImage.url,
         scale: 1,
         sprites,
       };
@@ -62,14 +71,70 @@ export default createServerSlice<SpriteSheetSlice, SettingsSliceTypes.default>(
     }
   },
   (state) => state.settings.settings,
-  () => ({ mergeSprites, setSpriteSheet, setSpriteSheetScale, splitSprite }),
+  (subscribe) => {
+    subscribe(
+      (context) => {
+        if (!context.get().spriteSheet.data?.rawImageURL) return;
+        context
+          .get()
+          .notification.setNotification("success", "Image loaded succesfully!");
+      },
+      (state) => state.spriteSheet.data?.rawImageURL,
+    );
+
+    return {
+      __setSpriteSheet__,
+      mergeSprites,
+      setSpriteSheetScale,
+      splitSprite,
+    };
+  },
 );
 
-function mergeSprites(
-  spriteIds: Parameters<SpriteSheetSlice["spriteSheet"]["mergeSprites"]>[0],
+function __setSpriteSheet__(
+  spriteSheet: Parameters<
+    SpriteSheetSlice["spriteSheet"]["__setSpriteSheet__"]
+  >[0],
   context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
 ): void {
-  if (spriteIds.length <= 1) return;
+  const imageURL = context.get().spriteSheet.data?.imageURL;
+  if (!imageURL) throw new Error("You need to provide an image first");
+
+  const rawImageURL = context.get().spriteSheet.data?.rawImageURL;
+  if (!rawImageURL) throw new Error("You need to provide an image first");
+
+  context.set({ ...spriteSheet, imageURL, rawImageURL });
+}
+
+async function mergeSprites(
+  spriteIds: Parameters<SpriteSheetSlice["spriteSheet"]["mergeSprites"]>[0],
+  context: CreateServerSliceTypes.Context<
+    SpriteSheetSlice,
+    AnimationsSliceTypes.default & NotificationSliceTypes.default
+  >,
+): Promise<void> {
+  if (spriteIds.length <= 1)
+    throw new Error("You need to select more than one sprite to merge");
+
+  const animations = context
+    .get()
+    .animations.animations.filter((a) =>
+      a.sprites.some((s) => spriteIds.includes(s.id)),
+    );
+  if (!!animations.length) {
+    const response = await context.get().notification.setNotification(
+      "warning",
+      replaceString(
+        "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+        {
+          animations: animations.length,
+          animationsName: animations.map((a) => `**"${a.name}"**`).join(", "),
+        },
+      ),
+    );
+
+    if (!response) return;
+  }
 
   context.set((prev) => {
     if (!prev) return prev;
@@ -114,20 +179,33 @@ function setSpriteSheetScale(
   );
 }
 
-function setSpriteSheet(
-  spriteSheet: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheet"]>[0],
-  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
-): void {
-  const imageURL = context.get().spriteSheet.data?.imageURL;
-  if (!imageURL) return;
-
-  context.set({ ...spriteSheet, imageURL });
-}
-
-function splitSprite(
+async function splitSprite(
   spriteId: Parameters<SpriteSheetSlice["spriteSheet"]["splitSprite"]>[0],
-  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
-): void {
+  context: CreateServerSliceTypes.Context<
+    SpriteSheetSlice,
+    AnimationsSliceTypes.default & NotificationSliceTypes.default
+  >,
+): Promise<void> {
+  const animations = context
+    .get()
+    .animations.animations.filter((a) =>
+      a.sprites.some((s) => s.id === spriteId),
+    );
+  if (!!animations.length) {
+    const response = await context.get().notification.setNotification(
+      "warning",
+      replaceString(
+        "By splitting selected sprite, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+        {
+          animations: animations.length,
+          animationsName: animations.map((a) => `**"${a.name}"**`).join(", "),
+        },
+      ),
+    );
+
+    if (!response) return;
+  }
+
   context.set((prev) => {
     if (!prev) return prev;
 

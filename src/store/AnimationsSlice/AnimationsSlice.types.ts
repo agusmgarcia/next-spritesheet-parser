@@ -23,6 +23,8 @@ type Animation = {
 type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
   "animations",
   {
+    __setAnimations__: Func<void, [animations: Animation[]]>;
+    __updateAnimations__: Func;
     animations: Animation[];
     createAnimation: Func<string | undefined, [spriteIds: string[]]>;
     deleteAnimation: Func<void, [id: string]>;
@@ -56,7 +58,6 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
       void,
       [id: string, playing: React.SetStateAction<boolean>]
     >;
-    setAnimations: Func<void, [animations: Animation[]]>;
     setAnimationScale: Func<
       void,
       [id: string, scale: React.SetStateAction<number>]
