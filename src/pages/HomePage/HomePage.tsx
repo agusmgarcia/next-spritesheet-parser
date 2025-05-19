@@ -9,7 +9,7 @@ export default function HomePage(props: HomePageProps) {
   const rest = useHomePage(props);
 
   return (
-    <Layout {...rest} sideBar={<SideBarContent />}>
+    <Layout {...rest} sideBar={<SideBarContent />} sideBarCollapse={true}>
       <MainContent />
     </Layout>
   );

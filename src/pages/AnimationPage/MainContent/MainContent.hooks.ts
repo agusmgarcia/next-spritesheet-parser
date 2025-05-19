@@ -55,7 +55,7 @@ export default function useMainContent({
 
     const scale = animationFromProps.scale * devicePixelRatio;
 
-    spriteCanvas.width = dimensions.width;
+    spriteCanvas.width = dimensions.width - 360;
     spriteCanvas.height = dimensions.height;
 
     context.imageSmoothingEnabled = false;
@@ -72,7 +72,7 @@ export default function useMainContent({
       currentSprite.top,
       currentSprite.width,
       currentSprite.height,
-      dimensions.width / (2 * scale) -
+      (dimensions.width - 360) / (2 * scale) -
         currentSprite.width / 2 -
         currentSprite.offsetX,
       dimensions.height / (2 * scale) -
@@ -90,7 +90,7 @@ export default function useMainContent({
         prevSprite.top,
         prevSprite.width,
         prevSprite.height,
-        dimensions.width / (2 * scale) -
+        (dimensions.width - 360) / (2 * scale) -
           prevSprite.width / 2 -
           prevSprite.offsetX,
         dimensions.height / (2 * scale) -
@@ -104,7 +104,7 @@ export default function useMainContent({
 
     context.beginPath();
     context.strokeStyle = animationFromProps.color;
-    const centerX = dimensions.width / (2 * scale);
+    const centerX = (dimensions.width - 360) / (2 * scale);
     const centerY = dimensions.height / (2 * scale);
     context.moveTo(centerX, centerY - 6);
     context.lineTo(centerX, centerY + 6);
