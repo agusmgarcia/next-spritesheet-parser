@@ -52,10 +52,12 @@ export default function Layout(props: LayoutProps) {
           <NotificationHandler />
 
           {/* INSTRUCTIONS BUTTON */}
-          <InstructionsButton
-            className="absolute bottom-2 left-2"
-            instructions={instructions}
-          />
+          {viewport !== "Tablet" && (
+            <InstructionsButton
+              className="absolute bottom-2 left-2"
+              instructions={instructions}
+            />
+          )}
         </>
       )}
     </main>
