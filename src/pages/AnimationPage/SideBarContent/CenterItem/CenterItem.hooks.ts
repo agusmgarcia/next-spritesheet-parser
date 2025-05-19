@@ -15,11 +15,6 @@ export default function useCenterItem({
     animation: animationFromProps,
   });
 
-  const {} = useOffset({
-    animation: animationFromProps,
-    index: indexFromProps,
-  });
-
   const { onionActive, onionDisabled, onionOnClick } = useOnion({
     animation: animationFromProps,
   });
@@ -60,80 +55,6 @@ function useColor({
   );
 
   return { colorDisabled, colorOnChange, colorValue };
-}
-
-function useOffset({
-  animation: animationFromProps,
-  index: indexFromProps,
-}: Pick<CenterItemProps, "animation" | "index">) {
-  const { setAnimationOffset } = useAnimations();
-
-  const animationOffsetUpOnClick = useCallback<Func>(() => {
-    if (animationFromProps.playing) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX,
-      (offsetY) => offsetY - devicePixelRatio,
-    );
-  }, [
-    animationFromProps.id,
-    animationFromProps.playing,
-    indexFromProps,
-    setAnimationOffset,
-  ]);
-
-  const animationOffsetRightOnClick = useCallback<Func>(() => {
-    if (animationFromProps.playing) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX + devicePixelRatio,
-      (offsetY) => offsetY,
-    );
-  }, [
-    animationFromProps.id,
-    animationFromProps.playing,
-    indexFromProps,
-    setAnimationOffset,
-  ]);
-
-  const animationOffsetDownOnClick = useCallback<Func>(() => {
-    if (animationFromProps.playing) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX,
-      (offsetY) => offsetY + devicePixelRatio,
-    );
-  }, [
-    animationFromProps.id,
-    animationFromProps.playing,
-    indexFromProps,
-    setAnimationOffset,
-  ]);
-
-  const animationOffsetLeftOnClick = useCallback<Func>(() => {
-    if (animationFromProps.playing) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX - devicePixelRatio,
-      (offsetY) => offsetY,
-    );
-  }, [
-    animationFromProps.id,
-    animationFromProps.playing,
-    indexFromProps,
-    setAnimationOffset,
-  ]);
-
-  useKeyDown("ArrowUp", animationOffsetUpOnClick, { altKey: true });
-  useKeyDown("ArrowRight", animationOffsetRightOnClick, { altKey: true });
-  useKeyDown("ArrowDown", animationOffsetDownOnClick, { altKey: true });
-  useKeyDown("ArrowLeft", animationOffsetLeftOnClick, { altKey: true });
-
-  return {};
 }
 
 function useOnion({

@@ -110,6 +110,11 @@ function useInstructions() {
             key: "ArrowLeft",
             options: { altKey: true },
           },
+        ],
+        title: "Movements",
+      },
+      {
+        keys: [
           {
             description: "Center the sprite",
             key: "c",
@@ -119,7 +124,7 @@ function useInstructions() {
             key: "o",
           },
         ],
-        title: "Movements",
+        title: "Center",
       },
       {
         keys: [
