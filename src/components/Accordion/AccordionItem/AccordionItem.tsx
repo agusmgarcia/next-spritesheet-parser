@@ -23,7 +23,7 @@ export default function AccordionItem(props: AccordionItemProps) {
           {heading}
 
           <Button
-            className="flex size-8 items-center justify-center rounded-b-none"
+            className="flex size-9 items-center justify-center rounded-b-none"
             onClick={toggle}
             variant="secondary"
           >
