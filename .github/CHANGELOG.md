@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.19.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.19.0)
+
+> May 20, 2025
+
+- **SettingsSlice**: extends validations before importing file
+- **AnimationPage**: separate movements into its component
+- **Layout**: remove instructions for Tablet
+- **Layout**: make side bar to collapse/expand
+- **Layout**: move it to fragments
+- **Accordion**: adjust arrow icon size
+
 ## [v0.18.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.2)
 
 > May 18, 2025
