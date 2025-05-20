@@ -84,10 +84,7 @@ function __setSpriteSheet__(
   >[0],
   context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
 ): void {
-  const imageURL = context.get().spriteSheet.data?.imageURL;
-  if (!imageURL) throw new Error("You need to provide an image first");
-
-  context.set({ ...spriteSheet, imageURL });
+  context.set(spriteSheet);
 }
 
 async function mergeSprites(

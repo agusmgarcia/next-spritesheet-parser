@@ -31,10 +31,7 @@ type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
   SpriteSheet | undefined,
   SettingsSliceTypes.default["settings"]["settings"],
   {
-    __setSpriteSheet__: Func<
-      void,
-      [sprites: Omit<SpriteSheet, "imageURL" | "rawImageURL">]
-    >;
+    __setSpriteSheet__: Func<void, [sprites: SpriteSheet]>;
     mergeSprites: AsyncFunc<void, [spriteIds: string[]]>;
     setSpriteSheetScale: Func<void, [scale: React.SetStateAction<number>]>;
     splitSprite: AsyncFunc<void, [spriteId: string]>;

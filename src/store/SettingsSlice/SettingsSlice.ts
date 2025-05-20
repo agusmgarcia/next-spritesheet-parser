@@ -1,6 +1,7 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
+  equals,
 } from "@agusmgarcia/react-core";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
@@ -72,11 +73,37 @@ async function setJSONFile(
       SpriteSheetSliceTypes.default
   >,
 ): Promise<void> {
-  const image = context.get().settings.settings.image;
+  const animations = context.get().animations.animations;
+  const newAnimations = jsonFile.animations;
+
+  const settings = context.get().settings.settings;
+
+  const image = settings.image;
   if (!image) throw new Error("You need to provide an image first");
 
-  const existingAnimations = !!context.get().animations.animations.length;
-  if (existingAnimations) {
+  const newSettings: SettingsSlice["settings"]["settings"] = {
+    ...jsonFile.settings,
+    image,
+  };
+
+  const spriteSheet = context.get().spriteSheet.data;
+
+  const imageURL = spriteSheet?.imageURL;
+  if (!imageURL) throw new Error("You need to provide an image first");
+
+  const newSpriteSheet: NonNullable<
+    SpriteSheetSliceTypes.default["spriteSheet"]["data"]
+  > = { ...jsonFile.spriteSheet, imageURL };
+
+  if (
+    (!!animations.length ||
+      Object.values(spriteSheet.sprites).some(
+        (sprite) => !!Object.keys(sprite.subsprites).length,
+      )) &&
+    (!equals.deep(newSettings, settings) ||
+      !equals.deep(newSpriteSheet, spriteSheet) ||
+      !equals.deep(newAnimations, animations))
+  ) {
     const response = await context
       .get()
       .notification.setNotification(
@@ -87,9 +114,9 @@ async function setJSONFile(
     if (!response) return;
   }
 
-  context.set({ settings: { ...jsonFile.settings, image } });
-  context.get().spriteSheet.__setSpriteSheet__(jsonFile.spriteSheet);
-  context.get().animations.__setAnimations__(jsonFile.animations);
+  context.set({ settings: newSettings });
+  context.get().spriteSheet.__setSpriteSheet__(newSpriteSheet);
+  context.get().animations.__setAnimations__(newAnimations);
 
   context
     .get()
