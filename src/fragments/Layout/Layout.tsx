@@ -52,7 +52,7 @@ export default function Layout(props: LayoutProps) {
           <NotificationHandler />
 
           {/* INSTRUCTIONS BUTTON */}
-          {viewport !== "Tablet" && (
+          {viewport !== "Tablet" && !!instructions?.length && (
             <InstructionsButton
               className="absolute bottom-2 left-2"
               instructions={instructions}

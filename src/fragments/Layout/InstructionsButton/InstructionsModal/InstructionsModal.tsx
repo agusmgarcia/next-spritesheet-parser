@@ -15,7 +15,7 @@ export default function InstructionsModal(props: InstructionsModalProps) {
       heading={<Typography variant="h1">Instructions</Typography>}
     >
       <div className="flex flex-col gap-4">
-        {instructions?.map((i) => (
+        {instructions.map((i) => (
           <div key={i.title} className="flex flex-col gap-2">
             {/* TITLE */}
             <Typography variant="h2">{i.title}</Typography>

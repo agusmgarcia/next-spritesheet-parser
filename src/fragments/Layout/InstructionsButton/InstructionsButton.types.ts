@@ -1,7 +1,7 @@
 import { type ButtonProps } from "#src/components";
 
 type InstructionsButtonProps = Pick<ButtonProps, "className"> & {
-  instructions?: {
+  instructions: {
     keys: {
       description: string;
       key: string;

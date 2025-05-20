@@ -12,7 +12,7 @@ export default function useInstructionsModal({
   const instructions = useMemo(
     () =>
       instructionsFromProps
-        ?.map((i) => ({
+        .map((i) => ({
           keys: i.keys.map((k) => ({
             description: k.description,
             extraKeys: [

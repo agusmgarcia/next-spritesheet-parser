@@ -1,7 +1,7 @@
 import { type ModalProps } from "#src/components";
 
 type InstructionsModalProps = Pick<ModalProps, "onClose" | "open"> & {
-  instructions?: {
+  instructions: {
     keys: {
       description: string;
       key: string;
