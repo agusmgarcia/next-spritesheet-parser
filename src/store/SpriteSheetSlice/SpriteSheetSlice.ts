@@ -7,7 +7,7 @@ import {
 import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
 import invert from "invert-color";
 
-import { loadImage } from "#src/utils";
+import { createFileFromImageData, getImageData, loadImage } from "#src/utils";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
@@ -27,47 +27,40 @@ export default createServerSlice<
     const rawImage = settings.image;
     if (!rawImage) return undefined;
 
-    const rawImageData = await loadImage(rawImage.url, signal).then(
-      getImageData,
-    );
-
-    const backgroundColor = `#${rawImageData.data[0].toString(16)}${rawImageData.data[1].toString(16)}${rawImageData.data[2].toString(16)}`;
+    const imageData = await loadImage(rawImage.url, signal).then(getImageData);
+    const backgroundColor = `#${imageData.data[0].toString(16)}${imageData.data[1].toString(16)}${imageData.data[2].toString(16)}`;
 
     const color = invert([
-      rawImageData.data[0],
-      rawImageData.data[1],
-      rawImageData.data[2],
+      imageData.data[0],
+      imageData.data[1],
+      imageData.data[2],
     ]);
 
-    const newFileImage = await createImageWithoutBackground(
-      rawImageData,
-      [rawImageData.data[0], rawImageData.data[1], rawImageData.data[2]],
+    const newFileImage = await createFileFromImageData(
+      removeBackground(imageData, [
+        imageData.data[0],
+        imageData.data[1],
+        imageData.data[2],
+      ]),
       rawImage.name,
       rawImage.type,
       signal,
     );
 
-    const imageURL = URL.createObjectURL(newFileImage);
+    const sprites = getSprites(
+      imageData,
+      [imageData.data[0], imageData.data[1], imageData.data[2]],
+      settings,
+    );
 
-    try {
-      const sprites = getSprites(
-        rawImageData,
-        [rawImageData.data[0], rawImageData.data[1], rawImageData.data[2]],
-        settings,
-      );
-
-      return {
-        backgroundColor,
-        color,
-        imageURL,
-        name: rawImage.name,
-        scale: 1,
-        sprites,
-      };
-    } catch (error) {
-      URL.revokeObjectURL(imageURL);
-      throw error;
-    }
+    return {
+      backgroundColor,
+      color,
+      imageURL: URL.createObjectURL(newFileImage),
+      name: rawImage.name,
+      scale: 1,
+      sprites,
+    };
   },
   (state) => state.settings.settings,
   () => ({
@@ -204,18 +197,6 @@ async function splitSprite(
   });
 }
 
-function getImageData(image: HTMLImageElement): ImageData {
-  const canvas = document.createElement("canvas");
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
-
-  const context = canvas.getContext("2d");
-  if (!context) throw new Error("Context is not available");
-
-  context.drawImage(image, 0, 0);
-  return context.getImageData(0, 0, canvas.width, canvas.height);
-}
-
 function toSprite(
   rect: Rect,
   subsprites?: NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
@@ -271,13 +252,10 @@ function getSprites(
     );
 }
 
-async function createImageWithoutBackground(
+function removeBackground(
   imageData: ImageData,
   backgroundColor: Tuple<number, 3>,
-  name: string,
-  type: string,
-  signal: AbortSignal,
-): Promise<File> {
+): ImageData {
   imageData = new ImageData(
     new Uint8ClampedArray(imageData.data),
     imageData.width,
@@ -297,21 +275,5 @@ async function createImageWithoutBackground(
     }
   }
 
-  const canvas = document.createElement("canvas");
-  canvas.width = imageData.width;
-  canvas.height = imageData.height;
-
-  const context = canvas.getContext("2d");
-  if (!context) throw new Error("Context is not available");
-
-  context.putImageData(imageData, 0, 0);
-
-  const blob = await new Promise<Blob | undefined>((resolve) =>
-    canvas.toBlob((blob) => resolve(blob || undefined), type),
-  );
-
-  signal.throwIfAborted();
-  if (!blob) throw new Error("Unexpected scenario");
-
-  return new File([blob], name, { type });
+  return imageData;
 }
