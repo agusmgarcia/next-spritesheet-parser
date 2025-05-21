@@ -32,7 +32,12 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
       </Button>
 
       {/* NAME */}
-      <Input aria-label="Name" onChange={nameOnChange} value={nameValue} />
+      <Input
+        aria-label="Name"
+        name="name"
+        onChange={nameOnChange}
+        value={nameValue}
+      />
 
       {/* DELETE ANIMATION */}
       <Button
