@@ -53,7 +53,7 @@ async function setImage(
     image: {
       name: image.name,
       type: image.type,
-      url: typeof image !== "string" ? URL.createObjectURL(image) : image,
+      url: URL.createObjectURL(image),
     },
     maxArea: 0.5,
     maxVariation: 0.5,
