@@ -38,12 +38,13 @@ function useImportFile() {
   const { setNotification } = useNotification();
   const { setImage, setJSONFile } = useSettings();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { normalMapLoading } = useNormalMap();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
 
   const importFileDisabled = useMemo<boolean>(
-    () => importFileLoading || spriteSheetLoading,
-    [importFileLoading, spriteSheetLoading],
+    () => importFileLoading || spriteSheetLoading || normalMapLoading,
+    [importFileLoading, normalMapLoading, spriteSheetLoading],
   );
 
   const importFile = useCallback<AsyncFunc<File | undefined, [accept: string]>>(
