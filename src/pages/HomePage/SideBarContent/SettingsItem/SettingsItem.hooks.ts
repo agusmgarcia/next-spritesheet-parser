@@ -57,14 +57,19 @@ function useSettings() {
       spriteSheetLoading ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
+      +settingsValue.delta < 0 ||
       !settingsValue.maxArea ||
       isNaN(+settingsValue.maxArea) ||
+      +settingsValue.maxArea < 0 ||
       !settingsValue.maxVariation ||
       isNaN(+settingsValue.maxVariation) ||
+      +settingsValue.maxVariation < 0 ||
       !settingsValue.minArea ||
       isNaN(+settingsValue.minArea) ||
+      +settingsValue.minArea < 0 ||
       !settingsValue.minDiversity ||
-      isNaN(+settingsValue.minDiversity),
+      isNaN(+settingsValue.minDiversity) ||
+      +settingsValue.minDiversity < 0,
     [
       spriteSheet,
       spriteSheetLoading,

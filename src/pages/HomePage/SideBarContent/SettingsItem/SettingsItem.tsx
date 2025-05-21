@@ -1,5 +1,3 @@
-import { twMerge } from "tailwind-merge";
-
 import { Accordion, Button, Icon, Input, Typography } from "#src/components";
 
 import useSettingsItem from "./SettingsItem.hooks";
@@ -106,7 +104,7 @@ export default function SettingsItem(props: SettingsItemProps) {
       >
         Regenerate
         <Icon
-          className={twMerge(settingsLoading ? "animate-spin" : undefined)}
+          className={settingsLoading ? "animate-spin" : undefined}
           variant="refresh"
         />
       </Button>
