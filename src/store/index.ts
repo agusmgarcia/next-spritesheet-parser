@@ -8,6 +8,9 @@ import createAnimationsSlice, {
 import createNormalMapSettingsSlice, {
   type NormalMapSettingsSliceTypes,
 } from "./NormalMapSettingsSlice";
+import createNormalMapSlice, {
+  type NormalMapSliceTypes,
+} from "./NormalMapSlice";
 import createNotificationSlice, {
   type NotificationSliceTypes,
 } from "./NotificationSlice";
@@ -21,6 +24,9 @@ export type Animation =
   AnimationsSliceTypes.default["animations"]["animations"][number];
 export type NormalMapSettings =
   NormalMapSettingsSliceTypes.default["normalMapSettings"]["normalMapSettings"];
+export type NormalMap = NonNullable<
+  NormalMapSliceTypes.default["normalMap"]["data"]
+>;
 export type Notification = NonNullable<
   NotificationSliceTypes.default["notification"]["notification"]
 >;
@@ -32,6 +38,7 @@ export type SpriteSheet = NonNullable<
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
   createNormalMapSettingsSlice,
+  createNormalMapSlice,
   createNotificationSlice,
   createSettingsSlice,
   createSpriteSelectionSlice,
@@ -80,6 +87,16 @@ export function useNormalMapSettings() {
     ),
     setNormalMapSettings: useSelector(
       (state) => state.normalMapSettings.setNormalMapSettings,
+    ),
+  };
+}
+
+export function useNormalMap() {
+  return {
+    normalMap: useSelector((state) => state.normalMap.data),
+    normalMapLoading: useSelector((state) => state.normalMap.loading),
+    setNormalMapScale: useSelector(
+      (state) => state.normalMap.setNormalMapScale,
     ),
   };
 }
