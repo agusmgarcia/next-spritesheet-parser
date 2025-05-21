@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.20.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.20.0)
+
+> May 21, 2025
+
+- **HomePage**: import normal map stuffs
+- **HomePage**: export normal map stuffs
+- **HomePage**: add link to go to normal-map page
+- **Icon**: add box variant
+- **NormalMapPage**: add page
+- **NormalMapSlice**: add slice
+- **NormalMapSettingSlice**: add slice
+- **SettingsSlice**: adjust logic to generate URL
+- **SpriteSheetSlice**: move out some functions
+- **HomePage**: add instruction to reset zoom
+- **AnimationPage**: add instruction to reset zoom
+- **AnimationPage**: add missing name attribute
+- **HomePage**: adjust settings item
+- **HomePage**: add missing hook
+- **Divisor**: add missing hook
+- remove uneeded libraries
+- **Layout**: prevent displaying instructions button when no instructions
+
 ## [v0.19.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.19.0)
 
 > May 20, 2025
