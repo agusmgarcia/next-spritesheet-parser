@@ -51,6 +51,10 @@ export default function useHomePage(props: HomePageProps) {
             description: "Zoom out",
             key: "ArrowDown",
           },
+          {
+            description: "Reset zoom",
+            key: "z",
+          },
         ],
         title: "Zoom",
       },
