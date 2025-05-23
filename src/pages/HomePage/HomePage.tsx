@@ -6,7 +6,7 @@ import MainContent from "./MainContent";
 import SideBarContent from "./SideBarContent";
 
 export default function HomePage(props: HomePageProps) {
-  const rest = useHomePage(props);
+  const { ...rest } = useHomePage(props);
 
   return (
     <Layout {...rest} sideBar={<SideBarContent />} sideBarCollapse={true}>

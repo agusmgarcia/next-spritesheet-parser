@@ -9,7 +9,7 @@ import type SideBarContentProps from "./SideBarContent.types";
 import ZoomItem from "./ZoomItem";
 
 export default function SideBarContent(props: SideBarContentProps) {
-  const rest = useSideBarContent(props);
+  const { ...rest } = useSideBarContent(props);
 
   return (
     <Accordion
