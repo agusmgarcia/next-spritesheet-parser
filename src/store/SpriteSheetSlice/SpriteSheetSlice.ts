@@ -2,12 +2,11 @@ import {
   createServerSlice,
   type CreateServerSliceTypes,
   replaceString,
-  type Tuple,
 } from "@agusmgarcia/react-core";
 import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
 import invert from "invert-color";
 
-import { createFileFromImageData, getImageData, loadImage } from "#src/utils";
+import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
@@ -27,31 +26,21 @@ export default createServerSlice<
     const rawImage = settings.image;
     if (!rawImage) return undefined;
 
-    const imageData = await loadImage(rawImage.url, signal).then(getImageData);
-    const backgroundColor = `#${imageData.data[0].toString(16)}${imageData.data[1].toString(16)}${imageData.data[2].toString(16)}`;
+    const imageData = await loadImage(rawImage.url, signal).then(
+      imageDataUtils.get,
+    );
 
-    const color = invert([
-      imageData.data[0],
-      imageData.data[1],
-      imageData.data[2],
-    ]);
+    const backgroundColor = imageDataUtils.getBackgroundColor(imageData);
+    const color = invert(imageDataUtils.getBackground(imageData));
 
-    const newFileImage = await createFileFromImageData(
-      removeBackground(imageData, [
-        imageData.data[0],
-        imageData.data[1],
-        imageData.data[2],
-      ]),
+    const newFileImage = await imageDataUtils.createFile(
+      imageDataUtils.removeBackground(imageData),
       rawImage.name,
       rawImage.type,
       signal,
     );
 
-    const sprites = getSprites(
-      imageData,
-      [imageData.data[0], imageData.data[1], imageData.data[2]],
-      settings,
-    );
+    const sprites = getSprites(imageData, settings);
 
     return {
       backgroundColor,
@@ -217,14 +206,15 @@ function toSprite(
 
 function getSprites(
   imageData: ImageData,
-  backgroundColor: Tuple<number, 3>,
   options: MSEROptions,
 ): NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"] {
+  const background = imageDataUtils.getBackground(imageData);
+
   for (let i = 0; i < imageData.data.length; i += 4) {
     if (
-      imageData.data[i] === backgroundColor[0] &&
-      imageData.data[i + 1] === backgroundColor[1] &&
-      imageData.data[i + 2] === backgroundColor[2]
+      imageData.data[i] === background[0] &&
+      imageData.data[i + 1] === background[1] &&
+      imageData.data[i + 2] === background[2]
     ) {
       imageData.data[i] = 255;
       imageData.data[i + 1] = 255;
@@ -250,30 +240,4 @@ function getSprites(
       },
       {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
     );
-}
-
-function removeBackground(
-  imageData: ImageData,
-  backgroundColor: Tuple<number, 3>,
-): ImageData {
-  imageData = new ImageData(
-    new Uint8ClampedArray(imageData.data),
-    imageData.width,
-    imageData.height,
-  );
-
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    if (
-      imageData.data[i] === backgroundColor[0] &&
-      imageData.data[i + 1] === backgroundColor[1] &&
-      imageData.data[i + 2] === backgroundColor[2]
-    ) {
-      imageData.data[i] = 0;
-      imageData.data[i + 1] = 0;
-      imageData.data[i + 2] = 0;
-      imageData.data[i + 3] = 0;
-    }
-  }
-
-  return imageData;
 }
