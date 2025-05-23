@@ -49,8 +49,9 @@ function useCreateAnimation() {
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
   const createAnimationDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading || !spriteSelection.length,
-    [spriteSelection.length, spriteSheet, spriteSheetLoading],
+    () =>
+      !spriteSheet?.image.url || spriteSheetLoading || !spriteSelection.length,
+    [spriteSelection.length, spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const createAnimationOnClick = useCallback<Func>(() => {
@@ -75,8 +76,9 @@ function useResetSelection() {
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
   const resetSelectionDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading || !spriteSelection.length,
-    [spriteSelection.length, spriteSheet, spriteSheetLoading],
+    () =>
+      !spriteSheet?.image.url || spriteSheetLoading || !spriteSelection.length,
+    [spriteSelection.length, spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const resetSelectionOnClick = useCallback<Func>(() => {
@@ -94,16 +96,20 @@ function useResetSelection() {
 
 function useMergeSprites() {
   const { spriteSelection } = useSpriteSelection();
-  const { mergeSprites, spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { mergeSpriteSheetSprites, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
 
   const mergeSpritesDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading || spriteSelection.length <= 1,
-    [spriteSelection.length, spriteSheet, spriteSheetLoading],
+    () =>
+      !spriteSheet?.image.url ||
+      spriteSheetLoading ||
+      spriteSelection.length <= 1,
+    [spriteSelection.length, spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const mergeSpritesOnClick = useCallback<Func>(() => {
-    mergeSprites(spriteSelection);
-  }, [mergeSprites, spriteSelection]);
+    mergeSpriteSheetSprites(spriteSelection);
+  }, [mergeSpriteSheetSprites, spriteSelection]);
 
   useKeyDown("m", mergeSpritesOnClick);
 
@@ -115,22 +121,28 @@ function useMergeSprites() {
 
 function useSplitSprite() {
   const { spriteSelection } = useSpriteSelection();
-  const { splitSprite, spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { splitSpriteSheetSprite, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
 
   const splitSpriteDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet ||
+      !spriteSheet?.image.url ||
       spriteSheetLoading ||
       spriteSelection.length !== 1 ||
       !Object.keys(spriteSheet?.sprites[spriteSelection[0]].subsprites || {})
         .length,
-    [spriteSelection, spriteSheet, spriteSheetLoading],
+    [
+      spriteSelection,
+      spriteSheet?.image.url,
+      spriteSheet?.sprites,
+      spriteSheetLoading,
+    ],
   );
 
   const splitSpriteOnClick = useCallback<Func>(() => {
     if (splitSpriteDisabled) return;
-    splitSprite(spriteSelection[0]);
-  }, [splitSprite, splitSpriteDisabled, spriteSelection]);
+    splitSpriteSheetSprite(spriteSelection[0]);
+  }, [splitSpriteSheetSprite, splitSpriteDisabled, spriteSelection]);
 
   useKeyDown("s", splitSpriteOnClick);
 
@@ -145,14 +157,19 @@ function useAnimationSelector() {
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
 
+  const animationSelectorDisabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url || spriteSheetLoading,
+    [spriteSheet?.image.url, spriteSheetLoading],
+  );
+
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
-      { id: "sheet", name: spriteSheet?.name || "Sprite sheet" },
+      { id: "sheet", name: spriteSheet?.image.name || "Sprite sheet" },
       ...animations
         .map((a) => ({ id: a.id, name: a.name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
     ],
-    [animations, spriteSheet?.name],
+    [animations, spriteSheet?.image.name],
   );
 
   const animationSelectorOnChange = useCallback<
@@ -169,7 +186,7 @@ function useAnimationSelector() {
   }, [animationSelectorValue, animations, push]);
 
   return {
-    animationSelectorDisabled: !spriteSheet || spriteSheetLoading,
+    animationSelectorDisabled,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,

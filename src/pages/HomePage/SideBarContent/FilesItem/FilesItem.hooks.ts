@@ -5,14 +5,12 @@ import {
   type Animation,
   type NormalMap,
   type NormalMapSettings,
-  type Settings,
   type SpriteSheet,
   useAnimations,
   useImportJSONFile,
   useNormalMap,
   useNormalMapSettings,
   useNotification,
-  useSettings,
   useSpriteSheet,
 } from "#src/store";
 import { getErrorMessage, useKeyDown } from "#src/utils";
@@ -37,9 +35,9 @@ export default function useFilesItem(props: FilesItemProps) {
 
 function useImportFile() {
   const { setNotification } = useNotification();
-  const { setImage } = useSettings();
   const { importJSONFile } = useImportJSONFile();
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { setSpriteSheetImage, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
   const { normalMapLoading } = useNormalMap();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
@@ -82,12 +80,12 @@ function useImportFile() {
   const importFileOnClick = useCallback<Func>(() => {
     if (importFileDisabled) return;
 
-    importFile(!spriteSheet ? "image/*" : "image/*,application/json")
+    importFile(!spriteSheet?.image.url ? "image/*" : "image/*,application/json")
       .then((file) => {
         setImportFileLoading(true);
         if (!file) return;
         return file.type.startsWith("image/")
-          ? setImage(file)
+          ? setSpriteSheetImage(file)
           : file
               .text()
               .then((text) => JSON.parse(text))
@@ -99,9 +97,9 @@ function useImportFile() {
     importFile,
     importFileDisabled,
     importJSONFile,
-    setImage,
     setNotification,
-    spriteSheet,
+    setSpriteSheetImage,
+    spriteSheet?.image.url,
   ]);
 
   useKeyDown("i", importFileOnClick);
@@ -116,7 +114,6 @@ function useImportFile() {
 function useExportFile() {
   const { animations } = useAnimations();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
-  const { settings } = useSettings();
   const { normalMap, normalMapLoading } = useNormalMap();
   const { normalMapSettings } = useNormalMapSettings();
 
@@ -130,13 +127,12 @@ function useExportFile() {
       void,
       [
         spriteSheet: SpriteSheet,
-        settings: Settings,
         animations: Animation[],
         normalMap: NormalMap,
         normalMapSettings: NormalMapSettings,
       ]
     >
-  >((spriteSheet, settings, animations, normalMap, normalMapSettings) => {
+  >((spriteSheet, animations, normalMap, normalMapSettings) => {
     const anchor = document.createElement("a");
 
     anchor.href =
@@ -146,7 +142,6 @@ function useExportFile() {
           animations,
           normalMap,
           normalMapSettings,
-          settings,
           spriteSheet,
           version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
         }),
@@ -154,7 +149,7 @@ function useExportFile() {
 
     anchor.setAttribute(
       "download",
-      `${spriteSheet.name.split(".").slice(0, -1).join(".") || spriteSheet.name}.json`,
+      `${spriteSheet.image.name.split(".").slice(0, -1).join(".") || spriteSheet.image.name}.json`,
     );
 
     anchor.click();
@@ -164,14 +159,13 @@ function useExportFile() {
     if (exportFileDisabled) return;
     if (!spriteSheet) return;
     if (!normalMap) return;
-    exportFile(spriteSheet, settings, animations, normalMap, normalMapSettings);
+    exportFile(spriteSheet, animations, normalMap, normalMapSettings);
   }, [
     animations,
     exportFile,
     exportFileDisabled,
     normalMap,
     normalMapSettings,
-    settings,
     spriteSheet,
   ]);
 

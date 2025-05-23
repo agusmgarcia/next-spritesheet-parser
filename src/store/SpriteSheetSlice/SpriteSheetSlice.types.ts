@@ -4,13 +4,20 @@ import {
   type Func,
 } from "@agusmgarcia/react-core";
 
-import { type SettingsSliceTypes } from "../SettingsSlice";
-
 type SpriteSheet = {
-  backgroundColor: string;
-  color: string;
-  imageURL: string;
-  name: string;
+  image: {
+    backgroundColor: string;
+    name: string;
+    type: string;
+    url: string;
+  };
+  settings: {
+    delta: number;
+    maxArea: number;
+    maxVariation: number;
+    minArea: number;
+    minDiversity: number;
+  };
   sprites: Record<
     string,
     {
@@ -27,12 +34,18 @@ type SpriteSheet = {
 
 type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
   "spriteSheet",
-  SpriteSheet | undefined,
-  SettingsSliceTypes.default["settings"]["settings"],
+  SpriteSheet,
+  Pick<SpriteSheet, "settings"> & { image: File | SpriteSheet["image"] },
   {
-    __setSpriteSheet__: Func<void, [sprites: SpriteSheet]>;
-    mergeSprites: AsyncFunc<void, [spriteIds: string[]]>;
-    splitSprite: AsyncFunc<void, [spriteId: string]>;
+    mergeSpriteSheetSprites: AsyncFunc<void, [spriteIds: string[]]>;
+    setSpriteSheetImage: AsyncFunc<void, [image: File]>;
+    setSpriteSheetName: Func<void, [name: React.SetStateAction<string>]>;
+    setSpriteSheetSettings: AsyncFunc<
+      void,
+      [settings: React.SetStateAction<SpriteSheet["settings"]>]
+    >;
+    setSpriteSheetSprites: Func<void, [sprites: SpriteSheet["sprites"]]>;
+    splitSpriteSheetSprite: AsyncFunc<void, [spriteId: string]>;
   }
 >;
 

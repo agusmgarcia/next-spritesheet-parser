@@ -137,7 +137,7 @@ function createAnimation(
   }
 
   const animation: AnimationsSlice["animations"]["animations"][number] = {
-    color: spriteSheet.backgroundColor,
+    color: spriteSheet.image.backgroundColor,
     fps: 12,
     id: createUUID(),
     name: `New animation ${getLatestAnimationOrder(context.get().animations.animations) + 1}`,

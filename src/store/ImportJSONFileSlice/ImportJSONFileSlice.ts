@@ -8,7 +8,6 @@ import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSettingsSliceTypes } from "../NormalMapSettingsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
-import { type SettingsSliceTypes } from "../SettingsSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type ImportJSONFileSlice from "./ImportJSONFileSlice.types";
 
@@ -18,7 +17,6 @@ export default createGlobalSlice<
     NormalMapSliceTypes.default &
     NormalMapSettingsSliceTypes.default &
     NotificationSliceTypes.default &
-    SettingsSliceTypes.default &
     SpriteSheetSliceTypes.default
 >("importJSONFile", () => ({ importJSONFile }));
 
@@ -32,7 +30,6 @@ async function importJSONFile(
       NormalMapSliceTypes.default &
       NormalMapSettingsSliceTypes.default &
       NotificationSliceTypes.default &
-      SettingsSliceTypes.default &
       SpriteSheetSliceTypes.default
   >,
 ): Promise<void> {
@@ -47,16 +44,12 @@ async function importJSONFile(
   const normalMapSettings = context.get().normalMapSettings.normalMapSettings;
   const newNormalMapSettings = jsonFile.normalMapSettings;
 
-  const settings = context.get().settings.settings;
-  if (!settings.image) throw new Error("You need to provide an image first");
-  const newSettings = { ...jsonFile.settings, image: settings.image };
-
   const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.imageURL)
+  if (!spriteSheet?.image.url)
     throw new Error("You need to provide an image first");
   const newSpriteSheet = {
     ...jsonFile.spriteSheet,
-    imageURL: spriteSheet.imageURL,
+    image: { ...spriteSheet.image, name: jsonFile.spriteSheet.image.name },
   };
 
   if (
@@ -65,8 +58,7 @@ async function importJSONFile(
         (sprite) => !!Object.keys(sprite.subsprites).length,
       ) ||
       normalMapSettings.strength !== 1) &&
-    (!equals.deep(newSettings, settings) ||
-      !equals.deep(newNormalMap, normalMap) ||
+    (!equals.deep(newNormalMap, normalMap) ||
       !equals.deep(newNormalMapSettings, normalMapSettings) ||
       !equals.deep(newSpriteSheet, spriteSheet) ||
       !equals.deep(newAnimations, animations))
@@ -81,8 +73,12 @@ async function importJSONFile(
     if (!response) return;
   }
 
-  context.get().settings.setSettings(newSettings);
-  context.get().spriteSheet.__setSpriteSheet__(newSpriteSheet);
+  await context
+    .get()
+    .spriteSheet.setSpriteSheetSettings(newSpriteSheet.settings);
+  context.get().spriteSheet.setSpriteSheetSprites(newSpriteSheet.sprites);
+  context.get().spriteSheet.setSpriteSheetName(newSpriteSheet.image.name);
+
   context.get().normalMapSettings.setNormalMapSettings(newNormalMapSettings);
   context.get().normalMap.__setNormalMap__(newNormalMap);
   context.get().animations.__setAnimations__(newAnimations);

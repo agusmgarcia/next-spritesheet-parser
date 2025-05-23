@@ -16,7 +16,6 @@ import createNotificationSlice, {
   type NotificationSliceTypes,
 } from "./NotificationSlice";
 import createScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
-import createSettingsSlice, { type SettingsSliceTypes } from "./SettingsSlice";
 import createSpriteSelectionSlice from "./SpriteSelectionSlice";
 import createSpriteSheetSlice, {
   type SpriteSheetSliceTypes,
@@ -33,7 +32,6 @@ export type Notification = NonNullable<
   NotificationSliceTypes.default["notification"]["notification"]
 >;
 export type Scale = ScaleSliceTypes.default["scale"]["scale"];
-export type Settings = SettingsSliceTypes.default["settings"]["settings"];
 export type SpriteSheet = NonNullable<
   SpriteSheetSliceTypes.default["spriteSheet"]["data"]
 >;
@@ -45,7 +43,6 @@ const { useSelector, ...reactStore } = createStore(
   createNormalMapSlice,
   createNotificationSlice,
   createScaleSlice,
-  createSettingsSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
 )((callback, context) =>
@@ -120,14 +117,6 @@ export function useScale() {
   };
 }
 
-export function useSettings() {
-  return {
-    setImage: useSelector((state) => state.settings.setImage),
-    setSettings: useSelector((state) => state.settings.setSettings),
-    settings: useSelector((state) => state.settings.settings),
-  };
-}
-
 export function useSpriteSelection() {
   return {
     selectSprite: useSelector((state) => state.spriteSelection.selectSprite),
@@ -145,8 +134,21 @@ export function useSpriteSelection() {
 
 export function useSpriteSheet() {
   return {
-    mergeSprites: useSelector((state) => state.spriteSheet.mergeSprites),
-    splitSprite: useSelector((state) => state.spriteSheet.splitSprite),
+    mergeSpriteSheetSprites: useSelector(
+      (state) => state.spriteSheet.mergeSpriteSheetSprites,
+    ),
+    setSpriteSheetImage: useSelector(
+      (state) => state.spriteSheet.setSpriteSheetImage,
+    ),
+    setSpriteSheetName: useSelector(
+      (state) => state.spriteSheet.setSpriteSheetName,
+    ),
+    setSpriteSheetSettings: useSelector(
+      (state) => state.spriteSheet.setSpriteSheetSettings,
+    ),
+    splitSpriteSheetSprite: useSelector(
+      (state) => state.spriteSheet.splitSpriteSheetSprite,
+    ),
     spriteSheet: useSelector((state) => state.spriteSheet.data),
     spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),
   };

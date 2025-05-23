@@ -11,8 +11,8 @@ export default function useZoomItem(props: ZoomItemProps) {
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
   const zoomOutDisabled = useMemo<boolean>(
-    () => scale <= 1 || !spriteSheet || spriteSheetLoading,
-    [scale, spriteSheet, spriteSheetLoading],
+    () => scale <= 1 || !spriteSheet?.image.url || spriteSheetLoading,
+    [scale, spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const zoomOutOnClick = useCallback<Func>(() => {
@@ -21,8 +21,8 @@ export default function useZoomItem(props: ZoomItemProps) {
   }, [setScale, zoomOutDisabled]);
 
   const zoomInDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading,
-    [spriteSheet, spriteSheetLoading],
+    () => !spriteSheet?.image.url || spriteSheetLoading,
+    [spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const zoomInOnClick = useCallback<Func>(() => {
@@ -31,8 +31,8 @@ export default function useZoomItem(props: ZoomItemProps) {
   }, [setScale, zoomInDisabled]);
 
   const resetZoomDisabled = useMemo<boolean>(
-    () => scale <= 1 || !spriteSheet || spriteSheetLoading,
-    [scale, spriteSheet, spriteSheetLoading],
+    () => scale <= 1 || !spriteSheet?.image.url || spriteSheetLoading,
+    [scale, spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const resetZoomOnClick = useCallback<Func>(() => {

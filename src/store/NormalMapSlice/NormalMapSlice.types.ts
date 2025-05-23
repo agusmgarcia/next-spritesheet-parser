@@ -18,7 +18,7 @@ type NormalMapSlice = CreateServerSliceTypes.SliceOf<
     imageURL:
       | NonNullable<
           SpriteSheetSliceTypes.default["spriteSheet"]["data"]
-        >["imageURL"]
+        >["image"]["url"]
       | undefined;
     strength: NormalMapSettingsSliceTypes.default["normalMapSettings"]["normalMapSettings"]["strength"];
   },

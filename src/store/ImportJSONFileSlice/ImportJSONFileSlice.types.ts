@@ -6,7 +6,6 @@ import {
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSettingsSliceTypes } from "../NormalMapSettingsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
-import { type SettingsSliceTypes } from "../SettingsSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 
 type ImportJSONFileSlice = CreateGlobalSliceTypes.SliceOf<
@@ -22,14 +21,17 @@ type ImportJSONFileSlice = CreateGlobalSliceTypes.SliceOf<
             "imageURL"
           >;
           normalMapSettings: NormalMapSettingsSliceTypes.default["normalMapSettings"]["normalMapSettings"];
-          settings: Omit<
-            SettingsSliceTypes.default["settings"]["settings"],
-            "image"
-          >;
-          spriteSheet: Omit<
+          spriteSheet: Pick<
             NonNullable<SpriteSheetSliceTypes.default["spriteSheet"]["data"]>,
-            "imageURL"
-          >;
+            "settings" | "sprites"
+          > & {
+            image: Pick<
+              NonNullable<
+                SpriteSheetSliceTypes.default["spriteSheet"]["data"]
+              >["image"],
+              "name"
+            >;
+          };
         },
       ]
     >;

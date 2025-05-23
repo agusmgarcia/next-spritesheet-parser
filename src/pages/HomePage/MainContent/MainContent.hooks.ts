@@ -4,6 +4,7 @@ import {
   useDevicePixelRatio,
   useDimensions,
 } from "@agusmgarcia/react-core";
+import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useScale, useSpriteSelection, useSpriteSheet } from "#src/store";
@@ -25,9 +26,17 @@ export default function useMainContent(props: MainContentProps) {
   const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
   const [spriteHovered, setSpriteHovered] = useState<string>();
 
-  const { image } = useLoadImage(spriteSheet?.imageURL || "");
+  const { image } = useLoadImage(spriteSheet?.image.url || "");
   const rootDimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * scaleFromStore;
+
+  const color = useMemo<string>(
+    () =>
+      spriteSheet?.image.backgroundColor
+        ? invert(spriteSheet.image.backgroundColor)
+        : "",
+    [spriteSheet?.image.backgroundColor],
+  );
 
   const sprites = useMemo(
     () =>
@@ -182,13 +191,13 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.fillStyle = spriteSheet.backgroundColor;
+    context.fillStyle = spriteSheet.image.backgroundColor;
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(scale, scale);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
     sprites.forEach((r) => {
-      context.strokeStyle = spriteSheet.color;
+      context.strokeStyle = color;
       context.strokeRect(r.left, r.top, r.width, r.height);
     });
   }, [
@@ -198,6 +207,7 @@ export default function useMainContent(props: MainContentProps) {
     rootDimensions.width,
     spriteSheet,
     sprites,
+    color,
   ]);
 
   useEffect(() => {
@@ -230,7 +240,7 @@ export default function useMainContent(props: MainContentProps) {
       if (spriteHovered === spriteId) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
@@ -240,7 +250,7 @@ export default function useMainContent(props: MainContentProps) {
       if (!sprite) return;
 
       context.globalAlpha = spriteSelection.includes(spriteHovered) ? 0.3 : 0.2;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     }
@@ -252,14 +262,14 @@ export default function useMainContent(props: MainContentProps) {
       if (spriteSelection.includes(spriteId)) return;
 
       context.globalAlpha = 0.4;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = color;
       context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
 
     if (!!selectedArea) {
       context.globalAlpha = 0.2;
-      context.fillStyle = spriteSheet.color;
+      context.fillStyle = color;
       context.fillRect(
         Math.min(selectedArea[2], selectedArea[0]),
         Math.min(selectedArea[3], selectedArea[1]),
@@ -278,6 +288,7 @@ export default function useMainContent(props: MainContentProps) {
     spriteSheet,
     sprites,
     spriteHovered,
+    color,
   ]);
 
   return {

@@ -17,7 +17,7 @@ export default function useMainContent({
   const ref = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { image } = useLoadImage(spriteSheet?.imageURL || "");
+  const { image } = useLoadImage(spriteSheet?.image.url || "");
   const dimensions = useDimensions(ref);
   const devicePixelRatio = useDevicePixelRatio();
 
@@ -63,7 +63,7 @@ export default function useMainContent({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
-    context.fillStyle = spriteSheet.backgroundColor;
+    context.fillStyle = spriteSheet.image.backgroundColor;
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
     context.scale(scale, scale);
 

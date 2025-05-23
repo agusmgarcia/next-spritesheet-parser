@@ -17,7 +17,7 @@
     "test": "agusmgarcia-react-core-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-core": "^4.4.4",
+    "@agusmgarcia/react-core": "^4.4.5",
     "blob-detection-ts": "^0.0.8",
     "invert-color": "^2.0.0",
     "react": "^19.1.0",

@@ -27,8 +27,12 @@ function useCreateNormalMap() {
   const { normalMap, normalMapLoading } = useNormalMap();
 
   const createNormalMapDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading || !normalMap || normalMapLoading,
-    [normalMap, normalMapLoading, spriteSheet, spriteSheetLoading],
+    () =>
+      !spriteSheet?.image.url ||
+      spriteSheetLoading ||
+      !normalMap ||
+      normalMapLoading,
+    [normalMap, normalMapLoading, spriteSheet?.image.url, spriteSheetLoading],
   );
 
   const createNormalMapLoading = useMemo<boolean>(

@@ -1,10 +1,7 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  useSettings as useSettingsFromStore,
-  useSpriteSheet,
-} from "#src/store";
+import { useSpriteSheet } from "#src/store";
 
 import type SettingsItemProps from "./SettingsItem.types";
 
@@ -30,8 +27,8 @@ export default function useSettingsItem(props: SettingsItemProps) {
 }
 
 function useSettings() {
-  const { setSettings, settings } = useSettingsFromStore();
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { setSpriteSheetSettings, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
 
   const initialSettings = useMemo(
     () => ({
@@ -47,13 +44,13 @@ function useSettings() {
   const [settingsValue, setSettingsValue] = useState(initialSettings);
 
   const settingsDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading,
+    () => !spriteSheet?.image.url || spriteSheetLoading,
     [spriteSheetLoading, spriteSheet],
   );
 
   const settingsButtonDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet ||
+      !spriteSheet?.image.url ||
       spriteSheetLoading ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
@@ -71,7 +68,7 @@ function useSettings() {
       isNaN(+settingsValue.minDiversity) ||
       +settingsValue.minDiversity < 0,
     [
-      spriteSheet,
+      spriteSheet?.image.url,
       spriteSheetLoading,
       settingsValue.delta,
       settingsValue.maxArea,
@@ -93,7 +90,7 @@ function useSettings() {
   );
 
   const settingsOnClick = useCallback<Func>(() => {
-    setSettings({
+    setSpriteSheetSettings({
       delta: +settingsValue.delta,
       maxArea: +settingsValue.maxArea,
       maxVariation: +settingsValue.maxVariation,
@@ -101,7 +98,7 @@ function useSettings() {
       minDiversity: +settingsValue.minDiversity,
     });
   }, [
-    setSettings,
+    setSpriteSheetSettings,
     settingsValue.delta,
     settingsValue.maxArea,
     settingsValue.maxVariation,
@@ -111,18 +108,18 @@ function useSettings() {
 
   useEffect(() => {
     setSettingsValue({
-      delta: settings.delta.toString() || "0",
-      maxArea: settings.maxArea.toString() || "0",
-      maxVariation: settings.maxVariation.toString() || "0",
-      minArea: settings.minArea.toString() || "0",
-      minDiversity: settings.minDiversity.toString() || "0",
+      delta: spriteSheet?.settings.delta.toString() || "0",
+      maxArea: spriteSheet?.settings.maxArea.toString() || "0",
+      maxVariation: spriteSheet?.settings.maxVariation.toString() || "0",
+      minArea: spriteSheet?.settings.minArea.toString() || "0",
+      minDiversity: spriteSheet?.settings.minDiversity.toString() || "0",
     });
   }, [
-    settings.delta,
-    settings.maxArea,
-    settings.maxVariation,
-    settings.minArea,
-    settings.minDiversity,
+    spriteSheet?.settings.delta,
+    spriteSheet?.settings.maxArea,
+    spriteSheet?.settings.maxVariation,
+    spriteSheet?.settings.minArea,
+    spriteSheet?.settings.minDiversity,
   ]);
 
   return {

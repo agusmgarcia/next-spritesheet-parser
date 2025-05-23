@@ -4,92 +4,139 @@ import {
   replaceString,
 } from "@agusmgarcia/react-core";
 import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
-import invert from "invert-color";
 
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
+import { type NormalMapSettingsSliceTypes } from "../NormalMapSettingsSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
-import { type SettingsSliceTypes } from "../SettingsSlice";
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
 export default createServerSlice<
   SpriteSheetSlice,
   AnimationsSliceTypes.default &
-    NotificationSliceTypes.default &
-    SettingsSliceTypes.default
+    NormalMapSettingsSliceTypes.default &
+    NotificationSliceTypes.default
 >(
   "spriteSheet",
-  async (settings, signal, prevSpriteSheet) => {
-    URL.revokeObjectURL(prevSpriteSheet?.imageURL || "");
+  async ({ image, settings }, signal, prevSpriteSheet) => {
+    if (image instanceof File) {
+      const imageURL = URL.createObjectURL(image);
 
-    const rawImage = settings.image;
-    if (!rawImage) return undefined;
+      try {
+        const data = await loadImage(imageURL, signal).then(imageDataUtils.get);
+        const backgroundColor = imageDataUtils.getBackgroundColor(data);
+        const sprites = getSprites(data, settings);
 
-    const imageData = await loadImage(rawImage.url, signal).then(
-      imageDataUtils.get,
-    );
+        const url = await imageDataUtils
+          .createFile(
+            imageDataUtils.removeBackground(data),
+            image.name,
+            image.type,
+            signal,
+          )
+          .then((file) => URL.createObjectURL(file));
 
-    const backgroundColor = imageDataUtils.getBackgroundColor(imageData);
-    const color = invert(imageDataUtils.getBackground(imageData));
+        URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
 
-    const newFileImage = await imageDataUtils.createFile(
-      imageDataUtils.removeBackground(imageData),
-      rawImage.name,
-      rawImage.type,
-      signal,
-    );
+        return {
+          image: { backgroundColor, name: image.name, type: image.type, url },
+          settings,
+          sprites,
+        };
+      } finally {
+        URL.revokeObjectURL(imageURL);
+      }
+    }
 
-    const sprites = getSprites(imageData, settings);
+    if (!image.url) {
+      URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
+      return initialSpriteSheet;
+    }
 
-    return {
-      backgroundColor,
-      color,
-      imageURL: URL.createObjectURL(newFileImage),
-      name: rawImage.name,
-      sprites,
-    };
+    const sprites = await loadImage(image.url, signal)
+      .then(imageDataUtils.get)
+      .then((data) => getSprites(data, settings));
+
+    if (image.url !== prevSpriteSheet?.image.url)
+      URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
+
+    return { image, settings, sprites };
   },
-  (state) => state.settings.settings,
   () => ({
-    __setSpriteSheet__,
-    mergeSprites,
-    splitSprite,
+    image: {
+      backgroundColor: "",
+      name: "",
+      type: "",
+      url: "",
+    },
+    settings: {
+      delta: 0,
+      maxArea: 0,
+      maxVariation: 0,
+      minArea: 0,
+      minDiversity: 0,
+    },
+  }),
+  () => ({
+    mergeSpriteSheetSprites,
+    setSpriteSheetImage,
+    setSpriteSheetName,
+    setSpriteSheetSettings,
+    setSpriteSheetSprites,
+    splitSpriteSheetSprite,
   }),
 );
 
-function __setSpriteSheet__(
-  spriteSheet: Parameters<
-    SpriteSheetSlice["spriteSheet"]["__setSpriteSheet__"]
-  >[0],
-  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
-): void {
-  context.set(spriteSheet);
-}
+const initialSpriteSheet: NonNullable<SpriteSheetSlice["spriteSheet"]["data"]> =
+  {
+    image: {
+      backgroundColor: "",
+      name: "",
+      type: "",
+      url: "",
+    },
+    settings: {
+      delta: 0,
+      maxArea: 0,
+      maxVariation: 0,
+      minArea: 0,
+      minDiversity: 0,
+    },
+    sprites: {},
+  };
 
-async function mergeSprites(
-  spriteIds: Parameters<SpriteSheetSlice["spriteSheet"]["mergeSprites"]>[0],
+async function mergeSpriteSheetSprites(
+  spriteIds: Parameters<
+    SpriteSheetSlice["spriteSheet"]["mergeSpriteSheetSprites"]
+  >[0],
   context: CreateServerSliceTypes.Context<
     SpriteSheetSlice,
     AnimationsSliceTypes.default & NotificationSliceTypes.default
   >,
 ): Promise<void> {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
   if (spriteIds.length <= 1)
     throw new Error("You need to select more than one sprite to merge");
 
-  const animations = context
+  const animationsThatContainAtLeastOneSprite = context
     .get()
     .animations.animations.filter((a) =>
       a.sprites.some((s) => spriteIds.includes(s.id)),
     );
-  if (!!animations.length) {
+  if (!!animationsThatContainAtLeastOneSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
       replaceString(
         "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
         {
-          animations: animations.length,
-          animationsName: animations.map((a) => `**"${a.name}"**`).join(", "),
+          animations: animationsThatContainAtLeastOneSprite.length,
+          animationsName: animationsThatContainAtLeastOneSprite
+            .map((a) => `**"${a.name}"**`)
+            .join(", "),
         },
       ),
     );
@@ -97,55 +144,168 @@ async function mergeSprites(
     if (!response) return;
   }
 
-  context.set((prev) => {
-    if (!prev) return prev;
+  const spriteToAdd = toSprite(
+    spriteIds
+      .map((sId) => spriteSheet.sprites[sId])
+      .map((s) => new Rect(s.left, s.top, s.width, s.height))
+      .reduce((r1, r2) => {
+        r1.merge(r2);
+        return r1;
+      }),
+    spriteIds.reduce(
+      (result, spriteId) => {
+        result[spriteId] = spriteSheet.sprites[spriteId];
+        return result;
+      },
+      {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
+    ),
+  );
 
-    const sprites = prev.sprites;
+  const sprites: NonNullable<
+    SpriteSheetSlice["spriteSheet"]["data"]
+  >["sprites"] = {
+    ...spriteSheet.sprites,
+    [spriteToAdd.id]: spriteToAdd,
+  };
 
-    const spriteToAdd = toSprite(
-      spriteIds
-        .map((sId) => sprites[sId])
-        .map((s) => new Rect(s.left, s.top, s.width, s.height))
-        .reduce((r1, r2) => {
-          r1.merge(r2);
-          return r1;
-        }),
-      spriteIds.reduce(
-        (result, spriteId) => {
-          result[spriteId] = sprites[spriteId];
-          return result;
-        },
-        {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
-      ),
-    );
+  spriteIds.forEach((sId) => delete sprites[sId]);
 
-    const newSprites = { ...sprites, [spriteToAdd.id]: spriteToAdd };
-    spriteIds.forEach((sId) => delete newSprites[sId]);
+  context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
+}
 
-    return { ...prev, sprites: newSprites };
+async function setSpriteSheetImage(
+  image: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheetImage"]>[0],
+  context: CreateServerSliceTypes.Context<
+    SpriteSheetSlice,
+    AnimationsSliceTypes.default &
+      NormalMapSettingsSliceTypes.default &
+      NotificationSliceTypes.default
+  >,
+): Promise<void> {
+  if (
+    !!context.get().animations.animations.length ||
+    Object.values(context.get().spriteSheet.data?.sprites || {}).some(
+      (sprite) => !!Object.keys(sprite.subsprites).length,
+    ) ||
+    context.get().normalMapSettings.normalMapSettings.strength !== 1
+  ) {
+    const response = await context
+      .get()
+      .notification.setNotification(
+        "warning",
+        "By loading a new image you may loose all your progress. Are you sure you want to continue?",
+      );
+
+    if (!response) return;
+  }
+
+  await context.reload({
+    image,
+    settings: {
+      delta: 0,
+      maxArea: 0.5,
+      maxVariation: 0.5,
+      minArea: 0,
+      minDiversity: 0.33,
+    },
   });
 }
 
-async function splitSprite(
-  spriteId: Parameters<SpriteSheetSlice["spriteSheet"]["splitSprite"]>[0],
+function setSpriteSheetName(
+  name: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheetName"]>[0],
+  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
+): void {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  context.set((prev) =>
+    !!prev
+      ? {
+          ...prev,
+          image: {
+            ...prev.image,
+            name: name instanceof Function ? name(prev.image.name) : name,
+          },
+        }
+      : prev,
+  );
+}
+
+async function setSpriteSheetSettings(
+  settings: Parameters<
+    SpriteSheetSlice["spriteSheet"]["setSpriteSheetSettings"]
+  >[0],
   context: CreateServerSliceTypes.Context<
     SpriteSheetSlice,
     AnimationsSliceTypes.default & NotificationSliceTypes.default
   >,
 ): Promise<void> {
-  const animations = context
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  if (!!context.get().animations.animations.length) {
+    const response = await context
+      .get()
+      .notification.setNotification(
+        "warning",
+        "By modifying this settings you may loose all your progress. Are you sure you want to continue?",
+      );
+
+    if (!response) return;
+  }
+
+  const newSettings =
+    settings instanceof Function ? settings(spriteSheet.settings) : settings;
+
+  await context.reload({
+    image: { ...spriteSheet.image },
+    settings: newSettings,
+  });
+}
+
+function setSpriteSheetSprites(
+  sprites: Parameters<
+    SpriteSheetSlice["spriteSheet"]["setSpriteSheetSprites"]
+  >[0],
+  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
+): void {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
+}
+
+async function splitSpriteSheetSprite(
+  spriteId: Parameters<
+    SpriteSheetSlice["spriteSheet"]["splitSpriteSheetSprite"]
+  >[0],
+  context: CreateServerSliceTypes.Context<
+    SpriteSheetSlice,
+    AnimationsSliceTypes.default & NotificationSliceTypes.default
+  >,
+): Promise<void> {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  const animationsThatContainTheSprite = context
     .get()
     .animations.animations.filter((a) =>
       a.sprites.some((s) => s.id === spriteId),
     );
-  if (!!animations.length) {
+  if (!!animationsThatContainTheSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
       replaceString(
         "By splitting selected sprite, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
         {
-          animations: animations.length,
-          animationsName: animations.map((a) => `**"${a.name}"**`).join(", "),
+          animations: animationsThatContainTheSprite.length,
+          animationsName: animationsThatContainTheSprite
+            .map((a) => `**"${a.name}"**`)
+            .join(", "),
         },
       ),
     );
@@ -153,21 +313,17 @@ async function splitSprite(
     if (!response) return;
   }
 
-  context.set((prev) => {
-    if (!prev) return prev;
+  const subspriteIds = Object.keys(spriteSheet.sprites[spriteId].subsprites);
+  if (!subspriteIds.length) return;
 
-    const subspriteIds = Object.keys(prev.sprites[spriteId].subsprites);
-    if (!subspriteIds.length) return prev;
+  const sprites = {
+    ...spriteSheet.sprites,
+    ...spriteSheet.sprites[spriteId].subsprites,
+  };
 
-    const newSprites = {
-      ...prev.sprites,
-      ...prev.sprites[spriteId].subsprites,
-    };
+  delete sprites[spriteId];
 
-    delete newSprites[spriteId];
-
-    return { ...prev, sprites: newSprites };
-  });
+  context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
 }
 
 function toSprite(
@@ -193,6 +349,12 @@ function getSprites(
   options: MSEROptions,
 ): NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"] {
   const background = imageDataUtils.getBackground(imageData);
+
+  imageData = new ImageData(
+    new Uint8ClampedArray(imageData.data),
+    imageData.width,
+    imageData.height,
+  );
 
   for (let i = 0; i < imageData.data.length; i += 4) {
     if (

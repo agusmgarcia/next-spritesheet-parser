@@ -13,7 +13,7 @@ export default createGlobalSlice<
   subscribe(
     (context) =>
       context.get().normalMapSettings.setNormalMapSettings({ strength: 1 }),
-    (state) => state.spriteSheet.data?.imageURL,
+    (state) => state.spriteSheet.data?.image.url,
   );
 
   return {

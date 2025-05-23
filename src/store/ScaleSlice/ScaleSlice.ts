@@ -11,7 +11,7 @@ export default createGlobalSlice<ScaleSlice, SpriteSheetSliceTypes.default>(
   (subscribe) => {
     subscribe(
       (context) => context.get().scale.setScale(1),
-      (state) => state.spriteSheet.data?.imageURL,
+      (state) => state.spriteSheet.data?.image.url,
     );
 
     return {

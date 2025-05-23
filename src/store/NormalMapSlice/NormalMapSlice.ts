@@ -38,7 +38,7 @@ export default createServerSlice<
     };
   },
   (state) => ({
-    imageURL: state.spriteSheet.data?.imageURL,
+    imageURL: state.spriteSheet.data?.image.url,
     strength: state.normalMapSettings.normalMapSettings.strength,
   }),
   () => ({ __setNormalMap__ }),
