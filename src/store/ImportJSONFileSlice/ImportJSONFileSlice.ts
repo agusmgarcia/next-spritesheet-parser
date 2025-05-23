@@ -5,7 +5,6 @@ import {
 } from "@agusmgarcia/react-core";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
-import { type NormalMapSettingsSliceTypes } from "../NormalMapSettingsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
@@ -15,7 +14,6 @@ export default createGlobalSlice<
   ImportJSONFileSlice,
   AnimationsSliceTypes.default &
     NormalMapSliceTypes.default &
-    NormalMapSettingsSliceTypes.default &
     NotificationSliceTypes.default &
     SpriteSheetSliceTypes.default
 >("importJSONFile", () => ({ importJSONFile }));
@@ -28,7 +26,6 @@ async function importJSONFile(
     ImportJSONFileSlice,
     AnimationsSliceTypes.default &
       NormalMapSliceTypes.default &
-      NormalMapSettingsSliceTypes.default &
       NotificationSliceTypes.default &
       SpriteSheetSliceTypes.default
   >,
@@ -37,12 +34,12 @@ async function importJSONFile(
   const newAnimations = jsonFile.animations;
 
   const normalMap = context.get().normalMap.data;
-  if (!normalMap?.imageURL)
+  if (!normalMap?.image.url)
     throw new Error("You need to provide an image first");
-  const newNormalMap = { ...jsonFile.normalMap, imageURL: normalMap.imageURL };
-
-  const normalMapSettings = context.get().normalMapSettings.normalMapSettings;
-  const newNormalMapSettings = jsonFile.normalMapSettings;
+  const newNormalMap = {
+    ...jsonFile.normalMap,
+    image: { ...normalMap.image, name: jsonFile.normalMap.image.name },
+  };
 
   const spriteSheet = context.get().spriteSheet.data;
   if (!spriteSheet?.image.url)
@@ -57,9 +54,8 @@ async function importJSONFile(
       Object.values(spriteSheet.sprites).some(
         (sprite) => !!Object.keys(sprite.subsprites).length,
       ) ||
-      normalMapSettings.strength !== 1) &&
+      normalMap.settings.strength !== 1) &&
     (!equals.deep(newNormalMap, normalMap) ||
-      !equals.deep(newNormalMapSettings, normalMapSettings) ||
       !equals.deep(newSpriteSheet, spriteSheet) ||
       !equals.deep(newAnimations, animations))
   ) {
@@ -79,8 +75,9 @@ async function importJSONFile(
   context.get().spriteSheet.setSpriteSheetSprites(newSpriteSheet.sprites);
   context.get().spriteSheet.setSpriteSheetName(newSpriteSheet.image.name);
 
-  context.get().normalMapSettings.setNormalMapSettings(newNormalMapSettings);
-  context.get().normalMap.__setNormalMap__(newNormalMap);
+  await context.get().normalMap.setNormalMapSettings(newNormalMap.settings);
+  context.get().normalMap.setNormalMapName(newNormalMap.image.name);
+
   await context.get().animations.setAnimations(newAnimations);
 
   await context

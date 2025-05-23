@@ -8,14 +8,14 @@ import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
-import { type NormalMapSettingsSliceTypes } from "../NormalMapSettingsSlice";
+import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
 export default createServerSlice<
   SpriteSheetSlice,
   AnimationsSliceTypes.default &
-    NormalMapSettingsSliceTypes.default &
+    NormalMapSliceTypes.default &
     NotificationSliceTypes.default
 >(
   "spriteSheet",
@@ -178,7 +178,7 @@ async function setSpriteSheetImage(
   context: CreateServerSliceTypes.Context<
     SpriteSheetSlice,
     AnimationsSliceTypes.default &
-      NormalMapSettingsSliceTypes.default &
+      NormalMapSliceTypes.default &
       NotificationSliceTypes.default
   >,
 ): Promise<void> {
@@ -187,7 +187,7 @@ async function setSpriteSheetImage(
     Object.values(context.get().spriteSheet.data?.sprites || {}).some(
       (sprite) => !!Object.keys(sprite.subsprites).length,
     ) ||
-    context.get().normalMapSettings.normalMapSettings.strength !== 1
+    context.get().normalMap.data?.settings.strength !== 1
   ) {
     const response = await context
       .get()

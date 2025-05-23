@@ -30,9 +30,14 @@ function useCreateNormalMap() {
     () =>
       !spriteSheet?.image.url ||
       spriteSheetLoading ||
-      !normalMap ||
+      !normalMap?.image.url ||
       normalMapLoading,
-    [normalMap, normalMapLoading, spriteSheet?.image.url, spriteSheetLoading],
+    [
+      normalMap?.image.url,
+      normalMapLoading,
+      spriteSheet?.image.url,
+      spriteSheetLoading,
+    ],
   );
 
   const createNormalMapLoading = useMemo<boolean>(

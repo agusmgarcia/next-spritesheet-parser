@@ -6,9 +6,6 @@ import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
 import createImportJSONFileSlice from "./ImportJSONFileSlice";
-import createNormalMapSettingsSlice, {
-  type NormalMapSettingsSliceTypes,
-} from "./NormalMapSettingsSlice";
 import createNormalMapSlice, {
   type NormalMapSliceTypes,
 } from "./NormalMapSlice";
@@ -23,8 +20,6 @@ import createSpriteSheetSlice, {
 
 export type Animation =
   AnimationsSliceTypes.default["animations"]["animations"][number];
-export type NormalMapSettings =
-  NormalMapSettingsSliceTypes.default["normalMapSettings"]["normalMapSettings"];
 export type NormalMap = NonNullable<
   NormalMapSliceTypes.default["normalMap"]["data"]
 >;
@@ -39,7 +34,6 @@ export type SpriteSheet = NonNullable<
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
   createImportJSONFileSlice,
-  createNormalMapSettingsSlice,
   createNormalMapSlice,
   createNotificationSlice,
   createScaleSlice,
@@ -85,21 +79,14 @@ export function useImportJSONFile() {
   };
 }
 
-export function useNormalMapSettings() {
-  return {
-    normalMapSettings: useSelector(
-      (state) => state.normalMapSettings.normalMapSettings,
-    ),
-    setNormalMapSettings: useSelector(
-      (state) => state.normalMapSettings.setNormalMapSettings,
-    ),
-  };
-}
-
 export function useNormalMap() {
   return {
     normalMap: useSelector((state) => state.normalMap.data),
     normalMapLoading: useSelector((state) => state.normalMap.loading),
+    setNormalMapName: useSelector((state) => state.normalMap.setNormalMapName),
+    setNormalMapSettings: useSelector(
+      (state) => state.normalMap.setNormalMapSettings,
+    ),
   };
 }
 

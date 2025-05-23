@@ -4,12 +4,10 @@ import { useCallback, useMemo, useState } from "react";
 import {
   type Animation,
   type NormalMap,
-  type NormalMapSettings,
   type SpriteSheet,
   useAnimations,
   useImportJSONFile,
   useNormalMap,
-  useNormalMapSettings,
   useNotification,
   useSpriteSheet,
 } from "#src/store";
@@ -115,24 +113,27 @@ function useExportFile() {
   const { animations } = useAnimations();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
   const { normalMap, normalMapLoading } = useNormalMap();
-  const { normalMapSettings } = useNormalMapSettings();
 
   const exportFileDisabled = useMemo<boolean>(
-    () => !spriteSheet || spriteSheetLoading || !normalMap || normalMapLoading,
-    [normalMap, normalMapLoading, spriteSheet, spriteSheetLoading],
+    () =>
+      !spriteSheet?.image.url ||
+      spriteSheetLoading ||
+      !normalMap?.image.url ||
+      normalMapLoading,
+    [
+      normalMap?.image.url,
+      normalMapLoading,
+      spriteSheet?.image.url,
+      spriteSheetLoading,
+    ],
   );
 
   const exportFile = useCallback<
     Func<
       void,
-      [
-        spriteSheet: SpriteSheet,
-        animations: Animation[],
-        normalMap: NormalMap,
-        normalMapSettings: NormalMapSettings,
-      ]
+      [spriteSheet: SpriteSheet, animations: Animation[], normalMap: NormalMap]
     >
-  >((spriteSheet, animations, normalMap, normalMapSettings) => {
+  >((spriteSheet, animations, normalMap) => {
     const anchor = document.createElement("a");
 
     anchor.href =
@@ -141,7 +142,6 @@ function useExportFile() {
         JSON.stringify({
           animations,
           normalMap,
-          normalMapSettings,
           spriteSheet,
           version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
         }),
@@ -159,15 +159,8 @@ function useExportFile() {
     if (exportFileDisabled) return;
     if (!spriteSheet) return;
     if (!normalMap) return;
-    exportFile(spriteSheet, animations, normalMap, normalMapSettings);
-  }, [
-    animations,
-    exportFile,
-    exportFileDisabled,
-    normalMap,
-    normalMapSettings,
-    spriteSheet,
-  ]);
+    exportFile(spriteSheet, animations, normalMap);
+  }, [animations, exportFile, exportFileDisabled, normalMap, spriteSheet]);
 
   useKeyDown("e", exportFileOnClick);
 

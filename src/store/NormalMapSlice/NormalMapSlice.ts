@@ -5,48 +5,119 @@ import {
 
 import { imageDataUtils, loadImage } from "#src/utils";
 
-import { type NormalMapSettingsSliceTypes } from "../NormalMapSettingsSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type NormalMapSlice from "./NormalMapSlice.types";
 
-export default createServerSlice<
-  NormalMapSlice,
-  NormalMapSettingsSliceTypes.default & SpriteSheetSliceTypes.default
->(
+export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
   "normalMap",
-  async (
-    { imageURL: spriteSheetImageURL, strength },
-    signal,
-    prevNormalMap,
-  ) => {
-    URL.revokeObjectURL(prevNormalMap?.imageURL || "");
-    if (!spriteSheetImageURL) return undefined;
+  async ({ image: spriteSheetImage, settings }, signal, prevNormalMap) => {
+    if (!spriteSheetImage.url) {
+      URL.revokeObjectURL(prevNormalMap?.image.url || "");
+      return initialNormalMap;
+    }
 
-    const imageData = await loadImage(spriteSheetImageURL, signal)
+    const data = await loadImage(spriteSheetImage.url, signal)
       .then(imageDataUtils.get)
-      .then((i) => imageDataUtils.generateNormalMap(i, strength));
+      .then((i) => imageDataUtils.generateNormalMap(i, settings.strength));
 
-    const backgroundColor = imageDataUtils.getBackgroundColor(imageData);
-
-    const imageURL = await imageDataUtils
-      .createFile(imageData, "normal-map.png", "image/png", signal)
+    const image = { ...spriteSheetImage };
+    image.name = spriteSheetImage.name.replace(/^(.+)\.(.+)$/, "$1.normal.png");
+    image.type = "image/png";
+    image.backgroundColor = imageDataUtils.getBackgroundColor(data);
+    image.url = await imageDataUtils
+      .createFile(data, image.name, image.type, signal)
       .then((file) => URL.createObjectURL(file));
 
+    URL.revokeObjectURL(prevNormalMap?.image.url || "");
+
+    return { image, settings };
+  },
+  () => ({
+    image: { backgroundColor: "", name: "", type: "", url: "" },
+    settings: { strength: 0 },
+  }),
+  (subscribe) => {
+    subscribe(
+      (context) => context.get().normalMap.__updateNormalMapImage__(),
+      (state) => state.spriteSheet.data?.image.url,
+    );
+
     return {
-      backgroundColor,
-      imageURL,
+      __updateNormalMapImage__,
+      setNormalMapName,
+      setNormalMapSettings,
     };
   },
-  (state) => ({
-    imageURL: state.spriteSheet.data?.image.url,
-    strength: state.normalMapSettings.normalMapSettings.strength,
-  }),
-  () => ({ __setNormalMap__ }),
 );
 
-function __setNormalMap__(
-  normalMap: Parameters<NormalMapSlice["normalMap"]["__setNormalMap__"]>[0],
+const initialNormalMap: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
+  image: {
+    backgroundColor: "",
+    name: "",
+    type: "",
+    url: "",
+  },
+  settings: {
+    strength: 1,
+  },
+};
+
+async function __updateNormalMapImage__(
+  context: CreateServerSliceTypes.Context<
+    NormalMapSlice,
+    SpriteSheetSliceTypes.default
+  >,
+): Promise<void> {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url) return;
+
+  await context.reload({
+    image: { ...spriteSheet.image },
+    settings: { strength: 1 },
+  });
+}
+
+function setNormalMapName(
+  name: Parameters<NormalMapSlice["normalMap"]["setNormalMapName"]>[0],
   context: CreateServerSliceTypes.Context<NormalMapSlice>,
 ): void {
-  context.set(normalMap);
+  const normalMap = context.get().normalMap.data;
+  if (!normalMap?.image.url)
+    throw new Error("You need to provide an image first");
+
+  context.set((prev) =>
+    !!prev
+      ? {
+          ...prev,
+          image: {
+            ...prev.image,
+            name: name instanceof Function ? name(prev.image.name) : name,
+          },
+        }
+      : prev,
+  );
+}
+
+async function setNormalMapSettings(
+  settings: Parameters<NormalMapSlice["normalMap"]["setNormalMapSettings"]>[0],
+  context: CreateServerSliceTypes.Context<
+    NormalMapSlice,
+    SpriteSheetSliceTypes.default
+  >,
+): Promise<void> {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  const normalMap = context.get().normalMap.data;
+  if (!normalMap?.image.url)
+    throw new Error("You need to provide an image first");
+
+  const newSettings =
+    settings instanceof Function ? settings(normalMap.settings) : settings;
+
+  await context.reload({
+    image: { ...spriteSheet.image },
+    settings: newSettings,
+  });
 }

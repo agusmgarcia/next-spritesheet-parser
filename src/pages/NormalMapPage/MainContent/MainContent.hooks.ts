@@ -13,13 +13,13 @@ export default function useMainContent(props: MainContentProps) {
   const ref = useRef<HTMLDivElement>(null);
   const normalMapCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { image } = useLoadImage(normalMap?.imageURL || "");
+  const { image } = useLoadImage(normalMap?.image.url || "");
   const rootDimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * scaleFromStore;
 
   useEffect(() => {
     if (!image) return;
-    if (!normalMap?.backgroundColor) return;
+    if (!normalMap?.image.backgroundColor) return;
 
     const normalMapCanvas = normalMapCanvasRef.current;
     if (!normalMapCanvas) return;
@@ -38,13 +38,13 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, normalMapCanvas.width, normalMapCanvas.height);
-    context.fillStyle = normalMap.backgroundColor;
+    context.fillStyle = normalMap.image.backgroundColor;
     context.fillRect(0, 0, normalMapCanvas.width, normalMapCanvas.height);
     context.scale(scale, scale);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
   }, [
     image,
-    normalMap?.backgroundColor,
+    normalMap?.image.backgroundColor,
     rootDimensions.height,
     rootDimensions.width,
     scale,

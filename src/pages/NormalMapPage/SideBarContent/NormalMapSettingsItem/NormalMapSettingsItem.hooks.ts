@@ -1,10 +1,7 @@
 import { type Func } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  useNormalMap,
-  useNormalMapSettings as useNormalMapSettingsFromStore,
-} from "#src/store";
+import { useNormalMap } from "#src/store";
 
 import type NormalMapSettingsItemProps from "./NormalMapSettingsItem.types";
 
@@ -32,9 +29,7 @@ export default function useNormalMapSettingsItem(
 }
 
 function useNormalMapSettings() {
-  const { normalMapSettings, setNormalMapSettings } =
-    useNormalMapSettingsFromStore();
-  const { normalMap, normalMapLoading } = useNormalMap();
+  const { normalMap, normalMapLoading, setNormalMapSettings } = useNormalMap();
 
   const initialNormalMapSettings = useMemo(() => ({ strength: "0" }), []);
 
@@ -43,8 +38,8 @@ function useNormalMapSettings() {
   );
 
   const normalMapSettingsDisabled = useMemo<boolean>(
-    () => !normalMap || normalMapLoading,
-    [normalMap, normalMapLoading],
+    () => !normalMap?.image.url || normalMapLoading,
+    [normalMap?.image.url, normalMapLoading],
   );
 
   const normalMapSettingsButtonDisabled = useMemo<boolean>(
@@ -75,9 +70,9 @@ function useNormalMapSettings() {
 
   useEffect(() => {
     setNormalMapSettingsValue({
-      strength: normalMapSettings.strength.toString() || "0",
+      strength: normalMap?.settings.strength.toString() || "0",
     });
-  }, [normalMapSettings.strength]);
+  }, [normalMap?.settings.strength]);
 
   return {
     normalMapSettingsButtonDisabled: normalMapSettingsButtonDisabled,
