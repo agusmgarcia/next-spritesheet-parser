@@ -5,6 +5,7 @@ import { getErrorMessage } from "#src/utils";
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
+import createImportJSONFileSlice from "./ImportJSONFileSlice";
 import createNormalMapSettingsSlice, {
   type NormalMapSettingsSliceTypes,
 } from "./NormalMapSettingsSlice";
@@ -39,6 +40,7 @@ export type SpriteSheet = NonNullable<
 
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
+  createImportJSONFileSlice,
   createNormalMapSettingsSlice,
   createNormalMapSlice,
   createNotificationSlice,
@@ -80,6 +82,12 @@ export function useAnimations() {
   };
 }
 
+export function useImportJSONFile() {
+  return {
+    importJSONFile: useSelector((state) => state.importJSONFile.importJSONFile),
+  };
+}
+
 export function useNormalMapSettings() {
   return {
     normalMapSettings: useSelector(
@@ -115,7 +123,6 @@ export function useScale() {
 export function useSettings() {
   return {
     setImage: useSelector((state) => state.settings.setImage),
-    setJSONFile: useSelector((state) => state.settings.setJSONFile),
     setSettings: useSelector((state) => state.settings.setSettings),
     settings: useSelector((state) => state.settings.settings),
   };

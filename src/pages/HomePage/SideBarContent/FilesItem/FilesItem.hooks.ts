@@ -8,6 +8,7 @@ import {
   type Settings,
   type SpriteSheet,
   useAnimations,
+  useImportJSONFile,
   useNormalMap,
   useNormalMapSettings,
   useNotification,
@@ -36,7 +37,8 @@ export default function useFilesItem(props: FilesItemProps) {
 
 function useImportFile() {
   const { setNotification } = useNotification();
-  const { setImage, setJSONFile } = useSettings();
+  const { setImage } = useSettings();
+  const { importJSONFile } = useImportJSONFile();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
   const { normalMapLoading } = useNormalMap();
 
@@ -89,15 +91,15 @@ function useImportFile() {
           : file
               .text()
               .then((text) => JSON.parse(text))
-              .then((jsonFile) => setJSONFile(jsonFile));
+              .then((jsonFile) => importJSONFile(jsonFile));
       })
       .catch((error) => setNotification("error", getErrorMessage(error)))
       .finally(() => setImportFileLoading(false));
   }, [
     importFile,
     importFileDisabled,
+    importJSONFile,
     setImage,
-    setJSONFile,
     setNotification,
     spriteSheet,
   ]);
