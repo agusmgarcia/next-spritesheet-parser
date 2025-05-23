@@ -1,20 +1,21 @@
 import { useDevicePixelRatio, useDimensions } from "@agusmgarcia/react-core";
 import { useEffect, useRef } from "react";
 
-import { useNormalMap } from "#src/store";
+import { useNormalMap, useScale } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent(props: MainContentProps) {
   const { normalMap } = useNormalMap();
+  const { scale: scaleFromStore } = useScale();
 
   const ref = useRef<HTMLDivElement>(null);
   const normalMapCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const { image } = useLoadImage(normalMap?.imageURL || "");
   const rootDimensions = useDimensions(ref);
-  const scale = useDevicePixelRatio() * (normalMap?.scale || 0);
+  const scale = useDevicePixelRatio() * scaleFromStore;
 
   useEffect(() => {
     if (!image) return;

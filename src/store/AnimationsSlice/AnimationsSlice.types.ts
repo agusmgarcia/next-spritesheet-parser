@@ -10,7 +10,6 @@ type Animation = {
   name: string;
   onion: boolean;
   playing: boolean;
-  scale: number;
   sprites: {
     id: string;
     initialOffsetX: number;
@@ -57,10 +56,6 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     setAnimationPlaying: Func<
       void,
       [id: string, playing: React.SetStateAction<boolean>]
-    >;
-    setAnimationScale: Func<
-      void,
-      [id: string, scale: React.SetStateAction<number>]
     >;
   }
 >;

@@ -6,12 +6,13 @@ import {
 } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useSpriteSelection, useSpriteSheet } from "#src/store";
+import { useScale, useSpriteSelection, useSpriteSheet } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent(props: MainContentProps) {
+  const { scale: scaleFromStore } = useScale();
   const { spriteSheet } = useSpriteSheet();
   const { selectSprite, spriteSelection, toggleSpriteSelection } =
     useSpriteSelection();
@@ -26,7 +27,7 @@ export default function useMainContent(props: MainContentProps) {
 
   const { image } = useLoadImage(spriteSheet?.imageURL || "");
   const rootDimensions = useDimensions(ref);
-  const scale = useDevicePixelRatio() * (spriteSheet?.scale || 0);
+  const scale = useDevicePixelRatio() * scaleFromStore;
 
   const sprites = useMemo(
     () =>

@@ -35,14 +35,13 @@ export default createServerSlice<
     return {
       backgroundColor,
       imageURL,
-      scale: 1,
     };
   },
   (state) => ({
     imageURL: state.spriteSheet.data?.imageURL,
     strength: state.normalMapSettings.normalMapSettings.strength,
   }),
-  () => ({ __setNormalMap__, setNormalMapScale }),
+  () => ({ __setNormalMap__ }),
 );
 
 function __setNormalMap__(
@@ -50,18 +49,4 @@ function __setNormalMap__(
   context: CreateServerSliceTypes.Context<NormalMapSlice>,
 ): void {
   context.set(normalMap);
-}
-
-function setNormalMapScale(
-  scale: Parameters<NormalMapSlice["normalMap"]["setNormalMapScale"]>[0],
-  context: CreateServerSliceTypes.Context<NormalMapSlice>,
-): void {
-  context.set((prev) =>
-    !!prev
-      ? {
-          ...prev,
-          scale: scale instanceof Function ? scale(prev.scale) : scale,
-        }
-      : undefined,
-  );
 }

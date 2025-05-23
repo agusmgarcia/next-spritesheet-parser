@@ -1,4 +1,5 @@
 import { Accordion, Typography } from "#src/components";
+import { ZoomItem } from "#src/fragments";
 
 import AnimationsItem from "./AnimationsItem";
 import CenterItem from "./CenterItem";
@@ -7,7 +8,6 @@ import FPSItem from "./FPSItem";
 import MovementsItem from "./MovementsItem";
 import PlayingItem from "./PlayingItem";
 import type SideBarContentProps from "./SideBarContent.types";
-import ZoomItem from "./ZoomItem";
 
 export default function SideBarContent({
   animation,
@@ -29,7 +29,7 @@ export default function SideBarContent({
       <FPSItem animation={animation} />
       <MovementsItem animation={animation} index={index} />
       <CenterItem animation={animation} index={index} />
-      <ZoomItem animation={animation} />
+      <ZoomItem />
       <AnimationsItem animation={animation} />
     </Accordion>
   );

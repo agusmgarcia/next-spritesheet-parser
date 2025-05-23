@@ -1,7 +1,7 @@
 import { useDevicePixelRatio, useDimensions } from "@agusmgarcia/react-core";
 import { useEffect, useMemo, useRef } from "react";
 
-import { useSpriteSheet } from "#src/store";
+import { useScale, useSpriteSheet } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
@@ -12,6 +12,7 @@ export default function useMainContent({
   ...rest
 }: MainContentProps) {
   const { spriteSheet } = useSpriteSheet();
+  const { scale: scaleFromStore } = useScale();
 
   const ref = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,7 +54,7 @@ export default function useMainContent({
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
 
-    const scale = animationFromProps.scale * devicePixelRatio;
+    const scale = scaleFromStore * devicePixelRatio;
 
     spriteCanvas.width = dimensions.width - 360;
     spriteCanvas.height = dimensions.height;
@@ -114,13 +115,13 @@ export default function useMainContent({
   }, [
     animationFromProps.color,
     animationFromProps.onion,
-    animationFromProps.scale,
     currentSprite,
     devicePixelRatio,
     dimensions.height,
     dimensions.width,
     image,
     prevSprite,
+    scaleFromStore,
     spriteSheet,
   ]);
 

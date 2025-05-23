@@ -11,7 +11,6 @@ type SpriteSheet = {
   color: string;
   imageURL: string;
   name: string;
-  scale: number;
   sprites: Record<
     string,
     {
@@ -33,7 +32,6 @@ type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
   {
     __setSpriteSheet__: Func<void, [sprites: SpriteSheet]>;
     mergeSprites: AsyncFunc<void, [spriteIds: string[]]>;
-    setSpriteSheetScale: Func<void, [scale: React.SetStateAction<number>]>;
     splitSprite: AsyncFunc<void, [spriteId: string]>;
   }
 >;

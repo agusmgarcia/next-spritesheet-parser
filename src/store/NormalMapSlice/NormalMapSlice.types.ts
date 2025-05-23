@@ -9,7 +9,6 @@ import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 type NormalMap = {
   backgroundColor: string;
   imageURL: string;
-  scale: number;
 };
 
 type NormalMapSlice = CreateServerSliceTypes.SliceOf<
@@ -25,7 +24,6 @@ type NormalMapSlice = CreateServerSliceTypes.SliceOf<
   },
   {
     __setNormalMap__: Func<void, [normalMap: NormalMap]>;
-    setNormalMapScale: Func<void, [scale: React.SetStateAction<number>]>;
   }
 >;
 

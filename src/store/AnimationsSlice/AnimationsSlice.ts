@@ -30,7 +30,6 @@ export default createGlobalSlice<
     setAnimationOffset,
     setAnimationOnion,
     setAnimationPlaying,
-    setAnimationScale,
   };
 });
 
@@ -144,7 +143,6 @@ function createAnimation(
     name: `New animation ${getLatestAnimationOrder(context.get().animations.animations) + 1}`,
     onion: false,
     playing: spriteIds.length > 1,
-    scale: 1,
     sprites: spriteIds
       .sort(sortSprites(spriteSheet.sprites))
       .map(mapSprites(spriteSheet.sprites)),
@@ -292,26 +290,6 @@ function setAnimationPlaying(
         ? {
             ...a,
             playing: playing instanceof Function ? playing(a.playing) : playing,
-          }
-        : a,
-    ),
-  }));
-}
-
-function setAnimationScale(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationScale"]>[0],
-  scale: Parameters<AnimationsSlice["animations"]["setAnimationScale"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            scale: Math.max(
-              scale instanceof Function ? scale(a.scale) : scale,
-              1,
-            ),
           }
         : a,
     ),

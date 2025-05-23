@@ -14,6 +14,7 @@ import createNormalMapSlice, {
 import createNotificationSlice, {
   type NotificationSliceTypes,
 } from "./NotificationSlice";
+import createScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
 import createSettingsSlice, { type SettingsSliceTypes } from "./SettingsSlice";
 import createSpriteSelectionSlice from "./SpriteSelectionSlice";
 import createSpriteSheetSlice, {
@@ -30,6 +31,7 @@ export type NormalMap = NonNullable<
 export type Notification = NonNullable<
   NotificationSliceTypes.default["notification"]["notification"]
 >;
+export type Scale = ScaleSliceTypes.default["scale"]["scale"];
 export type Settings = SettingsSliceTypes.default["settings"]["settings"];
 export type SpriteSheet = NonNullable<
   SpriteSheetSliceTypes.default["spriteSheet"]["data"]
@@ -40,6 +42,7 @@ const { useSelector, ...reactStore } = createStore(
   createNormalMapSettingsSlice,
   createNormalMapSlice,
   createNotificationSlice,
+  createScaleSlice,
   createSettingsSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
@@ -74,9 +77,6 @@ export function useAnimations() {
     setAnimationPlaying: useSelector(
       (state) => state.animations.setAnimationPlaying,
     ),
-    setAnimationScale: useSelector(
-      (state) => state.animations.setAnimationScale,
-    ),
   };
 }
 
@@ -95,9 +95,6 @@ export function useNormalMap() {
   return {
     normalMap: useSelector((state) => state.normalMap.data),
     normalMapLoading: useSelector((state) => state.normalMap.loading),
-    setNormalMapScale: useSelector(
-      (state) => state.normalMap.setNormalMapScale,
-    ),
   };
 }
 
@@ -105,6 +102,13 @@ export function useNotification() {
   return {
     notification: useSelector((state) => state.notification.notification),
     setNotification: useSelector((state) => state.notification.setNotification),
+  };
+}
+
+export function useScale() {
+  return {
+    scale: useSelector((state) => state.scale.scale),
+    setScale: useSelector((state) => state.scale.setScale),
   };
 }
 
@@ -135,9 +139,6 @@ export function useSpriteSelection() {
 export function useSpriteSheet() {
   return {
     mergeSprites: useSelector((state) => state.spriteSheet.mergeSprites),
-    setSpriteSheetScale: useSelector(
-      (state) => state.spriteSheet.setSpriteSheetScale,
-    ),
     splitSprite: useSelector((state) => state.spriteSheet.splitSprite),
     spriteSheet: useSelector((state) => state.spriteSheet.data),
     spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),

@@ -47,7 +47,6 @@ export default createServerSlice<
       color,
       imageURL: URL.createObjectURL(newFileImage),
       name: rawImage.name,
-      scale: 1,
       sprites,
     };
   },
@@ -55,7 +54,6 @@ export default createServerSlice<
   () => ({
     __setSpriteSheet__,
     mergeSprites,
-    setSpriteSheetScale,
     splitSprite,
   }),
 );
@@ -126,20 +124,6 @@ async function mergeSprites(
 
     return { ...prev, sprites: newSprites };
   });
-}
-
-function setSpriteSheetScale(
-  scale: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheetScale"]>[0],
-  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
-): void {
-  context.set((prev) =>
-    !!prev
-      ? {
-          ...prev,
-          scale: scale instanceof Function ? scale(prev.scale) : scale,
-        }
-      : undefined,
-  );
 }
 
 async function splitSprite(

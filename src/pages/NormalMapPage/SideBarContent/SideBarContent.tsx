@@ -1,10 +1,10 @@
 import { Accordion, Typography } from "#src/components";
+import { ZoomItem } from "#src/fragments";
 
 import ConfigurationsItem from "./ConfigurationsItem";
 import NormalMapSettingsItem from "./NormalMapSettingsItem";
 import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
-import ZoomItem from "./ZoomItem";
 
 export default function SideBarContent(props: SideBarContentProps) {
   const { ...rest } = useSideBarContent(props);

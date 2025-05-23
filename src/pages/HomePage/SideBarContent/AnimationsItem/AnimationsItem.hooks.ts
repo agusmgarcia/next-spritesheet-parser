@@ -44,7 +44,7 @@ export default function useAnimationsItem(props: AnimationsItemProps) {
 function useCreateAnimation() {
   const { push } = useRouter();
 
-  const { createAnimation, setAnimationScale } = useAnimations();
+  const { createAnimation } = useAnimations();
   const { spriteSelection } = useSpriteSelection();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
@@ -59,18 +59,8 @@ function useCreateAnimation() {
     const animationId = createAnimation(spriteSelection);
     if (!animationId) return;
 
-    const scale = spriteSheet?.scale || 1;
-    setAnimationScale(animationId, scale);
-
     push(`/animations/${animationId}`);
-  }, [
-    createAnimationDisabled,
-    createAnimation,
-    spriteSelection,
-    spriteSheet?.scale,
-    setAnimationScale,
-    push,
-  ]);
+  }, [createAnimationDisabled, createAnimation, spriteSelection, push]);
 
   useKeyDown("c", createAnimationOnClick);
 
