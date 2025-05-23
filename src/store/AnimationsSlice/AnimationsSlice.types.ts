@@ -1,4 +1,5 @@
 import {
+  type AsyncFunc,
   type CreateGlobalSliceTypes,
   type Func,
 } from "@agusmgarcia/react-core";
@@ -22,7 +23,6 @@ type Animation = {
 type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
   "animations",
   {
-    __setAnimations__: Func<void, [animations: Animation[]]>;
     __updateAnimations__: Func;
     animations: Animation[];
     createAnimation: Func<string | undefined, [spriteIds: string[]]>;
@@ -57,6 +57,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
       void,
       [id: string, playing: React.SetStateAction<boolean>]
     >;
+    setAnimations: AsyncFunc<void, [animations: Animation[]]>;
   }
 >;
 

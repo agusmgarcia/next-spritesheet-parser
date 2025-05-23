@@ -2,15 +2,17 @@ import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
   type Func,
+  replaceString,
 } from "@agusmgarcia/react-core";
 import { v4 as createUUID } from "uuid";
 
+import { type NotificationSliceTypes } from "../NotificationSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type AnimationsSlice from "./AnimationsSlice.types";
 
 export default createGlobalSlice<
   AnimationsSlice,
-  SpriteSheetSliceTypes.default
+  NotificationSliceTypes.default & SpriteSheetSliceTypes.default
 >("animations", (subscribe) => {
   subscribe(
     (context) => context.get().animations.__updateAnimations__(),
@@ -18,7 +20,6 @@ export default createGlobalSlice<
   );
 
   return {
-    __setAnimations__,
     __updateAnimations__,
     animations: [],
     createAnimation,
@@ -30,15 +31,9 @@ export default createGlobalSlice<
     setAnimationOffset,
     setAnimationOnion,
     setAnimationPlaying,
+    setAnimations,
   };
 });
-
-function __setAnimations__(
-  animations: Parameters<AnimationsSlice["animations"]["__setAnimations__"]>[0],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set({ animations });
-}
 
 function __updateAnimations__(
   context: CreateGlobalSliceTypes.Context<
@@ -294,4 +289,43 @@ function setAnimationPlaying(
         : a,
     ),
   }));
+}
+
+async function setAnimations(
+  animations: Parameters<AnimationsSlice["animations"]["setAnimations"]>[0],
+  context: CreateGlobalSliceTypes.Context<
+    AnimationsSlice,
+    NotificationSliceTypes.default & SpriteSheetSliceTypes.default
+  >,
+): Promise<void> {
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  const animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet = animations.filter(
+    (a) => a.sprites.some((s) => !spriteSheet.sprites[s.id]),
+  );
+
+  if (!!animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length)
+    await context.get().notification.setNotification(
+      "error",
+      replaceString(
+        "The following ${animations?animation:animations}: ${animationsName} ${animations?contains:contain} at least one sprite that is not part of the sprite sheet",
+        {
+          animations: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length,
+          animationsName: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet
+            .map((a) => `**"${a.name}"**`)
+            .join(", "),
+        },
+      ),
+    );
+
+  context.set({
+    animations: animations.filter(
+      (a) =>
+        !animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.find(
+          (b) => a.id === b.id,
+        ),
+    ),
+  });
 }

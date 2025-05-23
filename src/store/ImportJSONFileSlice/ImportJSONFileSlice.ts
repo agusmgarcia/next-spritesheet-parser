@@ -81,9 +81,9 @@ async function importJSONFile(
 
   context.get().normalMapSettings.setNormalMapSettings(newNormalMapSettings);
   context.get().normalMap.__setNormalMap__(newNormalMap);
-  context.get().animations.__setAnimations__(newAnimations);
+  await context.get().animations.setAnimations(newAnimations);
 
-  context
+  await context
     .get()
     .notification.setNotification("success", "JSON file loaded succesfully!");
 }
