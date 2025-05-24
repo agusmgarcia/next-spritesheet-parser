@@ -20,7 +20,7 @@ export default function SideBarContent({
       {...rest}
       heading={
         <Typography className="text-white" variant="h1">
-          {animation.name}
+          {animation.name || "Animation"}
         </Typography>
       }
     >
