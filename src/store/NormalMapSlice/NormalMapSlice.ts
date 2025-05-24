@@ -21,11 +21,11 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
       .then((i) => imageDataUtils.generateNormalMap(i, settings.strength));
 
     const image = { ...spriteSheetImage };
-    image.name = spriteSheetImage.name.replace(/^(.+)\.(.+)$/, "$1.normal.png");
+    image.name = `${spriteSheetImage.name}.normal`;
     image.type = "image/png";
     image.backgroundColor = imageDataUtils.getBackgroundColor(data);
     image.url = await imageDataUtils
-      .createFile(data, image.name, image.type, signal)
+      .createFile(data, `${image.name}.png`, image.type, signal)
       .then((file) => URL.createObjectURL(file));
 
     URL.revokeObjectURL(prevNormalMap?.image.url || "");

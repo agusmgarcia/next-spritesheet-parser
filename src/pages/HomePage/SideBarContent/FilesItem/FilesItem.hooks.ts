@@ -161,7 +161,7 @@ function useExportFile() {
           .then((blob) => ({
             input: blob,
             lastModified: new Date(),
-            name: `${spriteSheet.image.name.split(".").slice(0, -1).join(".")}.json`,
+            name: `${spriteSheet.image.name}.json`,
           })),
 
         fetch(spriteSheet.image.url)
@@ -169,7 +169,7 @@ function useExportFile() {
           .then((blob) => ({
             input: blob,
             lastModified: new Date(),
-            name: spriteSheet.image.name,
+            name: `${spriteSheet.image.name}.${spriteSheet.image.type.replace("image/", "")}`,
           })),
 
         fetch(normalMap.image.url)
@@ -177,7 +177,7 @@ function useExportFile() {
           .then((blob) => ({
             input: blob,
             lastModified: new Date(),
-            name: normalMap.image.name,
+            name: `${normalMap.image.name}.png`,
           })),
         ,
       ]);
@@ -190,14 +190,8 @@ function useExportFile() {
 
     const anchor = document.createElement("a");
     anchor.href = URL.createObjectURL(blob);
-
-    anchor.setAttribute(
-      "download",
-      `${spriteSheet.image.name.split(".").slice(0, -1).join(".")}.zip`,
-    );
-
+    anchor.setAttribute("download", `${spriteSheet.image.name}.zip`);
     anchor.click();
-
     URL.revokeObjectURL(anchor.href);
   }, []);
 

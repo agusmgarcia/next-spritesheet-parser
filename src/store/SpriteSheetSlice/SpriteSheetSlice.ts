@@ -40,7 +40,12 @@ export default createServerSlice<
         URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
 
         return {
-          image: { backgroundColor, name: image.name, type: image.type, url },
+          image: {
+            backgroundColor,
+            name: `${image.name.split(".").slice(0, -1).join(".")}`,
+            type: image.type,
+            url,
+          },
           settings,
           sprites,
         };
