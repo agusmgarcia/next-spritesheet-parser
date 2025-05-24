@@ -1,6 +1,12 @@
 type SelectProps = Pick<
   React.SelectHTMLAttributes<HTMLSelectElement>,
-  "aria-label" | "children" | "className" | "disabled" | "onChange" | "value"
+  | "aria-label"
+  | "children"
+  | "className"
+  | "disabled"
+  | "name"
+  | "onChange"
+  | "value"
 >;
 
 export default SelectProps;
