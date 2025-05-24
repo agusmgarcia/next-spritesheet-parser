@@ -27,17 +27,15 @@ export default function FilesItem(props: FilesItemProps) {
       }
     >
       {/* NAME */}
-      <label className="flex items-center justify-between gap-2 text-white">
-        Name
-        <Input
-          aria-label="Name"
-          className="w-2/3 text-center"
-          disabled={nameDisabled}
-          name="name"
-          onChange={nameOnChange}
-          value={nameValue}
-        />
-      </label>
+      <Input
+        aria-label="Name"
+        className="text-center"
+        disabled={nameDisabled}
+        name="name"
+        onChange={nameOnChange}
+        placeholder="Sprite sheet name..."
+        value={nameValue}
+      />
 
       {/* IMPORT FILE */}
       <Button

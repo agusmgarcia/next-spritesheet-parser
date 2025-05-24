@@ -29,8 +29,10 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
       {/* NAME */}
       <Input
         aria-label="Name"
+        className="text-center"
         name="name"
         onChange={nameOnChange}
+        placeholder="Normal map name..."
         value={nameValue}
       />
     </Accordion.Item>
