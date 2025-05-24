@@ -1,14 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import type SideBarProps from "./SideBar.types";
 
-export default function useSideBar(props: SideBarProps) {
-  const [collapsed, setCollapsed] = useState(false);
-
+export default function useSideBar({
+  collapsedOnChange,
+  ...rest
+}: SideBarProps) {
   const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => setCollapsed((prev) => !prev),
-    [],
+    (event) => {
+      const collapsed = event.currentTarget.dataset.collapsed === "true";
+      collapsedOnChange?.(!collapsed);
+    },
+    [collapsedOnChange],
   );
 
-  return { ...props, collapsed, onClick };
+  return { ...rest, onClick };
 }

@@ -1,4 +1,4 @@
-import { Typography } from "#src/components";
+import { Icon, Typography } from "#src/components";
 
 import InstructionsButton from "./InstructionsButton";
 import useLayout from "./Layout.hooks";
@@ -9,9 +9,11 @@ import SideBar from "./SideBar";
 export default function Layout(props: LayoutProps) {
   const {
     children,
+    childrenRef,
     instructions,
+    setSideBarCollapsed,
     sideBar,
-    sideBarCollapse,
+    sideBarCollapsed,
     version,
     viewport,
     ...rest
@@ -36,13 +38,22 @@ export default function Layout(props: LayoutProps) {
 
       {viewport !== "Mobile" && (
         <>
+          {/* // TODO: remove it */}
+          <Icon
+            className="absolute left-1/2 top-1/2 z-10 m-auto size-8 translate-x-1/2 translate-y-1/2 text-red-500"
+            variant="close"
+          />
+
           {/* CHILDREN */}
-          <div className="size-full overflow-auto">{children}</div>
+          <div ref={childrenRef} className="size-full overflow-auto">
+            {children}
+          </div>
 
           {/* SIDEBAR */}
           <SideBar
             className="absolute right-0 h-full w-[360px]"
-            collapseHidden={!sideBarCollapse}
+            collapsed={sideBarCollapsed}
+            collapsedOnChange={setSideBarCollapsed}
             version={version}
           >
             {sideBar}

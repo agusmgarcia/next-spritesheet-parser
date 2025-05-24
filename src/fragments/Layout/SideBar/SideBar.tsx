@@ -6,15 +6,8 @@ import useSideBar from "./SideBar.hooks";
 import type SideBarProps from "./SideBar.types";
 
 export default function SideBar(props: SideBarProps) {
-  const {
-    children,
-    className,
-    collapsed,
-    collapseHidden,
-    onClick,
-    version,
-    ...rest
-  } = useSideBar(props);
+  const { children, className, collapsed, onClick, version, ...rest } =
+    useSideBar(props);
 
   return (
     <div
@@ -26,9 +19,10 @@ export default function SideBar(props: SideBarProps) {
         className,
       )}
     >
-      {!collapseHidden && (
+      {typeof collapsed !== "undefined" && (
         <Button
           className="absolute bottom-[9px] left-[-36px] flex size-9 items-center justify-center rounded-l-lg bg-gray-800 text-white"
+          data-collapsed={collapsed}
           onClick={onClick}
         >
           <Icon variant={collapsed ? "arrowLeft" : "arrowRight"} />
