@@ -1,6 +1,7 @@
 type InputProps = Pick<
   React.InputHTMLAttributes<HTMLInputElement>,
   | "aria-label"
+  | "autoComplete"
   | "className"
   | "disabled"
   | "max"
