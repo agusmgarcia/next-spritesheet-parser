@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.21.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.21.0)
+
+> May 24, 2025
+
+- **NormalMapPage**: add ability to change the name
+- **NormalMapSlice**: unify with settings
+- **AnimationsSlice**: adjust setAnimations logic
+- **SpriteSheetSlice**: unify with settings
+- **importJSONFile**: move it to its own slice
+- encapsulate scaling in one place
+- align with the new destructuring style
+- **store**: move imageData functions into a module
+
 ## [v0.20.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.20.0)
 
 > May 21, 2025

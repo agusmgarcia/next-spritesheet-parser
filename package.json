@@ -1,7 +1,7 @@
 {
   "name": "@agusmgarcia/next-spritesheet-parser",
   "core": "app",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "private": true,
   "author": "Agus Garcia",
   "description": "An app to parse sprite sheet into animations. The system can import/export the results",
