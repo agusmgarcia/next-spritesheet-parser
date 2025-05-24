@@ -4,7 +4,6 @@ import { ZoomItem } from "#src/fragments";
 import AnimationsItem from "./AnimationsItem";
 import CenterItem from "./CenterItem";
 import ConfigurationsItem from "./ConfigurationsItem";
-import FPSItem from "./FPSItem";
 import PlayingItem from "./PlayingItem";
 import type SideBarContentProps from "./SideBarContent.types";
 
@@ -25,7 +24,6 @@ export default function SideBarContent({
     >
       <ConfigurationsItem animation={animation} />
       <PlayingItem animation={animation} onIndexChange={onIndexChange} />
-      <FPSItem animation={animation} />
       <CenterItem animation={animation} index={index} />
       <ZoomItem />
       <AnimationsItem animation={animation} />
