@@ -36,6 +36,14 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
         placeholder="Normal map name..."
         value={nameValue}
       />
+
+      {/* TERMINATION */}
+      <Input
+        className="w-28 text-center"
+        disabled={true}
+        name="termination"
+        value=".normal.png"
+      />
     </Accordion.Item>
   );
 }

@@ -177,7 +177,7 @@ function useExportFile() {
           .then((blob) => ({
             input: blob,
             lastModified: new Date(),
-            name: `${normalMap.image.name}.png`,
+            name: `${normalMap.image.name}.normal.png`,
           })),
         ,
       ]);
