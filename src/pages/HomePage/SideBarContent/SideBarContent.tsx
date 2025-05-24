@@ -21,10 +21,10 @@ export default function SideBarContent(props: SideBarContentProps) {
       }
     >
       <FilesItem />
-      <SettingsItem />
       <AnimationsItem />
-      <ZoomItem />
+      <SettingsItem />
       <NormalMapItem />
+      <ZoomItem />
     </Accordion>
   );
 }
