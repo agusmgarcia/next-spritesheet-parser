@@ -39,6 +39,7 @@ export default function FPSItem(props: FPSItemProps) {
         aria-label="FPS"
         className="text-center"
         min={1}
+        name="fps"
         onChange={fpsOnChange}
         type="number"
         value={fps}

@@ -49,6 +49,7 @@ export default function CenterItem(props: CenterItemProps) {
       {/* COLOR */}
       <Input
         disabled={colorDisabled}
+        name="color"
         onChange={colorOnChange}
         type="color"
         value={colorValue}

@@ -82,6 +82,7 @@ export default function AnimationsItem(props: AnimationsItemProps) {
       <Select
         className="text-center [text-align-last:center]"
         disabled={animationSelectorDisabled}
+        name="animationSelector"
         onChange={animationSelectorOnChange}
         value={animationSelectorValue}
       >
