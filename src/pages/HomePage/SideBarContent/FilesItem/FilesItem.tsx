@@ -12,6 +12,7 @@ export default function FilesItem(props: FilesItemProps) {
     importFileOnClick,
     nameDisabled,
     nameOnChange,
+    nameTermination,
     nameValue,
     ...rest
   } = useFilesItem(props);
@@ -26,17 +27,29 @@ export default function FilesItem(props: FilesItemProps) {
         </Typography>
       }
     >
-      {/* NAME */}
-      <Input
-        aria-label="Name"
-        autoComplete="off"
-        className="text-center"
-        disabled={nameDisabled}
-        name="name"
-        onChange={nameOnChange}
-        placeholder="Sprite sheet name..."
-        value={nameValue}
-      />
+      <div className="flex gap-1">
+        {/* NAME */}
+        <Input
+          aria-label="Name"
+          autoComplete="off"
+          className="text-center"
+          disabled={nameDisabled}
+          name="name"
+          onChange={nameOnChange}
+          placeholder="Sprite sheet name..."
+          value={nameValue}
+        />
+
+        {/* TERMINATION */}
+        {!!nameTermination && (
+          <Input
+            className="w-16 text-center"
+            disabled={true}
+            name="termination"
+            value={nameTermination}
+          />
+        )}
+      </div>
 
       {/* IMPORT FILE */}
       <Button

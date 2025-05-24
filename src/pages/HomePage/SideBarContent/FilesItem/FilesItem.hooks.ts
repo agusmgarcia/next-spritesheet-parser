@@ -22,7 +22,7 @@ export default function useFilesItem(props: FilesItemProps) {
 
   const { exportFileDisabled, exportFileOnClick } = useExportFile();
 
-  const { nameDisabled, nameOnChange, nameValue } = useName();
+  const { nameDisabled, nameOnChange, nameTermination, nameValue } = useName();
 
   return {
     ...props,
@@ -33,6 +33,7 @@ export default function useFilesItem(props: FilesItemProps) {
     importFileOnClick,
     nameDisabled,
     nameOnChange,
+    nameTermination,
     nameValue,
   };
 }
@@ -228,10 +229,18 @@ function useName() {
     [spriteSheet],
   );
 
+  const nameTermination = useMemo<string>(
+    () =>
+      !!spriteSheet?.image.type
+        ? `.${spriteSheet.image.type.replace("image/", "")}`
+        : "",
+    [spriteSheet?.image.type],
+  );
+
   const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (event) => setSpriteSheetName(event.target.value),
     [setSpriteSheetName],
   );
 
-  return { nameDisabled, nameOnChange, nameValue };
+  return { nameDisabled, nameOnChange, nameTermination, nameValue };
 }
