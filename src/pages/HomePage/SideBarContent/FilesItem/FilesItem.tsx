@@ -29,6 +29,7 @@ export default function FilesItem(props: FilesItemProps) {
       {/* NAME */}
       <Input
         aria-label="Name"
+        autoComplete="off"
         className="text-center"
         disabled={nameDisabled}
         name="name"

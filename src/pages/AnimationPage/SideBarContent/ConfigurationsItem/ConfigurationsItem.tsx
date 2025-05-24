@@ -34,6 +34,7 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
       {/* NAME */}
       <Input
         aria-label="Name"
+        autoComplete="off"
         className="text-center"
         name="name"
         onChange={nameOnChange}
