@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.22.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.22.0)
+
+> May 24, 2025
+
+- **HomePage**: add image name termination
+- **HomePage**: remove name from the selector when empty
+- **HomePage**: set the normal map section to be collapsed by default
+- prevent user of editing the normal termination of the image
+- adjust naming calculation
+- **AnimationPage**: prevent showing empty title
+- start using autoComplete attribute
+- **Input**: start forwarding autoComplete attribute
+- add missing name attributes
+- **Select**: start forwarding name attribute
+- **Input**: add placeholder styles
+- adjust input name inputs
+- **HomePage**: add ability to change sprite sheet image name
+- **Input**: set min height to 42px
+- **HomePage**: replace Reset by Clear
+- **Icon**: add eraser variant
+- **HomePage**: rename Configurations by Animations
+- **HomePage**: export a zip instead of json
+
 ## [v0.21.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.21.0)
 
 > May 24, 2025
