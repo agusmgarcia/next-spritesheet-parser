@@ -15,6 +15,7 @@ export default function NormalMapItem(props: NormalMapItemProps) {
     <Accordion.Item
       {...rest}
       className="flex flex-col gap-1"
+      defaultCollapsed={true}
       heading={
         <Typography className="text-white" variant="h2">
           Normal Map
