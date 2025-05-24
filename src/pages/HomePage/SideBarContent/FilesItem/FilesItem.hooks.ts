@@ -22,6 +22,8 @@ export default function useFilesItem(props: FilesItemProps) {
 
   const { exportFileDisabled, exportFileOnClick } = useExportFile();
 
+  const { nameDisabled, nameOnChange, nameValue } = useName();
+
   return {
     ...props,
     exportFileDisabled,
@@ -29,6 +31,9 @@ export default function useFilesItem(props: FilesItemProps) {
     importFileDisabled,
     importFileLoading,
     importFileOnClick,
+    nameDisabled,
+    nameOnChange,
+    nameValue,
   };
 }
 
@@ -213,4 +218,26 @@ function useExportFile() {
     exportFileDisabled,
     exportFileOnClick,
   };
+}
+
+function useName() {
+  const { setSpriteSheetName, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
+
+  const nameDisabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url || spriteSheetLoading,
+    [spriteSheet?.image.url, spriteSheetLoading],
+  );
+
+  const nameValue = useMemo<string>(
+    () => (!!spriteSheet?.image.url ? spriteSheet.image.name : "Sprite sheet"),
+    [spriteSheet],
+  );
+
+  const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (event) => setSpriteSheetName(event.target.value),
+    [setSpriteSheetName],
+  );
+
+  return { nameDisabled, nameOnChange, nameValue };
 }
