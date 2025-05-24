@@ -164,12 +164,17 @@ function useAnimationSelector() {
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
-      { id: "sheet", name: spriteSheet?.image.name || "Sprite sheet" },
+      {
+        id: "sheet",
+        name: !!spriteSheet?.image.url
+          ? spriteSheet.image.name
+          : "Sprite sheet",
+      },
       ...animations
         .map((a) => ({ id: a.id, name: a.name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
     ],
-    [animations, spriteSheet?.image.name],
+    [animations, spriteSheet?.image.name, spriteSheet?.image.url],
   );
 
   const animationSelectorOnChange = useCallback<
