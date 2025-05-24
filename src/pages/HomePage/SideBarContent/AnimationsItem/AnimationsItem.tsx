@@ -74,8 +74,8 @@ export default function AnimationsItem(props: AnimationsItemProps) {
         onClick={resetSelectionOnClick}
         variant="secondary"
       >
-        Reset
-        <Icon variant="reset" />
+        Clear
+        <Icon variant="eraser" />
       </Button>
 
       {/* ANIMATION SELECTOR */}
