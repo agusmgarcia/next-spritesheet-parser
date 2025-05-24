@@ -1,10 +1,11 @@
-import { Accordion, Button, Icon, Typography } from "#src/components";
+import { Accordion, Button, Icon, Input, Typography } from "#src/components";
 
 import useConfigurationsItem from "./ConfigurationsItem.hooks";
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
 export default function ConfigurationsItem(props: ConfigurationsItemProps) {
-  const { homeOnClick, ...rest } = useConfigurationsItem(props);
+  const { homeOnClick, nameOnChange, nameValue, ...rest } =
+    useConfigurationsItem(props);
 
   return (
     <Accordion.Item
@@ -24,6 +25,14 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
       >
         <Icon variant="home" />
       </Button>
+
+      {/* NAME */}
+      <Input
+        aria-label="Name"
+        name="name"
+        onChange={nameOnChange}
+        value={nameValue}
+      />
     </Accordion.Item>
   );
 }
