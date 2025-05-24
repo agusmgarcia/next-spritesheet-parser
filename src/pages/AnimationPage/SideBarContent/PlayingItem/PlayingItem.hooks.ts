@@ -22,13 +22,28 @@ export default function usePlayingItem({
     onIndexChange: onIndexChangeFromProps,
   });
 
+  const {
+    fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
+  } = useFPS({ animation: animationFromProps });
+
   return {
     ...rest,
     backwardOnClick,
     forwardOnClick,
+    fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
     playing,
     playingDisabled,
     playOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
   };
 }
 
@@ -110,5 +125,47 @@ function usePlaying({
     playing: animationFromProps.playing,
     playingDisabled,
     playOnClick,
+  };
+}
+
+function useFPS({
+  animation: animationFromProps,
+}: Pick<PlayingItemProps, "animation">) {
+  const { setAnimationFPS } = useAnimations();
+
+  const minusFPSDisabled = useMemo<boolean>(
+    () => animationFromProps.fps <= 1,
+    [animationFromProps.fps],
+  );
+
+  const minusFPSOnClick = useCallback<Func>(() => {
+    if (minusFPSDisabled) return;
+    setAnimationFPS(animationFromProps.id, (fps) => fps - 1);
+  }, [animationFromProps.id, minusFPSDisabled, setAnimationFPS]);
+
+  const fpsOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (event) =>
+      setAnimationFPS(animationFromProps.id, event.target.valueAsNumber),
+    [animationFromProps.id, setAnimationFPS],
+  );
+
+  const plusFPSDisabled = useMemo<boolean>(() => false, []);
+
+  const plusFPSOnClick = useCallback<Func>(() => {
+    if (plusFPSDisabled) return;
+    setAnimationFPS(animationFromProps.id, (fps) => fps + 1);
+  }, [animationFromProps.id, plusFPSDisabled, setAnimationFPS]);
+
+  useKeyDown("-", minusFPSOnClick);
+
+  useKeyDown("+", plusFPSOnClick);
+
+  return {
+    fps: animationFromProps.fps,
+    fpsOnChange,
+    minusFPSDisabled,
+    minusFPSOnClick,
+    plusFPSDisabled,
+    plusFPSOnClick,
   };
 }

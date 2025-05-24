@@ -72,11 +72,6 @@ function useInstructions() {
             description: "Move one sprite after",
             key: "ArrowRight",
           },
-        ],
-        title: "Playing",
-      },
-      {
-        keys: [
           {
             description: "Increase FPS",
             key: "\\+",
@@ -86,7 +81,7 @@ function useInstructions() {
             key: "\\-",
           },
         ],
-        title: "FPS",
+        title: "Playing",
       },
       {
         keys: [
