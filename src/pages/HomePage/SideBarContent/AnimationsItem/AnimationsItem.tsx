@@ -26,7 +26,7 @@ export default function AnimationsItem(props: AnimationsItemProps) {
       className="flex flex-col gap-1"
       heading={
         <Typography className="text-white" variant="h2">
-          Configurations
+          Animations
         </Typography>
       }
     >
