@@ -23,10 +23,10 @@ export default function SideBarContent({
       }
     >
       <ConfigurationsItem animation={animation} />
+      <AnimationsItem animation={animation} />
       <PlayingItem animation={animation} onIndexChange={onIndexChange} />
       <CenterItem animation={animation} index={index} />
       <ZoomItem />
-      <AnimationsItem animation={animation} />
     </Accordion>
   );
 }
