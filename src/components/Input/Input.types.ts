@@ -4,6 +4,7 @@ type InputProps = Pick<
   | "autoComplete"
   | "className"
   | "disabled"
+  | "id"
   | "max"
   | "min"
   | "name"
