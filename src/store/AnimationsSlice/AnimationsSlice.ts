@@ -62,12 +62,11 @@ function createAnimation(
   >,
 ): string | undefined {
   if (spriteIds.length <= 0)
-    throw new Error(
-      "You need to select at least one sprite to create the animation",
-    );
+    throw new Error("You need to select at least one sprite");
 
   const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet) throw new Error("Sprite sheet is not defined");
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
 
   function sortSprites(
     sprites: NonNullable<
@@ -165,7 +164,7 @@ async function deleteAnimation(
     .get()
     .notification.setNotification(
       "warning",
-      `Are you sure you want to delete the animation **${animation.name}**? This action cannot be undone.`,
+      `Are you sure you want to delete the animation **${animation.name}**? This action cannot be undone`,
     );
 
   if (!response) return false;

@@ -128,6 +128,7 @@ async function mergeSpriteSheetSprites(
     .animations.animations.filter((a) =>
       a.sprites.some((s) => spriteIds.includes(s.id)),
     );
+
   if (!!animationsThatContainAtLeastOneSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
@@ -287,6 +288,7 @@ async function setSpriteSheetSettings(
     .animations.animations.filter((a) =>
       a.sprites.some((s) => !spriteIds.includes(s.id)),
     );
+
   if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
@@ -341,6 +343,7 @@ async function splitSpriteSheetSprite(
     .animations.animations.filter((a) =>
       a.sprites.some((s) => s.id === spriteId),
     );
+
   if (!!animationsThatContainTheSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
