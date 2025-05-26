@@ -19,6 +19,9 @@ export default function useFilesItem(props: FilesItemProps) {
 
   const { nameDisabled, nameOnChange, nameTermination, nameValue } = useName();
 
+  const { removeSpriteSheetDisabled, removeSpriteSheetOnClick } =
+    useRemoveSpriteSheet();
+
   return {
     ...props,
     exportFileDisabled,
@@ -30,6 +33,8 @@ export default function useFilesItem(props: FilesItemProps) {
     nameOnChange,
     nameTermination,
     nameValue,
+    removeSpriteSheetDisabled,
+    removeSpriteSheetOnClick,
   };
 }
 
@@ -186,4 +191,23 @@ function useName() {
   );
 
   return { nameDisabled, nameOnChange, nameTermination, nameValue };
+}
+
+function useRemoveSpriteSheet() {
+  const { removeSpriteSheet, spriteSheet, spriteSheetLoading } =
+    useSpriteSheet();
+
+  const removeSpriteSheetDisabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url || spriteSheetLoading,
+    [spriteSheet?.image.url, spriteSheetLoading],
+  );
+
+  const removeSpriteSheetOnClick = useCallback<Func>(() => {
+    if (removeSpriteSheetDisabled) return;
+    removeSpriteSheet();
+  }, [removeSpriteSheet, removeSpriteSheetDisabled]);
+
+  useKeyDown("r", removeSpriteSheetOnClick);
+
+  return { removeSpriteSheetDisabled, removeSpriteSheetOnClick };
 }

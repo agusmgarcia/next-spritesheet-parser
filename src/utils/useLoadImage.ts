@@ -19,7 +19,11 @@ export default function useLoadImage(imageURL: string): UseLoadImageResult {
   const [result, setResult] = useState(initialLoadImageResult);
 
   useEffect(() => {
-    if (!imageURL) return;
+    if (!imageURL) {
+      setResult(initialLoadImageResult);
+      return;
+    }
+
     const controller = new AbortController();
 
     setResult((prev) => ({ ...prev, loading: true }));

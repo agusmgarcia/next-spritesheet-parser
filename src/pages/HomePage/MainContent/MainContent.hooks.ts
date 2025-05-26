@@ -170,18 +170,14 @@ export default function useMainContent(props: MainContentProps) {
   );
 
   useEffect(() => {
-    if (!image) return;
-    if (!sprites) return;
-    if (!spriteSheet) return;
-
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
 
     spriteSheetCanvas.width =
-      Math.max(rootDimensions.width, image.width * scale) + 360;
+      Math.max(rootDimensions.width, (image?.width || 0) * scale) + 360;
     spriteSheetCanvas.height = Math.max(
       rootDimensions.height,
-      image.height * scale,
+      (image?.height || 0) * scale,
     );
 
     const context = spriteSheetCanvas.getContext("2d");
@@ -191,15 +187,17 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.fillStyle = spriteSheet.image.backgroundColor;
+    context.fillStyle = spriteSheet?.image.backgroundColor || "#ffffff";
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(scale, scale);
-    context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
+    if (!!image)
+      context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 
-    sprites.forEach((r) => {
-      context.strokeStyle = color;
-      context.strokeRect(r.left, r.top, r.width, r.height);
-    });
+    if (!!sprites?.length)
+      sprites.forEach((r) => {
+        context.strokeStyle = color;
+        context.strokeRect(r.left, r.top, r.width, r.height);
+      });
   }, [
     scale,
     image,
@@ -211,18 +209,14 @@ export default function useMainContent(props: MainContentProps) {
   ]);
 
   useEffect(() => {
-    if (!image) return;
-    if (!sprites) return;
-    if (!spriteSheet) return;
-
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
     selectionCanvas.width =
-      Math.max(rootDimensions.width, image.width * scale) + 360;
+      Math.max(rootDimensions.width, (image?.width || 0) * scale) + 360;
     selectionCanvas.height = Math.max(
       rootDimensions.height,
-      image.height * scale,
+      (image?.height || 0) * scale,
     );
 
     const context = selectionCanvas.getContext("2d");
@@ -235,7 +229,7 @@ export default function useMainContent(props: MainContentProps) {
     context.scale(scale, scale);
 
     spriteSelection.forEach((spriteId) => {
-      const sprite = spriteSheet.sprites[spriteId];
+      const sprite = spriteSheet?.sprites[spriteId];
       if (!sprite) return;
       if (spriteHovered === spriteId) return;
 
@@ -246,7 +240,7 @@ export default function useMainContent(props: MainContentProps) {
     });
 
     if (!!spriteHovered) {
-      const sprite = spriteSheet.sprites[spriteHovered];
+      const sprite = spriteSheet?.sprites[spriteHovered];
       if (!sprite) return;
 
       context.globalAlpha = spriteSelection.includes(spriteHovered) ? 0.3 : 0.2;
@@ -256,7 +250,7 @@ export default function useMainContent(props: MainContentProps) {
     }
 
     preSelectedSprites?.forEach((spriteId) => {
-      const sprite = spriteSheet.sprites[spriteId];
+      const sprite = spriteSheet?.sprites[spriteId];
       if (!sprite) return;
 
       if (spriteSelection.includes(spriteId)) return;
@@ -286,7 +280,6 @@ export default function useMainContent(props: MainContentProps) {
     rootDimensions.height,
     rootDimensions.width,
     spriteSheet,
-    sprites,
     spriteHovered,
     color,
   ]);

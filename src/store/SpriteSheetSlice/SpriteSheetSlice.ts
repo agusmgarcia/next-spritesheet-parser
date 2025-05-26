@@ -85,6 +85,7 @@ export default createServerSlice<
   }),
   () => ({
     mergeSpriteSheetSprites,
+    removeSpriteSheet,
     setSpriteSheetImage,
     setSpriteSheetName,
     setSpriteSheetSettings,
@@ -176,6 +177,34 @@ async function mergeSpriteSheetSprites(
   spriteIds.forEach((sId) => delete sprites[sId]);
 
   context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
+}
+
+async function removeSpriteSheet(
+  context: CreateServerSliceTypes.Context<
+    SpriteSheetSlice,
+    AnimationsSliceTypes.default &
+      NormalMapSliceTypes.default &
+      NotificationSliceTypes.default
+  >,
+): Promise<void> {
+  if (
+    !!context.get().animations.animations.length ||
+    Object.values(context.get().spriteSheet.data?.sprites || {}).some(
+      (sprite) => !!Object.keys(sprite.subsprites).length,
+    ) ||
+    context.get().normalMap.data?.settings.strength !== 1
+  ) {
+    const response = await context
+      .get()
+      .notification.setNotification(
+        "warning",
+        "By removing the image you may loose all your progress. Are you sure you want to continue?",
+      );
+
+    if (!response) return;
+  }
+
+  await context.reload(initialSpriteSheet);
 }
 
 async function setSpriteSheetImage(

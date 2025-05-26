@@ -17,6 +17,10 @@ export default function useHomePage(props: HomePageProps) {
             description: "Export configuration",
             key: "e",
           },
+          {
+            description: "Remove sprite sheet",
+            key: "r",
+          },
         ],
         title: "Files",
       },

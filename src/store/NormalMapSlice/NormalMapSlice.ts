@@ -69,7 +69,7 @@ async function __updateNormalMapImage__(
   >,
 ): Promise<void> {
   const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url) return;
+  if (!spriteSheet) return;
 
   await context.reload({
     image: { ...spriteSheet.image },

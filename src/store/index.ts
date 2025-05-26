@@ -118,6 +118,9 @@ export function useSpriteSheet() {
     mergeSpriteSheetSprites: useSelector(
       (state) => state.spriteSheet.mergeSpriteSheetSprites,
     ),
+    removeSpriteSheet: useSelector(
+      (state) => state.spriteSheet.removeSpriteSheet,
+    ),
     setSpriteSheetImage: useSelector(
       (state) => state.spriteSheet.setSpriteSheetImage,
     ),

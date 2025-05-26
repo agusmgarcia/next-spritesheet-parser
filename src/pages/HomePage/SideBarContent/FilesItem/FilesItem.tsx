@@ -14,6 +14,8 @@ export default function FilesItem(props: FilesItemProps) {
     nameOnChange,
     nameTermination,
     nameValue,
+    removeSpriteSheetDisabled,
+    removeSpriteSheetOnClick,
     ...rest
   } = useFilesItem(props);
 
@@ -47,6 +49,16 @@ export default function FilesItem(props: FilesItemProps) {
           name="termination"
           value={nameTermination}
         />
+
+        {/* REMOVE SPRITE SHEET */}
+        <Button
+          className="flex w-fit items-center justify-center"
+          disabled={removeSpriteSheetDisabled}
+          onClick={removeSpriteSheetOnClick}
+          variant="secondary"
+        >
+          <Icon variant="trash" />
+        </Button>
       </div>
 
       {/* IMPORT FILE */}
