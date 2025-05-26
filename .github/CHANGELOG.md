@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.23.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.1)
+
+> May 26, 2025
+
+- **HomePage**: calculate loss when new settings are entered
+- **SpriteSheet**: remove background on export
+- **Accordion**: scroll into view when item is expanded
+- **HomePage**: prevent multiple sprite selection when no image
+
 ## [v0.23.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.0)
 
 > May 26, 2025
