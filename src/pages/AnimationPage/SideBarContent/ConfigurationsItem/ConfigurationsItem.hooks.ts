@@ -1,7 +1,9 @@
+import { type Func } from "@agusmgarcia/react-core";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 import { useAnimations } from "#src/store";
+import { useKeyDown } from "#src/utils";
 
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
@@ -59,12 +61,14 @@ function useDeleteAnimation({
 
   const { deleteAnimation } = useAnimations();
 
-  const deleteAnimationOnClick = useCallback<
-    React.MouseEventHandler<HTMLButtonElement>
-  >(() => {
-    deleteAnimation(animationFromProps.id);
-    replace("/");
+  const deleteAnimationOnClick = useCallback<Func>(() => {
+    deleteAnimation(animationFromProps.id).then((result) => {
+      if (!result) return;
+      return replace("/");
+    });
   }, [animationFromProps.id, deleteAnimation, replace]);
+
+  useKeyDown("r", deleteAnimationOnClick);
 
   return { deleteAnimationOnClick };
 }

@@ -148,13 +148,35 @@ function createAnimation(
   return animation.id;
 }
 
-function deleteAnimation(
+async function deleteAnimation(
   id: Parameters<AnimationsSlice["animations"]["deleteAnimation"]>[0],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
+  context: CreateGlobalSliceTypes.Context<
+    AnimationsSlice,
+    NotificationSliceTypes.default
+  >,
+): Promise<boolean> {
+  const animation = context
+    .get()
+    .animations.animations.find((a) => a.id === id);
+
+  if (!animation) return true;
+
+  const response = await context
+    .get()
+    .notification.setNotification(
+      "warning",
+      `Are you sure you want to delete the animation **${animation.name}**? This action cannot be undone.`,
+    );
+
+  if (!response) return false;
+
   context.set((prev) => ({
     animations: prev.animations.filter((a) => a.id !== id),
   }));
+
+  context.get().notification.setNotification("success", "Animation deleted!");
+
+  return true;
 }
 
 function resetAnimationOffset(

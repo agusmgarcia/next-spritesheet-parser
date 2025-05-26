@@ -26,7 +26,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     __updateAnimations__: Func;
     animations: Animation[];
     createAnimation: Func<string | undefined, [spriteIds: string[]]>;
-    deleteAnimation: Func<void, [id: string]>;
+    deleteAnimation: AsyncFunc<boolean, [id: string]>;
     resetAnimationOffset: Func<void, [id: string, index: number]>;
     setAnimationColor: Func<
       void,

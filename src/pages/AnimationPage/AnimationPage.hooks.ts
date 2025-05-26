@@ -61,6 +61,15 @@ function useInstructions() {
       {
         keys: [
           {
+            description: "Remove the animation",
+            key: "r",
+          },
+        ],
+        title: "Configurations",
+      },
+      {
+        keys: [
+          {
             description: "Play/Pause the animation",
             key: " ",
           },
