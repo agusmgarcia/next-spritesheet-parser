@@ -274,19 +274,35 @@ async function setSpriteSheetSettings(
   if (!spriteSheet?.image.url)
     throw new Error("You need to provide an image first");
 
-  if (!!context.get().animations.animations.length) {
-    const response = await context
-      .get()
-      .notification.setNotification(
-        "warning",
-        "By modifying this settings you may loose all your progress. Are you sure you want to continue?",
-      );
+  const newSettings =
+    settings instanceof Function ? settings(spriteSheet.settings) : settings;
+
+  const spriteIds = await loadImage(spriteSheet.image.url, context.signal)
+    .then(imageDataUtils.get)
+    .then((data) => getSprites(data, newSettings))
+    .then((sprites) => Object.keys(sprites));
+
+  const animationsThatDoesntContainAtLeastOneSprite = context
+    .get()
+    .animations.animations.filter((a) =>
+      a.sprites.some((s) => !spriteIds.includes(s.id)),
+    );
+  if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
+    const response = await context.get().notification.setNotification(
+      "warning",
+      replaceString(
+        "By modifying this settings, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+        {
+          animations: animationsThatDoesntContainAtLeastOneSprite.length,
+          animationsName: animationsThatDoesntContainAtLeastOneSprite
+            .map((a) => `**"${a.name}"**`)
+            .join(", "),
+        },
+      ),
+    );
 
     if (!response) return;
   }
-
-  const newSettings =
-    settings instanceof Function ? settings(spriteSheet.settings) : settings;
 
   await context.reload({
     image: { ...spriteSheet.image },

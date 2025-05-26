@@ -42,16 +42,22 @@ function useSettings() {
   );
 
   const [settingsValue, setSettingsValue] = useState(initialSettings);
+  const [loading, setLoading] = useState(false);
+
+  const settingsLoading = useMemo<boolean>(
+    () => spriteSheetLoading || loading,
+    [loading, spriteSheetLoading],
+  );
 
   const settingsDisabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url || spriteSheetLoading,
-    [spriteSheetLoading, spriteSheet],
+    () => !spriteSheet?.image.url || settingsLoading,
+    [settingsLoading, spriteSheet],
   );
 
   const settingsButtonDisabled = useMemo<boolean>(
     () =>
       !spriteSheet?.image.url ||
-      spriteSheetLoading ||
+      settingsLoading ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
       +settingsValue.delta < 0 ||
@@ -69,7 +75,7 @@ function useSettings() {
       +settingsValue.minDiversity < 0,
     [
       spriteSheet?.image.url,
-      spriteSheetLoading,
+      settingsLoading,
       settingsValue.delta,
       settingsValue.maxArea,
       settingsValue.maxVariation,
@@ -90,13 +96,14 @@ function useSettings() {
   );
 
   const settingsOnClick = useCallback<Func>(() => {
+    setLoading(true);
     setSpriteSheetSettings({
       delta: +settingsValue.delta,
       maxArea: +settingsValue.maxArea,
       maxVariation: +settingsValue.maxVariation,
       minArea: +settingsValue.minArea,
       minDiversity: +settingsValue.minDiversity,
-    });
+    }).finally(() => setLoading(false));
   }, [
     setSpriteSheetSettings,
     settingsValue.delta,
@@ -125,7 +132,7 @@ function useSettings() {
   return {
     settingsButtonDisabled,
     settingsDisabled,
-    settingsLoading: spriteSheetLoading,
+    settingsLoading,
     settingsOnChange,
     settingsOnClick,
     settingsValue,
