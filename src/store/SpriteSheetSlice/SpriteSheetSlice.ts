@@ -10,13 +10,15 @@ import { imageDataUtils, loadImage } from "#src/utils";
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
+import { type UtilsSliceTypes } from "../UtilsSlice";
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
 export default createServerSlice<
   SpriteSheetSlice,
   AnimationsSliceTypes.default &
     NormalMapSliceTypes.default &
-    NotificationSliceTypes.default
+    NotificationSliceTypes.default &
+    UtilsSliceTypes.default
 >(
   "spriteSheet",
   async ({ image, settings }, signal, prevSpriteSheet) => {
@@ -180,16 +182,11 @@ async function removeSpriteSheet(
     SpriteSheetSlice,
     AnimationsSliceTypes.default &
       NormalMapSliceTypes.default &
-      NotificationSliceTypes.default
+      NotificationSliceTypes.default &
+      UtilsSliceTypes.default
   >,
 ): Promise<void> {
-  if (
-    !!context.get().animations.animations.length ||
-    Object.values(context.get().spriteSheet.data?.sprites || {}).some(
-      (sprite) => !!Object.keys(sprite.subsprites).length,
-    ) ||
-    context.get().normalMap.data?.settings.strength !== 1
-  ) {
+  if (context.get().utils.isDirty()) {
     const response = await context
       .get()
       .notification.setNotification(
@@ -209,16 +206,11 @@ async function setSpriteSheetImage(
     SpriteSheetSlice,
     AnimationsSliceTypes.default &
       NormalMapSliceTypes.default &
-      NotificationSliceTypes.default
+      NotificationSliceTypes.default &
+      UtilsSliceTypes.default
   >,
 ): Promise<void> {
-  if (
-    !!context.get().animations.animations.length ||
-    Object.values(context.get().spriteSheet.data?.sprites || {}).some(
-      (sprite) => !!Object.keys(sprite.subsprites).length,
-    ) ||
-    context.get().normalMap.data?.settings.strength !== 1
-  ) {
+  if (context.get().utils.isDirty()) {
     const response = await context
       .get()
       .notification.setNotification(

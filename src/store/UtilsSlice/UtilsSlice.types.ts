@@ -1,6 +1,7 @@
 import {
   type AsyncFunc,
   type CreateGlobalSliceTypes,
+  type Func,
 } from "@agusmgarcia/react-core";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
@@ -41,6 +42,7 @@ type UtilsSlice = CreateGlobalSliceTypes.SliceOf<
         },
       ]
     >;
+    isDirty: Func<boolean>;
   }
 >;
 

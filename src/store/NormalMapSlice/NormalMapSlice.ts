@@ -58,7 +58,7 @@ const initialNormalMap: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
     url: "",
   },
   settings: {
-    strength: 1,
+    strength: 0,
   },
 };
 

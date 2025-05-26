@@ -19,7 +19,7 @@ export default createGlobalSlice<
     NormalMapSliceTypes.default &
     NotificationSliceTypes.default &
     SpriteSheetSliceTypes.default
->("utils", () => ({ exportZip, importJSONFile }));
+>("utils", () => ({ exportZip, importJSONFile, isDirty }));
 
 async function exportZip(
   context: CreateGlobalSliceTypes.Context<
@@ -116,11 +116,7 @@ async function importJSONFile(
   };
 
   if (
-    (!!animations.length ||
-      Object.values(spriteSheet.sprites).some(
-        (sprite) => !!Object.keys(sprite.subsprites).length,
-      ) ||
-      normalMap.settings.strength !== 1) &&
+    isDirty(context) &&
     (!equals.deep(newNormalMap, normalMap) ||
       !equals.deep(newSpriteSheet, spriteSheet) ||
       !equals.deep(newAnimations, animations))
@@ -149,4 +145,35 @@ async function importJSONFile(
   await context
     .get()
     .notification.setNotification("success", "JSON file loaded succesfully!");
+}
+
+function isDirty(
+  context: CreateGlobalSliceTypes.Context<
+    UtilsSlice,
+    AnimationsSliceTypes.default &
+      NormalMapSliceTypes.default &
+      SpriteSheetSliceTypes.default
+  >,
+): boolean {
+  const animations = context.get().animations.animations;
+  if (!!animations.length) return true;
+
+  const spriteSheet = context.get().spriteSheet.data;
+  if (
+    !!spriteSheet?.image.url &&
+    (Object.values(spriteSheet.sprites).some(
+      (sprite) => !!Object.keys(sprite.subsprites).length,
+    ) ||
+      spriteSheet.settings.delta !== 0 ||
+      spriteSheet.settings.minArea !== 0 ||
+      spriteSheet.settings.minDiversity !== 0.33 ||
+      spriteSheet.settings.maxArea !== 0.5 ||
+      spriteSheet.settings.maxVariation !== 0.5)
+  )
+    return true;
+
+  const normalMap = context.get().normalMap.data;
+  if (!!normalMap?.image.url && normalMap.settings.strength !== 1) return true;
+
+  return false;
 }
