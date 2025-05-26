@@ -1,35 +1,17 @@
 import { twMerge } from "tailwind-merge";
 
-import { Button, Icon } from "#src/components";
-
 import useAccordionItem from "./AccordionItem.hooks";
 import type AccordionItemProps from "./AccordionItem.types";
 
 export default function AccordionItem(props: AccordionItemProps) {
-  const { children, className, expanded, heading, toggle, ...rest } =
+  const { children, className, expanded, heading, ...rest } =
     useAccordionItem(props);
 
   return (
     <div {...rest} className="flex flex-col gap-1">
       {/* HEADER */}
       <div className="flex flex-col">
-        <div
-          className={twMerge(
-            "flex items-center justify-between",
-            !heading && "justify-end",
-          )}
-        >
-          {/* HEADING */}
-          {heading}
-
-          <Button
-            className="flex size-9 items-center justify-center rounded-b-none"
-            onClick={toggle}
-            variant="secondary"
-          >
-            <Icon variant={expanded ? "arrowUp" : "arrowDown"} />
-          </Button>
-        </div>
+        {heading}
 
         {/* DIVIDER */}
         <div className="h-[2px] w-full bg-white" />
