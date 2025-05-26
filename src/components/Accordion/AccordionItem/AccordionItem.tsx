@@ -4,7 +4,7 @@ import useAccordionItem from "./AccordionItem.hooks";
 import type AccordionItemProps from "./AccordionItem.types";
 
 export default function AccordionItem(props: AccordionItemProps) {
-  const { children, className, expanded, heading, ...rest } =
+  const { bodyRef, children, className, expanded, heading, ...rest } =
     useAccordionItem(props);
 
   return (
@@ -19,6 +19,7 @@ export default function AccordionItem(props: AccordionItemProps) {
 
       {/* BODY */}
       <div
+        ref={bodyRef}
         className={twMerge(
           "overflow-hidden transition-[max-height]",
           expanded ? "max-h-dvh" : "max-h-0",

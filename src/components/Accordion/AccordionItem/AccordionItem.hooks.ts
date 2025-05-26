@@ -1,5 +1,5 @@
 import { children } from "@agusmgarcia/react-core";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { Button, Icon, Typography } from "#src/components";
@@ -11,6 +11,8 @@ export default function useAccordionItem({
   heading: headingFromProps,
   ...rest
 }: AccordionItemProps) {
+  const bodyRef = useRef<HTMLDivElement>(null);
+
   const [expanded, setExpanded] = useState(!defaultCollapsedFromProps);
 
   const toggle = useCallback(() => setExpanded((prev) => !prev), []);
@@ -46,5 +48,24 @@ export default function useAccordionItem({
     setExpanded(!defaultCollapsedFromProps);
   }, [defaultCollapsedFromProps]);
 
-  return { ...rest, expanded, heading };
+  useEffect(() => {
+    const body = bodyRef.current;
+    if (!body) return;
+
+    if (!expanded) return;
+
+    const handleTransitionEnd = (event: TransitionEvent) => {
+      if (event.target !== body) return;
+      body.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "center",
+      });
+    };
+
+    body.addEventListener("transitionend", handleTransitionEnd);
+    return () => body.removeEventListener("transitionend", handleTransitionEnd);
+  }, [expanded]);
+
+  return { ...rest, bodyRef, expanded, heading };
 }
