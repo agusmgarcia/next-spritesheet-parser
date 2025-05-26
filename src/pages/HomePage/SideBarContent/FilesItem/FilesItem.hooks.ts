@@ -176,7 +176,7 @@ function useName() {
     () =>
       !!spriteSheet?.image.type
         ? `.${spriteSheet.image.type.replace("image/", "")}`
-        : "",
+        : ".png",
     [spriteSheet?.image.type],
   );
 

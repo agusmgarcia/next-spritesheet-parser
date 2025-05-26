@@ -41,14 +41,12 @@ export default function FilesItem(props: FilesItemProps) {
         />
 
         {/* TERMINATION */}
-        {!!nameTermination && (
-          <Input
-            className="w-16 text-center"
-            disabled={true}
-            name="termination"
-            value={nameTermination}
-          />
-        )}
+        <Input
+          className="w-16 text-center"
+          disabled={true}
+          name="termination"
+          value={nameTermination}
+        />
       </div>
 
       {/* IMPORT FILE */}
