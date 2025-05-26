@@ -5,6 +5,8 @@ import {
 } from "@agusmgarcia/react-core";
 import { downloadZip } from "client-zip";
 
+import { imageDataUtils, loadImage } from "#src/utils";
+
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
@@ -50,6 +52,7 @@ async function exportZip(
             version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
           }),
         ),
+      { signal: context.signal },
     )
       .then((response) => response.blob())
       .then((blob) => ({
@@ -58,15 +61,19 @@ async function exportZip(
         name: `${baseName}.json`,
       })),
 
-    fetch(spriteSheet.image.url)
-      .then((response) => response.blob())
-      .then((blob) => ({
-        input: blob,
-        lastModified: new Date(),
-        name: `${baseName}.${spriteSheet.image.type.replace("image/", "")}`,
-      })),
+    loadImage(spriteSheet.image.url, context.signal)
+      .then(imageDataUtils.get)
+      .then(imageDataUtils.removeBackground)
+      .then((data) =>
+        imageDataUtils.createFile(
+          data,
+          `${baseName}.${spriteSheet.image.type.replace("image/", "")}`,
+          spriteSheet.image.type,
+          context.signal,
+        ),
+      ),
 
-    fetch(normalMap.image.url)
+    fetch(normalMap.image.url, { signal: context.signal })
       .then((response) => response.blob())
       .then((blob) => ({
         input: blob,

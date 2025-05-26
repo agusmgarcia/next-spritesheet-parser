@@ -29,12 +29,7 @@ export default createServerSlice<
         const sprites = getSprites(data, settings);
 
         const url = await imageDataUtils
-          .createFile(
-            imageDataUtils.removeBackground(data),
-            image.name,
-            image.type,
-            signal,
-          )
+          .createFile(data, image.name, image.type, signal)
           .then((file) => URL.createObjectURL(file));
 
         URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
