@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.23.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.0)
+
+> May 26, 2025
+
+- **HomePage**: add remove sprite sheet feature
+- **AnimationPage**: add warning before deletion
+- **HomePage**: add termination even when image has not been loaded
+- move export zip feature to store
+- **UtilsSlice**: rename it
+- **Accordion**: add ability to collapse/expand by clicking on header
+- **AnimatioPage**: move animations item to the top
+- **AnimationPage**: merge fps and playing into single item
+- **AnimationPage**: merge center and movements into single item
+- **HomePage**: adjust order of items
+- **Accordion**: add missing hooks
+- **Typography**: add missing hooks
+
 ## [v0.22.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.22.0)
 
 > May 24, 2025
