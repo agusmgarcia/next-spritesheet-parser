@@ -125,12 +125,13 @@ export default function useMainContent(props: MainContentProps) {
 
   const onMouseDown = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
+      if (!spriteSheet?.image.url) return;
       const rect = event.currentTarget.getBoundingClientRect();
       const x = (event.clientX - rect.left) / scale;
       const y = (event.clientY - rect.top) / scale;
       setSelectedArea([x, y, x, y]);
     },
-    [scale],
+    [scale, spriteSheet?.image.url],
   );
 
   const onMouseLeave = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -162,11 +163,12 @@ export default function useMainContent(props: MainContentProps) {
         ).map((s) => s.id),
       );
 
-      setSelectedArea((prev) =>
-        !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
-      );
+      if (!!spriteSheet?.image.url)
+        setSelectedArea((prev) =>
+          !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
+        );
     },
-    [scale, findSprite, findSprites, selectedArea],
+    [scale, selectedArea, findSprites, spriteSheet?.image.url, findSprite],
   );
 
   useEffect(() => {
