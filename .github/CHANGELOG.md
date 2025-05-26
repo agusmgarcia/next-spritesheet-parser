@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.23.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.2)
+
+> May 26, 2025
+
+- **NormalMapSlice**: adjust normal map calculation
+- **UtilsSlice**: add isDirty method
+- **store**: add minor adjustments
+
 ## [v0.23.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.1)
 
 > May 26, 2025
