@@ -1,12 +1,7 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
-import { downloadZip } from "client-zip";
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  type Animation,
-  type NormalMap,
-  type SpriteSheet,
-  useAnimations,
   useNormalMap,
   useNotification,
   useSpriteSheet,
@@ -117,9 +112,9 @@ function useImportFile() {
 }
 
 function useExportFile() {
-  const { animations } = useAnimations();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
   const { normalMap, normalMapLoading } = useNormalMap();
+  const { exportZip } = useUtils();
 
   const [exportFileLoading, setExportFileLoading] = useState(false);
 
@@ -139,73 +134,21 @@ function useExportFile() {
     ],
   );
 
-  const exportFile = useCallback<
-    AsyncFunc<
-      void,
-      [spriteSheet: SpriteSheet, animations: Animation[], normalMap: NormalMap]
-    >
-  >(async (spriteSheet, animations, normalMap) => {
-    const [spriteSheetJSON, spriteSheetImage, normalMapImage] =
-      await Promise.all([
-        fetch(
-          "data:text/json;charset=utf-8," +
-            encodeURIComponent(
-              JSON.stringify({
-                animations,
-                normalMap,
-                spriteSheet,
-                version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
-              }),
-            ),
-        )
-          .then((response) => response.blob())
-          .then((blob) => ({
-            input: blob,
-            lastModified: new Date(),
-            name: `${spriteSheet.image.name}.json`,
-          })),
-
-        fetch(spriteSheet.image.url)
-          .then((response) => response.blob())
-          .then((blob) => ({
-            input: blob,
-            lastModified: new Date(),
-            name: `${spriteSheet.image.name}.${spriteSheet.image.type.replace("image/", "")}`,
-          })),
-
-        fetch(normalMap.image.url)
-          .then((response) => response.blob())
-          .then((blob) => ({
-            input: blob,
-            lastModified: new Date(),
-            name: `${normalMap.image.name}.normal.png`,
-          })),
-        ,
-      ]);
-
-    const blob = await downloadZip([
-      spriteSheetJSON,
-      spriteSheetImage,
-      normalMapImage,
-    ]).blob();
-
-    const anchor = document.createElement("a");
-    anchor.href = URL.createObjectURL(blob);
-    anchor.setAttribute("download", `${spriteSheet.image.name}.zip`);
-    anchor.click();
-    URL.revokeObjectURL(anchor.href);
-  }, []);
-
   const exportFileOnClick = useCallback<Func>(() => {
     if (exportFileDisabled) return;
-    if (!spriteSheet) return;
-    if (!normalMap) return;
 
     setExportFileLoading(true);
-    exportFile(spriteSheet, animations, normalMap).finally(() =>
-      setExportFileLoading(false),
-    );
-  }, [animations, exportFile, exportFileDisabled, normalMap, spriteSheet]);
+    exportZip()
+      .then((file) => {
+        const anchor = document.createElement("a");
+        const href = URL.createObjectURL(file);
+        anchor.href = href;
+        anchor.setAttribute("download", file.name);
+        anchor.click();
+        URL.revokeObjectURL(href);
+      })
+      .finally(() => setExportFileLoading(false));
+  }, [exportFileDisabled, exportZip]);
 
   useKeyDown("e", exportFileOnClick);
 

@@ -10,6 +10,7 @@ import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 type UtilsSlice = CreateGlobalSliceTypes.SliceOf<
   "utils",
   {
+    exportZip: AsyncFunc<File>;
     importJSONFile: AsyncFunc<
       void,
       [

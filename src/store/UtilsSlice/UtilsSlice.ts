@@ -3,6 +3,7 @@ import {
   type CreateGlobalSliceTypes,
   equals,
 } from "@agusmgarcia/react-core";
+import { downloadZip } from "client-zip";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
@@ -16,7 +17,67 @@ export default createGlobalSlice<
     NormalMapSliceTypes.default &
     NotificationSliceTypes.default &
     SpriteSheetSliceTypes.default
->("utils", () => ({ importJSONFile }));
+>("utils", () => ({ exportZip, importJSONFile }));
+
+async function exportZip(
+  context: CreateGlobalSliceTypes.Context<
+    UtilsSlice,
+    AnimationsSliceTypes.default &
+      NormalMapSliceTypes.default &
+      NotificationSliceTypes.default &
+      SpriteSheetSliceTypes.default
+  >,
+): Promise<File> {
+  const animations = context.get().animations.animations;
+  const normalMap = context.get().normalMap.data;
+  if (!normalMap?.image.url)
+    throw new Error("You need to provide an image first");
+
+  const spriteSheet = context.get().spriteSheet.data;
+  if (!spriteSheet?.image.url)
+    throw new Error("You need to provide an image first");
+
+  const baseName = spriteSheet.image.name || "Sprite sheet";
+
+  return await Promise.all([
+    fetch(
+      "data:text/json;charset=utf-8," +
+        encodeURIComponent(
+          JSON.stringify({
+            animations,
+            normalMap,
+            spriteSheet,
+            version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
+          }),
+        ),
+    )
+      .then((response) => response.blob())
+      .then((blob) => ({
+        input: blob,
+        lastModified: new Date(),
+        name: `${baseName}.json`,
+      })),
+
+    fetch(spriteSheet.image.url)
+      .then((response) => response.blob())
+      .then((blob) => ({
+        input: blob,
+        lastModified: new Date(),
+        name: `${baseName}.${spriteSheet.image.type.replace("image/", "")}`,
+      })),
+
+    fetch(normalMap.image.url)
+      .then((response) => response.blob())
+      .then((blob) => ({
+        input: blob,
+        lastModified: new Date(),
+        name: `${baseName}.normal.png`,
+      })),
+  ])
+    .then(downloadZip)
+    .then((result) => result.blob())
+    .then((blob) => new File([blob], `${baseName}.zip`));
+}
 
 async function importJSONFile(
   jsonFile: Parameters<UtilsSlice["utils"]["importJSONFile"]>[0],
