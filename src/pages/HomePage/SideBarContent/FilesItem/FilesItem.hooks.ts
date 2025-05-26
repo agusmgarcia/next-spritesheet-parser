@@ -7,10 +7,10 @@ import {
   type NormalMap,
   type SpriteSheet,
   useAnimations,
-  useImportJSONFile,
   useNormalMap,
   useNotification,
   useSpriteSheet,
+  useUtils,
 } from "#src/store";
 import { getErrorMessage, useKeyDown } from "#src/utils";
 
@@ -40,7 +40,7 @@ export default function useFilesItem(props: FilesItemProps) {
 
 function useImportFile() {
   const { setNotification } = useNotification();
-  const { importJSONFile } = useImportJSONFile();
+  const { importJSONFile } = useUtils();
   const { setSpriteSheetImage, spriteSheet, spriteSheetLoading } =
     useSpriteSheet();
   const { normalMapLoading } = useNormalMap();

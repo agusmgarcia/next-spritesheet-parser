@@ -7,8 +7,8 @@ import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 
-type ImportJSONFileSlice = CreateGlobalSliceTypes.SliceOf<
-  "importJSONFile",
+type UtilsSlice = CreateGlobalSliceTypes.SliceOf<
+  "utils",
   {
     importJSONFile: AsyncFunc<
       void,
@@ -43,4 +43,4 @@ type ImportJSONFileSlice = CreateGlobalSliceTypes.SliceOf<
   }
 >;
 
-export default ImportJSONFileSlice;
+export default UtilsSlice;

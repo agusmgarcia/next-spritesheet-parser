@@ -5,7 +5,6 @@ import { getErrorMessage } from "#src/utils";
 import createAnimationsSlice, {
   type AnimationsSliceTypes,
 } from "./AnimationsSlice";
-import createImportJSONFileSlice from "./ImportJSONFileSlice";
 import createNormalMapSlice, {
   type NormalMapSliceTypes,
 } from "./NormalMapSlice";
@@ -17,6 +16,7 @@ import createSpriteSelectionSlice from "./SpriteSelectionSlice";
 import createSpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
+import createUtilsSlice from "./UtilsSlice";
 
 export type Animation =
   AnimationsSliceTypes.default["animations"]["animations"][number];
@@ -33,12 +33,12 @@ export type SpriteSheet = NonNullable<
 
 const { useSelector, ...reactStore } = createStore(
   createAnimationsSlice,
-  createImportJSONFileSlice,
   createNormalMapSlice,
   createNotificationSlice,
   createScaleSlice,
   createSpriteSelectionSlice,
   createSpriteSheetSlice,
+  createUtilsSlice,
 )((callback, context) =>
   catchError(callback, (error) => {
     if (context.signal.aborted) return;
@@ -70,12 +70,6 @@ export function useAnimations() {
     setAnimationPlaying: useSelector(
       (state) => state.animations.setAnimationPlaying,
     ),
-  };
-}
-
-export function useImportJSONFile() {
-  return {
-    importJSONFile: useSelector((state) => state.importJSONFile.importJSONFile),
   };
 }
 
@@ -138,5 +132,11 @@ export function useSpriteSheet() {
     ),
     spriteSheet: useSelector((state) => state.spriteSheet.data),
     spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),
+  };
+}
+
+export function useUtils() {
+  return {
+    importJSONFile: useSelector((state) => state.utils.importJSONFile),
   };
 }

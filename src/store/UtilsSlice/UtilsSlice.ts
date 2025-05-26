@@ -8,22 +8,20 @@ import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import type ImportJSONFileSlice from "./ImportJSONFileSlice.types";
+import type UtilsSlice from "./UtilsSlice.types";
 
 export default createGlobalSlice<
-  ImportJSONFileSlice,
+  UtilsSlice,
   AnimationsSliceTypes.default &
     NormalMapSliceTypes.default &
     NotificationSliceTypes.default &
     SpriteSheetSliceTypes.default
->("importJSONFile", () => ({ importJSONFile }));
+>("utils", () => ({ importJSONFile }));
 
 async function importJSONFile(
-  jsonFile: Parameters<
-    ImportJSONFileSlice["importJSONFile"]["importJSONFile"]
-  >[0],
+  jsonFile: Parameters<UtilsSlice["utils"]["importJSONFile"]>[0],
   context: CreateGlobalSliceTypes.Context<
-    ImportJSONFileSlice,
+    UtilsSlice,
     AnimationsSliceTypes.default &
       NormalMapSliceTypes.default &
       NotificationSliceTypes.default &
