@@ -26,6 +26,7 @@ export default function Input(props: InputProps) {
       {...rest}
       className={twMerge(
         "size-full min-h-[42px] cursor-text rounded-lg border border-black bg-white p-2 text-black outline outline-1 outline-offset-0 outline-transparent",
+        rest.type === "number" && "pl-4",
         "transition-colors",
         "enabled:hover:bg-cranberry-300 enabled:focus:bg-cranberry-300",
         "focus-within:-outline-offset-2 focus-within:outline-cranberry-600",
