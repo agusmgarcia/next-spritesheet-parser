@@ -8,9 +8,15 @@ import { downloadZip } from "client-zip";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
-import { type NormalMapSliceTypes } from "../NormalMapSlice";
+import {
+  DEFAULT_SETTINGS as DEFAULT_NORMAL_MAP_SETTINGS,
+  type NormalMapSliceTypes,
+} from "../NormalMapSlice";
 import { type NotificationSliceTypes } from "../NotificationSlice";
-import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
+import {
+  DEFAULT_SETTINGS as DEFAULT_SPRITE_SHEET_SETTINGS,
+  type SpriteSheetSliceTypes,
+} from "../SpriteSheetSlice";
 import type UtilsSlice from "./UtilsSlice.types";
 
 export default createGlobalSlice<
@@ -164,23 +170,14 @@ function isDirty(
     (Object.values(spriteSheet.sprites).some(
       (sprite) => !!Object.keys(sprite.subsprites).length,
     ) ||
-      spriteSheet.settings.delta !== 0 ||
-      spriteSheet.settings.minArea !== 0 ||
-      spriteSheet.settings.minDiversity !== 0.33 ||
-      spriteSheet.settings.maxArea !== 0.5 ||
-      spriteSheet.settings.maxVariation !== 0.5)
+      !equals.deep(spriteSheet.settings, DEFAULT_SPRITE_SHEET_SETTINGS))
   )
     return true;
 
   const normalMap = context.get().normalMap.data;
   if (
     !!normalMap?.image.url &&
-    (normalMap.settings.colorSpace !== "linear" ||
-      normalMap.settings.filterRadius !== 1 ||
-      !!normalMap.settings.invertX ||
-      !!normalMap.settings.invertY ||
-      !!normalMap.settings.invertZ ||
-      normalMap.settings.strength !== 1)
+    !equals.deep(normalMap.settings, DEFAULT_NORMAL_MAP_SETTINGS)
   )
     return true;
 

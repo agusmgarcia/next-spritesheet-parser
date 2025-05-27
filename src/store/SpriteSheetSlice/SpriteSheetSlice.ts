@@ -13,6 +13,16 @@ import { type NotificationSliceTypes } from "../NotificationSlice";
 import { type UtilsSliceTypes } from "../UtilsSlice";
 import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 
+export const DEFAULT_SETTINGS: NonNullable<
+  SpriteSheetSlice["spriteSheet"]["data"]
+>["settings"] = {
+  delta: 0,
+  maxArea: 0.5,
+  maxVariation: 0.5,
+  minArea: 0,
+  minDiversity: 0.33,
+};
+
 export default createServerSlice<
   SpriteSheetSlice,
   AnimationsSliceTypes.default &
@@ -53,7 +63,7 @@ export default createServerSlice<
 
     if (!image.url) {
       URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
-      return initialSpriteSheet;
+      return DEFAULT_SPRITE_SHEET;
     }
 
     const sprites = await loadImage(image.url, signal)
@@ -65,21 +75,7 @@ export default createServerSlice<
 
     return { image, settings, sprites };
   },
-  () => ({
-    image: {
-      backgroundColor: "",
-      name: "",
-      type: "",
-      url: "",
-    },
-    settings: {
-      delta: 0,
-      maxArea: 0,
-      maxVariation: 0,
-      minArea: 0,
-      minDiversity: 0,
-    },
-  }),
+  () => DEFAULT_SPRITE_SHEET,
   () => ({
     mergeSpriteSheetSprites,
     removeSpriteSheet,
@@ -91,23 +87,24 @@ export default createServerSlice<
   }),
 );
 
-const initialSpriteSheet: NonNullable<SpriteSheetSlice["spriteSheet"]["data"]> =
-  {
-    image: {
-      backgroundColor: "",
-      name: "",
-      type: "",
-      url: "",
-    },
-    settings: {
-      delta: 0,
-      maxArea: 0,
-      maxVariation: 0,
-      minArea: 0,
-      minDiversity: 0,
-    },
-    sprites: {},
-  };
+const DEFAULT_SPRITE_SHEET: NonNullable<
+  SpriteSheetSlice["spriteSheet"]["data"]
+> = {
+  image: {
+    backgroundColor: "",
+    name: "",
+    type: "",
+    url: "",
+  },
+  settings: {
+    delta: 0,
+    maxArea: 0,
+    maxVariation: 0,
+    minArea: 0,
+    minDiversity: 0,
+  },
+  sprites: {},
+};
 
 async function mergeSpriteSheetSprites(
   spriteIds: Parameters<
@@ -197,7 +194,7 @@ async function removeSpriteSheet(
     if (!response) return;
   }
 
-  await context.reload(initialSpriteSheet);
+  await context.reload(DEFAULT_SPRITE_SHEET);
 }
 
 async function setSpriteSheetImage(
@@ -221,16 +218,7 @@ async function setSpriteSheetImage(
     if (!response) return;
   }
 
-  await context.reload({
-    image,
-    settings: {
-      delta: 0,
-      maxArea: 0.5,
-      maxVariation: 0.5,
-      minArea: 0,
-      minDiversity: 0.33,
-    },
-  });
+  await context.reload({ image, settings: DEFAULT_SETTINGS });
 }
 
 function setSpriteSheetName(
@@ -298,10 +286,7 @@ async function setSpriteSheetSettings(
     if (!response) return;
   }
 
-  await context.reload({
-    image: { ...spriteSheet.image },
-    settings: newSettings,
-  });
+  await context.reload({ image: spriteSheet.image, settings: newSettings });
 }
 
 function setSpriteSheetSprites(

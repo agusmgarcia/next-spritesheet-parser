@@ -8,12 +8,23 @@ import { imageDataUtils, loadImage } from "#src/utils";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type NormalMapSlice from "./NormalMapSlice.types";
 
+export const DEFAULT_SETTINGS: NonNullable<
+  NormalMapSlice["normalMap"]["data"]
+>["settings"] = {
+  colorSpace: "linear",
+  filterRadius: 1,
+  invertX: false,
+  invertY: false,
+  invertZ: false,
+  strength: 1,
+};
+
 export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
   "normalMap",
   async ({ image: spriteSheetImage, settings }, signal, prevNormalMap) => {
     if (!spriteSheetImage.url) {
       URL.revokeObjectURL(prevNormalMap?.image.url || "");
-      return initialNormalMap;
+      return INITIAL_NORMAL_MAP;
     }
 
     const data = await loadImage(spriteSheetImage.url, signal)
@@ -21,29 +32,25 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
       .then(imageDataUtils.removeBackground)
       .then((i) => imageDataUtils.generateNormalMap(i, settings));
 
-    const image = { ...spriteSheetImage };
-    image.name = spriteSheetImage.name;
-    image.type = "image/png";
-    image.backgroundColor = imageDataUtils.getBackgroundColor(data);
-    image.url = await imageDataUtils
-      .createFile(data, `${image.name}.normal.png`, image.type, signal)
-      .then((file) => URL.createObjectURL(file));
+    const image = {
+      backgroundColor: imageDataUtils.getBackgroundColor(data),
+      name: spriteSheetImage.name,
+      type: "image/png",
+      url: await imageDataUtils
+        .createFile(
+          data,
+          `${spriteSheetImage.name}.normal.png`,
+          "image/png",
+          signal,
+        )
+        .then((file) => URL.createObjectURL(file)),
+    };
 
     URL.revokeObjectURL(prevNormalMap?.image.url || "");
 
     return { image, settings };
   },
-  () => ({
-    image: { backgroundColor: "", name: "", type: "", url: "" },
-    settings: {
-      colorSpace: "linear",
-      filterRadius: 0,
-      invertX: false,
-      invertY: false,
-      invertZ: false,
-      strength: 0,
-    },
-  }),
+  () => INITIAL_NORMAL_MAP,
   (subscribe) => {
     subscribe(
       (context) => context.get().normalMap.__updateNormalMapImage__(),
@@ -58,7 +65,7 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
   },
 );
 
-const initialNormalMap: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
+const INITIAL_NORMAL_MAP: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
   image: {
     backgroundColor: "",
     name: "",
@@ -85,15 +92,8 @@ async function __updateNormalMapImage__(
   if (!spriteSheet) return;
 
   await context.reload({
-    image: { ...spriteSheet.image },
-    settings: {
-      colorSpace: "linear",
-      filterRadius: 1,
-      invertX: false,
-      invertY: false,
-      invertZ: false,
-      strength: 1,
-    },
+    image: spriteSheet.image,
+    settings: DEFAULT_SETTINGS,
   });
 }
 
@@ -140,7 +140,7 @@ async function setNormalMapSettings(
     throw new Error("'Strength' must be greater than 0");
 
   await context.reload({
-    image: { ...spriteSheet.image },
+    image: spriteSheet.image,
     settings: newSettings,
   });
 }
