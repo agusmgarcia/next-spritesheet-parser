@@ -29,7 +29,7 @@ export default function NormalMapItem(props: NormalMapItemProps) {
         onClick={createNormalMapOnClick}
         variant="primary"
       >
-        Create
+        Edit
         <Icon
           className={!createNormalMapLoading ? undefined : "animate-spin"}
           variant={!createNormalMapLoading ? "box" : "spinner"}
