@@ -14,6 +14,11 @@ type NormalMap = {
     url: string;
   };
   settings: {
+    colorSpace: "linear" | "sRGB";
+    filterRadius: number;
+    invertX: boolean;
+    invertY: boolean;
+    invertZ: boolean;
     strength: number;
   };
 };

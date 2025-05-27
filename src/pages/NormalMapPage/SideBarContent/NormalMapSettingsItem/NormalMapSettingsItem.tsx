@@ -9,6 +9,8 @@ export default function NormalMapSettingsItem(
   const {
     normalMapSettingsButtonDisabled,
     normalMapSettingsDisabled,
+    normalMapSettingsInvertXId,
+    normalMapSettingsInvertYId,
     normalMapSettingsLoading,
     normalMapSettingsOnChange,
     normalMapSettingsOnClick,
@@ -40,6 +42,34 @@ export default function NormalMapSettingsItem(
           value={normalMapSettingsValue.strength}
         />
       </label>
+
+      <div className="flex items-center justify-between gap-2 text-white">
+        <label htmlFor={normalMapSettingsInvertXId}>Invert R</label>
+        <div className="flex w-2/3 justify-center">
+          <Input
+            checked={normalMapSettingsValue.invertX}
+            disabled={normalMapSettingsDisabled}
+            id={normalMapSettingsInvertXId}
+            name="invertX"
+            onChange={normalMapSettingsOnChange}
+            type="checkbox"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-2 text-white">
+        <label htmlFor={normalMapSettingsInvertYId}>Invert G</label>
+        <div className="flex w-2/3 justify-center">
+          <Input
+            checked={normalMapSettingsValue.invertY}
+            disabled={normalMapSettingsDisabled}
+            id={normalMapSettingsInvertYId}
+            name="invertY"
+            onChange={normalMapSettingsOnChange}
+            type="checkbox"
+          />
+        </div>
+      </div>
 
       <Button
         className="flex items-center justify-center gap-1"

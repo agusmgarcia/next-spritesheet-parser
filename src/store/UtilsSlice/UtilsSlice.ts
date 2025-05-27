@@ -173,7 +173,16 @@ function isDirty(
     return true;
 
   const normalMap = context.get().normalMap.data;
-  if (!!normalMap?.image.url && normalMap.settings.strength !== 1) return true;
+  if (
+    !!normalMap?.image.url &&
+    (normalMap.settings.colorSpace !== "linear" ||
+      normalMap.settings.filterRadius !== 1 ||
+      !!normalMap.settings.invertX ||
+      !!normalMap.settings.invertY ||
+      !!normalMap.settings.invertZ ||
+      normalMap.settings.strength !== 1)
+  )
+    return true;
 
   return false;
 }

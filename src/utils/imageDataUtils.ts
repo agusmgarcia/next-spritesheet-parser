@@ -54,7 +54,21 @@ export function getBackgroundColor(imageData: ImageData): string {
 
 export function generateNormalMap(
   imageData: ImageData,
-  strength: number,
+  {
+    colorSpace,
+    filterRadius,
+    invertX,
+    invertY,
+    invertZ,
+    strength,
+  }: {
+    colorSpace: "linear" | "sRGB";
+    filterRadius: number;
+    invertX: boolean;
+    invertY: boolean;
+    invertZ: boolean;
+    strength: number;
+  },
 ): ImageData {
   const width = imageData.width;
   const height = imageData.height;
@@ -74,19 +88,24 @@ export function generateNormalMap(
       const i = (y * width + x) * 4;
 
       const pX =
-        getIntensity(x + 1, y, width, height, data) -
-        getIntensity(x - 1, y, width, height, data);
+        getIntensity(x + filterRadius, y, width, height, data, colorSpace) -
+        getIntensity(x - filterRadius, y, width, height, data, colorSpace);
 
       const pY =
-        getIntensity(x, y + 1, width, height, data) -
-        getIntensity(x, y - 1, width, height, data);
+        getIntensity(x, y + filterRadius, width, height, data, colorSpace) -
+        getIntensity(x, y - filterRadius, width, height, data, colorSpace);
 
-      const normalX = pX * strength + 128;
-      const normalY = pY * strength + 128;
+      let normalX = pX * strength + 128;
+      let normalY = pY * strength + 128;
+      let normalZ = 255;
+
+      if (invertX) normalX = 255 - normalX;
+      if (invertY) normalY = 255 - normalY;
+      if (invertZ) normalZ = 255 - normalZ;
 
       outputData[i] = Math.max(0, Math.min(255, normalX));
       outputData[i + 1] = Math.max(0, Math.min(255, normalY));
-      outputData[i + 2] = 255;
+      outputData[i + 2] = Math.max(0, Math.min(255, normalZ));
       outputData[i + 3] = 255;
     }
   }
@@ -100,10 +119,25 @@ function getIntensity(
   width: number,
   height: number,
   data: Uint8ClampedArray<ArrayBufferLike>,
+  colorSpace: "linear" | "sRGB",
 ): number {
-  if (x < 0 || x >= width || y < 0 || y >= height) return 0;
+  if (x < 0 || x >= width || y < 0 || y >= height) {
+    x = Math.max(0, Math.min(width - 1, x));
+    y = Math.max(0, Math.min(height - 1, y));
+  }
+
   const i = (y * width + x) * 4;
-  return (data[i] + data[i + 1] + data[i + 2]) / 3;
+  let r = data[i];
+  let g = data[i + 1];
+  let b = data[i + 2];
+
+  if (colorSpace === "sRGB") {
+    r = Math.pow(r / 255, 2.2) * 255;
+    g = Math.pow(g / 255, 2.2) * 255;
+    b = Math.pow(b / 255, 2.2) * 255;
+  }
+
+  return (r + g + b) / 3;
 }
 
 export function removeBackground(imageData: ImageData): ImageData {

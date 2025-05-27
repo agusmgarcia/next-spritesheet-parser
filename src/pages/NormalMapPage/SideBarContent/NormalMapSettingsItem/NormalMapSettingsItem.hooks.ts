@@ -1,5 +1,5 @@
 import { type Func } from "@agusmgarcia/react-core";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useNormalMap } from "#src/store";
 
@@ -11,6 +11,8 @@ export default function useNormalMapSettingsItem(
   const {
     normalMapSettingsButtonDisabled,
     normalMapSettingsDisabled,
+    normalMapSettingsInvertXId,
+    normalMapSettingsInvertYId,
     normalMapSettingsLoading,
     normalMapSettingsOnChange,
     normalMapSettingsOnClick,
@@ -21,6 +23,8 @@ export default function useNormalMapSettingsItem(
     ...props,
     normalMapSettingsButtonDisabled,
     normalMapSettingsDisabled,
+    normalMapSettingsInvertXId,
+    normalMapSettingsInvertYId,
     normalMapSettingsLoading,
     normalMapSettingsOnChange,
     normalMapSettingsOnClick,
@@ -29,9 +33,15 @@ export default function useNormalMapSettingsItem(
 }
 
 function useNormalMapSettings() {
+  const normalMapSettingsInvertXId = useId();
+  const normalMapSettingsInvertYId = useId();
+
   const { normalMap, normalMapLoading, setNormalMapSettings } = useNormalMap();
 
-  const initialNormalMapSettings = useMemo(() => ({ strength: "0" }), []);
+  const initialNormalMapSettings = useMemo(
+    () => ({ invertX: false, invertY: false, strength: "0" }),
+    [],
+  );
 
   const [normalMapSettingsValue, setNormalMapSettingsValue] = useState(
     initialNormalMapSettings,
@@ -57,29 +67,48 @@ function useNormalMapSettings() {
     (event) =>
       setNormalMapSettingsValue((prev) => ({
         ...prev,
-        [event.target.name]: event.target.value,
+        [event.target.name]:
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value,
       })),
     [],
   );
 
   const normalMapSettingsOnClick = useCallback<Func>(() => {
-    setNormalMapSettings({
+    setNormalMapSettings((prev) => ({
+      ...prev,
+      invertX: normalMapSettingsValue.invertX,
+      invertY: normalMapSettingsValue.invertY,
       strength: +normalMapSettingsValue.strength,
-    });
-  }, [setNormalMapSettings, normalMapSettingsValue.strength]);
+    }));
+  }, [
+    setNormalMapSettings,
+    normalMapSettingsValue.invertX,
+    normalMapSettingsValue.invertY,
+    normalMapSettingsValue.strength,
+  ]);
 
   useEffect(() => {
     setNormalMapSettingsValue({
+      invertX: !!normalMap?.settings.invertX,
+      invertY: !!normalMap?.settings.invertY,
       strength: normalMap?.settings.strength.toString() || "0",
     });
-  }, [normalMap?.settings.strength]);
+  }, [
+    normalMap?.settings.invertX,
+    normalMap?.settings.invertY,
+    normalMap?.settings.strength,
+  ]);
 
   return {
-    normalMapSettingsButtonDisabled: normalMapSettingsButtonDisabled,
-    normalMapSettingsDisabled: normalMapSettingsDisabled,
+    normalMapSettingsButtonDisabled,
+    normalMapSettingsDisabled,
+    normalMapSettingsInvertXId,
+    normalMapSettingsInvertYId,
     normalMapSettingsLoading: normalMapLoading,
-    normalMapSettingsOnChange: normalMapSettingsOnChange,
-    normalMapSettingsOnClick: normalMapSettingsOnClick,
-    normalMapSettingsValue: normalMapSettingsValue,
+    normalMapSettingsOnChange,
+    normalMapSettingsOnClick,
+    normalMapSettingsValue,
   };
 }

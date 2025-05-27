@@ -19,7 +19,7 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
     const data = await loadImage(spriteSheetImage.url, signal)
       .then(imageDataUtils.get)
       .then(imageDataUtils.removeBackground)
-      .then((i) => imageDataUtils.generateNormalMap(i, settings.strength));
+      .then((i) => imageDataUtils.generateNormalMap(i, settings));
 
     const image = { ...spriteSheetImage };
     image.name = spriteSheetImage.name;
@@ -35,7 +35,14 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
   },
   () => ({
     image: { backgroundColor: "", name: "", type: "", url: "" },
-    settings: { strength: 0 },
+    settings: {
+      colorSpace: "linear",
+      filterRadius: 0,
+      invertX: false,
+      invertY: false,
+      invertZ: false,
+      strength: 0,
+    },
   }),
   (subscribe) => {
     subscribe(
@@ -59,6 +66,11 @@ const initialNormalMap: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
     url: "",
   },
   settings: {
+    colorSpace: "linear",
+    filterRadius: 0,
+    invertX: false,
+    invertY: false,
+    invertZ: false,
     strength: 0,
   },
 };
@@ -74,7 +86,14 @@ async function __updateNormalMapImage__(
 
   await context.reload({
     image: { ...spriteSheet.image },
-    settings: { strength: 1 },
+    settings: {
+      colorSpace: "linear",
+      filterRadius: 1,
+      invertX: false,
+      invertY: false,
+      invertZ: false,
+      strength: 1,
+    },
   });
 }
 
