@@ -16,11 +16,11 @@ import type SpriteSheetSlice from "./SpriteSheetSlice.types";
 export const DEFAULT_SETTINGS: NonNullable<
   SpriteSheetSlice["spriteSheet"]["data"]
 >["settings"] = {
-  delta: 0,
+  delta: 5,
   maxArea: 0.5,
-  maxVariation: 0.5,
+  maxVariation: 0.25,
   minArea: 0,
-  minDiversity: 0.33,
+  minDiversity: 0.2,
 };
 
 export default createServerSlice<
@@ -257,6 +257,21 @@ async function setSpriteSheetSettings(
 
   const newSettings =
     settings instanceof Function ? settings(spriteSheet.settings) : settings;
+
+  if (newSettings.delta < 1)
+    throw new Error("'Delta' must be greater or equal than 1");
+
+  if (newSettings.maxVariation <= 0)
+    throw new Error("'Max variation' must be greater than 0");
+
+  if (newSettings.maxVariation > 1)
+    throw new Error("'Max variation' must be lower or equal than 1");
+
+  if (newSettings.minDiversity <= 0)
+    throw new Error("'Min diversity' must be greater than 0");
+
+  if (newSettings.minDiversity > 1)
+    throw new Error("'Min diversity' must be lower or equal than 1");
 
   const spriteIds = await loadImage(spriteSheet.image.url, context.signal)
     .then(imageDataUtils.get)

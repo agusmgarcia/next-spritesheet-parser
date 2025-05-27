@@ -60,26 +60,20 @@ function useSettings() {
       settingsLoading ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
-      +settingsValue.delta < 0 ||
-      !settingsValue.maxArea ||
-      isNaN(+settingsValue.maxArea) ||
-      +settingsValue.maxArea < 0 ||
+      +settingsValue.delta < 1 ||
       !settingsValue.maxVariation ||
       isNaN(+settingsValue.maxVariation) ||
-      +settingsValue.maxVariation < 0 ||
-      !settingsValue.minArea ||
-      isNaN(+settingsValue.minArea) ||
-      +settingsValue.minArea < 0 ||
+      +settingsValue.maxVariation <= 0 ||
+      +settingsValue.maxVariation > 1 ||
       !settingsValue.minDiversity ||
       isNaN(+settingsValue.minDiversity) ||
-      +settingsValue.minDiversity < 0,
+      +settingsValue.minDiversity <= 0 ||
+      +settingsValue.minDiversity > 1,
     [
       spriteSheet?.image.url,
       settingsLoading,
       settingsValue.delta,
-      settingsValue.maxArea,
       settingsValue.maxVariation,
-      settingsValue.minArea,
       settingsValue.minDiversity,
     ],
   );

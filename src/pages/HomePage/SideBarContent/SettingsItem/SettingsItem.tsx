@@ -30,7 +30,7 @@ export default function SettingsItem(props: SettingsItemProps) {
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
-          min={0}
+          min={1}
           name="delta"
           onChange={settingsOnChange}
           placeholder="Delta"
@@ -40,45 +40,18 @@ export default function SettingsItem(props: SettingsItemProps) {
       </label>
 
       <label className="flex items-center justify-between gap-2 text-white">
-        Min area
-        <Input
-          className="w-2/3 text-center"
-          disabled={settingsDisabled}
-          min={0}
-          name="minArea"
-          onChange={settingsOnChange}
-          placeholder="Min area"
-          type="number"
-          value={settingsValue.minArea}
-        />
-      </label>
-
-      <label className="flex items-center justify-between gap-2 text-white">
         Min diversity
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
-          min={0}
+          max={1}
+          min={0.01}
           name="minDiversity"
           onChange={settingsOnChange}
           placeholder="Min diversity"
+          step={0.01}
           type="number"
           value={settingsValue.minDiversity}
-        />
-      </label>
-
-      <label className="flex items-center justify-between gap-2 text-white">
-        Max area
-        <Input
-          className="w-2/3 text-center"
-          disabled={settingsDisabled}
-          min={0}
-          name="maxArea"
-          onChange={settingsOnChange}
-          placeholder="Max area"
-          step={0.1}
-          type="number"
-          value={settingsValue.maxArea}
         />
       </label>
 
@@ -87,10 +60,12 @@ export default function SettingsItem(props: SettingsItemProps) {
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
-          min={0}
+          max={1}
+          min={0.01}
           name="maxVariation"
           onChange={settingsOnChange}
           placeholder="Max variation"
+          step={0.01}
           type="number"
           value={settingsValue.maxVariation}
         />
