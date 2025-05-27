@@ -33,11 +33,11 @@ export default function NormalMapSettingsItem(
         <Input
           className="w-2/3 text-center"
           disabled={normalMapSettingsDisabled}
-          min={0.1}
+          min={0.01}
           name="strength"
           onChange={normalMapSettingsOnChange}
           placeholder="Strength"
-          step={0.1}
+          step={0.01}
           type="number"
           value={normalMapSettingsValue.strength}
         />

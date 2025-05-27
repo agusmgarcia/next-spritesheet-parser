@@ -136,6 +136,9 @@ async function setNormalMapSettings(
   const newSettings =
     settings instanceof Function ? settings(normalMap.settings) : settings;
 
+  if (newSettings.strength <= 0)
+    throw new Error("'Strength' must be greater than 0");
+
   await context.reload({
     image: { ...spriteSheet.image },
     settings: newSettings,
