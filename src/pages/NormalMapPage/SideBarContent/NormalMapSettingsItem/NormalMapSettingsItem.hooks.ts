@@ -39,7 +39,14 @@ function useNormalMapSettings() {
   const { normalMap, normalMapLoading, setNormalMapSettings } = useNormalMap();
 
   const initialNormalMapSettings = useMemo(
-    () => ({ invertX: false, invertY: false, strength: "0" }),
+    () => ({
+      colorSpace: "linear" as const,
+      filterRadius: "1",
+      invertX: false,
+      invertY: false,
+      invertZ: false,
+      strength: "0",
+    }),
     [],
   );
 
@@ -76,28 +83,39 @@ function useNormalMapSettings() {
   );
 
   const normalMapSettingsOnClick = useCallback<Func>(() => {
-    setNormalMapSettings((prev) => ({
-      ...prev,
+    setNormalMapSettings({
+      colorSpace: normalMapSettingsValue.colorSpace,
+      filterRadius: +normalMapSettingsValue.filterRadius,
       invertX: normalMapSettingsValue.invertX,
       invertY: normalMapSettingsValue.invertY,
+      invertZ: normalMapSettingsValue.invertZ,
       strength: +normalMapSettingsValue.strength,
-    }));
+    });
   }, [
     setNormalMapSettings,
+    normalMapSettingsValue.colorSpace,
+    normalMapSettingsValue.filterRadius,
     normalMapSettingsValue.invertX,
     normalMapSettingsValue.invertY,
+    normalMapSettingsValue.invertZ,
     normalMapSettingsValue.strength,
   ]);
 
   useEffect(() => {
     setNormalMapSettingsValue({
+      colorSpace: (normalMap?.settings.colorSpace as "linear") || "linear",
+      filterRadius: normalMap?.settings.filterRadius.toString() || "0",
       invertX: !!normalMap?.settings.invertX,
       invertY: !!normalMap?.settings.invertY,
+      invertZ: !!normalMap?.settings.invertZ,
       strength: normalMap?.settings.strength.toString() || "0",
     });
   }, [
+    normalMap?.settings.colorSpace,
+    normalMap?.settings.filterRadius,
     normalMap?.settings.invertX,
     normalMap?.settings.invertY,
+    normalMap?.settings.invertZ,
     normalMap?.settings.strength,
   ]);
 
