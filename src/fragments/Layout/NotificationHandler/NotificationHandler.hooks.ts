@@ -6,7 +6,9 @@ import { useKeyDown } from "#src/utils";
 
 import type NotificationHandlerProps from "./NotificationHandler.types";
 
-export default function useNotificationHandler(_: NotificationHandlerProps) {
+export default function useNotificationHandler(
+  props: NotificationHandlerProps,
+) {
   const { notification } = useNotification();
 
   const open = useMemo<boolean>(() => !!notification?.id, [notification?.id]);
@@ -25,6 +27,7 @@ export default function useNotificationHandler(_: NotificationHandlerProps) {
   );
 
   return {
+    ...props,
     [`${useKeyDown.dataIgnore}` as const]: open ? "" : undefined,
     notification,
     onAccept,

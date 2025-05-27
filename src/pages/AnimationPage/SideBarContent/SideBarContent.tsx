@@ -5,14 +5,12 @@ import AnimationsItem from "./AnimationsItem";
 import CenterItem from "./CenterItem";
 import ConfigurationsItem from "./ConfigurationsItem";
 import PlayingItem from "./PlayingItem";
+import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 
-export default function SideBarContent({
-  animation,
-  index,
-  onIndexChange,
-  ...rest
-}: SideBarContentProps) {
+export default function SideBarContent(props: SideBarContentProps) {
+  const { animation, index, onIndexChange, ...rest } = useSideBarContent(props);
+
   return (
     <Accordion
       {...rest}
