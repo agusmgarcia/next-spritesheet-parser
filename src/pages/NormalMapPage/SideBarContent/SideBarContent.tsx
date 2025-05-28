@@ -2,7 +2,7 @@ import { Accordion, Typography } from "#src/components";
 import { ZoomItem } from "#src/fragments";
 
 import ConfigurationsItem from "./ConfigurationsItem";
-import NormalMapSettingsItem from "./NormalMapSettingsItem";
+import SettingsItem from "./SettingsItem";
 import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 
@@ -19,7 +19,7 @@ export default function SideBarContent(props: SideBarContentProps) {
       }
     >
       <ConfigurationsItem />
-      <NormalMapSettingsItem />
+      <SettingsItem />
       <ZoomItem />
     </Accordion>
   );
