@@ -8,7 +8,8 @@ import type PlayingItemProps from "./PlayingItem.types";
 
 export default function usePlayingItem({
   animation: animationFromProps,
-  onIndexChange: onIndexChangeFromProps,
+  onNextIndex: onNextIndexFromProps,
+  onPreviousIndex: onPreviousIndexFromProps,
   ...rest
 }: PlayingItemProps) {
   const {
@@ -19,7 +20,8 @@ export default function usePlayingItem({
     playOnClick,
   } = usePlaying({
     animation: animationFromProps,
-    onIndexChange: onIndexChangeFromProps,
+    onNextIndex: onNextIndexFromProps,
+    onPreviousIndex: onPreviousIndexFromProps,
   });
 
   const {
@@ -49,8 +51,9 @@ export default function usePlayingItem({
 
 function usePlaying({
   animation: animationFromProps,
-  onIndexChange: onIndexChangeFromProps,
-}: Pick<PlayingItemProps, "animation" | "onIndexChange">) {
+  onNextIndex: onNextIndexFromProps,
+  onPreviousIndex: onPreviousIndexFromProps,
+}: Pick<PlayingItemProps, "animation" | "onNextIndex" | "onPreviousIndex">) {
   const { setAnimationPlaying } = useAnimations();
 
   const playingDisabled = useMemo<boolean>(
@@ -63,13 +66,11 @@ function usePlaying({
     if (!animationLength) return;
 
     setAnimationPlaying(animationFromProps.id, false);
-    onIndexChangeFromProps((prev) =>
-      prev > 0 ? prev - 1 : animationLength - 1,
-    );
+    onPreviousIndexFromProps();
   }, [
     animationFromProps.id,
     animationFromProps.sprites.length,
-    onIndexChangeFromProps,
+    onPreviousIndexFromProps,
     setAnimationPlaying,
   ]);
 
@@ -83,13 +84,11 @@ function usePlaying({
     if (!animationLength) return;
 
     setAnimationPlaying(animationFromProps.id, false);
-    onIndexChangeFromProps((prev) =>
-      prev < animationLength - 1 ? prev + 1 : 0,
-    );
+    onNextIndexFromProps();
   }, [
     animationFromProps.id,
     animationFromProps.sprites.length,
-    onIndexChangeFromProps,
+    onNextIndexFromProps,
     setAnimationPlaying,
   ]);
 
@@ -100,10 +99,7 @@ function usePlaying({
     if (!animationLength) return;
 
     const handler = setInterval(
-      () =>
-        onIndexChangeFromProps((prev) =>
-          prev < animationLength - 1 ? prev + 1 : 0,
-        ),
+      onNextIndexFromProps,
       1000 / animationFromProps.fps,
     );
 
@@ -112,7 +108,7 @@ function usePlaying({
     animationFromProps.fps,
     animationFromProps.playing,
     animationFromProps.sprites.length,
-    onIndexChangeFromProps,
+    onNextIndexFromProps,
   ]);
 
   useKeyDown(" ", playOnClick);

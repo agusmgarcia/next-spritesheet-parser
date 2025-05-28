@@ -1,5 +1,6 @@
+import { type Func } from "@agusmgarcia/react-core";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type LayoutProps } from "#src/fragments";
 import { type Animation, useAnimations } from "#src/store";
@@ -9,7 +10,7 @@ import type AnimationPageProps from "./AnimationPage.types";
 export default function useAnimationPage(props: AnimationPageProps) {
   const { animation } = useAnimation();
 
-  const { index, onIndexChange } = useIndex({ animation });
+  const { index, onNextIndex, onPreviousIndex } = useIndex({ animation });
 
   const { instructions } = useInstructions();
 
@@ -18,7 +19,8 @@ export default function useAnimationPage(props: AnimationPageProps) {
     animation,
     index,
     instructions,
-    onIndexChange,
+    onNextIndex,
+    onPreviousIndex,
   };
 }
 
@@ -47,12 +49,28 @@ function useIndex({
 }: Pick<ReturnType<typeof useAnimation>, "animation">) {
   const [index, setIndex] = useState(0);
 
+  const onPreviousIndex = useCallback<Func>(
+    () =>
+      setIndex((prev) =>
+        prev > 0 ? prev - 1 : (animationFromProps?.sprites.length || 0) - 1,
+      ),
+    [animationFromProps?.sprites.length],
+  );
+
+  const onNextIndex = useCallback<Func>(
+    () =>
+      setIndex((prev) =>
+        prev < (animationFromProps?.sprites.length || 0) - 1 ? prev + 1 : 0,
+      ),
+    [animationFromProps?.sprites.length],
+  );
+
   useEffect(() => {
     if (!animationFromProps?.id) return;
     setIndex(0);
   }, [animationFromProps?.id]);
 
-  return { index, onIndexChange: setIndex };
+  return { index, onNextIndex, onPreviousIndex };
 }
 
 function useInstructions() {
