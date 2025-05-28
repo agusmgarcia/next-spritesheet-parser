@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.24.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.0)
+
+> May 28, 2025
+
+- **AnimationPage**: forward next and previous index callbacks
+- **NormalMapPage**: rename SettingsItem component
+- add missing hooks
+- **NormalMapPage**: include all settings
+- **HomePage**: validate settings
+- **store**: encapsulate default settings
+- **NormalMapPage**: adjust strength min and max
+- **NormalMapPage**: add invertR and invertG parameters
+- **Input**: forward checked attribute
+- feat(Input) forward id attribute
+- **Input**: add type checkbox
+- **Input**: adjust padding for numbers
+- **HomePage**: change name of NormalMap link
+
 ## [v0.23.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.2)
 
 > May 26, 2025
