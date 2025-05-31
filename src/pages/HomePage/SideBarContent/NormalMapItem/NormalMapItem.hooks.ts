@@ -1,5 +1,5 @@
-import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router";
 
 import { useNormalMap, useSpriteSheet } from "#src/store";
 
@@ -21,7 +21,7 @@ export default function useNormalMapItem(props: NormalMapItemProps) {
 }
 
 function useCreateNormalMap() {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
   const { normalMap, normalMapLoading } = useNormalMap();
@@ -47,7 +47,7 @@ function useCreateNormalMap() {
 
   const createNormalMapOnClick = useCallback<
     React.MouseEventHandler<HTMLButtonElement>
-  >(() => push("/normal-map"), [push]);
+  >(() => navigate("/normal-map"), [navigate]);
 
   return {
     createNormalMapDisabled,

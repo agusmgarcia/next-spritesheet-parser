@@ -1,6 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
-import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { useNavigate } from "react-router";
 
 import { useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
@@ -31,11 +31,11 @@ export default function useConfigurationsItem({
 }
 
 function useHome() {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const homeOnClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => push("/"),
-    [push],
+    () => navigate("/"),
+    [navigate],
   );
 
   return { homeOnClick };
@@ -57,16 +57,16 @@ function useName({
 function useDeleteAnimation({
   animation: animationFromProps,
 }: Pick<ConfigurationsItemProps, "animation">) {
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const { deleteAnimation } = useAnimations();
 
   const deleteAnimationOnClick = useCallback<Func>(() => {
     deleteAnimation(animationFromProps.id).then((result) => {
       if (!result) return;
-      return replace("/");
+      return navigate("/", { replace: true });
     });
-  }, [animationFromProps.id, deleteAnimation, replace]);
+  }, [animationFromProps.id, deleteAnimation, navigate]);
 
   useKeyDown("r", deleteAnimationOnClick);
 

@@ -1,6 +1,6 @@
 import { type Func } from "@agusmgarcia/react-core";
-import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 
 import { type LayoutProps } from "#src/fragments";
 import { type Animation, useAnimations } from "#src/store";
@@ -26,7 +26,7 @@ export default function useAnimationPage(props: AnimationPageProps) {
 
 function useAnimation() {
   const params = useParams();
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const { animations } = useAnimations();
 
@@ -38,8 +38,8 @@ function useAnimation() {
   useEffect(() => {
     if (!params) return;
     if (!!animation) return;
-    replace("/");
-  }, [animation, params, replace]);
+    navigate("/", { replace: true });
+  }, [animation, navigate, params]);
 
   return { animation };
 }

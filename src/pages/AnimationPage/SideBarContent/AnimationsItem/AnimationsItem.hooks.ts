@@ -1,6 +1,6 @@
 import { sorts } from "@agusmgarcia/react-core";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { useAnimations, useSpriteSheet } from "#src/store";
 
@@ -27,7 +27,7 @@ export default function useAnimationsItem({
 function useAnimationSelector({
   animation: animationFromProps,
 }: Pick<AnimationsItemProps, "animation">) {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const { spriteSheet } = useSpriteSheet();
   const { animations } = useAnimations();
@@ -56,15 +56,15 @@ function useAnimationSelector({
 
   useEffect(() => {
     if (animationSelectorValue === "sheet") {
-      push("/");
+      navigate("/");
       return;
     }
 
     const animation = animations.find((a) => a.id === animationSelectorValue);
     if (!animation) return;
 
-    push(`/animations/${animation.id}`);
-  }, [animationSelectorValue, animations, push]);
+    navigate(`/animations/${animation.id}`);
+  }, [animationSelectorValue, animations, navigate]);
 
   return {
     animationSelectorOnChange,

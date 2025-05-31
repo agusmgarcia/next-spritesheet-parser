@@ -1,5 +1,5 @@
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
+import { useNavigate } from "react-router";
 
 import { type LayoutProps } from "#src/fragments";
 import { useSpriteSheet } from "#src/store";
@@ -7,7 +7,7 @@ import { useSpriteSheet } from "#src/store";
 import type NormalMapPageProps from "./NormalMapPage.types";
 
 export default function useNormalMapPage(props: NormalMapPageProps) {
-  const { replace } = useRouter();
+  const navigate = useNavigate();
 
   const { spriteSheet } = useSpriteSheet();
 
@@ -15,8 +15,8 @@ export default function useNormalMapPage(props: NormalMapPageProps) {
 
   useEffect(() => {
     if (!!spriteSheet) return;
-    replace("/");
-  }, [replace, spriteSheet]);
+    navigate("/", { replace: true });
+  }, [navigate, spriteSheet]);
 
   return { ...props, instructions };
 }

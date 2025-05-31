@@ -1,26 +1,24 @@
 import "./_app.css";
 
-import { type AppProps } from "next/app";
-import Head from "next/head";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Route, Routes } from "react-router";
 
+import { AnimationPage, HomePage, NormalMapPage } from "#src/pages";
 import { StoreProvider } from "#src/store";
 
-export default function App({ Component }: AppProps<any>) {
-  return (
-    <>
-      <Head>
-        <title>Spritesheet Parser</title>
-        <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <link
-          href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/favicon.ico`}
-          rel="icon"
-          type="image/x-icon"
-        />
-      </Head>
+const root = ReactDOM.createRoot(document.getElementsByTagName("body")[0]);
 
-      <StoreProvider>
-        <Component />
-      </StoreProvider>
-    </>
-  );
-}
+root.render(
+  <React.StrictMode>
+    <StoreProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<HomePage />} index={true} />
+          <Route element={<NormalMapPage />} path="/normal-map" />
+          <Route element={<AnimationPage />} path="/animations/:id" />
+        </Routes>
+      </BrowserRouter>
+    </StoreProvider>
+  </React.StrictMode>,
+);

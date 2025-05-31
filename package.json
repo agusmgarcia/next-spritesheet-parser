@@ -6,31 +6,35 @@
   "author": "Agus Garcia",
   "description": "An app to parse sprite sheet into animations. The system can import/export the results",
   "scripts": {
-    "build": "agusmgarcia-react-core-build",
+    "build": "webpack --mode=production",
     "check": "agusmgarcia-react-core-check",
     "deploy": "agusmgarcia-react-core-deploy",
     "format": "agusmgarcia-react-core-format",
     "postpack": "agusmgarcia-react-core-postpack",
     "prepack": "agusmgarcia-react-core-prepack",
-    "regenerate": "agusmgarcia-react-core-regenerate",
-    "start": "agusmgarcia-react-core-start",
+    "regenerate": "agusmgarcia-react-core-regenerate --ignore=next.config.js --ignore=webpack.config.js --ignore=tsconfig.json",
+    "start": "webpack serve --mode=development",
     "test": "agusmgarcia-react-core-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-core": "^4.4.5",
+    "@agusmgarcia/react-core": "file:../react-core/agusmgarcia-react-core-4.4.6-rc2.tgz",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",
     "invert-color": "^2.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-markdown": "^10.1.0",
+    "react-router": "^7.6.1",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.6.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@types/react-dom": "^19.1.5"
+    "@types/react-dom": "^19.1.5",
+    "copy-webpack-plugin": "^13.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "webpack-dev-server": "^5.2.1"
   },
   "engines": {
     "node": "22.14.0"

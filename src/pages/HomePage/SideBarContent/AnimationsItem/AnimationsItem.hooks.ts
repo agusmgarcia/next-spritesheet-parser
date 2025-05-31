@@ -1,6 +1,6 @@
 import { type Func, sorts } from "@agusmgarcia/react-core";
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 
 import { useAnimations, useSpriteSelection, useSpriteSheet } from "#src/store";
 import { useKeyDown } from "#src/utils";
@@ -42,7 +42,7 @@ export default function useAnimationsItem(props: AnimationsItemProps) {
 }
 
 function useCreateAnimation() {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const { createAnimation } = useAnimations();
   const { spriteSelection } = useSpriteSelection();
@@ -60,8 +60,8 @@ function useCreateAnimation() {
     const animationId = createAnimation(spriteSelection);
     if (!animationId) return;
 
-    push(`/animations/${animationId}`);
-  }, [createAnimationDisabled, createAnimation, spriteSelection, push]);
+    navigate(`/animations/${animationId}`);
+  }, [createAnimationDisabled, createAnimation, spriteSelection, navigate]);
 
   useKeyDown("c", createAnimationOnClick);
 
@@ -150,7 +150,7 @@ function useSplitSprite() {
 }
 
 function useAnimationSelector() {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const { animations } = useAnimations();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
@@ -187,8 +187,8 @@ function useAnimationSelector() {
     const animation = animations.find((a) => a.id === animationSelectorValue);
     if (!animation) return;
 
-    push(`/animations/${animation.id}`);
-  }, [animationSelectorValue, animations, push]);
+    navigate(`/animations/${animation.id}`);
+  }, [animationSelectorValue, animations, navigate]);
 
   return {
     animationSelectorDisabled,

@@ -1,5 +1,5 @@
-import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
+import { useNavigate } from "react-router";
 
 import { useNormalMap } from "#src/store";
 
@@ -19,11 +19,11 @@ export default function useConfigurationsItem(props: ConfigurationsItemProps) {
 }
 
 function useHome() {
-  const { push } = useRouter();
+  const navigate = useNavigate();
 
   const homeOnClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
-    () => push("/"),
-    [push],
+    () => navigate("/"),
+    [navigate],
   );
 
   return { homeOnClick };
