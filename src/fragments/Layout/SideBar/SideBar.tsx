@@ -29,6 +29,7 @@ export default function SideBar(props: SideBarProps) {
       {!collapseHidden && (
         <Button
           className="absolute bottom-[9px] left-[-36px] flex size-9 items-center justify-center rounded-l-lg bg-gray-800 text-white"
+          data-collapsed={collapsed}
           onClick={onClick}
         >
           <Icon variant={collapsed ? "arrowLeft" : "arrowRight"} />

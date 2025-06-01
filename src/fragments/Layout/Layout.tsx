@@ -9,9 +9,11 @@ import SideBar from "./SideBar";
 export default function Layout(props: LayoutProps) {
   const {
     children,
-    collapseHidden,
+    childrenRef,
     instructions,
     sideBar,
+    sideBarCollapsed,
+    sideBarCollapsedOnChange,
     version,
     viewport,
     ...rest
@@ -37,12 +39,15 @@ export default function Layout(props: LayoutProps) {
       {viewport !== "Mobile" && (
         <>
           {/* CHILDREN */}
-          <div className="size-full overflow-auto">{children}</div>
+          <div ref={childrenRef} className="size-full overflow-auto">
+            {children}
+          </div>
 
           {/* SIDEBAR */}
           <SideBar
             className="absolute right-0 h-full w-[360px]"
-            collapseHidden={collapseHidden}
+            collapsed={sideBarCollapsed}
+            onCollapsedChange={sideBarCollapsedOnChange}
             version={version}
           >
             {sideBar}
