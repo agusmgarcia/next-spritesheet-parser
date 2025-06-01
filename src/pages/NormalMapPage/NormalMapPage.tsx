@@ -9,7 +9,7 @@ export default function NormalMapPage(props: NormalMapPageProps) {
   const { ...rest } = useNormalMapPage(props);
 
   return (
-    <Layout {...rest} sideBar={<SideBarContent />} sideBarCollapse={true}>
+    <Layout {...rest} sideBar={<SideBarContent />} sideBarCollapsable={true}>
       <MainContent />
     </Layout>
   );
