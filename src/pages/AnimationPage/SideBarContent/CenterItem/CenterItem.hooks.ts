@@ -85,8 +85,8 @@ function useOnion({
   const { setAnimationOnion } = useAnimations();
 
   const onionDisabled = useMemo<boolean>(
-    () => animationFromProps.playing,
-    [animationFromProps.playing],
+    () => animationFromProps.playing || animationFromProps.sprites.length <= 1,
+    [animationFromProps.playing, animationFromProps.sprites.length],
   );
 
   const onionOnClick = useCallback<Func>(() => {
