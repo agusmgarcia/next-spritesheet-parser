@@ -9,9 +9,9 @@ import SideBar from "./SideBar";
 export default function Layout(props: LayoutProps) {
   const {
     children,
+    collapseHidden,
     instructions,
     sideBar,
-    sideBarCollapsable,
     version,
     viewport,
     ...rest
@@ -42,7 +42,7 @@ export default function Layout(props: LayoutProps) {
           {/* SIDEBAR */}
           <SideBar
             className="absolute right-0 h-full w-[360px]"
-            collapseHidden={!sideBarCollapsable}
+            collapseHidden={collapseHidden}
             version={version}
           >
             {sideBar}

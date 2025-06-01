@@ -176,7 +176,8 @@ export default function useMainContent(props: MainContentProps) {
     if (!spriteSheetCanvas) return;
 
     spriteSheetCanvas.width =
-      Math.max(rootDimensions.width, (image?.width || 0) * scale) + 360;
+      Math.max(rootDimensions.width, (image?.width || 0) * scale) +
+      (!!image ? 360 : 0);
     spriteSheetCanvas.height = Math.max(
       rootDimensions.height,
       (image?.height || 0) * scale,
@@ -215,7 +216,8 @@ export default function useMainContent(props: MainContentProps) {
     if (!selectionCanvas) return;
 
     selectionCanvas.width =
-      Math.max(rootDimensions.width, (image?.width || 0) * scale) + 360;
+      Math.max(rootDimensions.width, (image?.width || 0) * scale) +
+      (!!image ? 360 : 0);
     selectionCanvas.height = Math.max(
       rootDimensions.height,
       (image?.height || 0) * scale,
