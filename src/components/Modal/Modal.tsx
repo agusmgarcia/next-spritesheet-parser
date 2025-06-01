@@ -14,12 +14,12 @@ export default function Modal(props: ModalProps) {
       {...rest}
       className={twMerge(
         "m-auto flex max-h-[90vh] w-[512px] translate-y-[calc(100vh+100%)] flex-col overflow-auto rounded-2xl",
-        "transition-transform will-change-transform",
+        "transition-transform",
 
         state === "open" && "translate-y-0 scale-y-100",
         state === "hidden" && "hidden",
 
-        "backdrop:transition-[background-color] backdrop:will-change-[background-color]",
+        "backdrop:transition-[background-color]",
         "backdrop:fixed backdrop:bottom-0 backdrop:left-0 backdrop:right-0 backdrop:top-0 backdrop:bg-black backdrop:bg-opacity-0",
         state === "open" && "backdrop:bg-opacity-40",
         state === "hidden" && "backdrop:hidden",
@@ -36,7 +36,7 @@ export default function Modal(props: ModalProps) {
           !headerProps.children && !!headerProps.onClose && "justify-end",
           !!headerProps.children && !headerProps.onClose && "justify-start",
 
-          "transition-shadow will-change-[box-shadow]",
+          "transition-shadow",
           (!!headerProps.children || !!headerProps.onClose) &&
             !headerProps.atTop &&
             "shadow-[0px_3px_8px_0px] shadow-black/10",
@@ -73,7 +73,7 @@ export default function Modal(props: ModalProps) {
           "bg-white",
           !!footerProps.children && "sticky bottom-0 z-10 p-6",
 
-          "transition-shadow will-change-[box-shadow]",
+          "transition-shadow",
           !!footerProps.children &&
             !footerProps.atBottom &&
             "shadow-[0px_-3px_8px_0px] shadow-black/10",
