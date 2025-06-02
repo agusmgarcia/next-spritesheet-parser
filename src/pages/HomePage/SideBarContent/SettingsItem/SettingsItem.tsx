@@ -30,11 +30,11 @@ export default function SettingsItem(props: SettingsItemProps) {
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
+          max={20}
           min={1}
           name="delta"
           onChange={settingsOnChange}
-          placeholder="Delta"
-          type="number"
+          type="range"
           value={settingsValue.delta}
         />
       </label>
@@ -48,9 +48,8 @@ export default function SettingsItem(props: SettingsItemProps) {
           min={0.01}
           name="minDiversity"
           onChange={settingsOnChange}
-          placeholder="Min diversity"
           step={0.01}
-          type="number"
+          type="range"
           value={settingsValue.minDiversity}
         />
       </label>
@@ -64,9 +63,8 @@ export default function SettingsItem(props: SettingsItemProps) {
           min={0.01}
           name="maxVariation"
           onChange={settingsOnChange}
-          placeholder="Max variation"
           step={0.01}
-          type="number"
+          type="range"
           value={settingsValue.maxVariation}
         />
       </label>

@@ -38,6 +38,21 @@ export default function Input(props: InputProps) {
       />
     );
 
+  if (rest.type === "range")
+    return (
+      <input
+        {...rest}
+        className={twMerge(
+          "h-[6px] w-full cursor-pointer appearance-none rounded-lg bg-white outline-1 outline-offset-0 outline-transparent",
+          "[&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-cranberry-600",
+          "[&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cranberry-600",
+          "transition-colors",
+          "disabled:cursor-not-allowed disabled:bg-gray-100 [&::-moz-range-thumb]:disabled:bg-gray-500 [&::-webkit-slider-thumb]:disabled:bg-gray-500",
+          className,
+        )}
+      />
+    );
+
   return (
     <input
       {...rest}

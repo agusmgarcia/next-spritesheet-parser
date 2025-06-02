@@ -31,12 +31,13 @@ export default function SettingsItem(props: SettingsItemProps) {
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
+          max={10}
           min={0.01}
           name="strength"
           onChange={settingsOnChange}
           placeholder="Strength"
           step={0.01}
-          type="number"
+          type="range"
           value={settingsValue.strength}
         />
       </label>
