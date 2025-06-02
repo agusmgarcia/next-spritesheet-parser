@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.24.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.1)
+
+> June 2, 2025
+
+- **Select**: consume colors from tailwind
+- **Modal**: remove will-change styles
+- **AnimationPage**: disable onion when single sprite
+- **Layout**: adjust center of the scale
+- **Layout**: prevent Sidebar of being collapsed when no spritesheet
+- **Layout**: update sidebarCollapsable name
+
 ## [v0.24.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.0)
 
 > May 28, 2025
