@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.24.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.2)
+
+> June 6, 2025
+
+- **NormalMapPage**: adjust background color
+- adjust canvas when image is smaller than viewport
+- adjust background color calculation
+
 ## [v0.24.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.1)
 
 > June 2, 2025
