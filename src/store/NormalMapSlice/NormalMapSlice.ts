@@ -33,7 +33,7 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
       .then((i) => imageDataUtils.generateNormalMap(i, settings));
 
     const image = {
-      backgroundColor: imageDataUtils.getBackgroundColor(data),
+      backgroundColor: "#8080ff",
       name: spriteSheetImage.name,
       type: "image/png",
       url: await imageDataUtils
