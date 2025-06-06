@@ -27,7 +27,7 @@ export default function useMainContent(props: MainContentProps) {
   const [spriteHovered, setSpriteHovered] = useState<string>();
 
   const { image } = useLoadImage(spriteSheet?.image.url || "");
-  const rootDimensions = useDimensions(ref);
+  const dimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * scaleFromStore;
 
   const color = useMemo<string>(
@@ -175,11 +175,15 @@ export default function useMainContent(props: MainContentProps) {
     const spriteSheetCanvas = spriteSheetCanvasRef.current;
     if (!spriteSheetCanvas) return;
 
-    spriteSheetCanvas.width =
-      Math.max(rootDimensions.width, (image?.width || 0) * scale) +
-      (!!image ? 360 : 0);
+    spriteSheetCanvas.width = Math.max(
+      dimensions.width,
+      (image?.width || 0) * scale,
+    );
+    spriteSheetCanvas.width +=
+      (!!image ? 360 : 0) -
+      (spriteSheetCanvas.width - (image?.width || 0) * scale);
     spriteSheetCanvas.height = Math.max(
-      rootDimensions.height,
+      dimensions.height,
       (image?.height || 0) * scale,
     );
 
@@ -204,8 +208,8 @@ export default function useMainContent(props: MainContentProps) {
   }, [
     scale,
     image,
-    rootDimensions.height,
-    rootDimensions.width,
+    dimensions.height,
+    dimensions.width,
     spriteSheet,
     sprites,
     color,
@@ -215,11 +219,15 @@ export default function useMainContent(props: MainContentProps) {
     const selectionCanvas = selectionCanvasRef.current;
     if (!selectionCanvas) return;
 
-    selectionCanvas.width =
-      Math.max(rootDimensions.width, (image?.width || 0) * scale) +
-      (!!image ? 360 : 0);
+    selectionCanvas.width = Math.max(
+      dimensions.width,
+      (image?.width || 0) * scale,
+    );
+    selectionCanvas.width +=
+      (!!image ? 360 : 0) -
+      (selectionCanvas.width - (image?.width || 0) * scale);
     selectionCanvas.height = Math.max(
-      rootDimensions.height,
+      dimensions.height,
       (image?.height || 0) * scale,
     );
 
@@ -281,8 +289,8 @@ export default function useMainContent(props: MainContentProps) {
     spriteSelection,
     selectedArea,
     preSelectedSprites,
-    rootDimensions.height,
-    rootDimensions.width,
+    dimensions.height,
+    dimensions.width,
     spriteSheet,
     spriteHovered,
     color,

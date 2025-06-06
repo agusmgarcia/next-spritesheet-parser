@@ -14,7 +14,7 @@ export default function useMainContent(props: MainContentProps) {
   const normalMapCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const { image } = useLoadImage(normalMap?.image.url || "");
-  const rootDimensions = useDimensions(ref);
+  const dimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * scaleFromStore;
 
   useEffect(() => {
@@ -24,12 +24,11 @@ export default function useMainContent(props: MainContentProps) {
     const normalMapCanvas = normalMapCanvasRef.current;
     if (!normalMapCanvas) return;
 
-    normalMapCanvas.width =
-      Math.max(rootDimensions.width, image.width * scale) + 360;
-    normalMapCanvas.height = Math.max(
-      rootDimensions.height,
-      image.height * scale,
-    );
+    normalMapCanvas.width = Math.max(dimensions.width, image.width * scale);
+    normalMapCanvas.width +=
+      360 - (normalMapCanvas.width - image.width * scale);
+
+    normalMapCanvas.height = Math.max(dimensions.height, image.height * scale);
 
     const context = normalMapCanvas.getContext("2d");
     if (!context) return;
@@ -45,8 +44,8 @@ export default function useMainContent(props: MainContentProps) {
   }, [
     image,
     normalMap?.image.backgroundColor,
-    rootDimensions.height,
-    rootDimensions.width,
+    dimensions.height,
+    dimensions.width,
     scale,
   ]);
 
