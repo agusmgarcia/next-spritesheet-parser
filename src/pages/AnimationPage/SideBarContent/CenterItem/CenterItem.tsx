@@ -93,7 +93,7 @@ export default function CenterItem(props: CenterItemProps) {
           onClick={resetCenterOnClick}
           variant="secondary"
         >
-          <Icon variant="reset" />
+          <Icon variant="center" />
         </Button>
 
         {/* ONION */}
