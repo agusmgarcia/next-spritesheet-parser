@@ -17,7 +17,7 @@
     "test": "agusmgarcia-react-core-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-core": "^4.4.5",
+    "@agusmgarcia/react-core": "^4.5.0",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",
     "invert-color": "^2.0.0",
@@ -30,7 +30,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@types/react-dom": "^19.1.5"
+    "@types/react-dom": "^19.1.6"
   },
   "engines": {
     "node": "22.14.0"
