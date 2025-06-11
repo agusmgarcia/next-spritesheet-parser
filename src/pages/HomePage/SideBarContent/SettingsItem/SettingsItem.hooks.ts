@@ -6,6 +6,8 @@ import { useSpriteSheet } from "#src/store";
 import type SettingsItemProps from "./SettingsItem.types";
 
 export default function useSettingsItem(props: SettingsItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem();
+
   const {
     settingsButtonDisabled,
     settingsDisabled,
@@ -17,6 +19,8 @@ export default function useSettingsItem(props: SettingsItemProps) {
 
   return {
     ...props,
+    defaultCollapsed,
+    disabled,
     settingsButtonDisabled,
     settingsDisabled,
     settingsLoading,
@@ -24,6 +28,19 @@ export default function useSettingsItem(props: SettingsItemProps) {
     settingsOnClick,
     settingsValue,
   };
+}
+
+function useSideBarItem() {
+  const { spriteSheet } = useSpriteSheet();
+
+  const disabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url,
+    [spriteSheet?.image.url],
+  );
+
+  const defaultCollapsed = useMemo<boolean>(() => true, []);
+
+  return { defaultCollapsed, disabled };
 }
 
 function useSettings() {

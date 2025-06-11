@@ -18,7 +18,6 @@ export default function SettingsItem(props: SettingsItemProps) {
     <Accordion.Item
       {...rest}
       className="flex flex-col gap-1"
-      defaultCollapsed={true}
       heading={
         <Typography className="text-white" variant="h2">
           Settings

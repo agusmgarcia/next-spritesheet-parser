@@ -8,6 +8,8 @@ import { useKeyDown } from "#src/utils";
 import type AnimationsItemProps from "./AnimationsItem.types";
 
 export default function useAnimationsItem(props: AnimationsItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem();
+
   const { createAnimationDisabled, createAnimationOnClick } =
     useCreateAnimation();
 
@@ -32,6 +34,8 @@ export default function useAnimationsItem(props: AnimationsItemProps) {
     animationSelectorValue,
     createAnimationDisabled,
     createAnimationOnClick,
+    defaultCollapsed,
+    disabled,
     mergeSpritesDisabled,
     mergeSpritesOnClick,
     resetSelectionDisabled,
@@ -39,6 +43,19 @@ export default function useAnimationsItem(props: AnimationsItemProps) {
     splitSpriteDisabled,
     splitSpriteOnClick,
   };
+}
+
+function useSideBarItem() {
+  const { spriteSheet } = useSpriteSheet();
+
+  const disabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url,
+    [spriteSheet?.image.url],
+  );
+
+  const defaultCollapsed = useMemo<boolean>(() => disabled, [disabled]);
+
+  return { defaultCollapsed, disabled };
 }
 
 function useCreateAnimation() {

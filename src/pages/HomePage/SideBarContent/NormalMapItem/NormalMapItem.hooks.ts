@@ -6,6 +6,8 @@ import { useNormalMap, useSpriteSheet } from "#src/store";
 import type NormalMapItemProps from "./NormalMapItem.types";
 
 export default function useNormalMapItem(props: NormalMapItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem();
+
   const {
     createNormalMapDisabled,
     createNormalMapLoading,
@@ -17,7 +19,22 @@ export default function useNormalMapItem(props: NormalMapItemProps) {
     createNormalMapDisabled,
     createNormalMapLoading,
     createNormalMapOnClick,
+    defaultCollapsed,
+    disabled,
   };
+}
+
+function useSideBarItem() {
+  const { spriteSheet } = useSpriteSheet();
+
+  const disabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url,
+    [spriteSheet?.image.url],
+  );
+
+  const defaultCollapsed = useMemo<boolean>(() => true, []);
+
+  return { defaultCollapsed, disabled };
 }
 
 function useCreateNormalMap() {

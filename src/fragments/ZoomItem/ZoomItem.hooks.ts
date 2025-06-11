@@ -7,6 +7,44 @@ import { useKeyDown } from "#src/utils";
 import type ZoomItemProps from "./ZoomItem.types";
 
 export default function useZoomItem(props: ZoomItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem();
+
+  const {
+    resetZoomDisabled,
+    resetZoomOnClick,
+    zoomInDisabled,
+    zoomInOnClick,
+    zoomOutDisabled,
+    zoomOutOnClick,
+  } = useZoom();
+
+  return {
+    ...props,
+    defaultCollapsed,
+    disabled,
+    resetZoomDisabled,
+    resetZoomOnClick,
+    zoomInDisabled,
+    zoomInOnClick,
+    zoomOutDisabled,
+    zoomOutOnClick,
+  };
+}
+
+function useSideBarItem() {
+  const { spriteSheet } = useSpriteSheet();
+
+  const disabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url,
+    [spriteSheet?.image.url],
+  );
+
+  const defaultCollapsed = useMemo<boolean>(() => disabled, [disabled]);
+
+  return { defaultCollapsed, disabled };
+}
+
+function useZoom() {
   const { scale, setScale } = useScale();
   const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
 
@@ -45,7 +83,6 @@ export default function useZoomItem(props: ZoomItemProps) {
   useKeyDown("z", resetZoomOnClick);
 
   return {
-    ...props,
     resetZoomDisabled,
     resetZoomOnClick,
     zoomInDisabled,

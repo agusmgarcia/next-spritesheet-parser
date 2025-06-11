@@ -12,6 +12,8 @@ import { getErrorMessage, useKeyDown } from "#src/utils";
 import type FilesItemProps from "./FilesItem.types";
 
 export default function useFilesItem(props: FilesItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem();
+
   const { importFileDisabled, importFileLoading, importFileOnClick } =
     useImportFile();
 
@@ -24,6 +26,8 @@ export default function useFilesItem(props: FilesItemProps) {
 
   return {
     ...props,
+    defaultCollapsed,
+    disabled,
     exportFileDisabled,
     exportFileOnClick,
     importFileDisabled,
@@ -36,6 +40,19 @@ export default function useFilesItem(props: FilesItemProps) {
     removeSpriteSheetDisabled,
     removeSpriteSheetOnClick,
   };
+}
+
+function useSideBarItem() {
+  const { spriteSheet } = useSpriteSheet();
+
+  const disabled = useMemo<boolean>(
+    () => !spriteSheet?.image.url,
+    [spriteSheet?.image.url],
+  );
+
+  const defaultCollapsed = useMemo<boolean>(() => false, []);
+
+  return { defaultCollapsed, disabled };
 }
 
 function useImportFile() {
