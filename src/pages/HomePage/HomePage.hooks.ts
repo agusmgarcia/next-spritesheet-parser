@@ -1,10 +1,13 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import { type LayoutProps } from "#src/fragments";
+import { useSpriteSelection } from "#src/store";
 
 import type HomePageProps from "./HomePage.types";
 
 export default function useHomePage(props: HomePageProps) {
+  const { unselectAllSprites } = useSpriteSelection();
+
   const instructions = useMemo<LayoutProps["instructions"]>(
     () => [
       {
@@ -65,6 +68,10 @@ export default function useHomePage(props: HomePageProps) {
     ],
     [],
   );
+
+  useEffect(() => {
+    unselectAllSprites();
+  }, [unselectAllSprites]);
 
   return { ...props, instructions };
 }
