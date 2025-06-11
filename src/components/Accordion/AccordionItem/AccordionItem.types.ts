@@ -1,6 +1,10 @@
 type AccordionItemProps = Pick<
   React.HTMLAttributes<HTMLDivElement>,
   "children" | "className"
-> & { defaultCollapsed?: boolean; heading?: React.ReactNode };
+> & {
+  defaultCollapsed?: boolean;
+  disabled?: boolean;
+  heading?: React.ReactNode;
+};
 
 export default AccordionItemProps;

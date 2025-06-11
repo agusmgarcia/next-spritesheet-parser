@@ -1,6 +1,5 @@
 import { children } from "@agusmgarcia/react-core";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
 
 import { Button, Icon, Typography } from "#src/components";
 
@@ -8,6 +7,7 @@ import type AccordionItemProps from "./AccordionItem.types";
 
 export default function useAccordionItem({
   defaultCollapsed: defaultCollapsedFromProps,
+  disabled: disabledFromProps,
   heading: headingFromProps,
   ...rest
 }: AccordionItemProps) {
@@ -15,29 +15,27 @@ export default function useAccordionItem({
 
   const [expanded, setExpanded] = useState(!defaultCollapsedFromProps);
 
-  const toggle = useCallback(() => setExpanded((prev) => !prev), []);
+  const toggle = useCallback(() => {
+    if (!!disabledFromProps) return;
+    setExpanded((prev) => !prev);
+  }, [disabledFromProps]);
 
   const heading = children.mapOfType(Typography, headingFromProps, (child) =>
     React.createElement(
       Typography,
-      {
-        ...child.props,
-        className: twMerge(
-          child.props.className,
-          "[&>button:not(:hover)>svg]:text-black transition-colors",
-        ),
-      },
+      child.props,
       React.createElement(
         Button,
         {
-          className: "flex items-center justify-between",
+          className: "group flex items-center justify-between text-white",
+          disabled: disabledFromProps,
           onClick: toggle,
           variant: "raw",
         },
         child.props.children,
         React.createElement(Icon, {
           className:
-            "flex size-9 items-center justify-center rounded-lg rounded-b-none bg-white",
+            "flex size-9 items-center justify-center rounded-lg rounded-b-none bg-white group-[&:not(:hover):enabled]:text-black transition-colors",
           variant: expanded ? "arrowUp" : "arrowDown",
         }),
       ),
