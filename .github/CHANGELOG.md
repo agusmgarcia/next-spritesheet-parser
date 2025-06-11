@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.24.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.3)
+
+> June 11, 2025
+
+### Fixes 🎯
+
+- **HomePage**: reset sprite selection
+- update dependencies
+
 ## [v0.24.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.2)
 
 > June 6, 2025
