@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.24.4](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.4)
+
+> June 11, 2025
+
+### Fixes 🎯
+
+- **AnimationPage**: replace center icon
+- **Icon**: add center variant
+- **HomePage**: disabled items when no sprite sheet image
+- **Accordion**: add disabled property to items
+- **Button**: add text-black for raw variant
+
 ## [v0.24.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.3)
 
 > June 11, 2025
