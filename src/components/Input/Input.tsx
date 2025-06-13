@@ -38,6 +38,23 @@ export default function Input(props: InputProps) {
       />
     );
 
+  if (rest.type === "range")
+    return (
+      <input
+        {...rest}
+        className={twMerge(
+          "relative my-[18px] h-[6px] w-full cursor-pointer appearance-none rounded-lg bg-white bg-gradient-to-r from-cranberry-600 to-white outline-1 outline-offset-0 outline-transparent",
+          "[&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:bg-cranberry-600 [&::-webkit-slider-thumb]:transition-colors [&::-webkit-slider-thumb]:enabled:hover:bg-cranberry-500",
+          "[&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-cranberry-600 [&::-moz-range-thumb]:transition-colors [&::-moz-range-thumb]:enabled:hover:bg-cranberry-500",
+          "transition-colors",
+          "enabled:hover:from-cranberry-500",
+          "after:absolute after:bottom-full after:translate-x-[var(--translate-x)] after:rounded-t-lg after:bg-black after:px-4 after:text-sm after:opacity-0 after:transition-[opacity,_transform] after:content-[attr(value)] hover:after:opacity-100",
+          "disabled:cursor-not-allowed disabled:bg-gray-100 disabled:from-gray-400 disabled:to-gray-100 [&::-moz-range-thumb]:disabled:bg-gray-400 [&::-webkit-slider-thumb]:disabled:bg-gray-400",
+          className,
+        )}
+      />
+    );
+
   return (
     <input
       {...rest}

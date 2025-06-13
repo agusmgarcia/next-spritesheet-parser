@@ -13,6 +13,6 @@ type InputProps = Pick<
   | "placeholder"
   | "step"
   | "value"
-> & { type?: "checkbox" | "color" | "number" | "text" };
+> & { type?: "checkbox" | "color" | "number" | "range" | "text" };
 
 export default InputProps;
