@@ -33,6 +33,7 @@ export default function Input(props: InputProps) {
           "enabled:hover:bg-cranberry-300",
           "checked:bg-cranberry-600 checked:enabled:hover:bg-cranberry-500",
           "after:checked:absolute after:checked:left-1/2 after:checked:top-1/2 after:checked:h-4 after:checked:w-2 after:checked:-translate-x-1/2 after:checked:-translate-y-2/3 after:checked:rotate-45 after:checked:border-solid after:checked:border-white after:checked:content-[''] after:checked:[border-width:_0_3px_3px_0]",
+          "disabled:cursor-not-allowed disabled:checked:bg-gray-400",
           className,
         )}
       />
