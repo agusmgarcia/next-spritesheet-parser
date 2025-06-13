@@ -10,6 +10,7 @@ type InputProps = Pick<
   | "min"
   | "name"
   | "onChange"
+  | "onMouseUp"
   | "placeholder"
   | "step"
   | "value"
