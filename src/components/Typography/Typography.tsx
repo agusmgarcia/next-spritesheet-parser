@@ -13,7 +13,6 @@ export default function Typography(props: TypographyProps) {
     {
       ...rest,
       className: twMerge(
-        "font-sans",
         variant === "h1"
           ? "text-3xl"
           : variant === "h2"
