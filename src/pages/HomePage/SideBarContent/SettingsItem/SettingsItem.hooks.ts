@@ -9,11 +9,9 @@ export default function useSettingsItem(props: SettingsItemProps) {
   const { defaultCollapsed, disabled } = useSideBarItem();
 
   const {
-    settingsButtonDisabled,
     settingsDisabled,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
   } = useSettings();
 
@@ -21,11 +19,9 @@ export default function useSettingsItem(props: SettingsItemProps) {
     ...props,
     defaultCollapsed,
     disabled,
-    settingsButtonDisabled,
     settingsDisabled,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
   };
 }
@@ -71,10 +67,9 @@ function useSettings() {
     [settingsLoading, spriteSheet],
   );
 
-  const settingsButtonDisabled = useMemo<boolean>(
+  const settingsCTADisabled = useMemo<boolean>(
     () =>
-      !spriteSheet?.image.url ||
-      settingsLoading ||
+      settingsDisabled ||
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
       +settingsValue.delta < 1 ||
@@ -88,8 +83,7 @@ function useSettings() {
       +settingsValue.minDiversity < 0.01 ||
       +settingsValue.minDiversity > 1,
     [
-      spriteSheet?.image.url,
-      settingsLoading,
+      settingsDisabled,
       settingsValue.delta,
       settingsValue.maxVariation,
       settingsValue.minDiversity,
@@ -99,15 +93,18 @@ function useSettings() {
   const settingsOnChange = useCallback<
     React.ChangeEventHandler<HTMLInputElement>
   >(
-    (event) =>
+    (event) => {
+      if (settingsDisabled) return;
       setSettingsValue((prev) => ({
         ...prev,
         [event.target.name]: event.target.value,
-      })),
-    [],
+      }));
+    },
+    [settingsDisabled],
   );
 
-  const settingsOnClick = useCallback<Func>(() => {
+  const settingsOnMouseUp = useCallback<Func>(() => {
+    if (settingsCTADisabled) return;
     setLoading(true);
     setSpriteSheetSettings({
       delta: +settingsValue.delta,
@@ -118,6 +115,7 @@ function useSettings() {
     }).finally(() => setLoading(false));
   }, [
     setSpriteSheetSettings,
+    settingsCTADisabled,
     settingsValue.delta,
     settingsValue.maxArea,
     settingsValue.maxVariation,
@@ -142,11 +140,9 @@ function useSettings() {
   ]);
 
   return {
-    settingsButtonDisabled,
     settingsDisabled,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
   };
 }

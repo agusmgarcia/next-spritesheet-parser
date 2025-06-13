@@ -1,15 +1,13 @@
-import { Accordion, Button, Icon, Input, Typography } from "#src/components";
+import { Accordion, Input, Typography } from "#src/components";
 
 import useSettingsItem from "./SettingsItem.hooks";
 import type SettingsItemProps from "./SettingsItem.types";
 
 export default function SettingsItem(props: SettingsItemProps) {
   const {
-    settingsButtonDisabled,
     settingsDisabled,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
     ...rest
   } = useSettingsItem(props);
@@ -33,8 +31,8 @@ export default function SettingsItem(props: SettingsItemProps) {
           min={1}
           name="delta"
           onChange={settingsOnChange}
-          placeholder="Delta"
-          type="number"
+          onMouseUp={settingsOnMouseUp}
+          type="range"
           value={settingsValue.delta}
         />
       </label>
@@ -48,9 +46,9 @@ export default function SettingsItem(props: SettingsItemProps) {
           min={0.01}
           name="minDiversity"
           onChange={settingsOnChange}
-          placeholder="Min diversity"
+          onMouseUp={settingsOnMouseUp}
           step={0.01}
-          type="number"
+          type="range"
           value={settingsValue.minDiversity}
         />
       </label>
@@ -64,25 +62,12 @@ export default function SettingsItem(props: SettingsItemProps) {
           min={0.01}
           name="maxVariation"
           onChange={settingsOnChange}
-          placeholder="Max variation"
+          onMouseUp={settingsOnMouseUp}
           step={0.01}
-          type="number"
+          type="range"
           value={settingsValue.maxVariation}
         />
       </label>
-
-      <Button
-        className="flex items-center justify-center gap-1"
-        disabled={settingsButtonDisabled}
-        onClick={settingsOnClick}
-        variant="primary"
-      >
-        Regenerate
-        <Icon
-          className={settingsLoading ? "animate-spin" : undefined}
-          variant="refresh"
-        />
-      </Button>
     </Accordion.Item>
   );
 }
