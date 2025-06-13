@@ -31,11 +31,12 @@ export default function SettingsItem(props: SettingsItemProps) {
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
-          min={0.01}
+          max={5}
+          min={1}
           name="strength"
           onChange={settingsOnChange}
           placeholder="Strength"
-          step={0.01}
+          step={1}
           type="number"
           value={settingsValue.strength}
         />

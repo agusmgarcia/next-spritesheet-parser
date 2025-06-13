@@ -125,8 +125,11 @@ async function setNormalMapSettings(
   if (!normalMap?.image.url)
     throw new Error("You need to provide an image first");
 
-  if (settings.strength <= 0)
-    throw new Error("'Strength' must be greater than 0");
+  if (settings.strength < 1)
+    throw new Error("'Strength' must be greater or equal than 1");
+
+  if (settings.strength > 5)
+    throw new Error("'Strength' must be lower or equal than 5");
 
   await context.reload({ image: spriteSheet.image, settings });
 }

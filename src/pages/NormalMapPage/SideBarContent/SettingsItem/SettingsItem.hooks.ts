@@ -43,7 +43,7 @@ function useSettings() {
       invertX: false,
       invertY: false,
       invertZ: false,
-      strength: "0",
+      strength: "1",
     }),
     [],
   );
@@ -65,7 +65,8 @@ function useSettings() {
       settingsDisabled ||
       !settingsValue.strength ||
       isNaN(+settingsValue.strength) ||
-      +settingsValue.strength <= 0,
+      +settingsValue.strength < 1 ||
+      +settingsValue.strength > 5,
     [settingsDisabled, settingsValue.strength],
   );
 
