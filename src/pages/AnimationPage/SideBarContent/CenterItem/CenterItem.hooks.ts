@@ -114,10 +114,10 @@ function useResetCenter({
     () =>
       animationFromProps.playing ||
       !animationFromProps.sprites ||
-      (animationFromProps.sprites[indexFromProps].offsetX ===
-        animationFromProps.sprites[indexFromProps].initialOffsetX &&
-        animationFromProps.sprites[indexFromProps].offsetY ===
-          animationFromProps.sprites[indexFromProps].initialOffsetY),
+      (animationFromProps.sprites[indexFromProps].offset.x ===
+        animationFromProps.sprites[indexFromProps].offset.initialX &&
+        animationFromProps.sprites[indexFromProps].offset.y ===
+          animationFromProps.sprites[indexFromProps].offset.initialY),
     [animationFromProps.playing, animationFromProps.sprites, indexFromProps],
   );
 
@@ -164,12 +164,10 @@ function useOffset({
 
   const animationOffsetUpOnClick = useCallback<Func>(() => {
     if (animationOffsetUpDisabled) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX,
-      (offsetY) => offsetY - devicePixelRatio,
-    );
+    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
+      x: offset.x,
+      y: offset.y - devicePixelRatio,
+    }));
   }, [
     animationFromProps.id,
     animationOffsetUpDisabled,
@@ -179,12 +177,10 @@ function useOffset({
 
   const animationOffsetRightOnClick = useCallback<Func>(() => {
     if (animationOffsetRightDisabled) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX + devicePixelRatio,
-      (offsetY) => offsetY,
-    );
+    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
+      x: offset.x + devicePixelRatio,
+      y: offset.y,
+    }));
   }, [
     animationFromProps.id,
     animationOffsetRightDisabled,
@@ -194,12 +190,10 @@ function useOffset({
 
   const animationOffsetDownOnClick = useCallback<Func>(() => {
     if (animationOffsetDownDisabled) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX,
-      (offsetY) => offsetY + devicePixelRatio,
-    );
+    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
+      x: offset.x,
+      y: offset.y + devicePixelRatio,
+    }));
   }, [
     animationFromProps.id,
     animationOffsetDownDisabled,
@@ -209,12 +203,10 @@ function useOffset({
 
   const animationOffsetLeftOnClick = useCallback<Func>(() => {
     if (animationOffsetLeftDisabled) return;
-    setAnimationOffset(
-      animationFromProps.id,
-      indexFromProps,
-      (offsetX) => offsetX - devicePixelRatio,
-      (offsetY) => offsetY,
-    );
+    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
+      x: offset.x - devicePixelRatio,
+      y: offset.y,
+    }));
   }, [
     animationFromProps.id,
     animationOffsetLeftDisabled,

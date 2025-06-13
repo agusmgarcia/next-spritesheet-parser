@@ -103,10 +103,12 @@ function createAnimation(
       (result, s) => {
         result[s.id] = {
           id: s.id,
-          initialOffsetX: 0,
-          initialOffsetY: -(maxHeight - s.height) / 2,
-          offsetX: 0,
-          offsetY: -(maxHeight - s.height) / 2,
+          offset: {
+            initialX: 0,
+            initialY: -(maxHeight - s.height) / 2,
+            x: 0,
+            y: -(maxHeight - s.height) / 2,
+          },
         };
         return result;
       },
@@ -192,8 +194,11 @@ function resetAnimationOffset(
               i === index
                 ? {
                     ...s,
-                    offsetX: s.initialOffsetX,
-                    offsetY: s.initialOffsetY,
+                    offset: {
+                      ...s.offset,
+                      x: s.offset.initialX,
+                      y: s.offset.initialY,
+                    },
                   }
                 : s,
             ),
@@ -248,8 +253,7 @@ function setAnimationName(
 function setAnimationOffset(
   id: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[0],
   index: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[1],
-  offsetX: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[2],
-  offsetY: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[3],
+  offset: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[2],
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
 ): void {
   context.set((prev) => ({
@@ -261,14 +265,12 @@ function setAnimationOffset(
               i === index
                 ? {
                     ...s,
-                    offsetX:
-                      offsetX instanceof Function
-                        ? offsetX(s.offsetX)
-                        : offsetX,
-                    offsetY:
-                      offsetY instanceof Function
-                        ? offsetY(s.offsetY)
-                        : offsetY,
+                    offset: {
+                      ...s.offset,
+                      ...(offset instanceof Function
+                        ? offset(s.offset)
+                        : offset),
+                    },
                   }
                 : s,
             ),

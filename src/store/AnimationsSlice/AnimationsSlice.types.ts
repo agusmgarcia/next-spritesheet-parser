@@ -13,10 +13,12 @@ type Animation = {
   playing: boolean;
   sprites: {
     id: string;
-    initialOffsetX: number;
-    initialOffsetY: number;
-    offsetX: number;
-    offsetY: number;
+    offset: {
+      initialX: number;
+      initialY: number;
+      x: number;
+      y: number;
+    };
   }[];
 };
 
@@ -45,8 +47,7 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
       [
         id: string,
         index: number,
-        offsetX: React.SetStateAction<number>,
-        offsetY: React.SetStateAction<number>,
+        offset: React.SetStateAction<{ x: number; y: number }>,
       ]
     >;
     setAnimationOnion: Func<
