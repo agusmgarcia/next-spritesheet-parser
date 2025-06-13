@@ -29,6 +29,7 @@ export default function SettingsItem(props: SettingsItemProps) {
         <Input
           className="w-2/3 text-center"
           disabled={settingsDisabled}
+          max={20}
           min={1}
           name="delta"
           onChange={settingsOnChange}

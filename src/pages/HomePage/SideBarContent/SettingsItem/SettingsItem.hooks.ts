@@ -78,13 +78,14 @@ function useSettings() {
       !settingsValue.delta ||
       isNaN(+settingsValue.delta) ||
       +settingsValue.delta < 1 ||
+      +settingsValue.delta > 20 ||
       !settingsValue.maxVariation ||
       isNaN(+settingsValue.maxVariation) ||
-      +settingsValue.maxVariation <= 0 ||
+      +settingsValue.maxVariation < 0.01 ||
       +settingsValue.maxVariation > 1 ||
       !settingsValue.minDiversity ||
       isNaN(+settingsValue.minDiversity) ||
-      +settingsValue.minDiversity <= 0 ||
+      +settingsValue.minDiversity < 0.01 ||
       +settingsValue.minDiversity > 1,
     [
       spriteSheet?.image.url,
