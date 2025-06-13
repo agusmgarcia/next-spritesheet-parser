@@ -33,11 +33,8 @@ type NormalMapSlice = CreateServerSliceTypes.SliceOf<
     >,
   {
     __updateNormalMapImage__: AsyncFunc;
-    setNormalMapName: Func<void, [name: React.SetStateAction<string>]>;
-    setNormalMapSettings: AsyncFunc<
-      void,
-      [settings: React.SetStateAction<NormalMap["settings"]>]
-    >;
+    setNormalMapName: Func<void, [name: string]>;
+    setNormalMapSettings: AsyncFunc<void, [settings: NormalMap["settings"]]>;
   }
 >;
 

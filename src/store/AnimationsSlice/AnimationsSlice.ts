@@ -228,11 +228,7 @@ function setAnimationColor(
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
 ): void {
   context.set((prev) => ({
-    animations: prev.animations.map((a) =>
-      a.id === id
-        ? { ...a, color: color instanceof Function ? color(a.color) : color }
-        : a,
-    ),
+    animations: prev.animations.map((a) => (a.id === id ? { ...a, color } : a)),
   }));
 }
 
@@ -242,11 +238,7 @@ function setAnimationName(
   context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
 ): void {
   context.set((prev) => ({
-    animations: prev.animations.map((a) =>
-      a.id === id
-        ? { ...a, name: name instanceof Function ? name(a.name) : name }
-        : a,
-    ),
+    animations: prev.animations.map((a) => (a.id === id ? { ...a, name } : a)),
   }));
 }
 

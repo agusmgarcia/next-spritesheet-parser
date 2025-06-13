@@ -106,15 +106,7 @@ function setNormalMapName(
     throw new Error("You need to provide an image first");
 
   context.set((prev) =>
-    !!prev
-      ? {
-          ...prev,
-          image: {
-            ...prev.image,
-            name: name instanceof Function ? name(prev.image.name) : name,
-          },
-        }
-      : prev,
+    !!prev ? { ...prev, image: { ...prev.image, name } } : prev,
   );
 }
 
@@ -133,14 +125,8 @@ async function setNormalMapSettings(
   if (!normalMap?.image.url)
     throw new Error("You need to provide an image first");
 
-  const newSettings =
-    settings instanceof Function ? settings(normalMap.settings) : settings;
-
-  if (newSettings.strength <= 0)
+  if (settings.strength <= 0)
     throw new Error("'Strength' must be greater than 0");
 
-  await context.reload({
-    image: spriteSheet.image,
-    settings: newSettings,
-  });
+  await context.reload({ image: spriteSheet.image, settings });
 }

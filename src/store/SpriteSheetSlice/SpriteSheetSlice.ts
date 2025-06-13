@@ -230,15 +230,7 @@ function setSpriteSheetName(
     throw new Error("You need to provide an image first");
 
   context.set((prev) =>
-    !!prev
-      ? {
-          ...prev,
-          image: {
-            ...prev.image,
-            name: name instanceof Function ? name(prev.image.name) : name,
-          },
-        }
-      : prev,
+    !!prev ? { ...prev, image: { ...prev.image, name } } : prev,
   );
 }
 
@@ -255,27 +247,24 @@ async function setSpriteSheetSettings(
   if (!spriteSheet?.image.url)
     throw new Error("You need to provide an image first");
 
-  const newSettings =
-    settings instanceof Function ? settings(spriteSheet.settings) : settings;
-
-  if (newSettings.delta < 1)
+  if (settings.delta < 1)
     throw new Error("'Delta' must be greater or equal than 1");
 
-  if (newSettings.maxVariation <= 0)
+  if (settings.maxVariation <= 0)
     throw new Error("'Max variation' must be greater than 0");
 
-  if (newSettings.maxVariation > 1)
+  if (settings.maxVariation > 1)
     throw new Error("'Max variation' must be lower or equal than 1");
 
-  if (newSettings.minDiversity <= 0)
+  if (settings.minDiversity <= 0)
     throw new Error("'Min diversity' must be greater than 0");
 
-  if (newSettings.minDiversity > 1)
+  if (settings.minDiversity > 1)
     throw new Error("'Min diversity' must be lower or equal than 1");
 
   const spriteIds = await loadImage(spriteSheet.image.url, context.signal)
     .then(imageDataUtils.get)
-    .then((data) => getSprites(data, newSettings))
+    .then((data) => getSprites(data, settings))
     .then((sprites) => Object.keys(sprites));
 
   const animationsThatDoesntContainAtLeastOneSprite = context
@@ -301,7 +290,7 @@ async function setSpriteSheetSettings(
     if (!response) return;
   }
 
-  await context.reload({ image: spriteSheet.image, settings: newSettings });
+  await context.reload({ image: spriteSheet.image, settings });
 }
 
 function setSpriteSheetSprites(

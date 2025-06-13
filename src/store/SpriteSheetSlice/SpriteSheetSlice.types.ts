@@ -40,10 +40,10 @@ type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
     mergeSpriteSheetSprites: AsyncFunc<void, [spriteIds: string[]]>;
     removeSpriteSheet: AsyncFunc;
     setSpriteSheetImage: AsyncFunc<void, [image: File]>;
-    setSpriteSheetName: Func<void, [name: React.SetStateAction<string>]>;
+    setSpriteSheetName: Func<void, [name: string]>;
     setSpriteSheetSettings: AsyncFunc<
       void,
-      [settings: React.SetStateAction<SpriteSheet["settings"]>]
+      [settings: SpriteSheet["settings"]]
     >;
     setSpriteSheetSprites: Func<void, [sprites: SpriteSheet["sprites"]]>;
     splitSpriteSheetSprite: AsyncFunc<void, [spriteId: string]>;

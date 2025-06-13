@@ -30,18 +30,12 @@ type AnimationsSlice = CreateGlobalSliceTypes.SliceOf<
     createAnimation: Func<string | undefined, [spriteIds: string[]]>;
     deleteAnimation: AsyncFunc<boolean, [id: string]>;
     resetAnimationOffset: Func<void, [id: string, index: number]>;
-    setAnimationColor: Func<
-      void,
-      [id: string, color: React.SetStateAction<string>]
-    >;
+    setAnimationColor: Func<void, [id: string, color: string]>;
     setAnimationFPS: Func<
       void,
       [id: string, fps: React.SetStateAction<number>]
     >;
-    setAnimationName: Func<
-      void,
-      [id: string, name: React.SetStateAction<string>]
-    >;
+    setAnimationName: Func<void, [id: string, name: string]>;
     setAnimationOffset: Func<
       void,
       [
