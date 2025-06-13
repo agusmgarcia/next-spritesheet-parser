@@ -29,8 +29,8 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
 
     const data = await loadImage(spriteSheetImage.url, signal)
       .then(imageDataUtils.get)
-      .then(imageDataUtils.removeBackground)
-      .then((i) => imageDataUtils.generateNormalMap(i, settings));
+      .then((i) => imageDataUtils.removeBackground(i, signal))
+      .then((i) => imageDataUtils.generateNormalMap(i, settings, signal));
 
     const image = {
       backgroundColor: "#8080ff",

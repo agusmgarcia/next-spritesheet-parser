@@ -3,7 +3,7 @@ import {
   type CreateServerSliceTypes,
   replaceString,
 } from "@agusmgarcia/react-core";
-import MSER, { type MSEROptions, Rect } from "blob-detection-ts";
+import { type MSEROptions, Rect } from "blob-detection-ts";
 
 import { imageDataUtils, loadImage } from "#src/utils";
 
@@ -38,7 +38,7 @@ export default createServerSlice<
       try {
         const data = await loadImage(imageURL, signal).then(imageDataUtils.get);
         const backgroundColor = imageDataUtils.getBackgroundColor(data);
-        const sprites = getSprites(data, settings);
+        const sprites = await getSprites(data, settings, signal);
 
         const url = await imageDataUtils
           .createFile(data, image.name, image.type, signal)
@@ -68,7 +68,7 @@ export default createServerSlice<
 
     const sprites = await loadImage(image.url, signal)
       .then(imageDataUtils.get)
-      .then((data) => getSprites(data, settings));
+      .then((data) => getSprites(data, settings, signal));
 
     if (image.url !== prevSpriteSheet?.image.url)
       URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
@@ -267,7 +267,7 @@ async function setSpriteSheetSettings(
 
   const spriteIds = await loadImage(spriteSheet.image.url, context.signal)
     .then(imageDataUtils.get)
-    .then((data) => getSprites(data, settings))
+    .then((data) => getSprites(data, settings, context.signal))
     .then((sprites) => Object.keys(sprites));
 
   const animationsThatDoesntContainAtLeastOneSprite = context
@@ -379,43 +379,18 @@ function toSprite(
 function getSprites(
   imageData: ImageData,
   options: MSEROptions,
-): NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"] {
-  const background = imageDataUtils.getBackground(imageData);
-
-  imageData = new ImageData(
-    new Uint8ClampedArray(imageData.data),
-    imageData.width,
-    imageData.height,
-  );
-
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    if (
-      imageData.data[i] === background[0] &&
-      imageData.data[i + 1] === background[1] &&
-      imageData.data[i + 2] === background[2]
-    ) {
-      imageData.data[i] = 255;
-      imageData.data[i + 1] = 255;
-      imageData.data[i + 2] = 255;
-      imageData.data[i + 3] = 255;
-    } else {
-      imageData.data[i] = 0;
-      imageData.data[i + 1] = 0;
-      imageData.data[i + 2] = 0;
-      imageData.data[i + 3] = 255;
-    }
-  }
-
-  const mser = new MSER(options);
-
-  return mser
-    .mergeRects(mser.extract(imageData).map((r) => r.rect))
-    .map((r) => toSprite(r))
-    .reduce(
-      (result, current) => {
-        result[current.id] = current;
-        return result;
-      },
-      {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
+  signal: AbortSignal,
+): Promise<NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"]> {
+  return imageDataUtils
+    .getRects(imageData, options, signal)
+    .then((rects) => rects.map((r) => toSprite(r)))
+    .then((sprites) =>
+      sprites.reduce(
+        (result, current) => {
+          result[current.id] = current;
+          return result;
+        },
+        {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
+      ),
     );
 }
