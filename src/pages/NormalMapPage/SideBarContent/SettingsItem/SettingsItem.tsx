@@ -1,17 +1,15 @@
-import { Accordion, Button, Icon, Input, Typography } from "#src/components";
+import { Accordion, Input, Typography } from "#src/components";
 
 import useSettingsItem from "./SettingsItem.hooks";
 import type SettingsItemProps from "./SettingsItem.types";
 
 export default function SettingsItem(props: SettingsItemProps) {
   const {
-    settingsButtonDisabled,
     settingsDisabled,
     settingsInvertXId,
     settingsInvertYId,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
     ...rest
   } = useSettingsItem(props);
@@ -35,9 +33,10 @@ export default function SettingsItem(props: SettingsItemProps) {
           min={1}
           name="strength"
           onChange={settingsOnChange}
+          onMouseUp={settingsOnMouseUp}
           placeholder="Strength"
           step={1}
-          type="number"
+          type="range"
           value={settingsValue.strength}
         />
       </label>
@@ -51,6 +50,7 @@ export default function SettingsItem(props: SettingsItemProps) {
             id={settingsInvertXId}
             name="invertX"
             onChange={settingsOnChange}
+            onMouseUp={settingsOnMouseUp}
             type="checkbox"
           />
         </div>
@@ -65,23 +65,11 @@ export default function SettingsItem(props: SettingsItemProps) {
             id={settingsInvertYId}
             name="invertY"
             onChange={settingsOnChange}
+            onMouseUp={settingsOnMouseUp}
             type="checkbox"
           />
         </div>
       </div>
-
-      <Button
-        className="flex items-center justify-center gap-1"
-        disabled={settingsButtonDisabled}
-        onClick={settingsOnClick}
-        variant="primary"
-      >
-        Regenerate
-        <Icon
-          className={settingsLoading ? "animate-spin" : undefined}
-          variant="refresh"
-        />
-      </Button>
     </Accordion.Item>
   );
 }

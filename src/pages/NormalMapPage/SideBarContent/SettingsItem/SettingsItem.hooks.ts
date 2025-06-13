@@ -1,4 +1,4 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type AsyncFunc } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useNormalMap } from "#src/store";
@@ -7,25 +7,21 @@ import type SettingsItemProps from "./SettingsItem.types";
 
 export default function useSettingsItem(props: SettingsItemProps) {
   const {
-    settingsButtonDisabled,
     settingsDisabled,
     settingsInvertXId,
     settingsInvertYId,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
   } = useSettings();
 
   return {
     ...props,
-    settingsButtonDisabled,
     settingsDisabled,
     settingsInvertXId,
     settingsInvertYId,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
   };
 }
@@ -49,10 +45,11 @@ function useSettings() {
   );
 
   const [settingsValue, setSettingsValue] = useState(initialSettings);
+  const [loading, setLoading] = useState(false);
 
   const settingsLoading = useMemo<boolean>(
-    () => normalMapLoading,
-    [normalMapLoading],
+    () => normalMapLoading || loading,
+    [loading, normalMapLoading],
   );
 
   const settingsDisabled = useMemo<boolean>(
@@ -60,48 +57,58 @@ function useSettings() {
     [normalMap?.image.url, settingsLoading],
   );
 
-  const settingsButtonDisabled = useMemo<boolean>(
-    () =>
-      settingsDisabled ||
-      !settingsValue.strength ||
-      isNaN(+settingsValue.strength) ||
-      +settingsValue.strength < 1 ||
-      +settingsValue.strength > 5,
-    [settingsDisabled, settingsValue.strength],
+  const cta = useCallback<AsyncFunc<void, [settings: typeof initialSettings]>>(
+    async (settings) => {
+      if (
+        settingsDisabled ||
+        !settings.strength ||
+        isNaN(+settings.strength) ||
+        +settings.strength < 1 ||
+        +settings.strength > 5
+      )
+        return;
+
+      setLoading(true);
+      return setNormalMapSettings({
+        colorSpace: settings.colorSpace,
+        filterRadius: +settings.filterRadius,
+        invertX: settings.invertX,
+        invertY: settings.invertY,
+        invertZ: settings.invertZ,
+        strength: +settings.strength,
+      }).finally(() => setLoading(false));
+    },
+    [setNormalMapSettings, settingsDisabled],
   );
 
   const settingsOnChange = useCallback<
     React.ChangeEventHandler<HTMLInputElement>
   >(
-    (event) =>
+    (event) => {
+      if (settingsDisabled) return;
       setSettingsValue((prev) => ({
         ...prev,
         [event.target.name]:
           event.target.type === "checkbox"
             ? event.target.checked
             : event.target.value,
-      })),
-    [],
+      }));
+
+      if (event.target.type !== "checkbox") return;
+      cta({ ...settingsValue, [event.target.name]: event.target.checked });
+    },
+    [cta, settingsDisabled, settingsValue],
   );
 
-  const settingsOnClick = useCallback<Func>(() => {
-    setNormalMapSettings({
-      colorSpace: settingsValue.colorSpace,
-      filterRadius: +settingsValue.filterRadius,
-      invertX: settingsValue.invertX,
-      invertY: settingsValue.invertY,
-      invertZ: settingsValue.invertZ,
-      strength: +settingsValue.strength,
-    });
-  }, [
-    setNormalMapSettings,
-    settingsValue.colorSpace,
-    settingsValue.filterRadius,
-    settingsValue.invertX,
-    settingsValue.invertY,
-    settingsValue.invertZ,
-    settingsValue.strength,
-  ]);
+  const settingsOnMouseUp = useCallback<
+    React.MouseEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      if (event.currentTarget.type === "checkbox") return;
+      cta(settingsValue);
+    },
+    [cta, settingsValue],
+  );
 
   useEffect(() => {
     setSettingsValue({
@@ -122,13 +129,11 @@ function useSettings() {
   ]);
 
   return {
-    settingsButtonDisabled,
     settingsDisabled,
     settingsInvertXId,
     settingsInvertYId,
-    settingsLoading,
     settingsOnChange,
-    settingsOnClick,
+    settingsOnMouseUp,
     settingsValue,
   };
 }
