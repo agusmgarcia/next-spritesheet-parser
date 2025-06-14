@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.25.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.0)
+
+> June 14, 2025
+
+### Features ✅
+
+- add key to collapse and expand the sidebar
+- **HomePage**: add min/max area settings
+- start using workers
+- **Input**: forward onMouseUp
+- **Input**: add range type
+
+### Fixes 🎯
+
+- **SpriteSheetSlice**: include alpha in background
+- **NormalMapPage**: adjust initial settings
+- **Accordion**: trigger defaultCollapsed on disabled state
+- **HomePage**: rollback settings change on cancel
+- **SpriteSheetSlice**: store it without background
+- adjust some styles
+- **Icon**: stop using refresh variant
+- **NormalMapPage**: use ranges instead of number
+- **HomePage**: use ranges instead of number
+- **Input**: adjust styles for checkbox
+- **NormalMapPage**: add max strength
+- **HomePage**: add max delta
+- **store**: stop using React.SetStateAction when no needed
+- **AnimationSlice**: move offset to its object
+- update dependencies
+
 ## [v0.24.4](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.4)
 
 > June 11, 2025
