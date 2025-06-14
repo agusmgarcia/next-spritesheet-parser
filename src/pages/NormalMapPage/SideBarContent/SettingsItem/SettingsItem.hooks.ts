@@ -35,11 +35,11 @@ function useSettings() {
   const initialSettings = useMemo(
     () => ({
       colorSpace: "linear" as const,
-      filterRadius: "1",
+      filterRadius: "0",
       invertX: false,
       invertY: false,
       invertZ: false,
-      strength: "1",
+      strength: "0",
     }),
     [],
   );
