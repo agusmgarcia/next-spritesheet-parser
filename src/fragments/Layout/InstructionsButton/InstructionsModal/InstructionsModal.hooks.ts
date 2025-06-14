@@ -12,19 +12,14 @@ export default function useInstructionsModal({
   const instructions = useMemo(
     () =>
       instructionsFromProps
-        .map((i) => ({
-          keys: i.keys.map((k) => ({
-            description: k.description,
-            extraKeys: [
-              !!k.options?.altKey ? (isMacOS() ? "Opt" : "Alt") : "",
-            ].filter((k) => !!k),
-            id: k.key,
-            key: transformKey(k.key),
-          })),
-          title: i.title,
-        }))
+        .filter((i) => i.title !== "Others")
+        .map((i) => ({ keys: i.keys.map(toKey), title: i.title }))
         .concat({
           keys: [
+            ...instructionsFromProps
+              .filter((i) => i.title === "Others")
+              .flatMap((i) => i.keys)
+              .map(toKey),
             {
               description: "Open the instructions modal",
               extraKeys: [],
@@ -38,6 +33,24 @@ export default function useInstructionsModal({
   );
 
   return { ...rest, instructions };
+}
+
+function toKey(
+  key: InstructionsModalProps["instructions"][number]["keys"][number],
+): {
+  description: string;
+  extraKeys: string[];
+  id: string;
+  key: React.ReactNode;
+} {
+  return {
+    description: key.description,
+    extraKeys: [
+      !!key.options?.altKey ? (isMacOS() ? "Opt" : "Alt") : "",
+    ].filter((k) => !!k),
+    id: key.key,
+    key: transformKey(key.key),
+  };
 }
 
 function transformKey(key: string): React.ReactNode {

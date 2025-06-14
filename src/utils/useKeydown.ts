@@ -4,7 +4,7 @@ import { useEffect } from "react";
 export default function useKeyDown(
   key: string,
   callback: Func,
-  options?: Partial<{ altKey: boolean }>,
+  options?: Partial<{ altKey: true }>,
 ) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

@@ -1,12 +1,13 @@
-import { useDevicePixelRatio } from "@agusmgarcia/react-core";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type Func, useDevicePixelRatio } from "@agusmgarcia/react-core";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useScale, useSpriteSheet } from "#src/store";
-import { useViewport } from "#src/utils";
+import { useKeyDown, useViewport } from "#src/utils";
 
 import type LayoutProps from "./Layout.types";
 
 export default function useLayout({
+  instructions: instructionsFromProps,
   sideBarCollapsable: sideBarCollapsableFromProps,
   ...rest
 }: LayoutProps) {
@@ -15,7 +16,13 @@ export default function useLayout({
   const { sideBarCollapsed, sideBarCollapsedOnChange } = useSidebarCollapsed({
     sideBarCollapsable: sideBarCollapsableFromProps,
   });
+
   const { childrenRef } = useScroll({ sideBarCollapsed });
+
+  const { instructions } = useInstructions({
+    instructions: instructionsFromProps,
+    sideBarCollapsed,
+  });
 
   const version = useMemo<string>(() => {
     const maybeVersion = process.env.NEXT_PUBLIC_APP_VERSION;
@@ -26,6 +33,7 @@ export default function useLayout({
   return {
     ...rest,
     childrenRef,
+    instructions,
     sideBarCollapsed,
     sideBarCollapsedOnChange,
     version,
@@ -124,6 +132,13 @@ function useSidebarCollapsed({
     [sideBarCollapsableFromProps, spriteSheet?.image.url],
   );
 
+  const toggleSideBar = useCallback<Func>(() => {
+    if (sideBarHidden) return;
+    setSideBarCollapsed((prev) => !prev);
+  }, [sideBarHidden]);
+
+  useKeyDown("s", toggleSideBar);
+
   useEffect(() => {
     setSideBarCollapsed((prev) => (sideBarHidden ? false : prev));
   }, [sideBarHidden]);
@@ -132,4 +147,29 @@ function useSidebarCollapsed({
     sideBarCollapsed: !sideBarHidden ? sideBarCollapsed : undefined,
     sideBarCollapsedOnChange: !sideBarHidden ? setSideBarCollapsed : undefined,
   };
+}
+
+function useInstructions({
+  instructions: instructionsFromProps,
+  sideBarCollapsed: sideBarCollapsedFromProps,
+}: Pick<LayoutProps, "instructions"> & {
+  sideBarCollapsed: boolean | undefined;
+}) {
+  const instructions = useMemo<LayoutProps["instructions"]>(
+    () =>
+      typeof sideBarCollapsedFromProps !== "undefined"
+        ? instructionsFromProps?.concat({
+            keys: [
+              {
+                description: "Collapse/Expand the side bar",
+                key: "S",
+              },
+            ],
+            title: "Others",
+          })
+        : instructionsFromProps,
+    [instructionsFromProps, sideBarCollapsedFromProps],
+  );
+
+  return { instructions };
 }
