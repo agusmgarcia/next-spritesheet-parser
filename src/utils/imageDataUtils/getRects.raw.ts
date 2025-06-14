@@ -18,7 +18,8 @@ export default function rawGetRects(
     if (
       imageData.data[i] === background[0] &&
       imageData.data[i + 1] === background[1] &&
-      imageData.data[i + 2] === background[2]
+      imageData.data[i + 2] === background[2] &&
+      imageData.data[i + 3] === background[3]
     ) {
       imageData.data[i] = 255;
       imageData.data[i + 1] = 255;

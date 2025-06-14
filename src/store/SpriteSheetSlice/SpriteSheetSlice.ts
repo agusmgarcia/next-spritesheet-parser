@@ -36,15 +36,14 @@ export default createServerSlice<
       const imageURL = URL.createObjectURL(image);
 
       try {
-        const data = await loadImage(imageURL, signal).then(imageDataUtils.get);
-        const backgroundColor = imageDataUtils.getBackgroundColor(data);
+        const raw = await loadImage(imageURL, signal).then(imageDataUtils.get);
+        const backgroundColor = imageDataUtils.getBackgroundColor(raw);
+
+        const data = await imageDataUtils.removeBackground(raw, signal);
         const sprites = await getSprites(data, settings, signal);
 
         const url = await imageDataUtils
-          .removeBackground(data, signal)
-          .then((data) =>
-            imageDataUtils.createFile(data, image.name, image.type, signal),
-          )
+          .createFile(data, image.name, image.type, signal)
           .then((file) => URL.createObjectURL(file));
 
         URL.revokeObjectURL(prevSpriteSheet?.image.url || "");

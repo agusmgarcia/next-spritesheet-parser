@@ -13,7 +13,8 @@ export default function rawRemoveBackground(imageData: ImageData): ImageData {
     if (
       imageData.data[i] === background[0] &&
       imageData.data[i + 1] === background[1] &&
-      imageData.data[i + 2] === background[2]
+      imageData.data[i + 2] === background[2] &&
+      imageData.data[i + 3] == background[3]
     ) {
       imageData.data[i] = 0;
       imageData.data[i + 1] = 0;
