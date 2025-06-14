@@ -1,4 +1,4 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Func, throwError } from "@agusmgarcia/react-core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
@@ -112,7 +112,18 @@ function useSettings() {
       maxVariation: +settingsValue.maxVariation,
       minArea: +settingsValue.minArea,
       minDiversity: +settingsValue.minDiversity,
-    }).finally(() => setLoading(false));
+    })
+      .then((result) => (!result ? throwError("error") : undefined))
+      .catch(() =>
+        setSettingsValue({
+          delta: spriteSheet?.settings.delta.toString() || "0",
+          maxArea: spriteSheet?.settings.maxArea.toString() || "0",
+          maxVariation: spriteSheet?.settings.maxVariation.toString() || "0",
+          minArea: spriteSheet?.settings.minArea.toString() || "0",
+          minDiversity: spriteSheet?.settings.minDiversity.toString() || "0",
+        }),
+      )
+      .finally(() => setLoading(false));
   }, [
     setSpriteSheetSettings,
     settingsCTADisabled,
@@ -121,6 +132,11 @@ function useSettings() {
     settingsValue.maxVariation,
     settingsValue.minArea,
     settingsValue.minDiversity,
+    spriteSheet?.settings.delta,
+    spriteSheet?.settings.maxArea,
+    spriteSheet?.settings.maxVariation,
+    spriteSheet?.settings.minArea,
+    spriteSheet?.settings.minDiversity,
   ]);
 
   useEffect(() => {

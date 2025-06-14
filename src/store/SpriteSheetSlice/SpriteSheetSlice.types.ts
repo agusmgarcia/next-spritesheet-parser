@@ -42,7 +42,7 @@ type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
     setSpriteSheetImage: AsyncFunc<void, [image: File]>;
     setSpriteSheetName: Func<void, [name: string]>;
     setSpriteSheetSettings: AsyncFunc<
-      void,
+      boolean,
       [settings: SpriteSheet["settings"]]
     >;
     setSpriteSheetSprites: Func<void, [sprites: SpriteSheet["sprites"]]>;

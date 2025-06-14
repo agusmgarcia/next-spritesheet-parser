@@ -245,7 +245,7 @@ async function setSpriteSheetSettings(
     SpriteSheetSlice,
     AnimationsSliceTypes.default & NotificationSliceTypes.default
   >,
-): Promise<void> {
+): Promise<boolean> {
   const spriteSheet = context.get().spriteSheet.data;
   if (!spriteSheet?.image.url)
     throw new Error("You need to provide an image first");
@@ -293,10 +293,11 @@ async function setSpriteSheetSettings(
       ),
     );
 
-    if (!response) return;
+    if (!response) return false;
   }
 
   await context.reload({ image: spriteSheet.image, settings });
+  return true;
 }
 
 function setSpriteSheetSprites(
