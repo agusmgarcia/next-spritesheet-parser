@@ -29,7 +29,6 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
 
     const data = await loadImage(spriteSheetImage.url, signal)
       .then(imageDataUtils.get)
-      .then((i) => imageDataUtils.removeBackground(i, signal))
       .then((i) => imageDataUtils.generateNormalMap(i, settings, signal));
 
     const image = {

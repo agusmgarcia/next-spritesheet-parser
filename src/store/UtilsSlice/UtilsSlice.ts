@@ -69,7 +69,6 @@ async function exportZip(
 
     loadImage(spriteSheet.image.url, context.signal)
       .then(imageDataUtils.get)
-      .then((data) => imageDataUtils.removeBackground(data, context.signal))
       .then((data) =>
         imageDataUtils.createFile(
           data,
