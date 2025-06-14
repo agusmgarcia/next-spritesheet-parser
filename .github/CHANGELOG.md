@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.25.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.1)
+
+> June 14, 2025
+
+### Fixes 🎯
+
+- **Divisor**: adjust height
+
 ## [v0.25.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.0)
 
 > June 14, 2025
