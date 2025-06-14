@@ -44,7 +44,7 @@ export default function useAccordionItem({
 
   useEffect(() => {
     setExpanded(!defaultCollapsedFromProps);
-  }, [defaultCollapsedFromProps]);
+  }, [defaultCollapsedFromProps, disabledFromProps]);
 
   useEffect(() => {
     const body = bodyRef.current;
