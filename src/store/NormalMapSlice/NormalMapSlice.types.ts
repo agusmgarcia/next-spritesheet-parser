@@ -9,9 +9,11 @@ import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 type NormalMap = {
   image: {
     backgroundColor: string;
+    height: number;
     name: string;
     type: string;
     url: string;
+    width: number;
   };
   settings: {
     colorSpace: "linear" | "sRGB";

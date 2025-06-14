@@ -6,6 +6,7 @@ import type SettingsItemProps from "./SettingsItem.types";
 export default function SettingsItem(props: SettingsItemProps) {
   const {
     settingsDisabled,
+    settingsMaxArea,
     settingsOnChange,
     settingsOnMouseUp,
     settingsValue,
@@ -66,6 +67,38 @@ export default function SettingsItem(props: SettingsItemProps) {
           step={0.01}
           type="range"
           value={settingsValue.maxVariation}
+        />
+      </label>
+
+      <label className="flex items-center justify-between gap-2 text-white">
+        Min area
+        <Input
+          className="w-2/3 text-center"
+          disabled={settingsDisabled}
+          max={settingsValue.maxArea}
+          min={0}
+          name="minArea"
+          onChange={settingsOnChange}
+          onMouseUp={settingsOnMouseUp}
+          step={1}
+          type="range"
+          value={settingsValue.minArea}
+        />
+      </label>
+
+      <label className="flex items-center justify-between gap-2 text-white">
+        Max area
+        <Input
+          className="w-2/3 text-center"
+          disabled={settingsDisabled}
+          max={settingsMaxArea}
+          min={settingsValue.minArea}
+          name="maxArea"
+          onChange={settingsOnChange}
+          onMouseUp={settingsOnMouseUp}
+          step={1}
+          type="range"
+          value={settingsValue.maxArea}
         />
       </label>
     </Accordion.Item>

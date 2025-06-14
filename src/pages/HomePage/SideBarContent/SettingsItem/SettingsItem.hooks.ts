@@ -10,6 +10,7 @@ export default function useSettingsItem(props: SettingsItemProps) {
 
   const {
     settingsDisabled,
+    settingsMaxArea,
     settingsOnChange,
     settingsOnMouseUp,
     settingsValue,
@@ -20,6 +21,7 @@ export default function useSettingsItem(props: SettingsItemProps) {
     defaultCollapsed,
     disabled,
     settingsDisabled,
+    settingsMaxArea,
     settingsOnChange,
     settingsOnMouseUp,
     settingsValue,
@@ -67,6 +69,11 @@ function useSettings() {
     [settingsLoading, spriteSheet],
   );
 
+  const settingsMaxArea = useMemo<number>(
+    () => (spriteSheet?.image.width || 0) * (spriteSheet?.image.height || 0),
+    [spriteSheet?.image.height, spriteSheet?.image.width],
+  );
+
   const settingsCTADisabled = useMemo<boolean>(
     () =>
       settingsDisabled ||
@@ -81,11 +88,20 @@ function useSettings() {
       !settingsValue.minDiversity ||
       isNaN(+settingsValue.minDiversity) ||
       +settingsValue.minDiversity < 0.01 ||
-      +settingsValue.minDiversity > 1,
+      +settingsValue.minDiversity > 1 ||
+      isNaN(+settingsValue.minArea) ||
+      +settingsValue.minArea < 0 ||
+      +settingsValue.minArea > +settingsValue.maxArea ||
+      isNaN(+settingsValue.maxArea) ||
+      +settingsValue.maxArea < +settingsValue.minArea ||
+      +settingsValue.maxArea > settingsMaxArea,
     [
+      settingsMaxArea,
       settingsDisabled,
       settingsValue.delta,
+      settingsValue.maxArea,
       settingsValue.maxVariation,
+      settingsValue.minArea,
       settingsValue.minDiversity,
     ],
   );
@@ -157,6 +173,7 @@ function useSettings() {
 
   return {
     settingsDisabled,
+    settingsMaxArea,
     settingsOnChange,
     settingsOnMouseUp,
     settingsValue,

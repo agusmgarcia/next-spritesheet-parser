@@ -33,6 +33,7 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
 
     const image = {
       backgroundColor: "#8080ff",
+      height: data.height,
       name: spriteSheetImage.name,
       type: "image/png",
       url: await imageDataUtils
@@ -43,6 +44,7 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
           signal,
         )
         .then((file) => URL.createObjectURL(file)),
+      width: data.width,
     };
 
     URL.revokeObjectURL(prevNormalMap?.image.url || "");
@@ -67,9 +69,11 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
 const INITIAL_NORMAL_MAP: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
   image: {
     backgroundColor: "",
+    height: 0,
     name: "",
     type: "",
     url: "",
+    width: 0,
   },
   settings: {
     colorSpace: "linear",

@@ -169,7 +169,10 @@ function isDirty(
     (Object.values(spriteSheet.sprites).some(
       (sprite) => !!Object.keys(sprite.subsprites).length,
     ) ||
-      !equals.deep(spriteSheet.settings, DEFAULT_SPRITE_SHEET_SETTINGS))
+      !equals.deep(spriteSheet.settings, {
+        ...DEFAULT_SPRITE_SHEET_SETTINGS,
+        maxArea: 0.5 * spriteSheet.image.width * spriteSheet.image.height,
+      }))
   )
     return true;
 

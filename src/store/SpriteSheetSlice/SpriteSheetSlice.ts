@@ -17,7 +17,7 @@ export const DEFAULT_SETTINGS: NonNullable<
   SpriteSheetSlice["spriteSheet"]["data"]
 >["settings"] = {
   delta: 5,
-  maxArea: 0.5,
+  maxArea: 0,
   maxVariation: 0.25,
   minArea: 0,
   minDiversity: 0.2,
@@ -39,6 +39,11 @@ export default createServerSlice<
         const raw = await loadImage(imageURL, signal).then(imageDataUtils.get);
         const backgroundColor = imageDataUtils.getBackgroundColor(raw);
 
+        settings = {
+          ...DEFAULT_SETTINGS,
+          maxArea: 0.5 * raw.width * raw.height,
+        };
+
         const data = await imageDataUtils.removeBackground(raw, signal);
         const sprites = await getSprites(data, settings, signal);
 
@@ -51,9 +56,11 @@ export default createServerSlice<
         return {
           image: {
             backgroundColor,
+            height: data.height,
             name: `${image.name.split(".").slice(0, -1).join(".")}`,
             type: image.type,
             url,
+            width: data.width,
           },
           settings,
           sprites,
@@ -94,9 +101,11 @@ const DEFAULT_SPRITE_SHEET: NonNullable<
 > = {
   image: {
     backgroundColor: "",
+    height: 0,
     name: "",
     type: "",
     url: "",
+    width: 0,
   },
   settings: {
     delta: 0,
@@ -266,6 +275,25 @@ async function setSpriteSheetSettings(
 
   if (settings.minDiversity > 1)
     throw new Error("'Min diversity' must be lower or equal than 1");
+
+  if (settings.minArea < 0)
+    throw new Error("'Min area' must be greater or equal than 0");
+
+  if (settings.minArea > settings.maxArea)
+    throw new Error(
+      `'Min area' must be lower or equal than ${settings.maxArea}`,
+    );
+
+  if (settings.maxArea < settings.minArea)
+    throw new Error(
+      `'Max area' must be greater or equal than ${settings.minArea}`,
+    );
+
+  const maxArea =
+    (spriteSheet.image.width || 0) * (spriteSheet.image.height || 0);
+
+  if (settings.maxArea > maxArea)
+    throw new Error(`'Max area' must be lower or equal than ${maxArea}`);
 
   const spriteIds = await loadImage(spriteSheet.image.url, context.signal)
     .then(imageDataUtils.get)
