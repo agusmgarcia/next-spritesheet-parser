@@ -1,8 +1,8 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
-  equals,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-store";
+import { equals } from "@agusmgarcia/react-essentials-utils";
 import { downloadZip } from "client-zip";
 
 import { imageDataUtils, loadImage } from "#src/utils";

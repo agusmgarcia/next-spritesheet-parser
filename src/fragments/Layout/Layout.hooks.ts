@@ -1,4 +1,7 @@
-import { type Func, useDevicePixelRatio } from "@agusmgarcia/react-core";
+import {
+  type Func,
+  useDevicePixelRatio,
+} from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useScale, useSpriteSheet } from "#src/store";

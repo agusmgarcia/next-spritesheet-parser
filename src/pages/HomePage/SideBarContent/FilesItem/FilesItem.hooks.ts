@@ -1,4 +1,4 @@
-import { type AsyncFunc, type Func } from "@agusmgarcia/react-core";
+import { type AsyncFunc, type Func } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useMemo, useState } from "react";
 
 import {

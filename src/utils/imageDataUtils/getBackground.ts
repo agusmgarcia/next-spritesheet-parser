@@ -1,4 +1,4 @@
-import { type Tuple } from "@agusmgarcia/react-core";
+import { type Tuple } from "@agusmgarcia/react-essentials-utils";
 
 export default function getBackground(imageData: ImageData): Tuple<number, 4> {
   return [

@@ -1,4 +1,4 @@
-import { isSSR } from "@agusmgarcia/react-core";
+import { isSSR } from "@agusmgarcia/react-essentials-utils";
 import { type Rect } from "blob-detection-ts";
 import { v4 as createUUID } from "uuid";
 

@@ -1,4 +1,5 @@
-/** @type import("prettier").RequiredOptions */
-module.exports = {
-  plugins: ["prettier-plugin-tailwindcss"],
-};
+const {
+  createPrettierConfig,
+} = require("@agusmgarcia/react-essentials-commands");
+
+module.exports = createPrettierConfig("app");

@@ -1,4 +1,4 @@
-import { children } from "@agusmgarcia/react-core";
+import { children } from "@agusmgarcia/react-essentials-utils";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button, Icon, Typography } from "#src/components";

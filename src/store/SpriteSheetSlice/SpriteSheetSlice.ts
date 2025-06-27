@@ -1,8 +1,8 @@
 import {
   createServerSlice,
   type CreateServerSliceTypes,
-  replaceString,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-store";
+import { replaceString } from "@agusmgarcia/react-essentials-utils";
 import { type MSEROptions, Rect } from "blob-detection-ts";
 
 import { imageDataUtils, loadImage } from "#src/utils";

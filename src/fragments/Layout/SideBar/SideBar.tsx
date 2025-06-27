@@ -37,7 +37,7 @@ export default function SideBar(props: SideBarProps) {
       )}
 
       {/* CHILDREN */}
-      <div className="size-full overflow-y-auto overflow-x-hidden">
+      <div className="size-full overflow-x-hidden overflow-y-auto">
         {children}
       </div>
 

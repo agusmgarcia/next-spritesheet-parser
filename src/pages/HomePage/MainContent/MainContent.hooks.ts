@@ -3,7 +3,7 @@ import {
   type Tuple,
   useDevicePixelRatio,
   useDimensions,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-utils";
 import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 

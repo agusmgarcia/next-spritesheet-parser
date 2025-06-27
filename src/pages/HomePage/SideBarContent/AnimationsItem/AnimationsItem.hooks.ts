@@ -1,4 +1,4 @@
-import { type Func, sorts } from "@agusmgarcia/react-core";
+import { type Func, sorts } from "@agusmgarcia/react-essentials-utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 

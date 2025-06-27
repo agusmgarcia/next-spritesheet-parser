@@ -1,7 +1,7 @@
 import {
   createServerSlice,
   type CreateServerSliceTypes,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-store";
 
 import { imageDataUtils, loadImage } from "#src/utils";
 

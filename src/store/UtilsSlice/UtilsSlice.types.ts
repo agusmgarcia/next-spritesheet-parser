@@ -1,8 +1,5 @@
-import {
-  type AsyncFunc,
-  type CreateGlobalSliceTypes,
-  type Func,
-} from "@agusmgarcia/react-core";
+import { type CreateGlobalSliceTypes } from "@agusmgarcia/react-essentials-store";
+import { type AsyncFunc, type Func } from "@agusmgarcia/react-essentials-utils";
 
 import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import { type NormalMapSliceTypes } from "../NormalMapSlice";

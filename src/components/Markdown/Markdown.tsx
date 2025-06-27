@@ -1,4 +1,4 @@
-import { children as childrenModule } from "@agusmgarcia/react-core";
+import { children as childrenModule } from "@agusmgarcia/react-essentials-utils";
 import ReactMarkdown from "react-markdown";
 
 import useMarkdown from "./Markdown.hooks";

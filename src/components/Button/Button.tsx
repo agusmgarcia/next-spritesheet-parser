@@ -13,7 +13,7 @@ export default function Button(props: ButtonProps) {
         <button
           {...rest}
           className={twMerge(
-            "size-full cursor-pointer rounded-lg border border-cranberry-600 bg-cranberry-600 p-2 text-white outline outline-1 outline-offset-0 outline-transparent",
+            "size-full cursor-pointer rounded-lg border border-cranberry-600 bg-cranberry-600 p-2 text-white outline-1 outline-offset-0 outline-transparent",
             "transition-colors",
             "focus-within:-outline-offset-2 focus-within:outline-white",
             "enabled:hover:bg-cranberry-500",
@@ -30,7 +30,7 @@ export default function Button(props: ButtonProps) {
         <button
           {...rest}
           className={twMerge(
-            "size-full cursor-pointer rounded-lg border border-black bg-white p-2 text-black outline outline-1 outline-offset-0 outline-transparent",
+            "size-full cursor-pointer rounded-lg border border-black bg-white p-2 text-black outline-1 outline-offset-0 outline-transparent",
             "transition-colors",
             "focus-within:-outline-offset-2 focus-within:outline-cranberry-600",
             "enabled:hover:bg-cranberry-300",
@@ -48,7 +48,7 @@ export default function Button(props: ButtonProps) {
         <button
           {...rest}
           className={twMerge(
-            "size-full cursor-pointer text-black outline outline-1 outline-offset-0 outline-transparent",
+            "size-full cursor-pointer text-black outline-1 outline-offset-0 outline-transparent",
             "transition-colors",
             "focus-within:-outline-offset-2 focus-within:outline-cranberry-600",
             "enabled:hover:text-cranberry-300",

@@ -1,6 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-cranberry-50: #fdf2f7;
+  --color-cranberry-100: #fce7f0;
+  --color-cranberry-200: #fad0e3;
+  --color-cranberry-300: #f7aaca;
+  --color-cranberry-400: #f175a6;
+  --color-cranberry-500: #e63b7a;
+  --color-cranberry-600: #d72b61;
+  --color-cranberry-700: #ba1c4a;
+  --color-cranberry-800: #9a1a3e;
+  --color-cranberry-900: #801b36;
+  --color-cranberry-950: #4e091b;
+
+  --color-dark: #212529;
+
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+}
 
 * {
   @apply font-sans;

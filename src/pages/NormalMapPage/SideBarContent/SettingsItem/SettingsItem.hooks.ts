@@ -1,4 +1,4 @@
-import { type AsyncFunc } from "@agusmgarcia/react-core";
+import { type AsyncFunc } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { useNormalMap } from "#src/store";

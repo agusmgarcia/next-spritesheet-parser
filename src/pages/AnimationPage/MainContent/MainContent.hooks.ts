@@ -1,4 +1,7 @@
-import { useDevicePixelRatio, useDimensions } from "@agusmgarcia/react-core";
+import {
+  useDevicePixelRatio,
+  useDimensions,
+} from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useMemo, useRef } from "react";
 
 import { useScale, useSpriteSheet } from "#src/store";

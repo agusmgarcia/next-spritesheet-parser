@@ -1,4 +1,4 @@
-import { type Func, throwError } from "@agusmgarcia/react-core";
+import { type Func, throwError } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";

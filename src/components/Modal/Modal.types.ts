@@ -1,4 +1,4 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Func } from "@agusmgarcia/react-essentials-utils";
 
 type ModalProps = Pick<
   React.DialogHTMLAttributes<HTMLDialogElement>,

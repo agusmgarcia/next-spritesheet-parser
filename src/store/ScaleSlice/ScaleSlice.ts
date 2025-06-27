@@ -1,7 +1,7 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-store";
 
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import type ScaleSlice from "./ScaleSlice.types";

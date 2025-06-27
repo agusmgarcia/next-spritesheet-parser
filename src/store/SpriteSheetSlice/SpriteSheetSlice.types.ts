@@ -1,8 +1,5 @@
-import {
-  type AsyncFunc,
-  type CreateServerSliceTypes,
-  type Func,
-} from "@agusmgarcia/react-core";
+import { type CreateServerSliceTypes } from "@agusmgarcia/react-essentials-store";
+import { type AsyncFunc, type Func } from "@agusmgarcia/react-essentials-utils";
 
 type SpriteSheet = {
   image: {

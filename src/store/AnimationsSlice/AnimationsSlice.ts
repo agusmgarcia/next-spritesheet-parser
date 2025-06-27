@@ -1,9 +1,8 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
-  type Func,
-  replaceString,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-store";
+import { type Func, replaceString } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
 import { type NotificationSliceTypes } from "../NotificationSlice";

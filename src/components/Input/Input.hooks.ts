@@ -1,4 +1,4 @@
-import { useDimensions } from "@agusmgarcia/react-core";
+import { useDimensions } from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useMemo, useRef } from "react";
 
 import type InputProps from "./Input.types";

@@ -1,4 +1,5 @@
-import { catchError, createStore } from "@agusmgarcia/react-core";
+import { createStore } from "@agusmgarcia/react-essentials-store";
+import { catchError } from "@agusmgarcia/react-essentials-utils";
 
 import { getErrorMessage } from "#src/utils";
 

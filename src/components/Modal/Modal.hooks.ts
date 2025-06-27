@@ -1,4 +1,7 @@
-import { useElementAtBottom, useElementAtTop } from "@agusmgarcia/react-core";
+import {
+  useElementAtBottom,
+  useElementAtTop,
+} from "@agusmgarcia/react-essentials-utils";
 import {
   createContext,
   useCallback,

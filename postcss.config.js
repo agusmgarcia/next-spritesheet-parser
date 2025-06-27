@@ -1,6 +1,5 @@
-module.exports = {
-  plugins: {
-    autoprefixer: {},
-    tailwindcss: {},
-  },
-};
+const {
+  createPostCSSConfig,
+} = require("@agusmgarcia/react-essentials-commands");
+
+module.exports = createPostCSSConfig("app");

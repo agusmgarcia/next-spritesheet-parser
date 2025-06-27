@@ -20,8 +20,8 @@ export default function Modal(props: ModalProps) {
         state === "hidden" && "hidden",
 
         "backdrop:transition-[background-color]",
-        "backdrop:fixed backdrop:bottom-0 backdrop:left-0 backdrop:right-0 backdrop:top-0 backdrop:bg-black backdrop:bg-opacity-0",
-        state === "open" && "backdrop:bg-opacity-40",
+        "backdrop:fixed backdrop:top-0 backdrop:right-0 backdrop:bottom-0 backdrop:left-0 backdrop:bg-black/0",
+        state === "open" && "backdrop:bg-black/40",
         state === "hidden" && "backdrop:hidden",
       )}
     >

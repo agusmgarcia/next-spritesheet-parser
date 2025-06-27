@@ -1,4 +1,4 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Func } from "@agusmgarcia/react-essentials-utils";
 
 type SideBarProps = Pick<
   React.HTMLAttributes<HTMLDivElement>,

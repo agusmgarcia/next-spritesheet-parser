@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@agusmgarcia/react-core";
+import { useMediaQuery } from "@agusmgarcia/react-essentials-utils";
 import { useMemo } from "react";
 
 type Viewport = "Desktop" | "LargeDesktop" | "Mobile" | "Tablet";

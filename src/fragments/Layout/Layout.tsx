@@ -27,7 +27,7 @@ export default function Layout(props: LayoutProps) {
       {viewport === "Mobile" && (
         <div className="flex size-full flex-col justify-between bg-gray-800 p-2">
           {/* MESSAGE */}
-          <Typography className="italic text-white">
+          <Typography className="text-white italic">
             This app is not intended to be for Mobile.
           </Typography>
 

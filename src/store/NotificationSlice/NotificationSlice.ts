@@ -1,7 +1,7 @@
 import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
-} from "@agusmgarcia/react-core";
+} from "@agusmgarcia/react-essentials-store";
 import { v4 as createUUID } from "uuid";
 
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";

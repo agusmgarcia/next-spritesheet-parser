@@ -1,4 +1,4 @@
-import { type Func } from "@agusmgarcia/react-core";
+import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useMemo } from "react";
 
 import { useAnimations } from "#src/store";
