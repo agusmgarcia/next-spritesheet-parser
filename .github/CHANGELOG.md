@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.25.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.2)
+
+> June 29, 2025
+
+### Fixes 🎯
+
+- start using react-essentials
+
 ## [v0.25.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.1)
 
 > June 14, 2025
