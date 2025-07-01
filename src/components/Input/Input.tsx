@@ -32,7 +32,7 @@ export default function Input(props: InputProps) {
           "focus-within:-outline-offset-2 focus-within:outline-cranberry-600",
           "enabled:hover:bg-cranberry-300",
           "checked:bg-cranberry-600 checked:enabled:hover:bg-cranberry-500",
-          "after:checked:absolute after:checked:top-1/2 after:checked:left-1/2 after:checked:h-4 after:checked:w-2 after:checked:-translate-x-1/2 after:checked:-translate-y-2/3 after:checked:rotate-45 after:checked:[border-width:_0_3px_3px_0] after:checked:border-solid after:checked:border-white after:checked:content-['']",
+          "checked:after:absolute checked:after:top-1/2 checked:after:left-1/2 checked:after:h-4 checked:after:w-2 checked:after:-translate-x-1/2 checked:after:-translate-y-2/3 checked:after:rotate-45 checked:after:border-r-[3px] checked:after:border-b-[3px] checked:after:border-solid checked:after:border-white checked:after:content-['']",
           "disabled:cursor-not-allowed disabled:bg-gray-100 disabled:checked:bg-gray-400",
           className,
         )}
