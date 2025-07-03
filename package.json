@@ -32,7 +32,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@agusmgarcia/react-essentials-commands": "^1.0.4",
+    "@agusmgarcia/react-essentials-commands": "^1.0.5",
     "@types/react-dom": "^19.1.6"
   },
   "engines": {
