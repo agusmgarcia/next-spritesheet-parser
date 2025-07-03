@@ -1,5 +1,5 @@
 import { createStore } from "@agusmgarcia/react-essentials-store";
-import { catchError } from "@agusmgarcia/react-essentials-utils";
+import { errors } from "@agusmgarcia/react-essentials-utils";
 
 import { getErrorMessage } from "#src/utils";
 
@@ -41,7 +41,7 @@ const { useSelector, ...reactStore } = createStore(
   createSpriteSheetSlice,
   createUtilsSlice,
 )((callback, context) =>
-  catchError(callback, (error) => {
+  errors.handle(callback, (error) => {
     if (context.signal.aborted) return;
     context.get().notification.setNotification("error", getErrorMessage(error));
   }),

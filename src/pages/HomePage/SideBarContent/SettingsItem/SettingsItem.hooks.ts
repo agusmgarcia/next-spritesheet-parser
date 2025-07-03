@@ -1,4 +1,4 @@
-import { type Func, throwError } from "@agusmgarcia/react-essentials-utils";
+import { errors, type Func } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useSpriteSheet } from "#src/store";
@@ -129,7 +129,7 @@ function useSettings() {
       minArea: +settingsValue.minArea,
       minDiversity: +settingsValue.minDiversity,
     })
-      .then((result) => (!result ? throwError("error") : undefined))
+      .then((result) => (!result ? errors.emit("error") : undefined))
       .catch(() =>
         setSettingsValue({
           delta: spriteSheet?.settings.delta.toString() || "0",

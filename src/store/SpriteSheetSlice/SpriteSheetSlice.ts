@@ -2,7 +2,7 @@ import {
   createServerSlice,
   type CreateServerSliceTypes,
 } from "@agusmgarcia/react-essentials-store";
-import { replaceString } from "@agusmgarcia/react-essentials-utils";
+import { strings } from "@agusmgarcia/react-essentials-utils";
 import { type MSEROptions, Rect } from "blob-detection-ts";
 
 import { imageDataUtils, loadImage } from "#src/utils";
@@ -142,7 +142,7 @@ async function mergeSpriteSheetSprites(
   if (!!animationsThatContainAtLeastOneSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
-      replaceString(
+      strings.replace(
         "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
         {
           animations: animationsThatContainAtLeastOneSprite.length,
@@ -309,7 +309,7 @@ async function setSpriteSheetSettings(
   if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
-      replaceString(
+      strings.replace(
         "By modifying this settings, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
         {
           animations: animationsThatDoesntContainAtLeastOneSprite.length,
@@ -362,7 +362,7 @@ async function splitSpriteSheetSprite(
   if (!!animationsThatContainTheSprite.length) {
     const response = await context.get().notification.setNotification(
       "warning",
-      replaceString(
+      strings.replace(
         "By splitting selected sprite, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
         {
           animations: animationsThatContainTheSprite.length,

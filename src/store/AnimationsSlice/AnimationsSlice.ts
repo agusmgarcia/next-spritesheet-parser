@@ -2,7 +2,7 @@ import {
   createGlobalSlice,
   type CreateGlobalSliceTypes,
 } from "@agusmgarcia/react-essentials-store";
-import { type Func, replaceString } from "@agusmgarcia/react-essentials-utils";
+import { type Func, strings } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
 import { type NotificationSliceTypes } from "../NotificationSlice";
@@ -13,13 +13,9 @@ export default createGlobalSlice<
   AnimationsSlice,
   NotificationSliceTypes.default & SpriteSheetSliceTypes.default
 >("animations", (subscribe) => {
-  subscribe(
-    (context) => context.get().animations.__updateAnimations__(),
-    (state) => state.spriteSheet.data?.sprites,
-  );
+  subscribe(updateAnimations, (state) => state.spriteSheet.data?.sprites);
 
   return {
-    __updateAnimations__,
     animations: [],
     createAnimation,
     deleteAnimation,
@@ -34,7 +30,7 @@ export default createGlobalSlice<
   };
 });
 
-function __updateAnimations__(
+function updateAnimations(
   context: CreateGlobalSliceTypes.Context<
     AnimationsSlice,
     SpriteSheetSliceTypes.default
@@ -323,7 +319,7 @@ async function setAnimations(
   if (!!animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length)
     await context.get().notification.setNotification(
       "error",
-      replaceString(
+      strings.replace(
         "The following ${animations?animation:animations}: ${animationsName} ${animations?contains:contain} at least one sprite that is not part of the sprite sheet",
         {
           animations: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length,
