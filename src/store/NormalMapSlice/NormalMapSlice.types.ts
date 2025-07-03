@@ -31,7 +31,6 @@ type NormalMapSlice = CreateServerSliceTypes.SliceOf<
       "image"
     >,
   {
-    __updateNormalMapImage__: AsyncFunc;
     setNormalMapName: Func<void, [name: string]>;
     setNormalMapSettings: AsyncFunc<void, [settings: NormalMap["settings"]]>;
   }

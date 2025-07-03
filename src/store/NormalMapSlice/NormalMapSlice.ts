@@ -54,12 +54,11 @@ export default createServerSlice<NormalMapSlice, SpriteSheetSliceTypes.default>(
   () => INITIAL_NORMAL_MAP,
   (subscribe) => {
     subscribe(
-      (context) => context.get().normalMap.__updateNormalMapImage__(),
+      updateNormalMapImage,
       (state) => state.spriteSheet.data?.image.url,
     );
 
     return {
-      __updateNormalMapImage__,
       setNormalMapName,
       setNormalMapSettings,
     };
@@ -85,7 +84,7 @@ const INITIAL_NORMAL_MAP: NonNullable<NormalMapSlice["normalMap"]["data"]> = {
   },
 };
 
-async function __updateNormalMapImage__(
+async function updateNormalMapImage(
   context: CreateServerSliceTypes.Context<
     NormalMapSlice,
     SpriteSheetSliceTypes.default
