@@ -1,115 +1,94 @@
-import { createStore } from "@agusmgarcia/react-essentials-store";
+import { createReactStore } from "@agusmgarcia/react-essentials-store";
 import { errors } from "@agusmgarcia/react-essentials-utils";
 
-import { getErrorMessage } from "#src/utils";
-
-import createAnimationsSlice, {
-  type AnimationsSliceTypes,
-} from "./AnimationsSlice";
-import createNormalMapSlice, {
-  type NormalMapSliceTypes,
-} from "./NormalMapSlice";
-import createNotificationSlice, {
+import AnimationsSlice, { type AnimationsSliceTypes } from "./AnimationsSlice";
+import NormalMapSlice, { type NormalMapSliceTypes } from "./NormalMapSlice";
+import NotificationSlice, {
   type NotificationSliceTypes,
 } from "./NotificationSlice";
-import createScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
-import createSpriteSelectionSlice from "./SpriteSelectionSlice";
-import createSpriteSheetSlice, {
+import ScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
+import SpriteSelectionSlice from "./SpriteSelectionSlice";
+import SpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
-import createUtilsSlice from "./UtilsSlice";
+import UtilsSlice from "./UtilsSlice";
 
-export type Animation =
-  AnimationsSliceTypes.default["animations"]["animations"][number];
-export type NormalMap = NonNullable<
-  NormalMapSliceTypes.default["normalMap"]["data"]
->;
-export type Notification = NonNullable<
-  NotificationSliceTypes.default["notification"]["notification"]
->;
-export type Scale = ScaleSliceTypes.default["scale"]["scale"];
-export type SpriteSheet = NonNullable<
-  SpriteSheetSliceTypes.default["spriteSheet"]["data"]
->;
+export type Animation = AnimationsSliceTypes.Animations[number];
+export type NormalMap = NormalMapSliceTypes.NormalMap;
+export type Notification = NotificationSliceTypes.Notification;
+export type Scale = ScaleSliceTypes.Scale;
+export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
 
-const { useSelector, ...reactStore } = createStore(
-  createAnimationsSlice,
-  createNormalMapSlice,
-  createNotificationSlice,
-  createScaleSlice,
-  createSpriteSelectionSlice,
-  createSpriteSheetSlice,
-  createUtilsSlice,
-)((callback, context) =>
-  errors.handle(callback, (error) => {
-    if (context.signal.aborted) return;
-    context.get().notification.setNotification("error", getErrorMessage(error));
-  }),
-);
+const { useSelector, ...reactStore } = createReactStore({
+  middlewares: (callback, slices) =>
+    errors.handle(callback, (error) =>
+      slices.notification.set(
+        "error",
+        errors.getMessage(error) || "Unexpected error",
+      ),
+    ),
+  slices: {
+    animations: AnimationsSlice,
+    normalMap: NormalMapSlice,
+    notification: NotificationSlice,
+    scale: ScaleSlice,
+    spriteSelection: SpriteSelectionSlice,
+    spriteSheet: SpriteSheetSlice,
+    utils: UtilsSlice,
+  },
+});
 
 export const StoreProvider = reactStore.StoreProvider;
 
 export function useAnimations() {
   return {
-    animations: useSelector((state) => state.animations.animations),
-    createAnimation: useSelector((state) => state.animations.createAnimation),
-    deleteAnimation: useSelector((state) => state.animations.deleteAnimation),
-    resetAnimationOffset: useSelector(
-      (state) => state.animations.resetAnimationOffset,
-    ),
-    setAnimationColor: useSelector(
-      (state) => state.animations.setAnimationColor,
-    ),
-    setAnimationFPS: useSelector((state) => state.animations.setAnimationFPS),
-    setAnimationName: useSelector((state) => state.animations.setAnimationName),
-    setAnimationOffset: useSelector(
-      (state) => state.animations.setAnimationOffset,
-    ),
-    setAnimationOnion: useSelector(
-      (state) => state.animations.setAnimationOnion,
-    ),
-    setAnimationPlaying: useSelector(
-      (state) => state.animations.setAnimationPlaying,
-    ),
+    animations: useSelector((state) => state.animations.state),
+    createAnimation: useSelector((state) => state.animations.create),
+    deleteAnimation: useSelector((state) => state.animations.remove),
+    resetAnimationOffset: useSelector((state) => state.animations.resetOffset),
+    setAnimationColor: useSelector((state) => state.animations.setColor),
+    setAnimationFPS: useSelector((state) => state.animations.setFPS),
+    setAnimationName: useSelector((state) => state.animations.setName),
+    setAnimationOffset: useSelector((state) => state.animations.setOffset),
+    setAnimationOnion: useSelector((state) => state.animations.setOnion),
+    setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
   };
 }
 
 export function useNormalMap() {
   return {
-    normalMap: useSelector((state) => state.normalMap.data),
-    normalMapLoading: useSelector((state) => state.normalMap.loading),
-    setNormalMapName: useSelector((state) => state.normalMap.setNormalMapName),
-    setNormalMapSettings: useSelector(
-      (state) => state.normalMap.setNormalMapSettings,
-    ),
+    normalMap: useSelector((state) => state.normalMap.response),
+    normalMapLoading: useSelector((state) => state.normalMap.state.loading),
+    setNormalMapName: useSelector((state) => state.normalMap.setName),
+    setNormalMapSettings: useSelector((state) => state.normalMap.setSettings),
   };
 }
 
 export function useNotification() {
   return {
-    notification: useSelector((state) => state.notification.notification),
-    setNotification: useSelector((state) => state.notification.setNotification),
+    acceptNotification: useSelector((state) => state.notification.accept),
+    cancelNotification: useSelector((state) => state.notification.cancel),
+    notification: useSelector((state) => state.notification.state),
+    setNotification: useSelector((state) => state.notification.set),
   };
 }
 
 export function useScale() {
   return {
-    scale: useSelector((state) => state.scale.scale),
-    setScale: useSelector((state) => state.scale.setScale),
+    scale: useSelector((state) => state.scale.state),
+    setScale: useSelector((state) => state.scale.set),
   };
 }
 
 export function useSpriteSelection() {
   return {
-    selectSprite: useSelector((state) => state.spriteSelection.selectSprite),
-    spriteSelection: useSelector(
-      (state) => state.spriteSelection.spriteSelection,
-    ),
+    selectSprite: useSelector((state) => state.spriteSelection.select),
+    spriteSelection: useSelector((state) => state.spriteSelection.state),
     toggleSpriteSelection: useSelector(
-      (state) => state.spriteSelection.toggleSpriteSelection,
+      (state) => state.spriteSelection.toggleSelection,
     ),
     unselectAllSprites: useSelector(
-      (state) => state.spriteSelection.unselectAllSprites,
+      (state) => state.spriteSelection.unselectAll,
     ),
   };
 }
@@ -117,25 +96,19 @@ export function useSpriteSelection() {
 export function useSpriteSheet() {
   return {
     mergeSpriteSheetSprites: useSelector(
-      (state) => state.spriteSheet.mergeSpriteSheetSprites,
+      (state) => state.spriteSheet.mergeSprites,
     ),
-    removeSpriteSheet: useSelector(
-      (state) => state.spriteSheet.removeSpriteSheet,
-    ),
-    setSpriteSheetImage: useSelector(
-      (state) => state.spriteSheet.setSpriteSheetImage,
-    ),
-    setSpriteSheetName: useSelector(
-      (state) => state.spriteSheet.setSpriteSheetName,
-    ),
+    removeSpriteSheet: useSelector((state) => state.spriteSheet.remove),
+    setSpriteSheetImage: useSelector((state) => state.spriteSheet.setImage),
+    setSpriteSheetName: useSelector((state) => state.spriteSheet.setName),
     setSpriteSheetSettings: useSelector(
-      (state) => state.spriteSheet.setSpriteSheetSettings,
+      (state) => state.spriteSheet.setSettings,
     ),
     splitSpriteSheetSprite: useSelector(
-      (state) => state.spriteSheet.splitSpriteSheetSprite,
+      (state) => state.spriteSheet.splitSprite,
     ),
-    spriteSheet: useSelector((state) => state.spriteSheet.data),
-    spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),
+    spriteSheet: useSelector((state) => state.spriteSheet.response),
+    spriteSheetLoading: useSelector((state) => state.spriteSheet.state.loading),
   };
 }
 

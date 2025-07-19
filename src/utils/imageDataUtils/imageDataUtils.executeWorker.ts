@@ -8,25 +8,31 @@ import type rawRemoveBackground from "./removeBackground.raw";
 
 export default function executeWorker(
   type: "GENERATE_NORMAL_MAP",
-  ...args: [...Parameters<typeof rawGenerateNormalMap>, signal: AbortSignal]
+  ...args: [
+    ...Parameters<typeof rawGenerateNormalMap>,
+    signal: AbortSignal | undefined,
+  ]
 ): Promise<ReturnType<typeof rawGenerateNormalMap> | undefined>;
 
 export default function executeWorker(
   type: "GET_RECTS",
-  ...args: [...Parameters<typeof rawGetRects>, signal: AbortSignal]
+  ...args: [...Parameters<typeof rawGetRects>, signal: AbortSignal | undefined]
 ): Promise<ReturnType<typeof rawGetRects> | undefined>;
 
 export default function executeWorker(
   type: "REMOVE_BACKGROUND",
-  ...args: [...Parameters<typeof rawRemoveBackground>, signal: AbortSignal]
+  ...args: [
+    ...Parameters<typeof rawRemoveBackground>,
+    signal: AbortSignal | undefined,
+  ]
 ): Promise<ReturnType<typeof rawRemoveBackground> | undefined>;
 
 export default async function executeWorker(
   type: string,
   ...argsWithSignal: any[]
 ): Promise<any> {
-  const signal: AbortSignal = argsWithSignal.at(-1);
-  signal.throwIfAborted();
+  const signal: AbortSignal | undefined = argsWithSignal.at(-1);
+  signal?.throwIfAborted();
 
   if (isSSR() || !window.Worker) return undefined;
 
@@ -39,7 +45,7 @@ export default async function executeWorker(
 
     const cleanUp = () => {
       worker.removeEventListener("message", handleMessage);
-      signal.removeEventListener("abort", handleAbort);
+      signal?.removeEventListener("abort", handleAbort);
     };
 
     const handleMessage = (event: MessageEvent<Data>) => {
@@ -52,11 +58,11 @@ export default async function executeWorker(
     const handleAbort = () => {
       cleanUp();
       worker.postMessage({ abort: true, args: [], id, type });
-      reject(new Error(signal.reason));
+      reject(new Error(signal?.reason || "Aborted"));
     };
 
     worker.addEventListener("message", handleMessage);
-    signal.addEventListener("abort", handleAbort);
+    signal?.addEventListener("abort", handleAbort);
 
     const args = argsWithSignal.slice(0, -1);
     worker.postMessage({ abort: false, args, id, type });

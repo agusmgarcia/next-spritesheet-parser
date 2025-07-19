@@ -1,7 +1,4 @@
-import { type CreateServerSliceTypes } from "@agusmgarcia/react-essentials-store";
-import { type AsyncFunc, type Func } from "@agusmgarcia/react-essentials-utils";
-
-type SpriteSheet = {
+export type SpriteSheet = {
   image: {
     backgroundColor: string;
     height: number;
@@ -31,22 +28,7 @@ type SpriteSheet = {
   >;
 };
 
-type SpriteSheetSlice = CreateServerSliceTypes.SliceOf<
-  "spriteSheet",
-  SpriteSheet,
-  Pick<SpriteSheet, "settings"> & { image: File | SpriteSheet["image"] },
-  {
-    mergeSpriteSheetSprites: AsyncFunc<void, [spriteIds: string[]]>;
-    removeSpriteSheet: AsyncFunc;
-    setSpriteSheetImage: AsyncFunc<void, [image: File]>;
-    setSpriteSheetName: Func<void, [name: string]>;
-    setSpriteSheetSettings: AsyncFunc<
-      boolean,
-      [settings: SpriteSheet["settings"]]
-    >;
-    setSpriteSheetSprites: Func<void, [sprites: SpriteSheet["sprites"]]>;
-    splitSpriteSheetSprite: AsyncFunc<void, [spriteId: string]>;
-  }
->;
-
-export default SpriteSheetSlice;
+export type Request = {
+  image: File | SpriteSheet["image"];
+  settings: SpriteSheet["settings"];
+};

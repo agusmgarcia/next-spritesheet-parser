@@ -1,67 +1,52 @@
-import {
-  createGlobalSlice,
-  type CreateGlobalSliceTypes,
-} from "@agusmgarcia/react-essentials-store";
+import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
+import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
-import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import type NotificationSlice from "./NotificationSlice.types";
+import { type Notification } from "./NotificationSlice.types";
 
-export default createGlobalSlice<
-  NotificationSlice,
-  SpriteSheetSliceTypes.default
->("notification", () => ({
-  notification: undefined,
-  setNotification,
-}));
+export default class NotificationSlice extends GlobalSlice<
+  Notification | undefined
+> {
+  private readonly resolves: Record<string, Func<void, [value: boolean]>>;
 
-function setNotification(
-  type: Parameters<NotificationSlice["notification"]["setNotification"]>[0],
-  message: Parameters<NotificationSlice["notification"]["setNotification"]>[1],
-  context: CreateGlobalSliceTypes.Context<NotificationSlice>,
-): Promise<boolean> {
-  const notification = context.get().notification.notification;
-  if (!!notification) notification.close();
+  constructor() {
+    super(undefined);
+    this.resolves = {};
+  }
 
-  const id = createUUID();
+  get dirty(): boolean {
+    return !!this.state;
+  }
 
-  return new Promise<boolean>((resolve) => {
-    context.set({
-      notification: {
-        accept: () => {
-          if (!context.signal.aborted)
-            context.set((prev) =>
-              prev.notification?.id === id ? { notification: undefined } : prev,
-            );
+  set(
+    type: Notification["type"],
+    message: Notification["message"],
+  ): Promise<boolean> {
+    if (!!this.state?.id) this.close(this.state.id);
 
-          resolve(true);
-        },
-        close: () => {
-          if (!context.signal.aborted)
-            context.set((prev) =>
-              prev.notification?.id === id ? { notification: undefined } : prev,
-            );
-
-          resolve(false);
-        },
-        id,
-        message,
-        type,
-        ...(type === "warning"
-          ? {
-              cancel: () => {
-                if (!context.signal.aborted)
-                  context.set((prev) =>
-                    prev.notification?.id === id
-                      ? { notification: undefined }
-                      : prev,
-                  );
-
-                resolve(false);
-              },
-            }
-          : {}),
-      } as NotificationSlice["notification"]["notification"],
+    return new Promise<boolean>((resolve) => {
+      const id = createUUID();
+      this.resolves[id] = resolve;
+      this.state = { id, message, type };
     });
-  });
+  }
+
+  accept(id: string): void {
+    this.resolve(id, true);
+  }
+
+  cancel(id: string): void {
+    this.resolve(id, false);
+  }
+
+  close(id: string): void {
+    this.resolve(id, false);
+  }
+
+  private resolve(id: string, value: boolean): void {
+    if (this.state?.id !== id) return;
+    this.state = undefined;
+    this.resolves[id](value);
+    delete this.resolves[id];
+  }
 }

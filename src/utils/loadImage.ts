@@ -1,9 +1,9 @@
 export default function loadImage(
   imageURL: string,
-  signal: AbortSignal,
+  signal?: AbortSignal,
 ): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    if (signal.aborted) {
+    if (!!signal?.aborted) {
       reject(new Error(signal.reason));
       return;
     }
@@ -11,7 +11,7 @@ export default function loadImage(
     const image = new Image();
 
     const handleLoad = () => {
-      if (signal.aborted) {
+      if (!!signal?.aborted) {
         reject(new Error(signal.reason));
         return;
       }
@@ -22,7 +22,7 @@ export default function loadImage(
     };
 
     const handleError = (event: Event | string) => {
-      if (signal.aborted) {
+      if (!!signal?.aborted) {
         reject(new Error(signal.reason));
         return;
       }

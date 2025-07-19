@@ -1,48 +1,47 @@
-import {
-  createServerSlice,
-  type CreateServerSliceTypes,
-} from "@agusmgarcia/react-essentials-store";
-import { strings } from "@agusmgarcia/react-essentials-utils";
+import { ServerSlice } from "@agusmgarcia/react-essentials-store";
+import { equals, strings } from "@agusmgarcia/react-essentials-utils";
 import { type MSEROptions, Rect } from "blob-detection-ts";
 
 import { imageDataUtils, loadImage } from "#src/utils";
 
-import { type AnimationsSliceTypes } from "../AnimationsSlice";
-import { type NormalMapSliceTypes } from "../NormalMapSlice";
-import { type NotificationSliceTypes } from "../NotificationSlice";
-import { type UtilsSliceTypes } from "../UtilsSlice";
-import type SpriteSheetSlice from "./SpriteSheetSlice.types";
+import type AnimationsSlice from "../AnimationsSlice";
+import type NotificationSlice from "../NotificationSlice";
+import type UtilsSlice from "../UtilsSlice";
+import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
 
-export const DEFAULT_SETTINGS: NonNullable<
-  SpriteSheetSlice["spriteSheet"]["data"]
->["settings"] = {
-  delta: 5,
-  maxArea: 0,
-  maxVariation: 0.25,
-  minArea: 0,
-  minDiversity: 0.2,
-};
+export default class SpriteSheetSlice extends ServerSlice<
+  SpriteSheet,
+  Request,
+  {
+    animations: AnimationsSlice;
+    notification: NotificationSlice;
+    utils: UtilsSlice;
+  }
+> {
+  constructor() {
+    super(undefined);
+  }
 
-export default createServerSlice<
-  SpriteSheetSlice,
-  AnimationsSliceTypes.default &
-    NormalMapSliceTypes.default &
-    NotificationSliceTypes.default &
-    UtilsSliceTypes.default
->(
-  "spriteSheet",
-  async ({ image, settings }, signal, prevSpriteSheet) => {
+  get dirty(): boolean {
+    return (
+      !!this.response?.image.url &&
+      (Object.values(this.response.sprites).some(
+        (sprite) => !!Object.keys(sprite.subsprites).length,
+      ) ||
+        !equals.deep(this.response.settings, DEFAULT_SETTINGS))
+    );
+  }
+
+  protected override async onFetch(
+    { image, settings }: Request,
+    signal: AbortSignal,
+  ): Promise<SpriteSheet | undefined> {
     if (image instanceof File) {
       const imageURL = URL.createObjectURL(image);
 
       try {
         const raw = await loadImage(imageURL, signal).then(imageDataUtils.get);
         const backgroundColor = imageDataUtils.getBackgroundColor(raw);
-
-        settings = {
-          ...DEFAULT_SETTINGS,
-          maxArea: 0.5 * raw.width * raw.height,
-        };
 
         const data = await imageDataUtils.removeBackground(raw, signal);
         const sprites = await getSprites(data, settings, signal);
@@ -51,7 +50,7 @@ export default createServerSlice<
           .createFile(data, image.name, image.type, signal)
           .then((file) => URL.createObjectURL(file));
 
-        URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
+        URL.revokeObjectURL(this.response?.image.url || "");
 
         return {
           image: {
@@ -71,328 +70,255 @@ export default createServerSlice<
     }
 
     if (!image.url) {
-      URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
-      return DEFAULT_SPRITE_SHEET;
+      URL.revokeObjectURL(this.response?.image.url || "");
+      return undefined;
     }
 
     const sprites = await loadImage(image.url, signal)
       .then(imageDataUtils.get)
       .then((data) => getSprites(data, settings, signal));
 
-    if (image.url !== prevSpriteSheet?.image.url)
-      URL.revokeObjectURL(prevSpriteSheet?.image.url || "");
+    if (image.url !== this.response?.image.url)
+      URL.revokeObjectURL(this.response?.image.url || "");
 
     return { image, settings, sprites };
-  },
-  () => DEFAULT_SPRITE_SHEET,
-  () => ({
-    mergeSpriteSheetSprites,
-    removeSpriteSheet,
-    setSpriteSheetImage,
-    setSpriteSheetName,
-    setSpriteSheetSettings,
-    setSpriteSheetSprites,
-    splitSpriteSheetSprite,
-  }),
-);
+  }
 
-const DEFAULT_SPRITE_SHEET: NonNullable<
-  SpriteSheetSlice["spriteSheet"]["data"]
-> = {
-  image: {
-    backgroundColor: "",
-    height: 0,
-    name: "",
-    type: "",
-    url: "",
-    width: 0,
-  },
-  settings: {
-    delta: 0,
-    maxArea: 0,
-    maxVariation: 0,
-    minArea: 0,
-    minDiversity: 0,
-  },
-  sprites: {},
-};
+  async mergeSprites(spriteIds: string[]): Promise<void> {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-async function mergeSpriteSheetSprites(
-  spriteIds: Parameters<
-    SpriteSheetSlice["spriteSheet"]["mergeSpriteSheetSprites"]
-  >[0],
-  context: CreateServerSliceTypes.Context<
-    SpriteSheetSlice,
-    AnimationsSliceTypes.default & NotificationSliceTypes.default
-  >,
-): Promise<void> {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
+    if (spriteIds.length <= 1)
+      throw new Error("You need to select more than one sprite to merge");
 
-  if (spriteIds.length <= 1)
-    throw new Error("You need to select more than one sprite to merge");
+    const animationsThatContainAtLeastOneSprite =
+      this.slices.animations.state.filter((a) =>
+        a.sprites.some((s) => spriteIds.includes(s.id)),
+      );
 
-  const animationsThatContainAtLeastOneSprite = context
-    .get()
-    .animations.animations.filter((a) =>
-      a.sprites.some((s) => spriteIds.includes(s.id)),
-    );
+    if (!!animationsThatContainAtLeastOneSprite.length) {
+      const response = await this.slices.notification.set(
+        "warning",
+        strings.replace(
+          "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          {
+            animations: animationsThatContainAtLeastOneSprite.length,
+            animationsName: animationsThatContainAtLeastOneSprite
+              .map((a) => `**"${a.name}"**`)
+              .join(", "),
+          },
+        ),
+      );
 
-  if (!!animationsThatContainAtLeastOneSprite.length) {
-    const response = await context.get().notification.setNotification(
-      "warning",
-      strings.replace(
-        "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
-        {
-          animations: animationsThatContainAtLeastOneSprite.length,
-          animationsName: animationsThatContainAtLeastOneSprite
-            .map((a) => `**"${a.name}"**`)
-            .join(", "),
+      if (!response) return;
+    }
+
+    const spriteToAdd = toSprite(
+      spriteIds
+        .map((sId) => spriteSheet.sprites[sId])
+        .filter((s) => !!s)
+        .map((s) => new Rect(s.left, s.top, s.width, s.height))
+        .reduce((r1, r2) => {
+          r1.merge(r2);
+          return r1;
+        }),
+      spriteIds.reduce(
+        (result, spriteId) => {
+          const sprite = spriteSheet.sprites[spriteId];
+          if (!!sprite) result[spriteId] = sprite;
+          return result;
         },
+        {} as SpriteSheet["sprites"],
       ),
     );
 
-    if (!response) return;
+    const sprites = { ...spriteSheet.sprites, [spriteToAdd.id]: spriteToAdd };
+    spriteIds.forEach((sId) => delete sprites[sId]);
+
+    this.response = { ...spriteSheet, sprites };
   }
 
-  const spriteToAdd = toSprite(
-    spriteIds
-      .map((sId) => spriteSheet.sprites[sId])
-      .map((s) => new Rect(s.left, s.top, s.width, s.height))
-      .reduce((r1, r2) => {
-        r1.merge(r2);
-        return r1;
-      }),
-    spriteIds.reduce(
-      (result, spriteId) => {
-        result[spriteId] = spriteSheet.sprites[spriteId];
-        return result;
-      },
-      {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
-    ),
-  );
-
-  const sprites: NonNullable<
-    SpriteSheetSlice["spriteSheet"]["data"]
-  >["sprites"] = {
-    ...spriteSheet.sprites,
-    [spriteToAdd.id]: spriteToAdd,
-  };
-
-  spriteIds.forEach((sId) => delete sprites[sId]);
-
-  context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
-}
-
-async function removeSpriteSheet(
-  context: CreateServerSliceTypes.Context<
-    SpriteSheetSlice,
-    AnimationsSliceTypes.default &
-      NormalMapSliceTypes.default &
-      NotificationSliceTypes.default &
-      UtilsSliceTypes.default
-  >,
-): Promise<void> {
-  if (context.get().utils.isDirty()) {
-    const response = await context
-      .get()
-      .notification.setNotification(
+  async remove(): Promise<void> {
+    if (this.slices.utils.isDirty()) {
+      const response = await this.slices.notification.set(
         "warning",
         "By removing the image you may loose all your progress. Are you sure you want to continue?",
       );
 
-    if (!response) return;
+      if (!response) return;
+    }
+
+    await this.reload({
+      image: {
+        backgroundColor: "",
+        height: 0,
+        name: "",
+        type: "",
+        url: "",
+        width: 0,
+      },
+      settings: {
+        delta: 0,
+        maxArea: 0,
+        maxVariation: 0,
+        minArea: 0,
+        minDiversity: 0,
+      },
+    });
   }
 
-  await context.reload(DEFAULT_SPRITE_SHEET);
-}
-
-async function setSpriteSheetImage(
-  image: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheetImage"]>[0],
-  context: CreateServerSliceTypes.Context<
-    SpriteSheetSlice,
-    AnimationsSliceTypes.default &
-      NormalMapSliceTypes.default &
-      NotificationSliceTypes.default &
-      UtilsSliceTypes.default
-  >,
-): Promise<void> {
-  if (context.get().utils.isDirty()) {
-    const response = await context
-      .get()
-      .notification.setNotification(
+  async setImage(image: File): Promise<void> {
+    if (this.slices.utils.isDirty()) {
+      const response = await this.slices.notification.set(
         "warning",
         "By loading a new image you may loose all your progress. Are you sure you want to continue?",
       );
 
-    if (!response) return;
+      if (!response) return;
+    }
+
+    await this.reload({ image, settings: DEFAULT_SETTINGS });
   }
 
-  await context.reload({ image, settings: DEFAULT_SETTINGS });
-}
+  setName(name: string): void {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-function setSpriteSheetName(
-  name: Parameters<SpriteSheetSlice["spriteSheet"]["setSpriteSheetName"]>[0],
-  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
-): void {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
-
-  context.set((prev) =>
-    !!prev ? { ...prev, image: { ...prev.image, name } } : prev,
-  );
-}
-
-async function setSpriteSheetSettings(
-  settings: Parameters<
-    SpriteSheetSlice["spriteSheet"]["setSpriteSheetSettings"]
-  >[0],
-  context: CreateServerSliceTypes.Context<
-    SpriteSheetSlice,
-    AnimationsSliceTypes.default & NotificationSliceTypes.default
-  >,
-): Promise<boolean> {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
-
-  if (settings.delta < 1)
-    throw new Error("'Delta' must be greater or equal than 1");
-
-  if (settings.delta > 20)
-    throw new Error("'Delta' must be lower or equal than 20");
-
-  if (settings.maxVariation < 0.01)
-    throw new Error("'Max variation' must be greater or equal than 0.01");
-
-  if (settings.maxVariation > 1)
-    throw new Error("'Max variation' must be lower or equal than 1");
-
-  if (settings.minDiversity < 0.01)
-    throw new Error("'Min diversity' must be greater or equal than 0.01");
-
-  if (settings.minDiversity > 1)
-    throw new Error("'Min diversity' must be lower or equal than 1");
-
-  if (settings.minArea < 0)
-    throw new Error("'Min area' must be greater or equal than 0");
-
-  if (settings.minArea > settings.maxArea)
-    throw new Error(
-      `'Min area' must be lower or equal than ${settings.maxArea}`,
-    );
-
-  if (settings.maxArea < settings.minArea)
-    throw new Error(
-      `'Max area' must be greater or equal than ${settings.minArea}`,
-    );
-
-  const maxArea =
-    (spriteSheet.image.width || 0) * (spriteSheet.image.height || 0);
-
-  if (settings.maxArea > maxArea)
-    throw new Error(`'Max area' must be lower or equal than ${maxArea}`);
-
-  const spriteIds = await loadImage(spriteSheet.image.url, context.signal)
-    .then(imageDataUtils.get)
-    .then((data) => getSprites(data, settings, context.signal))
-    .then((sprites) => Object.keys(sprites));
-
-  const animationsThatDoesntContainAtLeastOneSprite = context
-    .get()
-    .animations.animations.filter((a) =>
-      a.sprites.some((s) => !spriteIds.includes(s.id)),
-    );
-
-  if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
-    const response = await context.get().notification.setNotification(
-      "warning",
-      strings.replace(
-        "By modifying this settings, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
-        {
-          animations: animationsThatDoesntContainAtLeastOneSprite.length,
-          animationsName: animationsThatDoesntContainAtLeastOneSprite
-            .map((a) => `**"${a.name}"**`)
-            .join(", "),
-        },
-      ),
-    );
-
-    if (!response) return false;
+    this.response = { ...spriteSheet, image: { ...spriteSheet.image, name } };
   }
 
-  await context.reload({ image: spriteSheet.image, settings });
-  return true;
-}
+  async setSettings(settings: SpriteSheet["settings"]): Promise<boolean> {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-function setSpriteSheetSprites(
-  sprites: Parameters<
-    SpriteSheetSlice["spriteSheet"]["setSpriteSheetSprites"]
-  >[0],
-  context: CreateServerSliceTypes.Context<SpriteSheetSlice>,
-): void {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
+    if (settings.delta < 1)
+      throw new Error("'Delta' must be greater or equal than 1");
 
-  context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
-}
+    if (settings.delta > 20)
+      throw new Error("'Delta' must be lower or equal than 20");
 
-async function splitSpriteSheetSprite(
-  spriteId: Parameters<
-    SpriteSheetSlice["spriteSheet"]["splitSpriteSheetSprite"]
-  >[0],
-  context: CreateServerSliceTypes.Context<
-    SpriteSheetSlice,
-    AnimationsSliceTypes.default & NotificationSliceTypes.default
-  >,
-): Promise<void> {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
+    if (settings.maxVariation < 0.01)
+      throw new Error("'Max variation' must be greater or equal than 0.01");
 
-  const animationsThatContainTheSprite = context
-    .get()
-    .animations.animations.filter((a) =>
-      a.sprites.some((s) => s.id === spriteId),
-    );
+    if (settings.maxVariation > 1)
+      throw new Error("'Max variation' must be lower or equal than 1");
 
-  if (!!animationsThatContainTheSprite.length) {
-    const response = await context.get().notification.setNotification(
-      "warning",
-      strings.replace(
-        "By splitting selected sprite, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
-        {
-          animations: animationsThatContainTheSprite.length,
-          animationsName: animationsThatContainTheSprite
-            .map((a) => `**"${a.name}"**`)
-            .join(", "),
-        },
-      ),
-    );
+    if (settings.minDiversity < 0.01)
+      throw new Error("'Min diversity' must be greater or equal than 0.01");
 
-    if (!response) return;
+    if (settings.minDiversity > 1)
+      throw new Error("'Min diversity' must be lower or equal than 1");
+
+    if (settings.minArea < 0)
+      throw new Error("'Min area' must be greater or equal than 0");
+
+    if (settings.minArea > settings.maxArea)
+      throw new Error(
+        `'Min area' must be lower or equal than ${settings.maxArea}`,
+      );
+
+    if (settings.maxArea < settings.minArea)
+      throw new Error(
+        `'Max area' must be greater or equal than ${settings.minArea}`,
+      );
+
+    const maxArea =
+      (spriteSheet.image.width || 0) * (spriteSheet.image.height || 0);
+
+    if (settings.maxArea > maxArea)
+      throw new Error(`'Max area' must be lower or equal than ${maxArea}`);
+
+    const spriteIds = await loadImage(spriteSheet.image.url)
+      .then(imageDataUtils.get)
+      .then((data) => getSprites(data, settings))
+      .then((sprites) => Object.keys(sprites));
+
+    const animationsThatDoesntContainAtLeastOneSprite =
+      this.slices.animations.state.filter((a) =>
+        a.sprites.some((s) => !spriteIds.includes(s.id)),
+      );
+
+    if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
+      const response = await this.slices.notification.set(
+        "warning",
+        strings.replace(
+          "By modifying this settings, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          {
+            animations: animationsThatDoesntContainAtLeastOneSprite.length,
+            animationsName: animationsThatDoesntContainAtLeastOneSprite
+              .map((a) => `**"${a.name}"**`)
+              .join(", "),
+          },
+        ),
+      );
+
+      if (!response) return false;
+    }
+
+    await this.reload({ image: spriteSheet.image, settings });
+    return true;
   }
 
-  const subspriteIds = Object.keys(spriteSheet.sprites[spriteId].subsprites);
-  if (!subspriteIds.length) return;
+  setSprites(sprites: SpriteSheet["sprites"]): void {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-  const sprites = {
-    ...spriteSheet.sprites,
-    ...spriteSheet.sprites[spriteId].subsprites,
-  };
+    this.response = { ...spriteSheet, sprites };
+  }
 
-  delete sprites[spriteId];
+  async splitSprite(spriteId: string): Promise<void> {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-  context.set((prev) => (!!prev ? { ...prev, sprites } : prev));
+    const animationsThatContainTheSprite = this.slices.animations.state.filter(
+      (a) => a.sprites.some((s) => s.id === spriteId),
+    );
+
+    if (!!animationsThatContainTheSprite.length) {
+      const response = await this.slices.notification.set(
+        "warning",
+        strings.replace(
+          "By splitting selected sprite, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          {
+            animations: animationsThatContainTheSprite.length,
+            animationsName: animationsThatContainTheSprite
+              .map((a) => `**"${a.name}"**`)
+              .join(", "),
+          },
+        ),
+      );
+
+      if (!response) return;
+    }
+
+    const subspriteIds = Object.keys(spriteSheet.sprites[spriteId].subsprites);
+    if (!subspriteIds.length) return;
+
+    const sprites = {
+      ...spriteSheet.sprites,
+      ...spriteSheet.sprites[spriteId].subsprites,
+    };
+
+    delete sprites[spriteId];
+    this.response = { ...spriteSheet, sprites };
+  }
 }
+
+const DEFAULT_SETTINGS: SpriteSheet["settings"] = {
+  delta: 5,
+  maxVariation: 0.25,
+  minDiversity: 0.2,
+};
 
 function toSprite(
   rect: Rect,
-  subsprites?: NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
-): NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"][string] & {
+  subsprites?: SpriteSheet["sprites"],
+): SpriteSheet["sprites"][string] & {
   id: string;
 } {
   return {
@@ -410,8 +336,8 @@ function toSprite(
 function getSprites(
   imageData: ImageData,
   options: MSEROptions,
-  signal: AbortSignal,
-): Promise<NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"]> {
+  signal?: AbortSignal,
+): Promise<SpriteSheet["sprites"]> {
   return imageDataUtils
     .getRects(imageData, options, signal)
     .then((rects) => rects.map((r) => toSprite(r)))
@@ -421,7 +347,7 @@ function getSprites(
           result[current.id] = current;
           return result;
         },
-        {} as NonNullable<SpriteSheetSlice["spriteSheet"]["data"]>["sprites"],
+        {} as SpriteSheet["sprites"],
       ),
     );
 }

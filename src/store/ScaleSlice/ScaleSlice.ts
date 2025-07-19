@@ -1,31 +1,33 @@
-import {
-  createGlobalSlice,
-  type CreateGlobalSliceTypes,
-} from "@agusmgarcia/react-essentials-store";
+import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
-import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import type ScaleSlice from "./ScaleSlice.types";
+import type SpriteSheetSlice from "../SpriteSheetSlice";
+import { type Scale } from "./ScaleSlice.types";
 
-export default createGlobalSlice<ScaleSlice, SpriteSheetSliceTypes.default>(
-  "scale",
-  (subscribe) => {
-    subscribe(
-      (context) => setScale(1, context),
-      (state) => state.spriteSheet.data?.image.url,
+export default class ScaleSlice extends GlobalSlice<
+  Scale,
+  { spriteSheet: SpriteSheetSlice }
+> {
+  constructor() {
+    super(1);
+  }
+
+  get dirty(): boolean {
+    return this.state !== 1;
+  }
+
+  protected override onInit(): void {
+    super.onInit();
+
+    this.slices.spriteSheet.subscribe(
+      (state) => state.response?.image.url,
+      () => this.set(1),
     );
+  }
 
-    return {
-      scale: 1,
-      setScale,
-    };
-  },
-);
-
-function setScale(
-  scale: Parameters<ScaleSlice["scale"]["setScale"]>[0],
-  context: CreateGlobalSliceTypes.Context<ScaleSlice>,
-): void {
-  context.set((prev) => ({
-    scale: Math.max(scale instanceof Function ? scale(prev.scale) : scale, 1),
-  }));
+  set(scale: React.SetStateAction<number>): void {
+    this.state = Math.max(
+      scale instanceof Function ? scale(this.state) : scale,
+      1,
+    );
+  }
 }

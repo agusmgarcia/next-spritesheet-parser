@@ -2,7 +2,7 @@ export default async function createFile(
   imageData: ImageData,
   name: string,
   type: string | undefined,
-  signal: AbortSignal,
+  signal?: AbortSignal,
 ): Promise<File> {
   const canvas = document.createElement("canvas");
   canvas.width = imageData.width;
@@ -20,7 +20,7 @@ export default async function createFile(
     canvas.toBlob((blob) => resolve(blob || undefined), type),
   );
 
-  signal.throwIfAborted();
+  signal?.throwIfAborted();
   if (!blob) throw new Error("Unexpected scenario");
 
   return new File([blob], name, { type });

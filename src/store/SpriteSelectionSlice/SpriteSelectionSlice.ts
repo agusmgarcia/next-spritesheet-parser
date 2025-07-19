@@ -1,69 +1,55 @@
-import {
-  createGlobalSlice,
-  type CreateGlobalSliceTypes,
-} from "@agusmgarcia/react-essentials-store";
+import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
-import { type AnimationsSliceTypes } from "../AnimationsSlice";
-import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import type SpriteSelectionSlice from "./SpriteSelectionSlice.types";
+import type AnimationsSlice from "../AnimationsSlice";
+import type SpriteSheetSlice from "../SpriteSheetSlice";
+import { type SpriteSelection } from "./SpriteSelectionSlice.types";
 
-export default createGlobalSlice<
-  SpriteSelectionSlice,
-  AnimationsSliceTypes.default & SpriteSheetSliceTypes.default
->("spriteSelection", (subscribe) => {
-  subscribe(unselectAllSprites, (state) => state.spriteSheet.data?.sprites);
-  subscribe(unselectAllSprites, (state) => state.animations.animations.length);
+export default class SpriteSelectionSlice extends GlobalSlice<
+  SpriteSelection,
+  { animations: AnimationsSlice; spriteSheet: SpriteSheetSlice }
+> {
+  constructor() {
+    super([]);
+  }
 
-  return {
-    selectSprite,
-    spriteSelection: [],
-    toggleSpriteSelection,
-    unselectAllSprites,
-  };
-});
+  get dirty(): boolean {
+    return !!this.state.length;
+  }
 
-function selectSprite(
-  spriteId: Parameters<
-    SpriteSelectionSlice["spriteSelection"]["selectSprite"]
-  >[0],
-  context: CreateGlobalSliceTypes.Context<
-    SpriteSelectionSlice,
-    SpriteSheetSliceTypes.default
-  >,
-): void {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.sprites[spriteId])
-    throw new Error("The selected sprite is not present in the sprite sheet");
+  protected override onInit(): void {
+    super.onInit();
 
-  context.set((prev) => ({
-    spriteSelection: prev.spriteSelection.includes(spriteId)
-      ? prev.spriteSelection
-      : [...prev.spriteSelection, spriteId],
-  }));
-}
+    this.slices.spriteSheet.subscribe(
+      (state) => state.response?.sprites,
+      () => this.unselectAll(),
+    );
 
-function toggleSpriteSelection(
-  spriteId: Parameters<
-    SpriteSelectionSlice["spriteSelection"]["toggleSpriteSelection"]
-  >[0],
-  context: CreateGlobalSliceTypes.Context<
-    SpriteSelectionSlice,
-    SpriteSheetSliceTypes.default
-  >,
-): void {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.sprites[spriteId])
-    throw new Error("The selected sprite is not present in the sprite sheet");
+    this.slices.animations.subscribe(
+      (state) => state.length,
+      () => this.unselectAll(),
+    );
+  }
 
-  context.set((prev) => ({
-    spriteSelection: prev.spriteSelection.includes(spriteId)
-      ? prev.spriteSelection.filter((sId) => sId !== spriteId)
-      : [...prev.spriteSelection, spriteId],
-  }));
-}
+  select(spriteId: string): void {
+    const spriteSheet = this.slices.spriteSheet.response;
+    if (!spriteSheet?.sprites[spriteId])
+      throw new Error("The selected sprite is not present in the sprite sheet");
 
-function unselectAllSprites(
-  context: CreateGlobalSliceTypes.Context<SpriteSelectionSlice>,
-): void {
-  context.set({ spriteSelection: [] });
+    if (this.state.includes(spriteId)) return;
+    this.state = [...this.state, spriteId];
+  }
+
+  toggleSelection(spriteId: string): void {
+    const spriteSheet = this.slices.spriteSheet.response;
+    if (!spriteSheet?.sprites[spriteId])
+      throw new Error("The selected sprite is not present in the sprite sheet");
+
+    this.state = this.state.includes(spriteId)
+      ? this.state.filter((sId) => sId !== spriteId)
+      : [...this.state, spriteId];
+  }
+
+  unselectAll(): void {
+    this.state = [];
+  }
 }

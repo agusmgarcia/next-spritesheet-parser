@@ -1,187 +1,78 @@
-import {
-  createGlobalSlice,
-  type CreateGlobalSliceTypes,
-} from "@agusmgarcia/react-essentials-store";
+import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 import { type Func, strings } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
-import { type NotificationSliceTypes } from "../NotificationSlice";
+import type NotificationSlice from "../NotificationSlice";
+import type SpriteSheetSlice from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import type AnimationsSlice from "./AnimationsSlice.types";
+import { type Animations } from "./AnimationsSlice.types";
 
-export default createGlobalSlice<
-  AnimationsSlice,
-  NotificationSliceTypes.default & SpriteSheetSliceTypes.default
->("animations", (subscribe) => {
-  subscribe(updateAnimations, (state) => state.spriteSheet.data?.sprites);
-
-  return {
-    animations: [],
-    createAnimation,
-    deleteAnimation,
-    resetAnimationOffset,
-    setAnimationColor,
-    setAnimationFPS,
-    setAnimationName,
-    setAnimationOffset,
-    setAnimationOnion,
-    setAnimationPlaying,
-    setAnimations,
-  };
-});
-
-function updateAnimations(
-  context: CreateGlobalSliceTypes.Context<
-    AnimationsSlice,
-    SpriteSheetSliceTypes.default
-  >,
-): void {
-  const sprites = context.get().spriteSheet.data?.sprites;
-  if (!sprites) {
-    context.set({ animations: [] });
-    return;
+export default class AnimationsSlice extends GlobalSlice<
+  Animations,
+  { notification: NotificationSlice; spriteSheet: SpriteSheetSlice }
+> {
+  constructor() {
+    super([]);
   }
 
-  context.set((prev) => ({
-    animations: prev.animations.filter((a) =>
-      a.sprites.every((s) => !!sprites[s.id]),
-    ),
-  }));
-}
-
-function createAnimation(
-  spriteIds: Parameters<AnimationsSlice["animations"]["createAnimation"]>[0],
-  context: CreateGlobalSliceTypes.Context<
-    AnimationsSlice,
-    SpriteSheetSliceTypes.default
-  >,
-): string | undefined {
-  if (spriteIds.length <= 0)
-    throw new Error("You need to select at least one sprite");
-
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
-
-  function sortSprites(
-    sprites: NonNullable<
-      SpriteSheetSliceTypes.default["spriteSheet"]["data"]
-    >["sprites"],
-  ): Func<number, [spriteId1: string, spriteId2: string]> {
-    return (spriteId1, spriteId2) => {
-      const sprite1 = sprites[spriteId1];
-      const sprite2 = sprites[spriteId2];
-
-      return sprite1.top <= sprite2.top + sprite2.height &&
-        sprite1.top + sprite1.height >= sprite2.top
-        ? sprite1.left - sprite2.left
-        : sprite1.top - sprite2.top;
-    };
+  get dirty(): boolean {
+    return !!this.state.length;
   }
 
-  function mapSprites(
-    sprites: NonNullable<
-      SpriteSheetSliceTypes.default["spriteSheet"]["data"]
-    >["sprites"],
-  ): Func<
-    AnimationsSlice["animations"]["animations"][number]["sprites"][number],
-    [spriteId: string]
-  > {
-    const spritesSelected = spriteIds.map((spriteId) => ({
-      id: spriteId,
-      ...sprites[spriteId],
-    }));
+  protected override onInit(): void {
+    super.onInit();
 
-    const maxHeight = Math.max(...spritesSelected.map((s) => s.height));
-
-    const result = spritesSelected.reduce(
-      (result, s) => {
-        result[s.id] = {
-          id: s.id,
-          offset: {
-            initialX: 0,
-            initialY: -(maxHeight - s.height) / 2,
-            x: 0,
-            y: -(maxHeight - s.height) / 2,
-          },
-        };
-        return result;
+    this.slices.spriteSheet.subscribe(
+      (state) => state.response?.sprites,
+      (sprites) => {
+        this.state = !!sprites
+          ? this.state.filter((a) => a.sprites.every((s) => !!sprites[s.id]))
+          : [];
       },
-      {} as Record<
-        string,
-        AnimationsSlice["animations"]["animations"][number]["sprites"][number]
-      >,
-    );
-
-    return (spriteId) => result[spriteId];
-  }
-
-  function getLatestAnimationOrder(
-    animations: AnimationsSlice["animations"]["animations"],
-  ): number {
-    return (
-      animations
-        .map((a) => +(a.name.match(/^New animation (\d+)$/)?.at(1) || "0"))
-        .sort()
-        .at(-1) || 0
     );
   }
 
-  const animation: AnimationsSlice["animations"]["animations"][number] = {
-    color: spriteSheet.image.backgroundColor,
-    fps: 12,
-    id: createUUID(),
-    name: `New animation ${getLatestAnimationOrder(context.get().animations.animations) + 1}`,
-    onion: false,
-    playing: spriteIds.length > 1,
-    sprites: spriteIds
-      .sort(sortSprites(spriteSheet.sprites))
-      .map(mapSprites(spriteSheet.sprites)),
-  };
+  create(spriteIds: string[]): string | undefined {
+    if (spriteIds.length <= 0)
+      throw new Error("You need to select at least one sprite");
 
-  context.set((prev) => ({ animations: [...prev.animations, animation] }));
+    const spriteSheet = this.slices.spriteSheet.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-  return animation.id;
-}
+    const animation: Animations[number] = {
+      color: spriteSheet.image.backgroundColor,
+      fps: 12,
+      id: createUUID(),
+      name: `New animation ${getLatestAnimationOrder(this.state) + 1}`,
+      onion: false,
+      playing: spriteIds.length > 1,
+      sprites: spriteIds
+        .sort(sortSprites(spriteSheet.sprites))
+        .map(mapSprites(spriteIds, spriteSheet.sprites)),
+    };
 
-async function deleteAnimation(
-  id: Parameters<AnimationsSlice["animations"]["deleteAnimation"]>[0],
-  context: CreateGlobalSliceTypes.Context<
-    AnimationsSlice,
-    NotificationSliceTypes.default
-  >,
-): Promise<boolean> {
-  const animation = context
-    .get()
-    .animations.animations.find((a) => a.id === id);
+    this.state = [...this.state, animation];
+    return animation.id;
+  }
 
-  if (!animation) return true;
+  async remove(id: string): Promise<boolean> {
+    const animation = this.state.find((a) => a.id === id);
+    if (!animation) return true;
 
-  const response = await context
-    .get()
-    .notification.setNotification(
+    const response = await this.slices.notification.set(
       "warning",
       `Are you sure you want to delete the animation **${animation.name}**? This action cannot be undone`,
     );
+    if (!response) return false;
 
-  if (!response) return false;
+    this.state = this.state.filter((a) => a.id !== id);
+    this.slices.notification.set("success", "Animation deleted!");
+    return true;
+  }
 
-  context.set((prev) => ({
-    animations: prev.animations.filter((a) => a.id !== id),
-  }));
-
-  context.get().notification.setNotification("success", "Animation deleted!");
-
-  return true;
-}
-
-function resetAnimationOffset(
-  id: Parameters<AnimationsSlice["animations"]["resetAnimationOffset"]>[0],
-  index: Parameters<AnimationsSlice["animations"]["resetAnimationOffset"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) =>
+  resetOffset(id: string, index: number): void {
+    this.state = this.state.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -199,52 +90,34 @@ function resetAnimationOffset(
             ),
           }
         : a,
-    ),
-  }));
-}
+    );
+  }
 
-function setAnimationFPS(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationFPS"]>[0],
-  fps: Parameters<AnimationsSlice["animations"]["setAnimationFPS"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) =>
+  setFPS(id: string, fps: React.SetStateAction<number>): void {
+    this.state = this.state.map((a) =>
       a.id === id
-        ? { ...a, fps: Math.max(fps instanceof Function ? fps(a.fps) : fps, 1) }
+        ? {
+            ...a,
+            fps: Math.max(fps instanceof Function ? fps(a.fps) : fps, 1),
+          }
         : a,
-    ),
-  }));
-}
+    );
+  }
 
-function setAnimationColor(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationColor"]>[0],
-  color: Parameters<AnimationsSlice["animations"]["setAnimationColor"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) => (a.id === id ? { ...a, color } : a)),
-  }));
-}
+  setColor(id: string, color: string): void {
+    this.state = this.state.map((a) => (a.id === id ? { ...a, color } : a));
+  }
 
-function setAnimationName(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationName"]>[0],
-  name: Parameters<AnimationsSlice["animations"]["setAnimationName"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) => (a.id === id ? { ...a, name } : a)),
-  }));
-}
+  setName(id: string, name: string): void {
+    this.state = this.state.map((a) => (a.id === id ? { ...a, name } : a));
+  }
 
-function setAnimationOffset(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[0],
-  index: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[1],
-  offset: Parameters<AnimationsSlice["animations"]["setAnimationOffset"]>[2],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) =>
+  setOffset(
+    id: string,
+    index: number,
+    offset: React.SetStateAction<{ x: number; y: number }>,
+  ): void {
+    this.state = this.state.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -263,79 +136,113 @@ function setAnimationOffset(
             ),
           }
         : a,
-    ),
-  }));
-}
+    );
+  }
 
-function setAnimationOnion(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationOnion"]>[0],
-  onion: Parameters<AnimationsSlice["animations"]["setAnimationOnion"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) =>
+  setOnion(id: string, onion: React.SetStateAction<boolean>): void {
+    this.state = this.state.map((a) =>
       a.id === id
         ? {
             ...a,
             onion: onion instanceof Function ? onion(a.onion) : onion,
           }
         : a,
-    ),
-  }));
-}
+    );
+  }
 
-function setAnimationPlaying(
-  id: Parameters<AnimationsSlice["animations"]["setAnimationPlaying"]>[0],
-  playing: Parameters<AnimationsSlice["animations"]["setAnimationPlaying"]>[1],
-  context: CreateGlobalSliceTypes.Context<AnimationsSlice>,
-): void {
-  context.set((prev) => ({
-    animations: prev.animations.map((a) =>
+  setPlaying(id: string, playing: React.SetStateAction<boolean>): void {
+    this.state = this.state.map((a) =>
       a.id === id
         ? {
             ...a,
             playing: playing instanceof Function ? playing(a.playing) : playing,
           }
         : a,
-    ),
-  }));
-}
+    );
+  }
 
-async function setAnimations(
-  animations: Parameters<AnimationsSlice["animations"]["setAnimations"]>[0],
-  context: CreateGlobalSliceTypes.Context<
-    AnimationsSlice,
-    NotificationSliceTypes.default & SpriteSheetSliceTypes.default
-  >,
-): Promise<void> {
-  const spriteSheet = context.get().spriteSheet.data;
-  if (!spriteSheet?.image.url)
-    throw new Error("You need to provide an image first");
+  async setAnimations(animations: Animations): Promise<void> {
+    const spriteSheet = this.slices.spriteSheet.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
 
-  const animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet = animations.filter(
-    (a) => a.sprites.some((s) => !spriteSheet.sprites[s.id]),
-  );
-
-  if (!!animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length)
-    await context.get().notification.setNotification(
-      "error",
-      strings.replace(
-        "The following ${animations?animation:animations}: ${animationsName} ${animations?contains:contain} at least one sprite that is not part of the sprite sheet",
-        {
-          animations: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length,
-          animationsName: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet
-            .map((a) => `**"${a.name}"**`)
-            .join(", "),
-        },
-      ),
+    const animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet = animations.filter(
+      (a) => a.sprites.some((s) => !spriteSheet.sprites[s.id]),
     );
 
-  context.set({
-    animations: animations.filter(
+    if (!!animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length)
+      await this.slices.notification.set(
+        "error",
+        strings.replace(
+          "The following ${animations?animation:animations}: ${animationsName} ${animations?contains:contain} at least one sprite that is not part of the sprite sheet",
+          {
+            animations:
+              animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length,
+            animationsName: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet
+              .map((a) => `**"${a.name}"**`)
+              .join(", "),
+          },
+        ),
+      );
+
+    this.state = animations.filter(
       (a) =>
         !animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.find(
           (b) => a.id === b.id,
         ),
-    ),
-  });
+    );
+  }
+}
+
+function sortSprites(
+  sprites: SpriteSheetSliceTypes.SpriteSheet["sprites"],
+): Func<number, [spriteId1: string, spriteId2: string]> {
+  return (spriteId1, spriteId2) => {
+    const sprite1 = sprites[spriteId1];
+    const sprite2 = sprites[spriteId2];
+
+    return sprite1.top <= sprite2.top + sprite2.height &&
+      sprite1.top + sprite1.height >= sprite2.top
+      ? sprite1.left - sprite2.left
+      : sprite1.top - sprite2.top;
+  };
+}
+
+function mapSprites(
+  spriteIds: string[],
+  sprites: SpriteSheetSliceTypes.SpriteSheet["sprites"],
+): Func<Animations[number]["sprites"][number], [spriteId: string]> {
+  const spritesSelected = spriteIds.map((spriteId) => ({
+    id: spriteId,
+    ...sprites[spriteId],
+  }));
+
+  const maxHeight = Math.max(...spritesSelected.map((s) => s.height));
+
+  const result = spritesSelected.reduce(
+    (result, s) => {
+      result[s.id] = {
+        id: s.id,
+        offset: {
+          initialX: 0,
+          initialY: -(maxHeight - s.height) / 2,
+          x: 0,
+          y: -(maxHeight - s.height) / 2,
+        },
+      };
+      return result;
+    },
+    {} as Record<string, Animations[number]["sprites"][number]>,
+  );
+
+  return (spriteId) => result[spriteId];
+}
+
+function getLatestAnimationOrder(animations: Animations): number {
+  return (
+    animations
+      .map((a) => +(a.name.match(/^New animation (\d+)$/)?.at(1) || "0"))
+      .sort()
+      .at(-1) || 0
+  );
 }

@@ -17,8 +17,8 @@
     "test": "react-essentials-commands-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-essentials-store": "^0.7.0",
-    "@agusmgarcia/react-essentials-utils": "^0.7.0",
+    "@agusmgarcia/react-essentials-store": "^0.8.0",
+    "@agusmgarcia/react-essentials-utils": "^0.8.0",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",
     "invert-color": "^2.0.0",
@@ -32,7 +32,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@agusmgarcia/react-essentials-commands": "^0.7.0",
+    "@agusmgarcia/react-essentials-commands": "^0.8.0",
     "@types/react-dom": "^19.1.7"
   },
   "engines": {

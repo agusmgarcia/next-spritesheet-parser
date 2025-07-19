@@ -4,7 +4,7 @@ import rawRemoveBackground from "./removeBackground.raw";
 export default async function removeBackground(
   ...[imageData, signal]: [
     ...Parameters<typeof rawRemoveBackground>,
-    signal: AbortSignal,
+    signal?: AbortSignal,
   ]
 ): Promise<ReturnType<typeof rawRemoveBackground>> {
   return (

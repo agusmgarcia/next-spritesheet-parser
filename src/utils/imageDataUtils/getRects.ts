@@ -4,7 +4,7 @@ import executeWorker from "./imageDataUtils.executeWorker";
 export default async function getRects(
   ...[imageData, options, signal]: [
     ...Parameters<typeof rawGetRects>,
-    signal: AbortSignal,
+    signal?: AbortSignal,
   ]
 ): Promise<ReturnType<typeof rawGetRects>> {
   return (
