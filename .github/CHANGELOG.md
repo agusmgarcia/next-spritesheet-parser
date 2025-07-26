@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.25.5](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.5)
+
+> July 26, 2025
+
+### Fixes 🎯
+
+- bump dependencies
+
 ## [v0.25.4](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.4)
 
 > July 1, 2025
