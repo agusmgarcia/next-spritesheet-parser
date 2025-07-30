@@ -147,7 +147,6 @@ function usePlaying({
 
   useEffect(() => {
     if (!animationFromProps.playing) return;
-
     if (forwardDisabled) return;
 
     const handler = setInterval(
@@ -162,6 +161,11 @@ function usePlaying({
     forwardDisabled,
     onNextIndexFromProps,
   ]);
+
+  useEffect(() => {
+    if (playingDisabled) return;
+    setAnimationPlaying(animationFromProps.id, true);
+  }, [animationFromProps.id, playingDisabled, setAnimationPlaying]);
 
   useKeyDown(" ", playOnClick);
   useKeyDown("ArrowLeft", backwardOnClick);
