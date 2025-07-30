@@ -9,8 +9,15 @@ import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 
 export default function SideBarContent(props: SideBarContentProps) {
-  const { animation, index, onNextIndex, onPreviousIndex, ...rest } =
-    useSideBarContent(props);
+  const {
+    animation,
+    index,
+    onFirstIndex,
+    onLastIndex,
+    onNextIndex,
+    onPreviousIndex,
+    ...rest
+  } = useSideBarContent(props);
 
   return (
     <Accordion
@@ -25,6 +32,8 @@ export default function SideBarContent(props: SideBarContentProps) {
       <AnimationsItem animation={animation} />
       <PlayingItem
         animation={animation}
+        onFirstIndex={onFirstIndex}
+        onLastIndex={onLastIndex}
         onNextIndex={onNextIndex}
         onPreviousIndex={onPreviousIndex}
       />

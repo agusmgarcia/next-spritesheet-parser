@@ -6,8 +6,15 @@ import MainContent from "./MainContent";
 import SideBarContent from "./SideBarContent";
 
 export default function AnimationPage(props: AnimationPageProps) {
-  const { animation, index, onNextIndex, onPreviousIndex, ...rest } =
-    useAnimationPage(props);
+  const {
+    animation,
+    index,
+    onFirstIndex,
+    onLastIndex,
+    onNextIndex,
+    onPreviousIndex,
+    ...rest
+  } = useAnimationPage(props);
   if (!animation) return <></>;
 
   return (
@@ -17,6 +24,8 @@ export default function AnimationPage(props: AnimationPageProps) {
         <SideBarContent
           animation={animation}
           index={index}
+          onFirstIndex={onFirstIndex}
+          onLastIndex={onLastIndex}
           onNextIndex={onNextIndex}
           onPreviousIndex={onPreviousIndex}
         />

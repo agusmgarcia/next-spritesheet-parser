@@ -8,6 +8,8 @@ import type PlayingItemProps from "./PlayingItem.types";
 
 export default function usePlayingItem({
   animation: animationFromProps,
+  onFirstIndex: onFirstIndexFromProps,
+  onLastIndex: onLastIndexFromProps,
   onNextIndex: onNextIndexFromProps,
   onPreviousIndex: onPreviousIndexFromProps,
   ...rest
@@ -20,8 +22,14 @@ export default function usePlayingItem({
     playing,
     playingDisabled,
     playOnClick,
+    toFirstDisabled,
+    toFirstOnClick,
+    toLastDisabled,
+    toLastOnClick,
   } = usePlaying({
     animation: animationFromProps,
+    onFirstIndex: onFirstIndexFromProps,
+    onLastIndex: onLastIndexFromProps,
     onNextIndex: onNextIndexFromProps,
     onPreviousIndex: onPreviousIndexFromProps,
   });
@@ -52,15 +60,38 @@ export default function usePlayingItem({
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    toFirstDisabled,
+    toFirstOnClick,
+    toLastDisabled,
+    toLastOnClick,
   };
 }
 
 function usePlaying({
   animation: animationFromProps,
+  onFirstIndex: onFirstIndexFromProps,
+  onLastIndex: onLastIndexFromProps,
   onNextIndex: onNextIndexFromProps,
   onPreviousIndex: onPreviousIndexFromProps,
-}: Pick<PlayingItemProps, "animation" | "onNextIndex" | "onPreviousIndex">) {
+}: Pick<
+  PlayingItemProps,
+  | "animation"
+  | "onFirstIndex"
+  | "onLastIndex"
+  | "onNextIndex"
+  | "onPreviousIndex"
+>) {
   const { setAnimationPlaying } = useAnimations();
+
+  const toFirstDisabled = useMemo<boolean>(
+    () => animationFromProps.sprites.length <= 1,
+    [animationFromProps.sprites.length],
+  );
+
+  const toFirstOnClick = useCallback<Func>(() => {
+    if (toFirstDisabled) return;
+    onFirstIndexFromProps();
+  }, [onFirstIndexFromProps, toFirstDisabled]);
 
   const backwardDisabled = useMemo<boolean>(
     () => animationFromProps.sprites.length <= 1,
@@ -104,6 +135,16 @@ function usePlaying({
     setAnimationPlaying,
   ]);
 
+  const toLastDisabled = useMemo<boolean>(
+    () => animationFromProps.sprites.length <= 1,
+    [animationFromProps.sprites.length],
+  );
+
+  const toLastOnClick = useCallback<Func>(() => {
+    if (toLastDisabled) return;
+    onLastIndexFromProps();
+  }, [onLastIndexFromProps, toLastDisabled]);
+
   useEffect(() => {
     if (!animationFromProps.playing) return;
 
@@ -123,8 +164,8 @@ function usePlaying({
   ]);
 
   useKeyDown(" ", playOnClick);
-  useKeyDown("ArrowRight", forwardOnClick);
   useKeyDown("ArrowLeft", backwardOnClick);
+  useKeyDown("ArrowRight", forwardOnClick);
 
   return {
     backwardDisabled,
@@ -134,6 +175,10 @@ function usePlaying({
     playing: animationFromProps.playing,
     playingDisabled,
     playOnClick,
+    toFirstDisabled,
+    toFirstOnClick,
+    toLastDisabled,
+    toLastOnClick,
   };
 }
 

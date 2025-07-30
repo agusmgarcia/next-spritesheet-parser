@@ -5,6 +5,8 @@ import { type Animation } from "#src/store";
 type SideBarContentProps = {
   animation: Animation;
   index: number;
+  onFirstIndex: Func;
+  onLastIndex: Func;
   onNextIndex: Func;
   onPreviousIndex: Func;
 };

@@ -19,6 +19,10 @@ export default function PlayingItem(props: PlayingItemProps) {
     playOnClick,
     plusFPSDisabled,
     plusFPSOnClick,
+    toFirstDisabled,
+    toFirstOnClick,
+    toLastDisabled,
+    toLastOnClick,
     ...rest
   } = usePlayingItem(props);
 
@@ -33,6 +37,16 @@ export default function PlayingItem(props: PlayingItemProps) {
       }
     >
       <div className="flex gap-1">
+        {/* TO FIRST */}
+        <Button
+          className="flex items-center justify-center"
+          disabled={toFirstDisabled}
+          onClick={toFirstOnClick}
+          variant="secondary"
+        >
+          <Icon variant="backwardFast" />
+        </Button>
+
         {/* BACKWARD */}
         <Button
           className="flex items-center justify-center"
@@ -61,6 +75,16 @@ export default function PlayingItem(props: PlayingItemProps) {
           variant="secondary"
         >
           <Icon variant="forward" />
+        </Button>
+
+        {/* TO LAST */}
+        <Button
+          className="flex items-center justify-center"
+          disabled={toLastDisabled}
+          onClick={toLastOnClick}
+          variant="secondary"
+        >
+          <Icon variant="forwardFast" />
         </Button>
       </div>
 

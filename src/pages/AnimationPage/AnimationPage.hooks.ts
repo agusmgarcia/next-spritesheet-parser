@@ -10,7 +10,8 @@ import type AnimationPageProps from "./AnimationPage.types";
 export default function useAnimationPage(props: AnimationPageProps) {
   const { animation } = useAnimation();
 
-  const { index, onNextIndex, onPreviousIndex } = useIndex({ animation });
+  const { index, onFirstIndex, onLastIndex, onNextIndex, onPreviousIndex } =
+    useIndex({ animation });
 
   const { instructions } = useInstructions();
 
@@ -19,6 +20,8 @@ export default function useAnimationPage(props: AnimationPageProps) {
     animation,
     index,
     instructions,
+    onFirstIndex,
+    onLastIndex,
     onNextIndex,
     onPreviousIndex,
   };
@@ -49,10 +52,12 @@ function useIndex({
 }: Pick<ReturnType<typeof useAnimation>, "animation">) {
   const [index, setIndex] = useState(0);
 
+  const onFirstIndex = useCallback<Func>(() => setIndex(0), []);
+
   const onPreviousIndex = useCallback<Func>(
     () =>
       setIndex((prev) =>
-        prev > 0 ? prev - 1 : (animationFromProps?.sprites.length || 0) - 1,
+        prev > 0 ? prev - 1 : (animationFromProps?.sprites.length || 1) - 1,
       ),
     [animationFromProps?.sprites.length],
   );
@@ -60,8 +65,13 @@ function useIndex({
   const onNextIndex = useCallback<Func>(
     () =>
       setIndex((prev) =>
-        prev < (animationFromProps?.sprites.length || 0) - 1 ? prev + 1 : 0,
+        prev < (animationFromProps?.sprites.length || 1) - 1 ? prev + 1 : 0,
       ),
+    [animationFromProps?.sprites.length],
+  );
+
+  const onLastIndex = useCallback<Func>(
+    () => setIndex((animationFromProps?.sprites.length || 1) - 1),
     [animationFromProps?.sprites.length],
   );
 
@@ -70,7 +80,7 @@ function useIndex({
     setIndex(0);
   }, [animationFromProps?.id]);
 
-  return { index, onNextIndex, onPreviousIndex };
+  return { index, onFirstIndex, onLastIndex, onNextIndex, onPreviousIndex };
 }
 
 function useInstructions() {
