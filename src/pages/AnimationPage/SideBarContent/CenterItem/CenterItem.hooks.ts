@@ -114,10 +114,10 @@ function useResetCenter({
     () =>
       animationFromProps.playing ||
       !animationFromProps.sprites ||
-      (animationFromProps.sprites[indexFromProps].offset.x ===
-        animationFromProps.sprites[indexFromProps].offset.initialX &&
-        animationFromProps.sprites[indexFromProps].offset.y ===
-          animationFromProps.sprites[indexFromProps].offset.initialY),
+      (animationFromProps.sprites[indexFromProps]?.offset.x ===
+        animationFromProps.sprites[indexFromProps]?.offset.initialX &&
+        animationFromProps.sprites[indexFromProps]?.offset.y ===
+          animationFromProps.sprites[indexFromProps]?.offset.initialY),
     [animationFromProps.playing, animationFromProps.sprites, indexFromProps],
   );
 

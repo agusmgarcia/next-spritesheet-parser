@@ -77,8 +77,8 @@ function useIndex({
 
   useEffect(() => {
     if (!animationFromProps?.id) return;
-    setIndex(0);
-  }, [animationFromProps?.id]);
+    onFirstIndex();
+  }, [animationFromProps?.id, onFirstIndex]);
 
   return { index, onFirstIndex, onLastIndex, onNextIndex, onPreviousIndex };
 }
