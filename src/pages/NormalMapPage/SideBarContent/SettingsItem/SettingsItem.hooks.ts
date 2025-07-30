@@ -64,7 +64,7 @@ function useSettings() {
         !settings.strength ||
         isNaN(+settings.strength) ||
         +settings.strength < 1 ||
-        +settings.strength > 5
+        +settings.strength > 10
       )
         return;
 

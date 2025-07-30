@@ -84,8 +84,8 @@ export default class NormalMapSlice extends ServerSlice<
     if (settings.strength < 1)
       throw new Error("'Strength' must be greater or equal than 1");
 
-    if (settings.strength > 5)
-      throw new Error("'Strength' must be lower or equal than 5");
+    if (settings.strength > 10)
+      throw new Error("'Strength' must be lower or equal than 10");
 
     await this.reload({ settings, spriteSheetImageURL: spriteSheet.image.url });
   }
