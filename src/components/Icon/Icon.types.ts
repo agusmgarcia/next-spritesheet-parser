@@ -5,6 +5,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className" | "style"> & {
     | "arrowRight"
     | "arrowUp"
     | "backward"
+    | "backwardFast"
     | "box"
     | "center"
     | "close"
