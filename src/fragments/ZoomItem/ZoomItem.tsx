@@ -24,14 +24,14 @@ export default function ZoomItem(props: ZoomItemProps) {
         </Typography>
       }
     >
-      {/* RESET ZOOM */}
+      {/* ZOOM IN */}
       <Button
         className="flex items-center justify-center"
-        disabled={resetZoomDisabled}
-        onClick={resetZoomOnClick}
+        disabled={zoomInDisabled}
+        onClick={zoomInOnClick}
         variant="secondary"
       >
-        <Icon variant="reset" />
+        <Icon variant="zoomIn" />
       </Button>
 
       {/* ZOOM OUT */}
@@ -44,14 +44,14 @@ export default function ZoomItem(props: ZoomItemProps) {
         <Icon variant="zoomOut" />
       </Button>
 
-      {/* ZOOM IN */}
+      {/* RESET ZOOM */}
       <Button
         className="flex items-center justify-center"
-        disabled={zoomInDisabled}
-        onClick={zoomInOnClick}
+        disabled={resetZoomDisabled}
+        onClick={resetZoomOnClick}
         variant="secondary"
       >
-        <Icon variant="zoomIn" />
+        <Icon variant="reset" />
       </Button>
     </Accordion.Item>
   );
