@@ -160,9 +160,7 @@ export default class SpriteSheetSlice extends ServerSlice<
       },
       settings: {
         delta: 0,
-        maxArea: 0,
         maxVariation: 0,
-        minArea: 0,
         minDiversity: 0,
       },
     });
@@ -211,25 +209,6 @@ export default class SpriteSheetSlice extends ServerSlice<
 
     if (settings.minDiversity > 1)
       throw new Error("'Min diversity' must be lower or equal than 1");
-
-    if (settings.minArea < 0)
-      throw new Error("'Min area' must be greater or equal than 0");
-
-    if (settings.minArea > settings.maxArea)
-      throw new Error(
-        `'Min area' must be lower or equal than ${settings.maxArea}`,
-      );
-
-    if (settings.maxArea < settings.minArea)
-      throw new Error(
-        `'Max area' must be greater or equal than ${settings.minArea}`,
-      );
-
-    const maxArea =
-      (spriteSheet.image.width || 0) * (spriteSheet.image.height || 0);
-
-    if (settings.maxArea > maxArea)
-      throw new Error(`'Max area' must be lower or equal than ${maxArea}`);
 
     const spriteIds = await loadImage(spriteSheet.image.url)
       .then(imageDataUtils.get)
@@ -335,11 +314,11 @@ function toSprite(
 
 function getSprites(
   imageData: ImageData,
-  options: MSEROptions,
+  options: Pick<MSEROptions, "delta" | "maxVariation" | "minDiversity">,
   signal?: AbortSignal,
 ): Promise<SpriteSheet["sprites"]> {
   return imageDataUtils
-    .getRects(imageData, options, signal)
+    .getRects(imageData, { ...options, maxArea: 0.5, minArea: 0 }, signal)
     .then((rects) => rects.map((r) => toSprite(r)))
     .then((sprites) =>
       sprites.reduce(

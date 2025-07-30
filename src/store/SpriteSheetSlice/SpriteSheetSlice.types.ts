@@ -9,9 +9,7 @@ export type SpriteSheet = {
   };
   settings: {
     delta: number;
-    maxArea: number;
     maxVariation: number;
-    minArea: number;
     minDiversity: number;
   };
   sprites: Record<

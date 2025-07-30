@@ -33,13 +33,7 @@ export default function rawGetRects(
     }
   }
 
-  const maxArea = imageData.width * imageData.height;
-
-  const mser = new MSER({
-    ...options,
-    maxArea: options.maxArea / maxArea,
-    minArea: options.minArea / maxArea,
-  });
+  const mser = new MSER(options);
 
   return mser.mergeRects(mser.extract(imageData).map((r) => r.rect));
 }
