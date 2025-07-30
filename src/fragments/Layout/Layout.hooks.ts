@@ -140,7 +140,7 @@ function useSidebarCollapsed({
     setSideBarCollapsed((prev) => !prev);
   }, [sideBarHidden]);
 
-  useKeyDown("s", toggleSideBar);
+  useKeyDown("t", toggleSideBar);
 
   useEffect(() => {
     setSideBarCollapsed((prev) => (sideBarHidden ? false : prev));
@@ -165,7 +165,7 @@ function useInstructions({
             keys: [
               {
                 description: "Collapse/Expand the side bar",
-                key: "S",
+                key: "t",
               },
             ],
             title: "Others",

@@ -153,7 +153,6 @@ function useFPS({
   }, [animationFromProps.id, plusFPSDisabled, setAnimationFPS]);
 
   useKeyDown("-", minusFPSOnClick);
-
   useKeyDown("+", plusFPSOnClick);
 
   return {

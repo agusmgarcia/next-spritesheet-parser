@@ -13,16 +13,16 @@ export default function useHomePage(props: HomePageProps) {
       {
         keys: [
           {
+            description: "Remove sprite sheet",
+            key: "r",
+          },
+          {
             description: "Import image or configuration",
             key: "i",
           },
           {
             description: "Export configuration",
             key: "e",
-          },
-          {
-            description: "Remove sprite sheet",
-            key: "r",
           },
         ],
         title: "Files",
@@ -34,16 +34,16 @@ export default function useHomePage(props: HomePageProps) {
             key: "c",
           },
           {
-            description: "Reset sprite selection",
-            key: "r",
-          },
-          {
             description: "Merge sprite selection into single one",
             key: "m",
           },
           {
             description: "Split sprite selection into multiple ones",
             key: "s",
+          },
+          {
+            description: "Clear sprite selection",
+            key: "l",
           },
         ],
         title: "Animations",

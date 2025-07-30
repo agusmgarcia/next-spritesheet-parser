@@ -103,7 +103,7 @@ function useResetSelection() {
     unselectAllSprites();
   }, [resetSelectionDisabled, unselectAllSprites]);
 
-  useKeyDown("r", resetSelectionOnClick);
+  useKeyDown("l", resetSelectionOnClick);
 
   return {
     resetSelectionDisabled,
