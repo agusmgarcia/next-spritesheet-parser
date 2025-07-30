@@ -5,9 +5,12 @@ import type PlayingItemProps from "./PlayingItem.types";
 
 export default function PlayingItem(props: PlayingItemProps) {
   const {
+    backwardDisabled,
     backwardOnClick,
+    forwardDisabled,
     forwardOnClick,
     fps,
+    fpsDisabled,
     fpsOnChange,
     minusFPSDisabled,
     minusFPSOnClick,
@@ -33,6 +36,7 @@ export default function PlayingItem(props: PlayingItemProps) {
         {/* BACKWARD */}
         <Button
           className="flex items-center justify-center"
+          disabled={backwardDisabled}
           onClick={backwardOnClick}
           variant="secondary"
         >
@@ -52,6 +56,7 @@ export default function PlayingItem(props: PlayingItemProps) {
         {/* FORWARD */}
         <Button
           className="flex items-center justify-center"
+          disabled={forwardDisabled}
           onClick={forwardOnClick}
           variant="secondary"
         >
@@ -74,6 +79,7 @@ export default function PlayingItem(props: PlayingItemProps) {
         <Input
           aria-label="FPS"
           className="text-center"
+          disabled={fpsDisabled}
           min={1}
           name="fps"
           onChange={fpsOnChange}
