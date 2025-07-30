@@ -2,7 +2,7 @@
 
 The app is deployed here: <https://agusmgarcia.github.io/next-spritesheet-parser/>
 
-[![Deploy application](https://github.com/agusmgarcia/next-spritesheet-parser/actions/workflows/deploy-app.yml/badge.svg)](https://github.com/agusmgarcia/next-spritesheet-parser/actions/workflows/deploy-app.yml)
+[![Release](https://github.com/agusmgarcia/next-spritesheet-parser/actions/workflows/release.yml/badge.svg)](https://github.com/agusmgarcia/next-spritesheet-parser/actions/workflows/release.yml)
 
 An app to parse sprite sheet into animations. The system can import/export the results.
 
@@ -21,8 +21,6 @@ cd spritesheet-parser
 npm i
 ```
 
-> Make sure to have exported an environment variable called `NODE_AUTH_TOKEN`. Its value should be your GitHub PAT.
-
 Start the project
 
 ```bash
@@ -31,17 +29,8 @@ npm start
 
 ## Deployments
 
-Every time a new tag is created with the pattern **v**_x.x.x_, the code will be built and deployed to the firebase app service automatically.
-
-Create and deploy a new tag using the following commands:
+Run the following command on the commit you want to deploy and let the process to take care of everything:
 
 ```bash
 npm run deploy
 ```
-
-Some of the technologies used to build this project were:
-
-- [NextJS](https://nextjs.org/)
-- [React](https://reactjs.org/)
-- [Tailwind](https://tailwindcss.com/)
-- [ThreeJS](https://threejs.org/)
