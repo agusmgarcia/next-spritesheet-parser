@@ -4,6 +4,7 @@ import {
 } from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useMemo, useRef } from "react";
 
+import { Layout } from "#src/fragments";
 import { useScale, useSpriteSheet } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
@@ -59,7 +60,7 @@ export default function useMainContent({
 
     const scale = scaleFromStore * devicePixelRatio;
 
-    spriteCanvas.width = dimensions.width - 360;
+    spriteCanvas.width = dimensions.width - Layout.SIDEBAR_WIDTH;
     spriteCanvas.height = dimensions.height;
 
     context.imageSmoothingEnabled = false;
@@ -76,7 +77,7 @@ export default function useMainContent({
       currentSprite.top,
       currentSprite.width,
       currentSprite.height,
-      (dimensions.width - 360) / (2 * scale) -
+      (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
         currentSprite.width / 2 -
         currentSprite.offset.x,
       dimensions.height / (2 * scale) -
@@ -94,7 +95,7 @@ export default function useMainContent({
         prevSprite.top,
         prevSprite.width,
         prevSprite.height,
-        (dimensions.width - 360) / (2 * scale) -
+        (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
           prevSprite.width / 2 -
           prevSprite.offset.x,
         dimensions.height / (2 * scale) -
@@ -108,7 +109,7 @@ export default function useMainContent({
 
     context.beginPath();
     context.strokeStyle = animationFromProps.color;
-    const centerX = (dimensions.width - 360) / (2 * scale);
+    const centerX = (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
     const centerY = dimensions.height / (2 * scale);
     context.moveTo(centerX, centerY - 6);
     context.lineTo(centerX, centerY + 6);

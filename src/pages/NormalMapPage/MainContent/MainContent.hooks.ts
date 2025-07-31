@@ -4,6 +4,7 @@ import {
 } from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useRef } from "react";
 
+import { Layout } from "#src/fragments";
 import { useNormalMap, useScale } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
@@ -29,7 +30,7 @@ export default function useMainContent(props: MainContentProps) {
 
     normalMapCanvas.width = Math.max(dimensions.width, image.width * scale);
     normalMapCanvas.width +=
-      360 - (normalMapCanvas.width - image.width * scale);
+      Layout.SIDEBAR_WIDTH - (normalMapCanvas.width - image.width * scale);
 
     normalMapCanvas.height = Math.max(dimensions.height, image.height * scale);
 

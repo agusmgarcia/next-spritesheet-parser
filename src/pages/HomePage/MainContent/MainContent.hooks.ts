@@ -7,6 +7,7 @@ import {
 import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { Layout } from "#src/fragments";
 import { useScale, useSpriteSelection, useSpriteSheet } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
@@ -180,7 +181,7 @@ export default function useMainContent(props: MainContentProps) {
       (image?.width || 0) * scale,
     );
     spriteSheetCanvas.width +=
-      (!!image ? 360 : 0) -
+      (!!image ? Layout.SIDEBAR_WIDTH : 0) -
       (spriteSheetCanvas.width - (image?.width || 0) * scale);
     spriteSheetCanvas.height = Math.max(
       dimensions.height,
@@ -224,7 +225,7 @@ export default function useMainContent(props: MainContentProps) {
       (image?.width || 0) * scale,
     );
     selectionCanvas.width +=
-      (!!image ? 360 : 0) -
+      (!!image ? Layout.SIDEBAR_WIDTH : 0) -
       (selectionCanvas.width - (image?.width || 0) * scale);
     selectionCanvas.height = Math.max(
       dimensions.height,

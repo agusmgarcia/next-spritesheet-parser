@@ -45,9 +45,10 @@ export default function Layout(props: LayoutProps) {
 
           {/* SIDEBAR */}
           <SideBar
-            className="absolute right-0 h-full w-[360px]"
+            className="absolute right-0 h-full"
             collapsed={sideBarCollapsed}
             onCollapsedChange={sideBarCollapsedOnChange}
+            style={{ width: `${Layout.SIDEBAR_WIDTH}px` }}
             version={version}
           >
             {sideBar}
@@ -68,3 +69,5 @@ export default function Layout(props: LayoutProps) {
     </main>
   );
 }
+
+Layout.SIDEBAR_WIDTH = 400;
