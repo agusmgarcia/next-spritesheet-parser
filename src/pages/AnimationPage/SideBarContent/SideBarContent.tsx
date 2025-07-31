@@ -29,7 +29,6 @@ export default function SideBarContent(props: SideBarContentProps) {
       }
     >
       <ConfigurationsItem animation={animation} />
-      <AnimationsItem animation={animation} />
       <PlayingItem
         animation={animation}
         onFirstIndex={onFirstIndex}
@@ -37,6 +36,7 @@ export default function SideBarContent(props: SideBarContentProps) {
         onNextIndex={onNextIndex}
         onPreviousIndex={onPreviousIndex}
       />
+      <AnimationsItem animation={animation} />
       <CenterItem animation={animation} index={index} />
       <ZoomItem />
     </Accordion>
