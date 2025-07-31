@@ -44,6 +44,7 @@ export default function FilesItem(props: FilesItemProps) {
 
         {/* TERMINATION */}
         <Input
+          aria-label="Termination"
           className="w-16 text-center"
           disabled={true}
           name="termination"

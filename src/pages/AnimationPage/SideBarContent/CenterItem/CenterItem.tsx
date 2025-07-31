@@ -79,6 +79,7 @@ export default function CenterItem(props: CenterItemProps) {
       <div className="flex gap-1">
         {/* COLOR */}
         <Input
+          aria-label="Color"
           disabled={colorDisabled}
           name="color"
           onChange={colorOnChange}

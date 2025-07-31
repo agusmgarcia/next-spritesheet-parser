@@ -39,6 +39,7 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
 
       {/* TERMINATION */}
       <Input
+        aria-label="Termination"
         className="w-28 text-center"
         disabled={true}
         name="termination"
