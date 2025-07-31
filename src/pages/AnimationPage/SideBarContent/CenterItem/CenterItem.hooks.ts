@@ -11,6 +11,10 @@ export default function useCenterItem({
   index: indexFromProps,
   ...rest
 }: CenterItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem({
+    animation: animationFromProps,
+  });
+
   const { colorDisabled, colorOnChange, colorValue } = useColor({
     animation: animationFromProps,
   });
@@ -51,12 +55,27 @@ export default function useCenterItem({
     colorDisabled,
     colorOnChange,
     colorValue,
+    defaultCollapsed,
+    disabled,
     onionActive,
     onionDisabled,
     onionOnClick,
     resetCenterDisabled,
     resetCenterOnClick,
   };
+}
+
+function useSideBarItem({
+  animation: animationFromProps,
+}: Pick<CenterItemProps, "animation">) {
+  const disabled = useMemo<boolean>(
+    () => animationFromProps.playing,
+    [animationFromProps.playing],
+  );
+
+  const defaultCollapsed = useMemo<boolean>(() => disabled, [disabled]);
+
+  return { defaultCollapsed, disabled };
 }
 
 function useColor({
