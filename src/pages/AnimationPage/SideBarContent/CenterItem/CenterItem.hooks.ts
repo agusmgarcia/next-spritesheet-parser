@@ -29,29 +29,29 @@ export default function useCenterItem({
   });
 
   const {
-    animationOffsetDownDisabled,
-    animationOffsetDownOnClick,
-    animationOffsetLeftDisabled,
-    animationOffsetLeftOnClick,
-    animationOffsetRightDisabled,
-    animationOffsetRightOnClick,
-    animationOffsetUpDisabled,
-    animationOffsetUpOnClick,
-  } = useOffset({
+    animationCenterDownDisabled,
+    animationCenterDownOnClick,
+    animationCenterLeftDisabled,
+    animationCenterLeftOnClick,
+    animationCenterRightDisabled,
+    animationCenterRightOnClick,
+    animationCenterUpDisabled,
+    animationCenterUpOnClick,
+  } = useCenter({
     animation: animationFromProps,
     index: indexFromProps,
   });
 
   return {
     ...rest,
-    animationOffsetDownDisabled,
-    animationOffsetDownOnClick,
-    animationOffsetLeftDisabled,
-    animationOffsetLeftOnClick,
-    animationOffsetRightDisabled,
-    animationOffsetRightOnClick,
-    animationOffsetUpDisabled,
-    animationOffsetUpOnClick,
+    animationCenterDownDisabled,
+    animationCenterDownOnClick,
+    animationCenterLeftDisabled,
+    animationCenterLeftOnClick,
+    animationCenterRightDisabled,
+    animationCenterRightOnClick,
+    animationCenterUpDisabled,
+    animationCenterUpOnClick,
     colorDisabled,
     colorOnChange,
     colorValue,
@@ -127,26 +127,26 @@ function useResetCenter({
   animation: animationFromProps,
   index: indexFromProps,
 }: Pick<CenterItemProps, "animation" | "index">) {
-  const { resetAnimationOffset } = useAnimations();
+  const { resetAnimationCenter } = useAnimations();
 
   const resetCenterDisabled = useMemo<boolean>(
     () =>
       animationFromProps.playing ||
-      !animationFromProps.sprites ||
-      (animationFromProps.sprites[indexFromProps]?.offset.x ===
-        animationFromProps.sprites[indexFromProps]?.offset.initialX &&
-        animationFromProps.sprites[indexFromProps]?.offset.y ===
-          animationFromProps.sprites[indexFromProps]?.offset.initialY),
+      !animationFromProps.sprites[indexFromProps] ||
+      (animationFromProps.sprites[indexFromProps].center.offsetX ===
+        animationFromProps.sprites[indexFromProps].center.initialOffsetX &&
+        animationFromProps.sprites[indexFromProps].center.offsetY ===
+          animationFromProps.sprites[indexFromProps].center.initialOffsetY),
     [animationFromProps.playing, animationFromProps.sprites, indexFromProps],
   );
 
   const resetCenterOnClick = useCallback<Func>(() => {
     if (resetCenterDisabled) return;
-    resetAnimationOffset(animationFromProps.id, indexFromProps);
+    resetAnimationCenter(animationFromProps.id, indexFromProps);
   }, [
     animationFromProps.id,
     indexFromProps,
-    resetAnimationOffset,
+    resetAnimationCenter,
     resetCenterDisabled,
   ]);
 
@@ -155,97 +155,97 @@ function useResetCenter({
   return { resetCenterDisabled, resetCenterOnClick };
 }
 
-function useOffset({
+function useCenter({
   animation: animationFromProps,
   index: indexFromProps,
 }: Pick<CenterItemProps, "animation" | "index">) {
-  const { setAnimationOffset } = useAnimations();
+  const { setAnimationCenter } = useAnimations();
 
-  const animationOffsetUpDisabled = useMemo<boolean>(
+  const animationCenterUpDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationOffsetRightDisabled = useMemo<boolean>(
+  const animationCenterRightDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationOffsetDownDisabled = useMemo<boolean>(
+  const animationCenterDownDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationOffsetLeftDisabled = useMemo<boolean>(
+  const animationCenterLeftDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationOffsetUpOnClick = useCallback<Func>(() => {
-    if (animationOffsetUpDisabled) return;
-    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
-      x: offset.x,
-      y: offset.y - devicePixelRatio,
+  const animationCenterUpOnClick = useCallback<Func>(() => {
+    if (animationCenterUpDisabled) return;
+    setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
+      offsetX: center.offsetX,
+      offsetY: center.offsetY - devicePixelRatio,
     }));
   }, [
     animationFromProps.id,
-    animationOffsetUpDisabled,
+    animationCenterUpDisabled,
     indexFromProps,
-    setAnimationOffset,
+    setAnimationCenter,
   ]);
 
-  const animationOffsetRightOnClick = useCallback<Func>(() => {
-    if (animationOffsetRightDisabled) return;
-    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
-      x: offset.x + devicePixelRatio,
-      y: offset.y,
+  const animationCenterRightOnClick = useCallback<Func>(() => {
+    if (animationCenterRightDisabled) return;
+    setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
+      offsetX: center.offsetX + devicePixelRatio,
+      offsetY: center.offsetY,
     }));
   }, [
     animationFromProps.id,
-    animationOffsetRightDisabled,
+    animationCenterRightDisabled,
     indexFromProps,
-    setAnimationOffset,
+    setAnimationCenter,
   ]);
 
-  const animationOffsetDownOnClick = useCallback<Func>(() => {
-    if (animationOffsetDownDisabled) return;
-    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
-      x: offset.x,
-      y: offset.y + devicePixelRatio,
+  const animationCenterDownOnClick = useCallback<Func>(() => {
+    if (animationCenterDownDisabled) return;
+    setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
+      offsetX: center.offsetX,
+      offsetY: center.offsetY + devicePixelRatio,
     }));
   }, [
     animationFromProps.id,
-    animationOffsetDownDisabled,
+    animationCenterDownDisabled,
     indexFromProps,
-    setAnimationOffset,
+    setAnimationCenter,
   ]);
 
-  const animationOffsetLeftOnClick = useCallback<Func>(() => {
-    if (animationOffsetLeftDisabled) return;
-    setAnimationOffset(animationFromProps.id, indexFromProps, (offset) => ({
-      x: offset.x - devicePixelRatio,
-      y: offset.y,
+  const animationCenterLeftOnClick = useCallback<Func>(() => {
+    if (animationCenterLeftDisabled) return;
+    setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
+      offsetX: center.offsetX - devicePixelRatio,
+      offsetY: center.offsetY,
     }));
   }, [
     animationFromProps.id,
-    animationOffsetLeftDisabled,
+    animationCenterLeftDisabled,
     indexFromProps,
-    setAnimationOffset,
+    setAnimationCenter,
   ]);
 
-  useKeyDown("ArrowUp", animationOffsetUpOnClick, { altKey: true });
-  useKeyDown("ArrowRight", animationOffsetRightOnClick, { altKey: true });
-  useKeyDown("ArrowDown", animationOffsetDownOnClick, { altKey: true });
-  useKeyDown("ArrowLeft", animationOffsetLeftOnClick, { altKey: true });
+  useKeyDown("ArrowUp", animationCenterUpOnClick, { altKey: true });
+  useKeyDown("ArrowRight", animationCenterRightOnClick, { altKey: true });
+  useKeyDown("ArrowDown", animationCenterDownOnClick, { altKey: true });
+  useKeyDown("ArrowLeft", animationCenterLeftOnClick, { altKey: true });
 
   return {
-    animationOffsetDownDisabled,
-    animationOffsetDownOnClick,
-    animationOffsetLeftDisabled,
-    animationOffsetLeftOnClick,
-    animationOffsetRightDisabled,
-    animationOffsetRightOnClick,
-    animationOffsetUpDisabled,
-    animationOffsetUpOnClick,
+    animationCenterDownDisabled,
+    animationCenterDownOnClick,
+    animationCenterLeftDisabled,
+    animationCenterLeftOnClick,
+    animationCenterRightDisabled,
+    animationCenterRightOnClick,
+    animationCenterUpDisabled,
+    animationCenterUpOnClick,
   };
 }

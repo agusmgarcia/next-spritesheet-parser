@@ -6,12 +6,12 @@ export type Animations = {
   onion: boolean;
   playing: boolean;
   sprites: {
-    id: string;
-    offset: {
-      initialX: number;
-      initialY: number;
-      x: number;
-      y: number;
+    center: {
+      initialOffsetX: number;
+      initialOffsetY: number;
+      offsetX: number;
+      offsetY: number;
     };
+    id: string;
   }[];
 }[];

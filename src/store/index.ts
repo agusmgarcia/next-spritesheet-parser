@@ -45,11 +45,11 @@ export function useAnimations() {
     animations: useSelector((state) => state.animations.state),
     createAnimation: useSelector((state) => state.animations.create),
     deleteAnimation: useSelector((state) => state.animations.remove),
-    resetAnimationOffset: useSelector((state) => state.animations.resetOffset),
+    resetAnimationCenter: useSelector((state) => state.animations.resetCenter),
+    setAnimationCenter: useSelector((state) => state.animations.setCenter),
     setAnimationColor: useSelector((state) => state.animations.setColor),
     setAnimationFPS: useSelector((state) => state.animations.setFPS),
     setAnimationName: useSelector((state) => state.animations.setName),
-    setAnimationOffset: useSelector((state) => state.animations.setOffset),
     setAnimationOnion: useSelector((state) => state.animations.setOnion),
     setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
   };

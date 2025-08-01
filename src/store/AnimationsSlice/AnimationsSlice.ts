@@ -71,7 +71,7 @@ export default class AnimationsSlice extends GlobalSlice<
     return true;
   }
 
-  resetOffset(id: string, index: number): void {
+  resetCenter(id: string, index: number): void {
     this.state = this.state.map((a) =>
       a.id === id
         ? {
@@ -80,10 +80,10 @@ export default class AnimationsSlice extends GlobalSlice<
               i === index
                 ? {
                     ...s,
-                    offset: {
-                      ...s.offset,
-                      x: s.offset.initialX,
-                      y: s.offset.initialY,
+                    center: {
+                      ...s.center,
+                      offsetX: s.center.initialOffsetX,
+                      offsetY: s.center.initialOffsetY,
                     },
                   }
                 : s,
@@ -112,10 +112,15 @@ export default class AnimationsSlice extends GlobalSlice<
     this.state = this.state.map((a) => (a.id === id ? { ...a, name } : a));
   }
 
-  setOffset(
+  setCenter(
     id: string,
     index: number,
-    offset: React.SetStateAction<{ x: number; y: number }>,
+    center: React.SetStateAction<
+      Pick<
+        Animations[number]["sprites"][number]["center"],
+        "offsetX" | "offsetY"
+      >
+    >,
   ): void {
     this.state = this.state.map((a) =>
       a.id === id
@@ -125,11 +130,11 @@ export default class AnimationsSlice extends GlobalSlice<
               i === index
                 ? {
                     ...s,
-                    offset: {
-                      ...s.offset,
-                      ...(offset instanceof Function
-                        ? offset(s.offset)
-                        : offset),
+                    center: {
+                      ...s.center,
+                      ...(center instanceof Function
+                        ? center(s.center)
+                        : center),
                     },
                   }
                 : s,
@@ -222,13 +227,13 @@ function mapSprites(
   const result = spritesSelected.reduce(
     (result, s) => {
       result[s.id] = {
-        id: s.id,
-        offset: {
-          initialX: 0,
-          initialY: -(maxHeight - s.height) / 2,
-          x: 0,
-          y: -(maxHeight - s.height) / 2,
+        center: {
+          initialOffsetX: 0,
+          initialOffsetY: -(maxHeight - s.height) / 2,
+          offsetX: 0,
+          offsetY: -(maxHeight - s.height) / 2,
         },
+        id: s.id,
       };
       return result;
     },

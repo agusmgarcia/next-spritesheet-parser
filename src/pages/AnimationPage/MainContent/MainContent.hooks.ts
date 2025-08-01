@@ -79,10 +79,10 @@ export default function useMainContent({
       currentSprite.height,
       (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
         currentSprite.width / 2 -
-        currentSprite.offset.x,
+        currentSprite.center.offsetX,
       dimensions.height / (2 * scale) -
         currentSprite.height / 2 -
-        currentSprite.offset.y,
+        currentSprite.center.offsetY,
       currentSprite.width,
       currentSprite.height,
     );
@@ -97,10 +97,10 @@ export default function useMainContent({
         prevSprite.height,
         (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
           prevSprite.width / 2 -
-          prevSprite.offset.x,
+          prevSprite.center.offsetX,
         dimensions.height / (2 * scale) -
           prevSprite.height / 2 -
-          prevSprite.offset.y,
+          prevSprite.center.offsetY,
         prevSprite.width,
         prevSprite.height,
       );

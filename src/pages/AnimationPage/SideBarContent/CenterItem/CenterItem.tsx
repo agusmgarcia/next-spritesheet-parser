@@ -5,14 +5,14 @@ import type CenterItemProps from "./CenterItem.types";
 
 export default function CenterItem(props: CenterItemProps) {
   const {
-    animationOffsetDownDisabled,
-    animationOffsetDownOnClick,
-    animationOffsetLeftDisabled,
-    animationOffsetLeftOnClick,
-    animationOffsetRightDisabled,
-    animationOffsetRightOnClick,
-    animationOffsetUpDisabled,
-    animationOffsetUpOnClick,
+    animationCenterDownDisabled,
+    animationCenterDownOnClick,
+    animationCenterLeftDisabled,
+    animationCenterLeftOnClick,
+    animationCenterRightDisabled,
+    animationCenterRightOnClick,
+    animationCenterUpDisabled,
+    animationCenterUpOnClick,
     colorDisabled,
     colorOnChange,
     colorValue,
@@ -38,8 +38,8 @@ export default function CenterItem(props: CenterItemProps) {
         {/* LEFT */}
         <Button
           className="flex items-center justify-center"
-          disabled={animationOffsetLeftDisabled}
-          onClick={animationOffsetLeftOnClick}
+          disabled={animationCenterLeftDisabled}
+          onClick={animationCenterLeftOnClick}
           variant="secondary"
         >
           <Icon variant="arrowLeft" />
@@ -48,8 +48,8 @@ export default function CenterItem(props: CenterItemProps) {
         {/* UP */}
         <Button
           className="flex items-center justify-center"
-          disabled={animationOffsetUpDisabled}
-          onClick={animationOffsetUpOnClick}
+          disabled={animationCenterUpDisabled}
+          onClick={animationCenterUpOnClick}
           variant="secondary"
         >
           <Icon variant="arrowUp" />
@@ -58,8 +58,8 @@ export default function CenterItem(props: CenterItemProps) {
         {/* DOWN */}
         <Button
           className="flex items-center justify-center"
-          disabled={animationOffsetDownDisabled}
-          onClick={animationOffsetDownOnClick}
+          disabled={animationCenterDownDisabled}
+          onClick={animationCenterDownOnClick}
           variant="secondary"
         >
           <Icon variant="arrowDown" />
@@ -68,8 +68,8 @@ export default function CenterItem(props: CenterItemProps) {
         {/* RIGHT */}
         <Button
           className="flex items-center justify-center"
-          disabled={animationOffsetRightDisabled}
-          onClick={animationOffsetRightOnClick}
+          disabled={animationCenterRightDisabled}
+          onClick={animationCenterRightOnClick}
           variant="secondary"
         >
           <Icon variant="arrowRight" />
