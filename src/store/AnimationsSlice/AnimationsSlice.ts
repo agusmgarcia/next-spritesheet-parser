@@ -229,9 +229,9 @@ function mapSprites(
       result[s.id] = {
         center: {
           initialOffsetX: 0,
-          initialOffsetY: -(maxHeight - s.height) / 2,
+          initialOffsetY: (maxHeight - s.height) / 2,
           offsetX: 0,
-          offsetY: -(maxHeight - s.height) / 2,
+          offsetY: (maxHeight - s.height) / 2,
         },
         id: s.id,
       };

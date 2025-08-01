@@ -81,7 +81,7 @@ export default function useMainContent({
         currentSprite.width / 2 -
         currentSprite.center.offsetX,
       dimensions.height / (2 * scale) -
-        currentSprite.height / 2 -
+        currentSprite.height / 2 +
         currentSprite.center.offsetY,
       currentSprite.width,
       currentSprite.height,
@@ -99,7 +99,7 @@ export default function useMainContent({
           prevSprite.width / 2 -
           prevSprite.center.offsetX,
         dimensions.height / (2 * scale) -
-          prevSprite.height / 2 -
+          prevSprite.height / 2 +
           prevSprite.center.offsetY,
         prevSprite.width,
         prevSprite.height,

@@ -185,7 +185,7 @@ function useCenter({
     if (animationCenterUpDisabled) return;
     setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
       offsetX: center.offsetX,
-      offsetY: center.offsetY - devicePixelRatio,
+      offsetY: center.offsetY + devicePixelRatio,
     }));
   }, [
     animationFromProps.id,
@@ -211,7 +211,7 @@ function useCenter({
     if (animationCenterDownDisabled) return;
     setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
       offsetX: center.offsetX,
-      offsetY: center.offsetY + devicePixelRatio,
+      offsetY: center.offsetY - devicePixelRatio,
     }));
   }, [
     animationFromProps.id,
