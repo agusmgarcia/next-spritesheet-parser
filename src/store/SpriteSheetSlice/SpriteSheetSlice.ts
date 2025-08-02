@@ -84,61 +84,6 @@ export default class SpriteSheetSlice extends ServerSlice<
     return { image, settings, sprites };
   }
 
-  async mergeSprites(spriteIds: string[]): Promise<void> {
-    const spriteSheet = this.response;
-    if (!spriteSheet?.image.url)
-      throw new Error("You need to provide an image first");
-
-    if (spriteIds.length <= 1)
-      throw new Error("You need to select more than one sprite to merge");
-
-    const animationsThatContainAtLeastOneSprite =
-      this.slices.animations.state.filter((a) =>
-        a.sprites.some((s) => spriteIds.includes(s.id)),
-      );
-
-    if (!!animationsThatContainAtLeastOneSprite.length) {
-      const response = await this.slices.notification.set(
-        "warning",
-        strings.replace(
-          "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
-          {
-            animations: animationsThatContainAtLeastOneSprite.length,
-            animationsName: animationsThatContainAtLeastOneSprite
-              .map((a) => `**"${a.name}"**`)
-              .join(", "),
-          },
-        ),
-      );
-
-      if (!response) return;
-    }
-
-    const spriteToAdd = toSprite(
-      spriteIds
-        .map((sId) => spriteSheet.sprites[sId])
-        .filter((s) => !!s)
-        .map((s) => new Rect(s.x, s.y, s.width, s.height))
-        .reduce((r1, r2) => {
-          r1.merge(r2);
-          return r1;
-        }),
-      spriteIds.reduce(
-        (result, spriteId) => {
-          const sprite = spriteSheet.sprites[spriteId];
-          if (!!sprite) result[spriteId] = sprite;
-          return result;
-        },
-        {} as SpriteSheet["sprites"],
-      ),
-    );
-
-    const sprites = { ...spriteSheet.sprites, [spriteToAdd.id]: spriteToAdd };
-    spriteIds.forEach((sId) => delete sprites[sId]);
-
-    this.response = { ...spriteSheet, sprites };
-  }
-
   async remove(): Promise<void> {
     if (this.slices.utils.isDirty()) {
       const response = await this.slices.notification.set(
@@ -177,14 +122,6 @@ export default class SpriteSheetSlice extends ServerSlice<
     }
 
     await this.reload({ image, settings: DEFAULT_SETTINGS });
-  }
-
-  setName(name: string): void {
-    const spriteSheet = this.response;
-    if (!spriteSheet?.image.url)
-      throw new Error("You need to provide an image first");
-
-    this.response = { ...spriteSheet, image: { ...spriteSheet.image, name } };
   }
 
   async setSettings(settings: SpriteSheet["settings"]): Promise<boolean> {
@@ -245,6 +182,69 @@ export default class SpriteSheetSlice extends ServerSlice<
     const spriteSheet = this.response;
     if (!spriteSheet?.image.url)
       throw new Error("You need to provide an image first");
+
+    this.response = { ...spriteSheet, sprites };
+  }
+
+  setName(name: string): void {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
+
+    this.response = { ...spriteSheet, image: { ...spriteSheet.image, name } };
+  }
+
+  async mergeSprites(spriteIds: string[]): Promise<void> {
+    const spriteSheet = this.response;
+    if (!spriteSheet?.image.url)
+      throw new Error("You need to provide an image first");
+
+    if (spriteIds.length <= 1)
+      throw new Error("You need to select more than one sprite to merge");
+
+    const animationsThatContainAtLeastOneSprite =
+      this.slices.animations.state.filter((a) =>
+        a.sprites.some((s) => spriteIds.includes(s.id)),
+      );
+
+    if (!!animationsThatContainAtLeastOneSprite.length) {
+      const response = await this.slices.notification.set(
+        "warning",
+        strings.replace(
+          "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          {
+            animations: animationsThatContainAtLeastOneSprite.length,
+            animationsName: animationsThatContainAtLeastOneSprite
+              .map((a) => `**"${a.name}"**`)
+              .join(", "),
+          },
+        ),
+      );
+
+      if (!response) return;
+    }
+
+    const spriteToAdd = toSprite(
+      spriteIds
+        .map((sId) => spriteSheet.sprites[sId])
+        .filter((s) => !!s)
+        .map((s) => new Rect(s.x, s.y, s.width, s.height))
+        .reduce((r1, r2) => {
+          r1.merge(r2);
+          return r1;
+        }),
+      spriteIds.reduce(
+        (result, spriteId) => {
+          const sprite = spriteSheet.sprites[spriteId];
+          if (!!sprite) result[spriteId] = sprite;
+          return result;
+        },
+        {} as SpriteSheet["sprites"],
+      ),
+    );
+
+    const sprites = { ...spriteSheet.sprites, [spriteToAdd.id]: spriteToAdd };
+    spriteIds.forEach((sId) => delete sprites[sId]);
 
     this.response = { ...spriteSheet, sprites };
   }

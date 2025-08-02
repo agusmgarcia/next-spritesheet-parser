@@ -71,13 +71,6 @@ export default class AnimationsSlice extends GlobalSlice<
     return true;
   }
 
-  resetCenter(id: string, index: number): void {
-    this.setCenter(id, index, (center) => ({
-      offsetX: center.initialOffsetX,
-      offsetY: center.initialOffsetY,
-    }));
-  }
-
   setFPS(id: string, fps: React.SetStateAction<number>): void {
     this.state = this.state.map((a) =>
       a.id === id
@@ -139,6 +132,27 @@ export default class AnimationsSlice extends GlobalSlice<
     );
   }
 
+  resetCenter(id: string, index: number): void {
+    this.setCenter(id, index, (center) => ({
+      offsetX: center.initialOffsetX,
+      offsetY: center.initialOffsetY,
+    }));
+  }
+
+  toggleCenterVisibility(id: string): void {
+    this.state = this.state.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s) => ({
+              ...s,
+              center: { ...s.center, visible: !s.center.visible },
+            })),
+          }
+        : a,
+    );
+  }
+
   setOnion(id: string, onion: React.SetStateAction<boolean>): void {
     this.state = this.state.map((a) =>
       a.id === id
@@ -190,20 +204,6 @@ export default class AnimationsSlice extends GlobalSlice<
         !animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.find(
           (b) => a.id === b.id,
         ),
-    );
-  }
-
-  toggleCenterVisibility(id: string): void {
-    this.state = this.state.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            sprites: a.sprites.map((s) => ({
-              ...s,
-              center: { ...s.center, visible: !s.center.visible },
-            })),
-          }
-        : a,
     );
   }
 }
