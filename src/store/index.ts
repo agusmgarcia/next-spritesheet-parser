@@ -52,6 +52,9 @@ export function useAnimations() {
     setAnimationName: useSelector((state) => state.animations.setName),
     setAnimationOnion: useSelector((state) => state.animations.setOnion),
     setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
+    toggleAnimationCenterVisibility: useSelector(
+      (state) => state.animations.toggleCenterVisibility,
+    ),
   };
 }
 

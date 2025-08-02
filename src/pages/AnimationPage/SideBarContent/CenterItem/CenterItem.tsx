@@ -13,6 +13,7 @@ export default function CenterItem(props: CenterItemProps) {
     centerToRightOnClick,
     centerToUpDisabled,
     centerToUpOnClick,
+    centerVisible,
     colorDisabled,
     colorOnChange,
     colorValue,
@@ -21,6 +22,8 @@ export default function CenterItem(props: CenterItemProps) {
     onionOnClick,
     resetCenterDisabled,
     resetCenterOnClick,
+    toggleVisibilityDisabled,
+    toggleVisibilityOnClick,
     ...rest
   } = useCenterItem(props);
 
@@ -77,6 +80,16 @@ export default function CenterItem(props: CenterItemProps) {
       </div>
 
       <div className="flex gap-1">
+        {/* TOOGLE CENTER VISIBILITY */}
+        <Button
+          className="flex w-fit items-center justify-center"
+          disabled={toggleVisibilityDisabled}
+          onClick={toggleVisibilityOnClick}
+          variant={centerVisible ? "primary" : "secondary"}
+        >
+          <Icon variant={centerVisible ? "eye" : "eyeClosed"} />
+        </Button>
+
         {/* COLOR */}
         <Input
           aria-label="Color"

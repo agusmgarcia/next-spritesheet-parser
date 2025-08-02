@@ -42,6 +42,12 @@ export default function useCenterItem({
     index: indexFromProps,
   });
 
+  const { centerVisible, toggleVisibilityDisabled, toggleVisibilityOnClick } =
+    useVisibility({
+      animation: animationFromProps,
+      index: indexFromProps,
+    });
+
   return {
     ...rest,
     centerToDownDisabled,
@@ -52,6 +58,7 @@ export default function useCenterItem({
     centerToRightOnClick,
     centerToUpDisabled,
     centerToUpOnClick,
+    centerVisible,
     colorDisabled,
     colorOnChange,
     colorValue,
@@ -62,6 +69,8 @@ export default function useCenterItem({
     onionOnClick,
     resetCenterDisabled,
     resetCenterOnClick,
+    toggleVisibilityDisabled,
+    toggleVisibilityOnClick,
   };
 }
 
@@ -248,4 +257,34 @@ function useCenter({
     centerToUpDisabled,
     centerToUpOnClick,
   };
+}
+
+function useVisibility({
+  animation: animationFromProps,
+  index: indexFromProps,
+}: Pick<CenterItemProps, "animation" | "index">) {
+  const { toggleAnimationCenterVisibility } = useAnimations();
+
+  const toggleVisibilityDisabled = useMemo<boolean>(
+    () => animationFromProps.playing,
+    [animationFromProps.playing],
+  );
+
+  const centerVisible = useMemo<boolean>(
+    () => !!animationFromProps.sprites[indexFromProps]?.center.visible,
+    [animationFromProps.sprites, indexFromProps],
+  );
+
+  const toggleVisibilityOnClick = useCallback<Func>(() => {
+    if (toggleVisibilityDisabled) return;
+    toggleAnimationCenterVisibility(animationFromProps.id);
+  }, [
+    animationFromProps.id,
+    toggleAnimationCenterVisibility,
+    toggleVisibilityDisabled,
+  ]);
+
+  useKeyDown("v", toggleVisibilityOnClick);
+
+  return { centerVisible, toggleVisibilityDisabled, toggleVisibilityOnClick };
 }

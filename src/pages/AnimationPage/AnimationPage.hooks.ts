@@ -123,24 +123,28 @@ function useInstructions() {
       {
         keys: [
           {
-            description: "Move the sprite down",
+            description: "Move the center up",
             key: "ArrowUp",
             options: { altKey: true },
           },
           {
-            description: "Move the sprite left",
+            description: "Move the center right",
             key: "ArrowRight",
             options: { altKey: true },
           },
           {
-            description: "Move the sprite up",
+            description: "Move the center down",
             key: "ArrowDown",
             options: { altKey: true },
           },
           {
-            description: "Move the sprite right",
+            description: "Move the center left",
             key: "ArrowLeft",
             options: { altKey: true },
+          },
+          {
+            description: "Toggle center visibility",
+            key: "v",
           },
           {
             description: "Center the sprite",

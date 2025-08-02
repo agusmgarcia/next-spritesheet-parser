@@ -11,6 +11,7 @@ export type Animations = {
       initialOffsetY: number;
       offsetX: number;
       offsetY: number;
+      visible: boolean;
     };
     id: string;
   }[];

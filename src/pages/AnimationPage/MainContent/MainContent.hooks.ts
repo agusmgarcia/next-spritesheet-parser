@@ -107,15 +107,17 @@ export default function useMainContent({
       context.globalAlpha = 1;
     }
 
-    context.beginPath();
-    context.strokeStyle = animationFromProps.color;
-    const centerX = (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
-    const centerY = dimensions.height / (2 * scale);
-    context.moveTo(centerX, centerY - 6);
-    context.lineTo(centerX, centerY + 6);
-    context.moveTo(centerX - 6, centerY);
-    context.lineTo(centerX + 6, centerY);
-    context.stroke();
+    if (currentSprite.center.visible) {
+      context.beginPath();
+      context.strokeStyle = animationFromProps.color;
+      const centerX = (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
+      const centerY = dimensions.height / (2 * scale);
+      context.moveTo(centerX, centerY - 6);
+      context.lineTo(centerX, centerY + 6);
+      context.moveTo(centerX - 6, centerY);
+      context.lineTo(centerX + 6, centerY);
+      context.stroke();
+    }
   }, [
     animationFromProps.color,
     animationFromProps.onion,

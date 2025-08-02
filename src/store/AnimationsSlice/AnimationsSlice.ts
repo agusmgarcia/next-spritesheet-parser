@@ -72,25 +72,10 @@ export default class AnimationsSlice extends GlobalSlice<
   }
 
   resetCenter(id: string, index: number): void {
-    this.state = this.state.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            sprites: a.sprites.map((s, i) =>
-              i === index
-                ? {
-                    ...s,
-                    center: {
-                      ...s.center,
-                      offsetX: s.center.initialOffsetX,
-                      offsetY: s.center.initialOffsetY,
-                    },
-                  }
-                : s,
-            ),
-          }
-        : a,
-    );
+    this.setCenter(id, index, (center) => ({
+      offsetX: center.initialOffsetX,
+      offsetY: center.initialOffsetY,
+    }));
   }
 
   setFPS(id: string, fps: React.SetStateAction<number>): void {
@@ -115,12 +100,18 @@ export default class AnimationsSlice extends GlobalSlice<
   setCenter(
     id: string,
     index: number,
-    center: React.SetStateAction<
-      Pick<
-        Animations[number]["sprites"][number]["center"],
-        "offsetX" | "offsetY"
-      >
-    >,
+    center:
+      | Pick<
+          Animations[number]["sprites"][number]["center"],
+          "offsetX" | "offsetY"
+        >
+      | Func<
+          Pick<
+            Animations[number]["sprites"][number]["center"],
+            "offsetX" | "offsetY"
+          >,
+          [center: Animations[number]["sprites"][number]["center"]]
+        >,
   ): void {
     this.state = this.state.map((a) =>
       a.id === id
@@ -135,9 +126,13 @@ export default class AnimationsSlice extends GlobalSlice<
                       ...(center instanceof Function
                         ? center(s.center)
                         : center),
+                      visible: true,
                     },
                   }
-                : s,
+                : {
+                    ...s,
+                    center: { ...s.center, visible: true },
+                  },
             ),
           }
         : a,
@@ -197,6 +192,20 @@ export default class AnimationsSlice extends GlobalSlice<
         ),
     );
   }
+
+  toggleCenterVisibility(id: string): void {
+    this.state = this.state.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s) => ({
+              ...s,
+              center: { ...s.center, visible: !s.center.visible },
+            })),
+          }
+        : a,
+    );
+  }
 }
 
 function sortSprites(
@@ -232,6 +241,7 @@ function mapSprites(
           initialOffsetY: (maxHeight - s.height) / 2,
           offsetX: 0,
           offsetY: (maxHeight - s.height) / 2,
+          visible: false,
         },
         id: s.id,
       };
