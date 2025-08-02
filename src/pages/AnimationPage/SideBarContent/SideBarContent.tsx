@@ -2,6 +2,7 @@ import { Accordion, Typography } from "#src/components";
 import { ZoomItem } from "#src/fragments";
 
 import AnimationsItem from "./AnimationsItem";
+import BoundingBoxesItem from "./BoundingBoxesItem";
 import CenterItem from "./CenterItem";
 import ConfigurationsItem from "./ConfigurationsItem";
 import PlayingItem from "./PlayingItem";
@@ -38,6 +39,7 @@ export default function SideBarContent(props: SideBarContentProps) {
       />
       <AnimationsItem animation={animation} />
       <CenterItem animation={animation} index={index} />
+      <BoundingBoxesItem animation={animation} index={index} />
       <ZoomItem />
     </Accordion>
   );

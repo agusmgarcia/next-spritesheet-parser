@@ -44,14 +44,26 @@ export function useAnimations() {
   return {
     animations: useSelector((state) => state.animations.state),
     createAnimation: useSelector((state) => state.animations.create),
+    createAnimationBoundingBox: useSelector(
+      (state) => state.animations.createBoundingBox,
+    ),
     deleteAnimation: useSelector((state) => state.animations.remove),
+    deleteAnimationBoundingBox: useSelector(
+      (state) => state.animations.removeBoundingBox,
+    ),
     resetAnimationCenter: useSelector((state) => state.animations.resetCenter),
+    setAnimationBoundingBox: useSelector(
+      (state) => state.animations.setBoundingBox,
+    ),
     setAnimationCenter: useSelector((state) => state.animations.setCenter),
     setAnimationColor: useSelector((state) => state.animations.setColor),
     setAnimationFPS: useSelector((state) => state.animations.setFPS),
     setAnimationName: useSelector((state) => state.animations.setName),
     setAnimationOnion: useSelector((state) => state.animations.setOnion),
     setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
+    toggleAnimationBoundingBoxVisibility: useSelector(
+      (state) => state.animations.toggleBoundingBoxVisibility,
+    ),
     toggleAnimationCenterVisibility: useSelector(
       (state) => state.animations.toggleCenterVisibility,
     ),

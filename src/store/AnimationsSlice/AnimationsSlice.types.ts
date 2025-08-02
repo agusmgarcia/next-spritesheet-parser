@@ -6,6 +6,15 @@ export type Animations = {
   onion: boolean;
   playing: boolean;
   sprites: {
+    boundingBoxes: {
+      color: string;
+      height: number;
+      id: string;
+      offsetX: number;
+      offsetY: number;
+      visible: boolean;
+      width: number;
+    }[];
     center: {
       initialOffsetX: number;
       initialOffsetY: number;
