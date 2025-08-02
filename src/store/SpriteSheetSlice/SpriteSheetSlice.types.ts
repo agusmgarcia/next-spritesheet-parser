@@ -15,13 +15,11 @@ export type SpriteSheet = {
   sprites: Record<
     string,
     {
-      bottom: number;
       height: number;
-      left: number;
-      right: number;
       subsprites: SpriteSheet["sprites"];
-      top: number;
       width: number;
+      x: number;
+      y: number;
     }
   >;
 };

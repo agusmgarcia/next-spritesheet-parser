@@ -43,8 +43,13 @@ export default function useMainContent(props: MainContentProps) {
     () =>
       !!spriteSheet?.sprites
         ? Object.entries(spriteSheet.sprites).map(([id, sprite]) => ({
+            bottom: sprite.y + sprite.height,
+            height: sprite.height,
             id,
-            ...sprite,
+            left: sprite.x,
+            right: sprite.x + sprite.width,
+            top: sprite.y,
+            width: sprite.width,
           }))
         : undefined,
     [spriteSheet?.sprites],
@@ -248,7 +253,7 @@ export default function useMainContent(props: MainContentProps) {
 
       context.globalAlpha = 0.4;
       context.fillStyle = color;
-      context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
+      context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
 
@@ -258,7 +263,7 @@ export default function useMainContent(props: MainContentProps) {
 
       context.globalAlpha = spriteSelection.includes(spriteHovered) ? 0.3 : 0.2;
       context.fillStyle = color;
-      context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
+      context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
       context.globalAlpha = 1;
     }
 
@@ -270,7 +275,7 @@ export default function useMainContent(props: MainContentProps) {
 
       context.globalAlpha = 0.4;
       context.fillStyle = color;
-      context.fillRect(sprite.left, sprite.top, sprite.width, sprite.height);
+      context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
       context.globalAlpha = 1;
     });
 

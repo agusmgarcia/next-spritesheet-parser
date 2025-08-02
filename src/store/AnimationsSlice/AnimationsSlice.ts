@@ -215,10 +215,10 @@ function sortSprites(
     const sprite1 = sprites[spriteId1];
     const sprite2 = sprites[spriteId2];
 
-    return sprite1.top <= sprite2.top + sprite2.height &&
-      sprite1.top + sprite1.height >= sprite2.top
-      ? sprite1.left - sprite2.left
-      : sprite1.top - sprite2.top;
+    return sprite1.y <= sprite2.y + sprite2.height &&
+      sprite1.y + sprite1.height >= sprite2.y
+      ? sprite1.x - sprite2.x
+      : sprite1.y - sprite2.y;
   };
 }
 

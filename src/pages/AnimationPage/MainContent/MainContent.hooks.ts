@@ -73,8 +73,8 @@ export default function useMainContent({
 
     context.drawImage(
       image,
-      currentSprite.left,
-      currentSprite.top,
+      currentSprite.x,
+      currentSprite.y,
       currentSprite.width,
       currentSprite.height,
       (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
@@ -91,8 +91,8 @@ export default function useMainContent({
       context.globalAlpha = 0.4;
       context.drawImage(
         image,
-        prevSprite.left,
-        prevSprite.top,
+        prevSprite.x,
+        prevSprite.y,
         prevSprite.width,
         prevSprite.height,
         (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -

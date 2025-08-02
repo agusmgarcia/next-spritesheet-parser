@@ -118,7 +118,7 @@ export default class SpriteSheetSlice extends ServerSlice<
       spriteIds
         .map((sId) => spriteSheet.sprites[sId])
         .filter((s) => !!s)
-        .map((s) => new Rect(s.left, s.top, s.width, s.height))
+        .map((s) => new Rect(s.x, s.y, s.width, s.height))
         .reduce((r1, r2) => {
           r1.merge(r2);
           return r1;
@@ -301,14 +301,12 @@ function toSprite(
   id: string;
 } {
   return {
-    bottom: rect.bottom,
     height: rect.bottom - rect.top,
-    id: `${rect.top}:${rect.right}:${rect.bottom}:${rect.left}`,
-    left: rect.left,
-    right: rect.right,
+    id: `${rect.left}:${rect.top}:${rect.right - rect.left}:${rect.bottom - rect.top}`,
     subsprites: subsprites || {},
-    top: rect.top,
     width: rect.right - rect.left,
+    x: rect.left,
+    y: rect.top,
   };
 }
 
