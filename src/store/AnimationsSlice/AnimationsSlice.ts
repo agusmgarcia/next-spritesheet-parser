@@ -227,6 +227,147 @@ export default class AnimationsSlice extends ServerSlice<
         ? {
             ...a,
             playing: playing instanceof Function ? playing(a.playing) : playing,
+            sprites: (
+              playing instanceof Function ? playing(a.playing) : playing
+            )
+              ? a.sprites.map((s) => ({
+                  ...s,
+                  boundingBoxes: s.boundingBoxes.map((bb) => ({
+                    ...bb,
+                    visible: false,
+                  })),
+                }))
+              : a.sprites,
+          }
+        : a,
+    );
+  }
+
+  createBoundingBox(id: string, index: number): string {
+    const spriteSheet = this.slices.spriteSheet.response;
+    if (!spriteSheet) throw new Error("You need to provide an image first");
+
+    if (!this.response) throw new Error("You need to provide an image first");
+    const boundingBoxId = createUUID();
+
+    this.response = this.response.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s, i) =>
+              i === index
+                ? {
+                    ...s,
+                    boundingBoxes: [
+                      ...s.boundingBoxes,
+                      {
+                        color: "#008000",
+                        height: spriteSheet[s.id].height,
+                        id: boundingBoxId,
+                        offsetX: 0,
+                        offsetY: 0,
+                        visible: true,
+                        width: spriteSheet[s.id].width,
+                      },
+                    ],
+                  }
+                : s,
+            ),
+          }
+        : a,
+    );
+
+    return boundingBoxId;
+  }
+
+  setBoundingBox(
+    id: string,
+    index: number,
+    boundingBoxId: string,
+    boundingBox: React.SetStateAction<
+      Pick<
+        Animations[number]["sprites"][number]["boundingBoxes"][number],
+        "color" | "height" | "offsetX" | "offsetY" | "width"
+      >
+    >,
+  ): void {
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s, i) =>
+              i === index
+                ? {
+                    ...s,
+                    boundingBoxes: s.boundingBoxes
+                      .map((bb) =>
+                        bb.id === boundingBoxId
+                          ? {
+                              ...bb,
+                              ...(boundingBox instanceof Function
+                                ? boundingBox(bb)
+                                : boundingBox),
+                              visible: true,
+                            }
+                          : bb,
+                      )
+                      .map((bb) => ({
+                        ...bb,
+                        height: Math.max(bb.height, 1),
+                        width: Math.max(bb.width, 1),
+                      })),
+                  }
+                : s,
+            ),
+          }
+        : a,
+    );
+  }
+
+  removeBoundingBox(id: string, index: number, boundingBoxId: string): void {
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s, i) =>
+              i === index
+                ? {
+                    ...s,
+                    boundingBoxes: s.boundingBoxes.filter(
+                      (bb) => bb.id !== boundingBoxId,
+                    ),
+                  }
+                : s,
+            ),
+          }
+        : a,
+    );
+  }
+
+  toggleBoundingBoxVisibility(
+    id: string,
+    index: number,
+    boundingBoxId: string,
+  ): void {
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            sprites: a.sprites.map((s, i) =>
+              i === index
+                ? {
+                    ...s,
+                    boundingBoxes: s.boundingBoxes.map((bb) =>
+                      bb.id === boundingBoxId
+                        ? { ...bb, visible: !bb.visible }
+                        : bb,
+                    ),
+                  }
+                : s,
+            ),
           }
         : a,
     );
@@ -261,6 +402,17 @@ function mapSprites(
   const result = spritesSelected.reduce(
     (result, s) => {
       result[s.id] = {
+        boundingBoxes: [
+          {
+            color: "#008000",
+            height: s.height,
+            id: createUUID(),
+            offsetX: 0,
+            offsetY: 0,
+            visible: false,
+            width: s.width,
+          },
+        ],
         center: {
           initialOffsetX: 0,
           initialOffsetY: (maxHeight - s.height) / 2,

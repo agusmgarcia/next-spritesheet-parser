@@ -7,6 +7,7 @@ import {
   type GetStateRequest,
   type GetStateResponse,
   type GetStateResponseV1,
+  type GetStateResponseV2,
   type PatchStateRequest,
   type PatchStateResponse,
 } from "./SpriteSheetParserClient.types";
@@ -40,7 +41,7 @@ export default class SpriteSheetParserClient {
 
       const state: GetStateResponse = {
         createdAt: now,
-        version: "v1",
+        version: "v2",
         ...stateFromStorage,
         ...stateFromRequest,
         updatedAt: now,
@@ -94,7 +95,9 @@ export default class SpriteSheetParserClient {
     return SpriteSheetParserClient.migrateState(state);
   }
 
-  private static parseState(item: string): GetStateResponseV1 | undefined {
+  private static parseState(
+    item: string,
+  ): GetStateResponseV1 | GetStateResponseV2 | undefined {
     try {
       const maybeState = JSON.parse(item);
 
@@ -110,7 +113,10 @@ export default class SpriteSheetParserClient {
         typeof maybeState.updatedAt !== "number"
       )
         return undefined;
-      if (!("version" in maybeState) || maybeState.version !== "v1")
+      if (
+        !("version" in maybeState) ||
+        (maybeState.version !== "v1" && maybeState.version !== "v2")
+      )
         return undefined;
 
       return maybeState;
@@ -120,9 +126,22 @@ export default class SpriteSheetParserClient {
   }
 
   private static migrateState(
-    state: GetStateResponseV1,
+    state: GetStateResponseV1 | GetStateResponseV2,
   ): GetStateResponse | undefined {
-    if (state.version === "v1") return state;
+    if (state.version === "v1")
+      return {
+        ...state,
+        animations: !!state.animations
+          ? state.animations.map((a) => ({
+              ...a,
+              sprites: a.sprites.map((s) => ({ ...s, boundingBoxes: [] })),
+            }))
+          : undefined,
+        version: "v2",
+      };
+
+    if (state.version === "v2") return state;
+
     return undefined;
   }
 

@@ -24,15 +24,22 @@ export default function useMainContent({
 
   const { image } = useLoadImage(spriteSheetImage?.url || "");
   const dimensions = useDimensions(ref);
-  const devicePixelRatio = useDevicePixelRatio();
+  const scale = useDevicePixelRatio() * scaleFromStore;
 
   const sprites = useMemo(
     () =>
       animationFromProps.sprites
-        .map((s) => {
-          const sprite = spriteSheet?.[s.id];
-          if (!sprite) return undefined;
-          return { ...sprite, ...s };
+        .map((spriteFromAnimation) => {
+          const spriteFromSheet = spriteSheet?.[spriteFromAnimation.id];
+          if (!spriteFromSheet) return undefined;
+          return {
+            boundingBoxes: spriteFromAnimation.boundingBoxes,
+            center: spriteFromAnimation.center,
+            height: spriteFromSheet.height,
+            width: spriteFromSheet.width,
+            x: spriteFromSheet.x,
+            y: spriteFromSheet.y,
+          };
         })
         .filter((s) => !!s),
     [animationFromProps.sprites, spriteSheet],
@@ -58,8 +65,6 @@ export default function useMainContent({
 
     const context = spriteCanvas.getContext("2d");
     if (!context) return;
-
-    const scale = scaleFromStore * devicePixelRatio;
 
     spriteCanvas.width = dimensions.width - Layout.SIDEBAR_WIDTH;
     spriteCanvas.height = dimensions.height;
@@ -108,6 +113,36 @@ export default function useMainContent({
       context.globalAlpha = 1;
     }
 
+    for (const boundingBox of currentSprite.boundingBoxes) {
+      if (boundingBox.visible) {
+        context.fillStyle = boundingBox.color;
+        context.globalAlpha = 0.25;
+        context.fillRect(
+          (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
+            boundingBox.width / 2 -
+            (currentSprite.center.offsetX - boundingBox.offsetX),
+          dimensions.height / (2 * scale) -
+            boundingBox.height / 2 +
+            (currentSprite.center.offsetY - boundingBox.offsetY),
+          boundingBox.width,
+          boundingBox.height,
+        );
+        context.globalAlpha = 1;
+
+        context.strokeStyle = boundingBox.color;
+        context.strokeRect(
+          (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
+            boundingBox.width / 2 -
+            (currentSprite.center.offsetX - boundingBox.offsetX),
+          dimensions.height / (2 * scale) -
+            boundingBox.height / 2 +
+            (currentSprite.center.offsetY - boundingBox.offsetY),
+          boundingBox.width,
+          boundingBox.height,
+        );
+      }
+    }
+
     if (currentSprite.center.visible) {
       context.beginPath();
       context.strokeStyle = animationFromProps.color;
@@ -123,12 +158,11 @@ export default function useMainContent({
     animationFromProps.color,
     animationFromProps.onion,
     currentSprite,
-    devicePixelRatio,
     dimensions.height,
     dimensions.width,
     image,
     prevSprite,
-    scaleFromStore,
+    scale,
     spriteSheetImage,
   ]);
 
