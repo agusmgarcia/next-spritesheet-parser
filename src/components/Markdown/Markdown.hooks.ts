@@ -7,7 +7,7 @@ import { twMerge } from "tailwind-merge";
 import type MarkdownProps from "./Markdown.types";
 
 export default function useMarkdown(props: MarkdownProps) {
-  const allowedElements = useMemo(
+  const allowedElements = useMemo<string[]>(
     () => ["br", "del", "em", "p", "s", "strong"],
     [],
   );
@@ -29,9 +29,13 @@ export default function useMarkdown(props: MarkdownProps) {
     [],
   );
 
-  const rehypePlugins = useMemo(() => [rehypeRaw], []);
+  const rehypePlugins = useMemo<
+    Parameters<typeof ReactMarkdown>[0]["rehypePlugins"]
+  >(() => [rehypeRaw], []);
 
-  const remarkPlugins = useMemo(() => [remarkGfm], []);
+  const remarkPlugins = useMemo<
+    Parameters<typeof ReactMarkdown>[0]["remarkPlugins"]
+  >(() => [remarkGfm], []);
 
   return {
     ...props,
