@@ -29,14 +29,14 @@ export default function useCenterItem({
   });
 
   const {
-    animationCenterDownDisabled,
-    animationCenterDownOnClick,
-    animationCenterLeftDisabled,
-    animationCenterLeftOnClick,
-    animationCenterRightDisabled,
-    animationCenterRightOnClick,
-    animationCenterUpDisabled,
-    animationCenterUpOnClick,
+    centerToDownDisabled,
+    centerToDownOnClick,
+    centerToLeftDisabled,
+    centerToLeftOnClick,
+    centerToRightDisabled,
+    centerToRightOnClick,
+    centerToUpDisabled,
+    centerToUpOnClick,
   } = useCenter({
     animation: animationFromProps,
     index: indexFromProps,
@@ -44,14 +44,14 @@ export default function useCenterItem({
 
   return {
     ...rest,
-    animationCenterDownDisabled,
-    animationCenterDownOnClick,
-    animationCenterLeftDisabled,
-    animationCenterLeftOnClick,
-    animationCenterRightDisabled,
-    animationCenterRightOnClick,
-    animationCenterUpDisabled,
-    animationCenterUpOnClick,
+    centerToDownDisabled,
+    centerToDownOnClick,
+    centerToLeftDisabled,
+    centerToLeftOnClick,
+    centerToRightDisabled,
+    centerToRightOnClick,
+    centerToUpDisabled,
+    centerToUpOnClick,
     colorDisabled,
     colorOnChange,
     colorValue,
@@ -161,91 +161,91 @@ function useCenter({
 }: Pick<CenterItemProps, "animation" | "index">) {
   const { setAnimationCenter } = useAnimations();
 
-  const animationCenterUpDisabled = useMemo<boolean>(
+  const centerToUpDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationCenterRightDisabled = useMemo<boolean>(
+  const centerToRightDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationCenterDownDisabled = useMemo<boolean>(
+  const centerToDownDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationCenterLeftDisabled = useMemo<boolean>(
+  const centerToLeftDisabled = useMemo<boolean>(
     () => animationFromProps.playing,
     [animationFromProps.playing],
   );
 
-  const animationCenterUpOnClick = useCallback<Func>(() => {
-    if (animationCenterUpDisabled) return;
+  const centerToUpOnClick = useCallback<Func>(() => {
+    if (centerToUpDisabled) return;
     setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
       offsetX: center.offsetX,
       offsetY: center.offsetY + devicePixelRatio,
     }));
   }, [
     animationFromProps.id,
-    animationCenterUpDisabled,
+    centerToUpDisabled,
     indexFromProps,
     setAnimationCenter,
   ]);
 
-  const animationCenterRightOnClick = useCallback<Func>(() => {
-    if (animationCenterRightDisabled) return;
+  const centerToRightOnClick = useCallback<Func>(() => {
+    if (centerToRightDisabled) return;
     setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
       offsetX: center.offsetX + devicePixelRatio,
       offsetY: center.offsetY,
     }));
   }, [
     animationFromProps.id,
-    animationCenterRightDisabled,
+    centerToRightDisabled,
     indexFromProps,
     setAnimationCenter,
   ]);
 
-  const animationCenterDownOnClick = useCallback<Func>(() => {
-    if (animationCenterDownDisabled) return;
+  const centerToDownOnClick = useCallback<Func>(() => {
+    if (centerToDownDisabled) return;
     setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
       offsetX: center.offsetX,
       offsetY: center.offsetY - devicePixelRatio,
     }));
   }, [
     animationFromProps.id,
-    animationCenterDownDisabled,
+    centerToDownDisabled,
     indexFromProps,
     setAnimationCenter,
   ]);
 
-  const animationCenterLeftOnClick = useCallback<Func>(() => {
-    if (animationCenterLeftDisabled) return;
+  const centerToLeftOnClick = useCallback<Func>(() => {
+    if (centerToLeftDisabled) return;
     setAnimationCenter(animationFromProps.id, indexFromProps, (center) => ({
       offsetX: center.offsetX - devicePixelRatio,
       offsetY: center.offsetY,
     }));
   }, [
     animationFromProps.id,
-    animationCenterLeftDisabled,
+    centerToLeftDisabled,
     indexFromProps,
     setAnimationCenter,
   ]);
 
-  useKeyDown("ArrowUp", animationCenterUpOnClick, { altKey: true });
-  useKeyDown("ArrowRight", animationCenterRightOnClick, { altKey: true });
-  useKeyDown("ArrowDown", animationCenterDownOnClick, { altKey: true });
-  useKeyDown("ArrowLeft", animationCenterLeftOnClick, { altKey: true });
+  useKeyDown("ArrowUp", centerToUpOnClick, { altKey: true });
+  useKeyDown("ArrowRight", centerToRightOnClick, { altKey: true });
+  useKeyDown("ArrowDown", centerToDownOnClick, { altKey: true });
+  useKeyDown("ArrowLeft", centerToLeftOnClick, { altKey: true });
 
   return {
-    animationCenterDownDisabled,
-    animationCenterDownOnClick,
-    animationCenterLeftDisabled,
-    animationCenterLeftOnClick,
-    animationCenterRightDisabled,
-    animationCenterRightOnClick,
-    animationCenterUpDisabled,
-    animationCenterUpOnClick,
+    centerToDownDisabled,
+    centerToDownOnClick,
+    centerToLeftDisabled,
+    centerToLeftOnClick,
+    centerToRightDisabled,
+    centerToRightOnClick,
+    centerToUpDisabled,
+    centerToUpOnClick,
   };
 }
