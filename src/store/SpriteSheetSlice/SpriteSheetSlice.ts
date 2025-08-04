@@ -5,6 +5,7 @@ import { type MSEROptions, Rect } from "blob-detection-ts";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import type AnimationsSlice from "../AnimationsSlice";
+import type NormalMapSlice from "../NormalMapSlice";
 import type NotificationSlice from "../NotificationSlice";
 import type UtilsSlice from "../UtilsSlice";
 import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
@@ -14,6 +15,7 @@ export default class SpriteSheetSlice extends ServerSlice<
   Request,
   {
     animations: AnimationsSlice;
+    normalMap: NormalMapSlice;
     notification: NotificationSlice;
     utils: UtilsSlice;
   }
@@ -85,7 +87,11 @@ export default class SpriteSheetSlice extends ServerSlice<
   }
 
   async remove(): Promise<void> {
-    if (this.slices.utils.isDirty()) {
+    if (
+      this.dirty ||
+      this.slices.animations.dirty ||
+      this.slices.normalMap.dirty
+    ) {
       const response = await this.slices.notification.set(
         "warning",
         "By removing the image you may loose all your progress. Are you sure you want to continue?",
@@ -112,7 +118,11 @@ export default class SpriteSheetSlice extends ServerSlice<
   }
 
   async setImage(image: File): Promise<void> {
-    if (this.slices.utils.isDirty()) {
+    if (
+      this.dirty ||
+      this.slices.animations.dirty ||
+      this.slices.normalMap.dirty
+    ) {
       const response = await this.slices.notification.set(
         "warning",
         "By loading a new image you may loose all your progress. Are you sure you want to continue?",

@@ -118,6 +118,6 @@ export function useSpriteSheet() {
 export function useUtils() {
   return {
     exportZip: useSelector((state) => state.utils.exportZip),
-    importJSONFile: useSelector((state) => state.utils.importJSONFile),
+    importJSON: useSelector((state) => state.utils.importJSON),
   };
 }

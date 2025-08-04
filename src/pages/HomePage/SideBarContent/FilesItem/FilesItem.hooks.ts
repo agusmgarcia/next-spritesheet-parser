@@ -57,7 +57,7 @@ function useSideBarItem() {
 
 function useImportFile() {
   const { setNotification } = useNotification();
-  const { importJSONFile } = useUtils();
+  const { importJSON } = useUtils();
   const { setSpriteSheetImage, spriteSheet, spriteSheetLoading } =
     useSpriteSheet();
   const { normalMapLoading } = useNormalMap();
@@ -111,14 +111,14 @@ function useImportFile() {
           : file
               .text()
               .then((text) => JSON.parse(text))
-              .then((jsonFile) => importJSONFile(jsonFile));
+              .then((jsonFile) => importJSON(jsonFile));
       })
       .catch((error) => setNotification("error", getErrorMessage(error)))
       .finally(() => setImportFileLoading(false));
   }, [
     importFile,
     importFileDisabled,
-    importJSONFile,
+    importJSON,
     setNotification,
     setSpriteSheetImage,
     spriteSheet?.image.url,
