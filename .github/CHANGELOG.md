@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.26.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.26.1)
+
+> August 4, 2025
+
+### Fixes 🎯
+
+- adjust normal map image when exporting
+
 ## [v0.26.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.26.0)
 
 > August 4, 2025
