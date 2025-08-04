@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.26.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.26.0)
+
+> August 4, 2025
+
+### Features ✅
+
+- **Divisor**: add className property
+- **AnimationPage**: add ability to the center to be visible or hidden
+- **Icon**: add eyeClosed variant
+- **Icon**: add eye variant
+- **AnimationPage**: collapse center item when animation is being played
+- **AnimationPage**: move playing section after configurations item
+- **AnimationPage**: automatically play the animation
+- **AnimationPage**: add ability to go to the first and last sprite
+- **Icon**: add forwardFast variant
+- **Icon**: add backwardFast variant
+- **HomePage**: remove minArea and maxArea props
+
+### Fixes 🎯
+
+- **store**: sort methods of slices
+- **SpriteSheetSlice**: store x and y instead of boundaries
+- **Markdown**: add missing types
+- **AnimationPage**: rename properties
+- **AnimationsSlice**: invert y
+- **AnimationsSlice**: rename offset by center
+- set missing aria-labels
+- move sidebar width into a constant
+- **AnimationPage**: reset index when animation changes
+- **NormalMapPage**: adjust max strength to 10
+- **README.md**: update file
+- **AnimationPage**: disabled all the playing section when single sprite
+- **ZoomItem**: sort buttons
+- modify the key that makes sidebar collapse and expand
+- **store**: use classes instead of functions
+- bump depdendencies
+
 ## [v0.25.5](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.25.5)
 
 > July 26, 2025
