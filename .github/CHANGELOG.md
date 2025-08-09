@@ -30,6 +30,14 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
+- **AnimationPage**: reset index when animation changes
+- **NormalMapPage**: adjust max strength to 10
+- **AnimationPage**: disabled all the playing section when single sprite
+- **ZoomItem**: sort buttons
+- modify the key that makes sidebar collapse and expand
+
+### Chores ⚙️
+
 - **store**: sort methods of slices
 - **SpriteSheetSlice**: store x and y instead of boundaries
 - **Markdown**: add missing types
@@ -38,12 +46,7 @@ All notable changes to this project will be documented in this file.
 - **AnimationsSlice**: rename offset by center
 - set missing aria-labels
 - move sidebar width into a constant
-- **AnimationPage**: reset index when animation changes
-- **NormalMapPage**: adjust max strength to 10
 - **README.md**: update file
-- **AnimationPage**: disabled all the playing section when single sprite
-- **ZoomItem**: sort buttons
-- modify the key that makes sidebar collapse and expand
 - **store**: use classes instead of functions
 - bump depdendencies
 
@@ -51,7 +54,7 @@ All notable changes to this project will be documented in this file.
 
 > July 26, 2025
 
-### Fixes 🎯
+### Chores ⚙️
 
 - bump dependencies
 
@@ -67,7 +70,7 @@ All notable changes to this project will be documented in this file.
 
 > June 29, 2025
 
-### Fixes 🎯
+### Chores ⚙️
 
 - bump package dependencies
 
@@ -75,7 +78,7 @@ All notable changes to this project will be documented in this file.
 
 > June 29, 2025
 
-### Fixes 🎯
+### Chores ⚙️
 
 - start using react-essentials
 
@@ -106,13 +109,16 @@ All notable changes to this project will be documented in this file.
 - **Accordion**: trigger defaultCollapsed on disabled state
 - **HomePage**: rollback settings change on cancel
 - **SpriteSheetSlice**: store it without background
+- **Input**: adjust styles for checkbox
+- **NormalMapPage**: add max strength
+- **HomePage**: add max delta
+
+### Chores ⚙️
+
 - adjust some styles
 - **Icon**: stop using refresh variant
 - **NormalMapPage**: use ranges instead of number
 - **HomePage**: use ranges instead of number
-- **Input**: adjust styles for checkbox
-- **NormalMapPage**: add max strength
-- **HomePage**: add max delta
 - **store**: stop using React.SetStateAction when no needed
 - **AnimationSlice**: move offset to its object
 - update dependencies
@@ -124,10 +130,13 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **AnimationPage**: replace center icon
-- **Icon**: add center variant
 - **HomePage**: disabled items when no sprite sheet image
-- **Accordion**: add disabled property to items
 - **Button**: add text-black for raw variant
+
+### Chores ⚙️
+
+- **Icon**: add center variant
+- **Accordion**: add disabled property to items
 
 ## [v0.24.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.3)
 
@@ -136,6 +145,9 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **HomePage**: reset sprite selection
+
+### Chores ⚙️
+
 - update dependencies
 
 ## [v0.24.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.2)
@@ -159,6 +171,9 @@ All notable changes to this project will be documented in this file.
 - **AnimationPage**: disable onion when single sprite
 - **Layout**: adjust center of the scale
 - **Layout**: prevent Sidebar of being collapsed when no spritesheet
+
+### Chores ⚙️
+
 - **Layout**: update sidebarCollapsable name
 
 ## [v0.24.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.24.0)
@@ -175,14 +190,17 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
+- **NormalMapPage**: include all settings
+- **Input**: adjust padding for numbers
+- **HomePage**: change name of NormalMap link
+
+### Chores ⚙️
+
 - **AnimationPage**: forward next and previous index callbacks
 - **NormalMapPage**: rename SettingsItem component
 - add missing hooks
-- **NormalMapPage**: include all settings
 - **store**: encapsulate default settings
 - feat(Input) forward id attribute
-- **Input**: adjust padding for numbers
-- **HomePage**: change name of NormalMap link
 
 ## [v0.23.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.23.2)
 
@@ -191,6 +209,9 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **NormalMapSlice**: adjust normal map calculation
+
+### Chores ⚙️
+
 - **UtilsSlice**: add isDirty method
 - **store**: add minor adjustments
 
@@ -217,13 +238,16 @@ All notable changes to this project will be documented in this file.
 
 - **AnimationPage**: add warning before deletion
 - **HomePage**: add termination even when image has not been loaded
-- move export zip feature to store
-- **UtilsSlice**: rename it
 - **Accordion**: add ability to collapse/expand by clicking on header
 - **AnimatioPage**: move animations item to the top
 - **AnimationPage**: merge fps and playing into single item
 - **AnimationPage**: merge center and movements into single item
 - **HomePage**: adjust order of items
+
+### Chores ⚙️
+
+- move export zip feature to store
+- **UtilsSlice**: rename it
 - **Accordion**: add missing hooks
 - **Typography**: add missing hooks
 
@@ -263,7 +287,7 @@ All notable changes to this project will be documented in this file.
 
 - **NormalMapPage**: add ability to change the name
 
-### Fixes 🎯
+### Chores ⚙️
 
 - **NormalMapSlice**: unify with settings
 - **AnimationsSlice**: adjust setAnimations logic
@@ -287,18 +311,21 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
-- **NormalMapSlice**: add slice
-- **NormalMapSettingSlice**: add slice
-- **SettingsSlice**: adjust logic to generate URL
-- **SpriteSheetSlice**: move out some functions
 - **HomePage**: add instruction to reset zoom
 - **AnimationPage**: add instruction to reset zoom
 - **AnimationPage**: add missing name attribute
 - **HomePage**: adjust settings item
+- **Layout**: prevent displaying instructions button when no instructions
+
+### Chores ⚙️
+
+- **NormalMapSlice**: add slice
+- **NormalMapSettingSlice**: add slice
+- **SettingsSlice**: adjust logic to generate URL
+- **SpriteSheetSlice**: move out some functions
 - **HomePage**: add missing hook
 - **Divisor**: add missing hook
 - remove uneeded libraries
-- **Layout**: prevent displaying instructions button when no instructions
 
 ## [v0.19.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.19.0)
 
@@ -313,8 +340,11 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **Layout**: remove instructions for Tablet
-- **Layout**: move it to fragments
 - **Accordion**: adjust arrow icon size
+
+### Chores ⚙️
+
+- **Layout**: move it to fragments
 
 ## [v0.18.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.2)
 
@@ -323,9 +353,12 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **InstructionsButton**: replace Alt by Opt whe is MacOS
-- **isMacOS**: add utility
 - **SpriteSheetSlice**: stop sending alert when new image loaded
 - **AnimationPage**: adjust instructions keys
+
+### Chores ⚙️
+
+- **isMacOS**: add utility
 
 ## [v0.18.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.18.1)
 
@@ -349,11 +382,14 @@ All notable changes to this project will be documented in this file.
 - **Modal**: adjust padding when header or footer are not present
 - **AnimationPage**: escape markdown for instructions
 - **NotificationHandler**: move responsability to the slice
-- forward rest parameters
 - **useKeyDown**: prevent executing when notification is open
-- **store**: add error handler
 - **store**: perform some validations
 - include settings within the exported file
+
+### Chores ⚙️
+
+- forward rest parameters
+- **store**: add error handler
 - **Accordion**: adjust import path
 - **getErrorMessage**: add utility
 - stop using Toast in favor of Modal
@@ -378,15 +414,18 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **Modal**: adjust styles
+- **AnimationPage**: re-sort sidebar items
+- **useKeyDown**: remove uneeded options
+- **HomePage**: stop hovering sprite when cursor leaves
+- **AnimationsSlice**: adjust default playing state
+
+### Chores ⚙️
+
 - **Typography**: remove hook
 - adjust conditions
 - bump dependencies
-- **AnimationPage**: re-sort sidebar items
-- **useKeyDown**: remove uneeded options
 - **Accordion**: forward heading component
 - **SideBar**: adjust types
-- **HomePage**: stop hovering sprite when cursor leaves
-- **AnimationsSlice**: adjust default playing state
 
 ## [v0.16.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.16.0)
 
@@ -403,15 +442,18 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
-- bump library dependencies
 - **Accordion**: adjust styles
-- **AnimationPage**: move hooks to the corresponding components
-- **HomePage**: rename properties
 - sort animations by number
-- **HomePage**: move hooks to the corresponding components
-- **useKeyDown**: add hook
 - **SettingsSlice**: set initial values to 0
 - **Select**: adjust styles for disabled status
+
+### Chores ⚙️
+
+- bump library dependencies
+- **AnimationPage**: move hooks to the corresponding components
+- **HomePage**: rename properties
+- **HomePage**: move hooks to the corresponding components
+- **useKeyDown**: add hook
 - **Icon**: forward style property
 - support multiple notification types
 - add all tailwind colors
@@ -435,7 +477,7 @@ All notable changes to this project will be documented in this file.
 
 > April 29, 2025
 
-### Fixes 🎯
+### Chores ⚙️
 
 - bump dependencies
 
@@ -446,6 +488,9 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **\_app**: adjust icon
+
+### Chores ⚙️
+
 - **README.md**: update file
 - bump dependencies
 
@@ -476,6 +521,9 @@ All notable changes to this project will be documented in this file.
 - **HomePage**: remove merge loading status
 - **SpriteSelectionSlice**: unselect all sprites on animations length change
 - **AnimationPage**: reset sprite index on animation change
+
+### Chores ⚙️
+
 - bump dependencies
 
 ## [v0.13.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.13.1)
@@ -485,6 +533,9 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **AnimationPage**: reset sprite index on animation change
+
+### Chores ⚙️
+
 - make SpriteSheet a server slice
 - **AnimationSlice**: make methods sync
 - move sprite selection to store
@@ -506,7 +557,7 @@ All notable changes to this project will be documented in this file.
 - **HomePage**: add ability to export file using keyboard
 - **HomePage**: add ability to import file using keyboard
 
-### Fixes 🎯
+### Chores ⚙️
 
 - **AnimationPage**: rename some properties
 - **HomePage**: adjust useCallback type
@@ -523,6 +574,9 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **AnimationPage**: put the onion layer in front current sprite
+
+### Chores ⚙️
+
 - **useLoadImage**: start using the hook
 - **Typography**: adjust logic
 - bump dependencies
@@ -540,12 +594,15 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **AppPage**: style mobile version
-- **HomePage**: remove animationSelectorDisabled property
 - **HomePage**: set spriteSheet when importing the json file
 - **AnimationSlice**: update animations on sprites change event
+- **Select**: adjust styles
+
+### Chores ⚙️
+
+- **HomePage**: remove animationSelectorDisabled property
 - **Carousel**: remove component
 - **SpriteSheetSlice**: remove resetSpriteSheet method
-- **Select**: adjust styles
 - **SpriteSheetSlice**: represent slices as records instead of array
 - **SetValue**: stop using it in favor of React.SetStateAction
 - **SpriteSheetSlice**: create sheet object
@@ -565,9 +622,12 @@ All notable changes to this project will be documented in this file.
 ### Fixes 🎯
 
 - **HomePage**: adjust select to show image name
-- **Accordion**: change imports
 - **HomePage**: set custom style for safari
 - **Select**: add arrow
+
+### Chores ⚙️
+
+- **Accordion**: change imports
 
 ## [v0.9.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.9.0)
 
@@ -604,12 +664,15 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
-- rename properties
-- **AnimationPage**: improve layout and styles
-- **HomePage**: improve layout and styles
 - **Input**: adjust styles
 - **Button**: adjust styles
 - **Select**: adjust styles
+
+### Chores ⚙️
+
+- rename properties
+- **AnimationPage**: improve layout and styles
+- **HomePage**: improve layout and styles
 - bump dependencies
 - **Carousel**: adjust props definition
 
@@ -627,10 +690,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
-- **README.md**: update file
-- **AnimationPage**: rename reset by reset zoom
 - **Input**: set hover and focus styles for color variant
 - **SpriteSheetSlice**: set background color as rgb
+
+### Chores ⚙️
+
+- **README.md**: update file
+- **AnimationPage**: rename reset by reset zoom
 - bump dependencies
 
 ## [v0.6.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.6.0)
@@ -654,16 +720,19 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
-- move color into the slice
 - **AnimationPage**: adjust styles
 - **Select**: adjust styles
 - keep animation scale
 - **SpriteSheetSlice**: improve the way sprites are calculated
-- **AnimationPage**: improve sprites calculation
-- start using useDevicePixelRatio hook
 - **AnimationPage**: adjust tool bar styles
 - **HomePage**: adjust tool bar styles
 - **AnimationPage**: set minimum scale
+
+### Chores ⚙️
+
+- move color into the slice
+- **AnimationPage**: improve sprites calculation
+- start using useDevicePixelRatio hook
 
 ## [v0.5.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.1)
 
@@ -671,9 +740,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
+- **AnimationPage**: stop listening for keys
+
+### Chores ⚙️
+
 - define types for useCallback and useMemo
 - bump dependencies
-- **AnimationPage**: stop listening for keys
 
 ## [v0.5.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.5.0)
 
@@ -692,6 +764,9 @@ All notable changes to this project will be documented in this file.
 
 - **AnimationsSlice**: reset when new sprite sheet is loaded
 - **Carousel**: adjust page calculation
+
+### Chores ⚙️
+
 - **store**: split slices
 
 ## [v0.4.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.4.0)
@@ -703,7 +778,7 @@ All notable changes to this project will be documented in this file.
 - **AnimationPage**: add page
 - **Icon**: add home variant
 
-### Fixes 🎯
+### Chores ⚙️
 
 - **README.md**: update file
 
@@ -724,10 +799,13 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
-- **Icon**: move some properties into the hook
 - **Input**: adjust styles
 - **Button**: addjust styles
 - **Icon**: stop applying spinning behavior to the spinner
+
+### Chores ⚙️
+
+- **Icon**: move some properties into the hook
 
 ## [v0.2.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.2.0)
 
@@ -757,9 +835,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixes 🎯
 
+- **Icon**: rename play by roundedPlay
+
+### Chores ⚙️
+
 - use loadImage instead of getImageData
 - **HomePage**: add comments
-- **Icon**: rename play by roundedPlay
 
 ## [v0.1.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.1.0)
 
@@ -777,6 +858,6 @@ All notable changes to this project will be documented in this file.
 - **Icon**: add uploadFile variant
 - **Icon**: add component
 
-### Fixes 🎯
+### Chores ⚙️
 
 - setup project
