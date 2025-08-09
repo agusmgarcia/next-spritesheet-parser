@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.26.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.26.2)
+
+> August 9, 2025
+
+### Fixes 🎯
+
+- **AnimationPage**: pause animation when go to first or last frame
+
+### Chores ⚙️
+
+- bump dependencies
+
 ## [v0.26.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.26.1)
 
 > August 4, 2025
