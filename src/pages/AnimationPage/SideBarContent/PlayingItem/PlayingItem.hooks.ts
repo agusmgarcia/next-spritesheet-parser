@@ -90,8 +90,14 @@ function usePlaying({
 
   const toFirstOnClick = useCallback<Func>(() => {
     if (toFirstDisabled) return;
+    setAnimationPlaying(animationFromProps.id, false);
     onFirstIndexFromProps();
-  }, [onFirstIndexFromProps, toFirstDisabled]);
+  }, [
+    animationFromProps.id,
+    onFirstIndexFromProps,
+    setAnimationPlaying,
+    toFirstDisabled,
+  ]);
 
   const backwardDisabled = useMemo<boolean>(
     () => animationFromProps.sprites.length <= 1,
@@ -142,8 +148,14 @@ function usePlaying({
 
   const toLastOnClick = useCallback<Func>(() => {
     if (toLastDisabled) return;
+    setAnimationPlaying(animationFromProps.id, false);
     onLastIndexFromProps();
-  }, [onLastIndexFromProps, toLastDisabled]);
+  }, [
+    animationFromProps.id,
+    onLastIndexFromProps,
+    setAnimationPlaying,
+    toLastDisabled,
+  ]);
 
   useEffect(() => {
     if (!animationFromProps.playing) return;
