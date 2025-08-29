@@ -1,4 +1,4 @@
-import getErrorMessage from "../getErrorMessage";
+import { errors } from "@agusmgarcia/react-essentials-utils";
 
 const CONTROLLERS: Record<string, AbortController> = {};
 
@@ -19,7 +19,7 @@ self.onmessage = async (event) => {
     const result = await processEvent(type, ...args, signal);
     self.postMessage({ id, result });
   } catch (error) {
-    const message = getErrorMessage(error);
+    const message = errors.getMessage(error) || "";
     self.postMessage({ error: message, id });
   } finally {
     delete CONTROLLERS[id];

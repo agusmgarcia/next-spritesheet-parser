@@ -1,4 +1,3 @@
-export { default as getErrorMessage } from "./getErrorMessage";
 export * as imageDataUtils from "./imageDataUtils";
 export { default as isMacOS } from "./isMacOS";
 export { default as loadImage } from "./loadImage";

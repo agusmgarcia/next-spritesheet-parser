@@ -1,4 +1,8 @@
-import { type AsyncFunc, type Func } from "@agusmgarcia/react-essentials-utils";
+import {
+  type AsyncFunc,
+  errors,
+  type Func,
+} from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useMemo, useState } from "react";
 
 import {
@@ -7,7 +11,7 @@ import {
   useSpriteSheet,
   useUtils,
 } from "#src/store";
-import { getErrorMessage, useKeyDown } from "#src/utils";
+import { useKeyDown } from "#src/utils";
 
 import type FilesItemProps from "./FilesItem.types";
 
@@ -113,7 +117,7 @@ function useImportFile() {
               .then((text) => JSON.parse(text))
               .then((jsonFile) => importJSON(jsonFile));
       })
-      .catch((error) => setNotification("error", getErrorMessage(error)))
+      .catch((e) => setNotification("error", errors.getMessage(e) || ""))
       .finally(() => setImportFileLoading(false));
   }, [
     importFile,

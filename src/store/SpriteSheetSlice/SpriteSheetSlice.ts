@@ -21,7 +21,7 @@ export default class SpriteSheetSlice extends ServerSlice<
   }
 > {
   constructor() {
-    super(undefined);
+    super();
   }
 
   get dirty(): boolean {
