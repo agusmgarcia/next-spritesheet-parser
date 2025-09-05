@@ -180,6 +180,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "roundedPlus":
+      return (
+        <svg {...rest}>
+          <path d="M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4Zm1 11C6.47715 22 2 17.5228 2 12 2 6.47715 6.47715 2 12 2c5.5228 0 10 4.47715 10 10 0 5.5228 -4.4772 10 -10 10Zm0 -2c4.4183 0 8 -3.5817 8 -8 0 -4.41828 -3.5817 -8 -8 -8 -4.41828 0 -8 3.58172 -8 8 0 4.4183 3.58172 8 8 8Z" />
+        </svg>
+      );
+
     case "spaceBar":
       return (
         <svg {...rest}>

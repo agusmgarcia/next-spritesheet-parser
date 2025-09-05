@@ -25,6 +25,7 @@ type IconProps = Pick<React.SVGProps<SVGSVGElement>, "className" | "style"> & {
     | "plus"
     | "reset"
     | "roundedPlay"
+    | "roundedPlus"
     | "spaceBar"
     | "spinner"
     | "split"
