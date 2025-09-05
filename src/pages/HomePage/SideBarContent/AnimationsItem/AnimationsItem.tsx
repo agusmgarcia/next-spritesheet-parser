@@ -38,7 +38,7 @@ export default function AnimationsItem(props: AnimationsItemProps) {
         variant="primary"
       >
         Create
-        <Icon variant="roundedPlay" />
+        <Icon variant="roundedPlus" />
       </Button>
 
       {/* SPLIT SPRITES */}
