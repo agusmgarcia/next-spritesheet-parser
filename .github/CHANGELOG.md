@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.27.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.27.0)
+
+> September 5, 2025
+
+### Features ✅
+
+- **Icon**: remove roundedPlay variant
+- **HomePage**: replace create animation icon
+- **Icon**: add roundedPlus variant
+
+### Chores ⚙️
+
+- **getErrorMessage**: stop using module
+- bump dependencies
+
 ## [v0.26.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.26.2)
 
 > August 9, 2025
