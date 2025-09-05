@@ -12,7 +12,7 @@ export default class NormalMapSlice extends ServerSlice<
   { spriteSheet: SpriteSheetSlice }
 > {
   constructor() {
-    super(undefined);
+    super();
   }
 
   get dirty(): boolean {

@@ -28,7 +28,7 @@ export default function useLayout({
   });
 
   const version = useMemo<string>(() => {
-    const maybeVersion = process.env.NEXT_PUBLIC_APP_VERSION;
+    const maybeVersion = process.env.APP_VERSION;
     if (!maybeVersion) return "v0.0.0";
     return `v${maybeVersion}`;
   }, []);

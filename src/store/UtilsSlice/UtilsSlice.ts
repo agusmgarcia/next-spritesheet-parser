@@ -76,7 +76,7 @@ export default class UtilsSlice extends GlobalSlice<
               animations,
               normalMap,
               spriteSheet,
-              version: process.env.NEXT_PUBLIC_APP_VERSION || "0.0.0",
+              version: process.env.APP_VERSION || "0.0.0",
             }),
           ),
       )
