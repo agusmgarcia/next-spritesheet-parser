@@ -2,7 +2,7 @@ import { sorts } from "@agusmgarcia/react-essentials-utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useAnimations, useSpriteSheet } from "#src/store";
+import { useAnimations, useSpriteSheetImage } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
@@ -29,7 +29,7 @@ function useAnimationSelector({
 }: Pick<AnimationsItemProps, "animation">) {
   const { push } = useRouter();
 
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
   const { animations } = useAnimations();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState(
@@ -38,12 +38,12 @@ function useAnimationSelector({
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
-      { id: "sheet", name: spriteSheet?.image.name || "Sprite sheet" },
+      { id: "sheet", name: spriteSheetImage?.name || "Sprite sheet" },
       ...animations
         .map((a) => ({ id: a.id, name: a.name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
     ],
-    [animations, spriteSheet?.image.name],
+    [animations, spriteSheetImage?.name],
   );
 
   const animationSelectorOnChange = useCallback<

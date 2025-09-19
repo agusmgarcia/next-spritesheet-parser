@@ -8,7 +8,12 @@ import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Layout } from "#src/fragments";
-import { useScale, useSpriteSelection, useSpriteSheet } from "#src/store";
+import {
+  useScale,
+  useSpriteSelection,
+  useSpriteSheet,
+  useSpriteSheetImage,
+} from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
@@ -16,6 +21,7 @@ import type MainContentProps from "./MainContent.types";
 export default function useMainContent(props: MainContentProps) {
   const { scale: scaleFromStore } = useScale();
   const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
   const { selectSprite, spriteSelection, toggleSpriteSelection } =
     useSpriteSelection();
 
@@ -27,32 +33,30 @@ export default function useMainContent(props: MainContentProps) {
   const [preSelectedSprites, setPreSelectedSprites] = useState<string[]>();
   const [spriteHovered, setSpriteHovered] = useState<string>();
 
-  const { image } = useLoadImage(spriteSheet?.image.url || "");
+  const { image } = useLoadImage(spriteSheetImage?.url || "");
   const dimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * scaleFromStore;
 
   const color = useMemo<string>(
     () =>
-      spriteSheet?.image.backgroundColor
-        ? invert(spriteSheet.image.backgroundColor)
+      spriteSheetImage?.backgroundColor
+        ? invert(spriteSheetImage.backgroundColor)
         : "",
-    [spriteSheet?.image.backgroundColor],
+    [spriteSheetImage?.backgroundColor],
   );
 
   const sprites = useMemo(
     () =>
-      !!spriteSheet?.sprites
-        ? Object.entries(spriteSheet.sprites).map(([id, sprite]) => ({
-            bottom: sprite.y + sprite.height,
-            height: sprite.height,
-            id,
-            left: sprite.x,
-            right: sprite.x + sprite.width,
-            top: sprite.y,
-            width: sprite.width,
-          }))
-        : undefined,
-    [spriteSheet?.sprites],
+      Object.entries(spriteSheet).map(([id, sprite]) => ({
+        bottom: sprite.y + sprite.height,
+        height: sprite.height,
+        id,
+        left: sprite.x,
+        right: sprite.x + sprite.width,
+        top: sprite.y,
+        width: sprite.width,
+      })),
+    [spriteSheet],
   );
 
   const findSprite = useCallback<
@@ -131,13 +135,13 @@ export default function useMainContent(props: MainContentProps) {
 
   const onMouseDown = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
     (event) => {
-      if (!spriteSheet?.image.url) return;
+      if (!spriteSheetImage?.url) return;
       const rect = event.currentTarget.getBoundingClientRect();
       const x = (event.clientX - rect.left) / scale;
       const y = (event.clientY - rect.top) / scale;
       setSelectedArea([x, y, x, y]);
     },
-    [scale, spriteSheet?.image.url],
+    [scale, spriteSheetImage?.url],
   );
 
   const onMouseLeave = useCallback<React.MouseEventHandler<HTMLCanvasElement>>(
@@ -169,12 +173,12 @@ export default function useMainContent(props: MainContentProps) {
         ).map((s) => s.id),
       );
 
-      if (!!spriteSheet?.image.url)
+      if (!!spriteSheetImage?.url)
         setSelectedArea((prev) =>
           !!prev ? [prev[0], prev[1], x, y] : [x, y, x, y],
         );
     },
-    [scale, selectedArea, findSprites, spriteSheet?.image.url, findSprite],
+    [scale, selectedArea, findSprites, spriteSheetImage?.url, findSprite],
   );
 
   useEffect(() => {
@@ -200,7 +204,7 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
-    context.fillStyle = spriteSheet?.image.backgroundColor || "#ffffff";
+    context.fillStyle = spriteSheetImage?.backgroundColor || "#ffffff";
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
     context.scale(scale, scale);
     if (!!image)
@@ -212,13 +216,13 @@ export default function useMainContent(props: MainContentProps) {
         context.strokeRect(r.left, r.top, r.width, r.height);
       });
   }, [
-    scale,
-    image,
+    color,
     dimensions.height,
     dimensions.width,
-    spriteSheet,
+    image,
+    scale,
+    spriteSheetImage?.backgroundColor,
     sprites,
-    color,
   ]);
 
   useEffect(() => {
@@ -247,7 +251,7 @@ export default function useMainContent(props: MainContentProps) {
     context.scale(scale, scale);
 
     spriteSelection.forEach((spriteId) => {
-      const sprite = spriteSheet?.sprites[spriteId];
+      const sprite = spriteSheet[spriteId];
       if (!sprite) return;
       if (spriteHovered === spriteId) return;
 
@@ -258,7 +262,7 @@ export default function useMainContent(props: MainContentProps) {
     });
 
     if (!!spriteHovered) {
-      const sprite = spriteSheet?.sprites[spriteHovered];
+      const sprite = spriteSheet[spriteHovered];
       if (!sprite) return;
 
       context.globalAlpha = spriteSelection.includes(spriteHovered) ? 0.3 : 0.2;
@@ -268,7 +272,7 @@ export default function useMainContent(props: MainContentProps) {
     }
 
     preSelectedSprites?.forEach((spriteId) => {
-      const sprite = spriteSheet?.sprites[spriteId];
+      const sprite = spriteSheet[spriteId];
       if (!sprite) return;
 
       if (spriteSelection.includes(spriteId)) return;

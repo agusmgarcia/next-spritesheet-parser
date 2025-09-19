@@ -2,7 +2,12 @@ import { createReactStore } from "@agusmgarcia/react-essentials-store";
 import { errors } from "@agusmgarcia/react-essentials-utils";
 
 import AnimationsSlice, { type AnimationsSliceTypes } from "./AnimationsSlice";
-import NormalMapSlice, { type NormalMapSliceTypes } from "./NormalMapSlice";
+import NormalMapImageSlice, {
+  type NormalMapImageSliceTypes,
+} from "./NormalMapImageSlice";
+import NormalMapSettingsSlice, {
+  type NormalMapSettingsSliceTypes,
+} from "./NormalMapSettingsSlice";
 import NotificationSlice, {
   type NotificationSliceTypes,
 } from "./NotificationSlice";
@@ -10,16 +15,26 @@ import ScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
 import SpriteSelectionSlice, {
   type SpriteSelectionSliceTypes,
 } from "./SpriteSelectionSlice";
+import SpriteSheetImageSlice, {
+  type SpriteSheetImageSliceTypes,
+} from "./SpriteSheetImageSlice";
+import SpriteSheetSettingsSlice, {
+  type SpriteSheetSettingsSliceTypes,
+} from "./SpriteSheetSettingsSlice";
 import SpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
 import UtilsSlice, { type UtilsSliceTypes } from "./UtilsSlice";
 
 export type Animation = AnimationsSliceTypes.Animations[number];
-export type NormalMap = NormalMapSliceTypes.NormalMap;
+export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;
+export type NormalMapSettings = NormalMapSettingsSliceTypes.NormalMapSettings;
 export type Notification = NotificationSliceTypes.Notification;
 export type SpriteSelection = SpriteSelectionSliceTypes.SpriteSelection;
 export type Scale = ScaleSliceTypes.Scale;
+export type SpriteSheetImage = SpriteSheetImageSliceTypes.SpriteSheetImage;
+export type SpriteSheetSettings =
+  SpriteSheetSettingsSliceTypes.SpriteSheetSettings;
 export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
 export type Utils = UtilsSliceTypes.Utils;
 
@@ -33,11 +48,14 @@ const { useSelector, ...reactStore } = createReactStore({
     ),
   slices: {
     animations: AnimationsSlice,
-    normalMap: NormalMapSlice,
+    normalMapImage: NormalMapImageSlice,
+    normalMapSettings: NormalMapSettingsSlice,
     notification: NotificationSlice,
     scale: ScaleSlice,
     spriteSelection: SpriteSelectionSlice,
     spriteSheet: SpriteSheetSlice,
+    spriteSheetImage: SpriteSheetImageSlice,
+    spriteSheetSettings: SpriteSheetSettingsSlice,
     utils: UtilsSlice,
   },
 });
@@ -62,12 +80,21 @@ export function useAnimations() {
   };
 }
 
-export function useNormalMap() {
+export function useNormalMapImage() {
   return {
-    normalMap: useSelector((state) => state.normalMap.response),
-    normalMapLoading: useSelector((state) => state.normalMap.state.loading),
-    setNormalMapName: useSelector((state) => state.normalMap.setName),
-    setNormalMapSettings: useSelector((state) => state.normalMap.setSettings),
+    normalMapImage: useSelector((state) => state.normalMapImage.response),
+    normalMapImageLoading: useSelector(
+      (state) => state.normalMapImage.state.loading,
+    ),
+  };
+}
+
+export function useNormalMapSettings() {
+  return {
+    normalMapSettings: useSelector((state) => state.normalMapSettings.state),
+    setNormalMapSettings: useSelector(
+      (state) => state.normalMapSettings.setSettings,
+    ),
   };
 }
 
@@ -105,12 +132,6 @@ export function useSpriteSheet() {
     mergeSpriteSheetSprites: useSelector(
       (state) => state.spriteSheet.mergeSprites,
     ),
-    removeSpriteSheet: useSelector((state) => state.spriteSheet.remove),
-    setSpriteSheetImage: useSelector((state) => state.spriteSheet.setImage),
-    setSpriteSheetName: useSelector((state) => state.spriteSheet.setName),
-    setSpriteSheetSettings: useSelector(
-      (state) => state.spriteSheet.setSettings,
-    ),
     splitSpriteSheetSprite: useSelector(
       (state) => state.spriteSheet.splitSprite,
     ),
@@ -119,9 +140,34 @@ export function useSpriteSheet() {
   };
 }
 
+export function useSpriteSheetImage() {
+  return {
+    removeSpriteSheetImage: useSelector(
+      (state) => state.spriteSheetImage.removeImage,
+    ),
+    setSpriteSheetImage: useSelector(
+      (state) => state.spriteSheetImage.setImage,
+    ),
+    spriteSheetImage: useSelector((state) => state.spriteSheetImage.response),
+    spriteSheetImageLoading: useSelector(
+      (state) => state.spriteSheetImage.state.loading,
+    ),
+  };
+}
+
+export function useSpriteSheetSettings() {
+  return {
+    setSpriteSheetSettings: useSelector(
+      (state) => state.spriteSheetSettings.setSettings,
+    ),
+    spriteSheetSettings: useSelector(
+      (state) => state.spriteSheetSettings.state,
+    ),
+  };
+}
+
 export function useUtils() {
   return {
     exportZip: useSelector((state) => state.utils.exportZip),
-    importJSON: useSelector((state) => state.utils.importJSON),
   };
 }

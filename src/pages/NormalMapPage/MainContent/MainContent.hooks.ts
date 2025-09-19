@@ -5,25 +5,25 @@ import {
 import { useEffect, useRef } from "react";
 
 import { Layout } from "#src/fragments";
-import { useNormalMap, useScale } from "#src/store";
+import { useNormalMapImage, useScale } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent(props: MainContentProps) {
-  const { normalMap } = useNormalMap();
+  const { normalMapImage } = useNormalMapImage();
   const { scale: scaleFromStore } = useScale();
 
   const ref = useRef<HTMLDivElement>(null);
   const normalMapCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { image } = useLoadImage(normalMap?.image.url || "");
+  const { image } = useLoadImage(normalMapImage?.url || "");
   const dimensions = useDimensions(ref);
   const scale = useDevicePixelRatio() * scaleFromStore;
 
   useEffect(() => {
     if (!image) return;
-    if (!normalMap?.image.backgroundColor) return;
+    if (!normalMapImage?.backgroundColor) return;
 
     const normalMapCanvas = normalMapCanvasRef.current;
     if (!normalMapCanvas) return;
@@ -41,13 +41,13 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, normalMapCanvas.width, normalMapCanvas.height);
-    context.fillStyle = normalMap.image.backgroundColor;
+    context.fillStyle = normalMapImage.backgroundColor;
     context.fillRect(0, 0, normalMapCanvas.width, normalMapCanvas.height);
     context.scale(scale, scale);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
   }, [
     image,
-    normalMap?.image.backgroundColor,
+    normalMapImage?.backgroundColor,
     dimensions.height,
     dimensions.width,
     scale,

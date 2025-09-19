@@ -2,7 +2,13 @@ import { type Func, sorts } from "@agusmgarcia/react-essentials-utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useAnimations, useSpriteSelection, useSpriteSheet } from "#src/store";
+import {
+  useAnimations,
+  useSpriteSelection,
+  useSpriteSheet,
+  useSpriteSheetImage,
+  useSpriteSheetSettings,
+} from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
@@ -46,11 +52,11 @@ export default function useAnimationsItem(props: AnimationsItemProps) {
 }
 
 function useSideBarItem() {
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
 
   const disabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url,
-    [spriteSheet?.image.url],
+    () => !spriteSheetImage?.url,
+    [spriteSheetImage?.url],
   );
 
   const defaultCollapsed = useMemo<boolean>(() => disabled, [disabled]);
@@ -63,12 +69,21 @@ function useCreateAnimation() {
 
   const { createAnimation } = useAnimations();
   const { spriteSelection } = useSpriteSelection();
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
 
   const createAnimationDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet?.image.url || spriteSheetLoading || !spriteSelection.length,
-    [spriteSelection.length, spriteSheet?.image.url, spriteSheetLoading],
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
+      spriteSheetLoading ||
+      !spriteSelection.length,
+    [
+      spriteSelection.length,
+      spriteSheetImage?.url,
+      spriteSheetImageLoading,
+      spriteSheetLoading,
+    ],
   );
 
   const createAnimationOnClick = useCallback<Func>(() => {
@@ -90,12 +105,21 @@ function useCreateAnimation() {
 
 function useResetSelection() {
   const { spriteSelection, unselectAllSprites } = useSpriteSelection();
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
 
   const resetSelectionDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet?.image.url || spriteSheetLoading || !spriteSelection.length,
-    [spriteSelection.length, spriteSheet?.image.url, spriteSheetLoading],
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
+      spriteSheetLoading ||
+      !spriteSelection.length,
+    [
+      spriteSelection.length,
+      spriteSheetImage?.url,
+      spriteSheetImageLoading,
+      spriteSheetLoading,
+    ],
   );
 
   const resetSelectionOnClick = useCallback<Func>(() => {
@@ -113,15 +137,21 @@ function useResetSelection() {
 
 function useMergeSprites() {
   const { spriteSelection } = useSpriteSelection();
-  const { mergeSpriteSheetSprites, spriteSheet, spriteSheetLoading } =
-    useSpriteSheet();
+  const { mergeSpriteSheetSprites, spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
 
   const mergeSpritesDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet?.image.url ||
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
       spriteSheetLoading ||
       spriteSelection.length <= 1,
-    [spriteSelection.length, spriteSheet?.image.url, spriteSheetLoading],
+    [
+      spriteSelection.length,
+      spriteSheetImage?.url,
+      spriteSheetImageLoading,
+      spriteSheetLoading,
+    ],
   );
 
   const mergeSpritesOnClick = useCallback<Func>(() => {
@@ -140,19 +170,21 @@ function useSplitSprite() {
   const { spriteSelection } = useSpriteSelection();
   const { splitSpriteSheetSprite, spriteSheet, spriteSheetLoading } =
     useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
 
   const splitSpriteDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet?.image.url ||
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
       spriteSheetLoading ||
       spriteSelection.length !== 1 ||
-      !Object.keys(spriteSheet?.sprites[spriteSelection[0]].subsprites || {})
-        .length,
+      !Object.keys(spriteSheet[spriteSelection[0]].subsprites || {}).length,
     [
-      spriteSelection,
-      spriteSheet?.image.url,
-      spriteSheet?.sprites,
+      spriteSheetImage?.url,
+      spriteSheetImageLoading,
       spriteSheetLoading,
+      spriteSelection,
+      spriteSheet,
     ],
   );
 
@@ -170,28 +202,31 @@ function useAnimationSelector() {
   const { push } = useRouter();
 
   const { animations } = useAnimations();
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { spriteSheetSettings } = useSpriteSheetSettings();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState("sheet");
 
   const animationSelectorDisabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url || spriteSheetLoading,
-    [spriteSheet?.image.url, spriteSheetLoading],
+    () =>
+      !spriteSheetImage?.url || spriteSheetImageLoading || spriteSheetLoading,
+    [spriteSheetImage?.url, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
       {
         id: "sheet",
-        name: !!spriteSheet?.image.url
-          ? spriteSheet.image.name
+        name: !!spriteSheetImage?.url
+          ? spriteSheetSettings.name
           : "Sprite sheet",
       },
       ...animations
         .map((a) => ({ id: a.id, name: a.name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
     ],
-    [animations, spriteSheet?.image.name, spriteSheet?.image.url],
+    [animations, spriteSheetImage?.url, spriteSheetSettings.name],
   );
 
   const animationSelectorOnChange = useCallback<

@@ -2,7 +2,7 @@ export default async function createFile(
   imageData: ImageData,
   name: string,
   type: string | undefined,
-  signal?: AbortSignal,
+  signal: AbortSignal,
 ): Promise<File> {
   const canvas = document.createElement("canvas");
   canvas.width = imageData.width;

@@ -15,7 +15,7 @@
     "test": "react-essentials-commands-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-essentials-store": "^0.13.0",
+    "@agusmgarcia/react-essentials-store": "file:../react-essentials/packages/react-essentials-store/agusmgarcia-react-essentials-store-0.14.0-rc12.tgz",
     "@agusmgarcia/react-essentials-utils": "^0.10.2",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",
@@ -27,7 +27,7 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.3.1",
-    "uuid": "^11.1.0"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@agusmgarcia/react-essentials-commands": "0.12.3",

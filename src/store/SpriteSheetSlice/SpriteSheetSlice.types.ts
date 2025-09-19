@@ -1,30 +1,18 @@
-export type SpriteSheet = {
-  image: {
-    backgroundColor: string;
+import { type SpriteSheetImageSliceTypes } from "../SpriteSheetImageSlice";
+import { type SpriteSheetSettingsSliceTypes } from "../SpriteSheetSettingsSlice";
+
+export type SpriteSheet = Record<
+  string,
+  {
     height: number;
-    name: string;
-    type: string;
-    url: string;
+    subsprites: SpriteSheet;
     width: number;
-  };
-  settings: {
-    delta: number;
-    maxVariation: number;
-    minDiversity: number;
-  };
-  sprites: Record<
-    string,
-    {
-      height: number;
-      subsprites: SpriteSheet["sprites"];
-      width: number;
-      x: number;
-      y: number;
-    }
-  >;
-};
+    x: number;
+    y: number;
+  }
+>;
 
 export type Request = {
-  image: File | SpriteSheet["image"];
-  settings: SpriteSheet["settings"];
+  settings: Omit<SpriteSheetSettingsSliceTypes.SpriteSheetSettings, "name">;
+  spriteSheetImage: SpriteSheetImageSliceTypes.SpriteSheetImage | undefined;
 };

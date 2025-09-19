@@ -1,7 +1,7 @@
 import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useMemo } from "react";
 
-import { useScale, useSpriteSheet } from "#src/store";
+import { useScale, useSpriteSheet, useSpriteSheetImage } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type ZoomItemProps from "./ZoomItem.types";
@@ -32,11 +32,11 @@ export default function useZoomItem(props: ZoomItemProps) {
 }
 
 function useSideBarItem() {
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
 
   const disabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url,
-    [spriteSheet?.image.url],
+    () => !spriteSheetImage?.url,
+    [spriteSheetImage?.url],
   );
 
   const defaultCollapsed = useMemo<boolean>(() => disabled, [disabled]);
@@ -46,11 +46,16 @@ function useSideBarItem() {
 
 function useZoom() {
   const { scale, setScale } = useScale();
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
 
   const zoomOutDisabled = useMemo<boolean>(
-    () => scale <= 1 || !spriteSheet?.image.url || spriteSheetLoading,
-    [scale, spriteSheet?.image.url, spriteSheetLoading],
+    () =>
+      scale <= 1 ||
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
+      spriteSheetLoading,
+    [scale, spriteSheetImage?.url, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const zoomOutOnClick = useCallback<Func>(() => {
@@ -59,8 +64,9 @@ function useZoom() {
   }, [setScale, zoomOutDisabled]);
 
   const zoomInDisabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url || spriteSheetLoading,
-    [spriteSheet?.image.url, spriteSheetLoading],
+    () =>
+      !spriteSheetImage?.url || spriteSheetImageLoading || spriteSheetLoading,
+    [spriteSheetImage?.url, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const zoomInOnClick = useCallback<Func>(() => {
@@ -69,8 +75,12 @@ function useZoom() {
   }, [setScale, zoomInDisabled]);
 
   const resetZoomDisabled = useMemo<boolean>(
-    () => scale <= 1 || !spriteSheet?.image.url || spriteSheetLoading,
-    [scale, spriteSheet?.image.url, spriteSheetLoading],
+    () =>
+      scale <= 1 ||
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
+      spriteSheetLoading,
+    [scale, spriteSheetImage?.url, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const resetZoomOnClick = useCallback<Func>(() => {

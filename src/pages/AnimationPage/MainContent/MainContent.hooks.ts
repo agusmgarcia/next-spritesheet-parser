@@ -5,7 +5,7 @@ import {
 import { useEffect, useMemo, useRef } from "react";
 
 import { Layout } from "#src/fragments";
-import { useScale, useSpriteSheet } from "#src/store";
+import { useScale, useSpriteSheet, useSpriteSheetImage } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
@@ -15,13 +15,14 @@ export default function useMainContent({
   index: indexFromProps,
   ...rest
 }: MainContentProps) {
+  const { spriteSheetImage } = useSpriteSheetImage();
   const { spriteSheet } = useSpriteSheet();
   const { scale: scaleFromStore } = useScale();
 
   const ref = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { image } = useLoadImage(spriteSheet?.image.url || "");
+  const { image } = useLoadImage(spriteSheetImage?.url || "");
   const dimensions = useDimensions(ref);
   const devicePixelRatio = useDevicePixelRatio();
 
@@ -29,12 +30,12 @@ export default function useMainContent({
     () =>
       animationFromProps.sprites
         .map((s) => {
-          const sprite = spriteSheet?.sprites[s.id];
+          const sprite = spriteSheet[s.id];
           if (!sprite) return undefined;
           return { ...sprite, ...s };
         })
         .filter((s) => !!s),
-    [animationFromProps.sprites, spriteSheet?.sprites],
+    [animationFromProps.sprites, spriteSheet],
   );
 
   const currentSprite = useMemo<(typeof sprites)[number] | undefined>(
@@ -50,7 +51,7 @@ export default function useMainContent({
   useEffect(() => {
     if (!image) return;
     if (!currentSprite) return;
-    if (!spriteSheet) return;
+    if (!spriteSheetImage) return;
 
     const spriteCanvas = spriteCanvasRef.current;
     if (!spriteCanvas) return;
@@ -67,7 +68,7 @@ export default function useMainContent({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
-    context.fillStyle = spriteSheet.image.backgroundColor;
+    context.fillStyle = spriteSheetImage.backgroundColor;
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
     context.scale(scale, scale);
 
@@ -128,7 +129,7 @@ export default function useMainContent({
     image,
     prevSprite,
     scaleFromStore,
-    spriteSheet,
+    spriteSheetImage,
   ]);
 
   return { ...rest, ref, spriteCanvasRef };

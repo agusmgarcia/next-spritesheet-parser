@@ -1,7 +1,11 @@
 import { errors, type Func } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useSpriteSheet } from "#src/store";
+import {
+  useSpriteSheet,
+  useSpriteSheetImage,
+  useSpriteSheetSettings,
+} from "#src/store";
 
 import type SettingsItemProps from "./SettingsItem.types";
 
@@ -27,11 +31,11 @@ export default function useSettingsItem(props: SettingsItemProps) {
 }
 
 function useSideBarItem() {
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
 
   const disabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url,
-    [spriteSheet?.image.url],
+    () => !spriteSheetImage?.url,
+    [spriteSheetImage?.url],
   );
 
   const defaultCollapsed = useMemo<boolean>(() => true, []);
@@ -40,8 +44,10 @@ function useSideBarItem() {
 }
 
 function useSettings() {
-  const { setSpriteSheetSettings, spriteSheet, spriteSheetLoading } =
-    useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { setSpriteSheetSettings, spriteSheetSettings } =
+    useSpriteSheetSettings();
 
   const initialSettings = useMemo(
     () => ({
@@ -56,13 +62,13 @@ function useSettings() {
   const [loading, setLoading] = useState(false);
 
   const settingsLoading = useMemo<boolean>(
-    () => spriteSheetLoading || loading,
-    [loading, spriteSheetLoading],
+    () => loading || spriteSheetImageLoading || spriteSheetLoading,
+    [loading, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const settingsDisabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url || settingsLoading,
-    [settingsLoading, spriteSheet],
+    () => !spriteSheetImage?.url || settingsLoading,
+    [settingsLoading, spriteSheetImage?.url],
   );
 
   const settingsCTADisabled = useMemo<boolean>(
@@ -112,9 +118,9 @@ function useSettings() {
       .then((result) => (!result ? errors.emit("error") : undefined))
       .catch(() =>
         setSettingsValue({
-          delta: spriteSheet?.settings.delta.toString() || "0",
-          maxVariation: spriteSheet?.settings.maxVariation.toString() || "0",
-          minDiversity: spriteSheet?.settings.minDiversity.toString() || "0",
+          delta: spriteSheetSettings?.delta.toString() || "0",
+          maxVariation: spriteSheetSettings?.maxVariation.toString() || "0",
+          minDiversity: spriteSheetSettings?.minDiversity.toString() || "0",
         }),
       )
       .finally(() => setLoading(false));
@@ -124,21 +130,21 @@ function useSettings() {
     settingsValue.delta,
     settingsValue.maxVariation,
     settingsValue.minDiversity,
-    spriteSheet?.settings.delta,
-    spriteSheet?.settings.maxVariation,
-    spriteSheet?.settings.minDiversity,
+    spriteSheetSettings?.delta,
+    spriteSheetSettings?.maxVariation,
+    spriteSheetSettings?.minDiversity,
   ]);
 
   useEffect(() => {
     setSettingsValue({
-      delta: spriteSheet?.settings.delta.toString() || "0",
-      maxVariation: spriteSheet?.settings.maxVariation.toString() || "0",
-      minDiversity: spriteSheet?.settings.minDiversity.toString() || "0",
+      delta: spriteSheetSettings?.delta.toString() || "0",
+      maxVariation: spriteSheetSettings?.maxVariation.toString() || "0",
+      minDiversity: spriteSheetSettings?.minDiversity.toString() || "0",
     });
   }, [
-    spriteSheet?.settings.delta,
-    spriteSheet?.settings.maxVariation,
-    spriteSheet?.settings.minDiversity,
+    spriteSheetSettings?.delta,
+    spriteSheetSettings?.maxVariation,
+    spriteSheetSettings?.minDiversity,
   ]);
 
   return {

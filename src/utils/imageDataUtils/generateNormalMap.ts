@@ -4,7 +4,7 @@ import executeWorker from "./imageDataUtils.executeWorker";
 export default async function generateNormalMap(
   ...[imageData, settings, signal]: [
     ...Parameters<typeof rawGenerateNormalMap>,
-    signal?: AbortSignal,
+    signal: AbortSignal,
   ]
 ): Promise<ReturnType<typeof rawGenerateNormalMap>> {
   return (

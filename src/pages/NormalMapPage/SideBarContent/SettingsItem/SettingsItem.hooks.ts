@@ -1,7 +1,7 @@
 import { type AsyncFunc } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
-import { useNormalMap } from "#src/store";
+import { useNormalMapImage, useNormalMapSettings } from "#src/store";
 
 import type SettingsItemProps from "./SettingsItem.types";
 
@@ -30,7 +30,8 @@ function useSettings() {
   const settingsInvertXId = useId();
   const settingsInvertYId = useId();
 
-  const { normalMap, normalMapLoading, setNormalMapSettings } = useNormalMap();
+  const { normalMapImage, normalMapImageLoading } = useNormalMapImage();
+  const { normalMapSettings, setNormalMapSettings } = useNormalMapSettings();
 
   const initialSettings = useMemo(
     () => ({
@@ -45,16 +46,15 @@ function useSettings() {
   );
 
   const [settingsValue, setSettingsValue] = useState(initialSettings);
-  const [loading, setLoading] = useState(false);
 
   const settingsLoading = useMemo<boolean>(
-    () => normalMapLoading || loading,
-    [loading, normalMapLoading],
+    () => normalMapImageLoading,
+    [normalMapImageLoading],
   );
 
   const settingsDisabled = useMemo<boolean>(
-    () => !normalMap?.image.url || settingsLoading,
-    [normalMap?.image.url, settingsLoading],
+    () => !normalMapImage?.url || settingsLoading,
+    [normalMapImage?.url, settingsLoading],
   );
 
   const cta = useCallback<AsyncFunc<void, [settings: typeof initialSettings]>>(
@@ -68,7 +68,6 @@ function useSettings() {
       )
         return;
 
-      setLoading(true);
       return setNormalMapSettings({
         colorSpace: settings.colorSpace,
         filterRadius: +settings.filterRadius,
@@ -76,7 +75,7 @@ function useSettings() {
         invertY: settings.invertY,
         invertZ: settings.invertZ,
         strength: +settings.strength,
-      }).finally(() => setLoading(false));
+      });
     },
     [setNormalMapSettings, settingsDisabled],
   );
@@ -112,20 +111,20 @@ function useSettings() {
 
   useEffect(() => {
     setSettingsValue({
-      colorSpace: (normalMap?.settings.colorSpace as "linear") || "linear",
-      filterRadius: normalMap?.settings.filterRadius.toString() || "0",
-      invertX: !!normalMap?.settings.invertX,
-      invertY: !!normalMap?.settings.invertY,
-      invertZ: !!normalMap?.settings.invertZ,
-      strength: normalMap?.settings.strength.toString() || "0",
+      colorSpace: (normalMapSettings.colorSpace as "linear") || "linear",
+      filterRadius: normalMapSettings.filterRadius.toString() || "0",
+      invertX: !!normalMapSettings.invertX,
+      invertY: !!normalMapSettings.invertY,
+      invertZ: !!normalMapSettings.invertZ,
+      strength: normalMapSettings.strength.toString() || "0",
     });
   }, [
-    normalMap?.settings.colorSpace,
-    normalMap?.settings.filterRadius,
-    normalMap?.settings.invertX,
-    normalMap?.settings.invertY,
-    normalMap?.settings.invertZ,
-    normalMap?.settings.strength,
+    normalMapSettings.colorSpace,
+    normalMapSettings.filterRadius,
+    normalMapSettings.invertX,
+    normalMapSettings.invertY,
+    normalMapSettings.invertZ,
+    normalMapSettings.strength,
   ]);
 
   return {

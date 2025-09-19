@@ -3,13 +3,18 @@ import { type Func, strings } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
 import type NotificationSlice from "../NotificationSlice";
+import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
 import type SpriteSheetSlice from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import { type Animations } from "./AnimationsSlice.types";
 
 export default class AnimationsSlice extends GlobalSlice<
   Animations,
-  { notification: NotificationSlice; spriteSheet: SpriteSheetSlice }
+  {
+    notification: NotificationSlice;
+    spriteSheet: SpriteSheetSlice;
+    spriteSheetImage: SpriteSheetImageSlice;
+  }
 > {
   constructor() {
     super([]);
@@ -23,12 +28,11 @@ export default class AnimationsSlice extends GlobalSlice<
     super.onInit();
 
     this.slices.spriteSheet.subscribe(
-      (state) => state.response?.sprites,
-      (sprites) => {
-        this.state = !!sprites
-          ? this.state.filter((a) => a.sprites.every((s) => !!sprites[s.id]))
-          : [];
-      },
+      (state) => state.response,
+      (sprites) =>
+        (this.state = this.state.filter((a) =>
+          a.sprites.every((s) => !!sprites[s.id]),
+        )),
     );
   }
 
@@ -36,38 +40,41 @@ export default class AnimationsSlice extends GlobalSlice<
     if (spriteIds.length <= 0)
       throw new Error("You need to select at least one sprite");
 
-    const spriteSheet = this.slices.spriteSheet.response;
-    if (!spriteSheet?.image.url)
+    const spriteSheetImage = this.slices.spriteSheetImage.response;
+    if (!spriteSheetImage)
       throw new Error("You need to provide an image first");
 
+    const spriteSheet = this.slices.spriteSheet.response;
+
     const animation: Animations[number] = {
-      color: spriteSheet.image.backgroundColor,
+      color: spriteSheetImage.backgroundColor,
       fps: 12,
       id: createUUID(),
       name: `New animation ${getLatestAnimationOrder(this.state) + 1}`,
       onion: false,
       playing: spriteIds.length > 1,
       sprites: spriteIds
-        .sort(sortSprites(spriteSheet.sprites))
-        .map(mapSprites(spriteIds, spriteSheet.sprites)),
+        .sort(sortSprites(spriteSheet))
+        .map(mapSprites(spriteIds, spriteSheet)),
     };
 
     this.state = [...this.state, animation];
     return animation.id;
   }
 
-  async remove(id: string): Promise<boolean> {
+  async remove(id: string, signal: AbortSignal): Promise<boolean> {
     const animation = this.state.find((a) => a.id === id);
     if (!animation) return true;
 
     const response = await this.slices.notification.set(
       "warning",
       `Are you sure you want to delete the animation **${animation.name}**? This action cannot be undone`,
+      signal,
     );
     if (!response) return false;
 
     this.state = this.state.filter((a) => a.id !== id);
-    this.slices.notification.set("success", "Animation deleted!");
+    await this.slices.notification.set("success", "Animation deleted!", signal);
     return true;
   }
 
@@ -175,18 +182,15 @@ export default class AnimationsSlice extends GlobalSlice<
     );
   }
 
-  async setAnimations(animations: Animations): Promise<void> {
+  _setAnimations(animations: Animations): void {
     const spriteSheet = this.slices.spriteSheet.response;
-    if (!spriteSheet?.image.url)
-      throw new Error("You need to provide an image first");
 
     const animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet = animations.filter(
-      (a) => a.sprites.some((s) => !spriteSheet.sprites[s.id]),
+      (a) => a.sprites.some((s) => !spriteSheet[s.id]),
     );
 
     if (!!animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length)
-      await this.slices.notification.set(
-        "error",
+      throw new Error(
         strings.replace(
           "The following ${animations?animation:animations}: ${animationsName} ${animations?contains:contain} at least one sprite that is not part of the sprite sheet",
           {
@@ -199,17 +203,12 @@ export default class AnimationsSlice extends GlobalSlice<
         ),
       );
 
-    this.state = animations.filter(
-      (a) =>
-        !animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.find(
-          (b) => a.id === b.id,
-        ),
-    );
+    this.state = animations;
   }
 }
 
 function sortSprites(
-  sprites: SpriteSheetSliceTypes.SpriteSheet["sprites"],
+  sprites: SpriteSheetSliceTypes.SpriteSheet,
 ): Func<number, [spriteId1: string, spriteId2: string]> {
   return (spriteId1, spriteId2) => {
     const sprite1 = sprites[spriteId1];
@@ -224,7 +223,7 @@ function sortSprites(
 
 function mapSprites(
   spriteIds: string[],
-  sprites: SpriteSheetSliceTypes.SpriteSheet["sprites"],
+  sprites: SpriteSheetSliceTypes.SpriteSheet,
 ): Func<Animations[number]["sprites"][number], [spriteId: string]> {
   const spritesSelected = spriteIds.map((spriteId) => ({
     id: spriteId,

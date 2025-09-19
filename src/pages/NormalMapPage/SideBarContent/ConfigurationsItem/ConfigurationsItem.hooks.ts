@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-import { useNormalMap } from "#src/store";
+import { useNormalMapSettings } from "#src/store";
 
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
@@ -30,16 +30,17 @@ function useHome() {
 }
 
 function useName() {
-  const { normalMap, setNormalMapName } = useNormalMap();
+  const { setNormalMapSettings } = useNormalMapSettings();
+  const { normalMapSettings } = useNormalMapSettings();
 
   const nameValue = useMemo<string>(
-    () => normalMap?.image.name || "",
-    [normalMap?.image.name],
+    () => normalMapSettings.name || "",
+    [normalMapSettings.name],
   );
 
   const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => setNormalMapName(event.target.value),
-    [setNormalMapName],
+    (event) => setNormalMapSettings({ name: event.target.value }),
+    [setNormalMapSettings],
   );
 
   return { nameOnChange, nameValue };

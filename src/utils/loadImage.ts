@@ -1,6 +1,6 @@
 export default function loadImage(
   imageURL: string,
-  signal?: AbortSignal,
+  signal: AbortSignal,
 ): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     if (!!signal?.aborted) {

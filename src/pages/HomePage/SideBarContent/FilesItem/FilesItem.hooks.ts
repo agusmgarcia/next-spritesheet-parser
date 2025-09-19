@@ -6,9 +6,11 @@ import {
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  useNormalMap,
+  useNormalMapImage,
   useNotification,
   useSpriteSheet,
+  useSpriteSheetImage,
+  useSpriteSheetSettings,
   useUtils,
 } from "#src/store";
 import { useKeyDown } from "#src/utils";
@@ -47,11 +49,11 @@ export default function useFilesItem(props: FilesItemProps) {
 }
 
 function useSideBarItem() {
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
 
   const disabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url,
-    [spriteSheet?.image.url],
+    () => !spriteSheetImage?.url,
+    [spriteSheetImage?.url],
   );
 
   const defaultCollapsed = useMemo<boolean>(() => false, []);
@@ -61,16 +63,25 @@ function useSideBarItem() {
 
 function useImportFile() {
   const { setNotification } = useNotification();
-  const { importJSON } = useUtils();
-  const { setSpriteSheetImage, spriteSheet, spriteSheetLoading } =
-    useSpriteSheet();
-  const { normalMapLoading } = useNormalMap();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { setSpriteSheetImage, spriteSheetImageLoading } =
+    useSpriteSheetImage();
+  const { normalMapImageLoading } = useNormalMapImage();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
 
   const importFileDisabled = useMemo<boolean>(
-    () => importFileLoading || spriteSheetLoading || normalMapLoading,
-    [importFileLoading, normalMapLoading, spriteSheetLoading],
+    () =>
+      importFileLoading ||
+      spriteSheetImageLoading ||
+      spriteSheetLoading ||
+      normalMapImageLoading,
+    [
+      importFileLoading,
+      normalMapImageLoading,
+      spriteSheetImageLoading,
+      spriteSheetLoading,
+    ],
   );
 
   const importFile = useCallback<AsyncFunc<File | undefined, [accept: string]>>(
@@ -106,27 +117,15 @@ function useImportFile() {
   const importFileOnClick = useCallback<Func>(() => {
     if (importFileDisabled) return;
 
-    importFile(!spriteSheet?.image.url ? "image/*" : "image/*,application/json")
+    importFile("image/*")
       .then((file) => {
         setImportFileLoading(true);
         if (!file) return;
-        return file.type.startsWith("image/")
-          ? setSpriteSheetImage(file)
-          : file
-              .text()
-              .then((text) => JSON.parse(text))
-              .then((jsonFile) => importJSON(jsonFile));
+        return setSpriteSheetImage(file);
       })
       .catch((e) => setNotification("error", errors.getMessage(e) || ""))
       .finally(() => setImportFileLoading(false));
-  }, [
-    importFile,
-    importFileDisabled,
-    importJSON,
-    setNotification,
-    setSpriteSheetImage,
-    spriteSheet?.image.url,
-  ]);
+  }, [importFile, importFileDisabled, setNotification, setSpriteSheetImage]);
 
   useKeyDown("i", importFileOnClick);
 
@@ -138,8 +137,9 @@ function useImportFile() {
 }
 
 function useExportFile() {
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
-  const { normalMap, normalMapLoading } = useNormalMap();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { normalMapImage, normalMapImageLoading } = useNormalMapImage();
   const { exportZip } = useUtils();
 
   const [exportFileLoading, setExportFileLoading] = useState(false);
@@ -147,15 +147,17 @@ function useExportFile() {
   const exportFileDisabled = useMemo<boolean>(
     () =>
       exportFileLoading ||
-      !spriteSheet?.image.url ||
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
       spriteSheetLoading ||
-      !normalMap?.image.url ||
-      normalMapLoading,
+      !normalMapImage?.url ||
+      normalMapImageLoading,
     [
       exportFileLoading,
-      normalMap?.image.url,
-      normalMapLoading,
-      spriteSheet?.image.url,
+      normalMapImage?.url,
+      normalMapImageLoading,
+      spriteSheetImage?.url,
+      spriteSheetImageLoading,
       spriteSheetLoading,
     ],
   );
@@ -185,48 +187,53 @@ function useExportFile() {
 }
 
 function useName() {
-  const { setSpriteSheetName, spriteSheet, spriteSheetLoading } =
-    useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { setSpriteSheetSettings, spriteSheetSettings } =
+    useSpriteSheetSettings();
 
   const nameDisabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url || spriteSheetLoading,
-    [spriteSheet?.image.url, spriteSheetLoading],
+    () =>
+      !spriteSheetImage?.url || spriteSheetImageLoading || spriteSheetLoading,
+    [spriteSheetImage?.url, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const nameValue = useMemo<string>(
-    () => (!!spriteSheet?.image.url ? spriteSheet.image.name : "Sprite sheet"),
-    [spriteSheet],
+    () => (!!spriteSheetImage?.url ? spriteSheetSettings.name : "Sprite sheet"),
+    [spriteSheetImage?.url, spriteSheetSettings.name],
   );
 
   const nameTermination = useMemo<string>(
     () =>
-      !!spriteSheet?.image.type
-        ? `.${spriteSheet.image.type.replace("image/", "")}`
+      !!spriteSheetImage?.type
+        ? `.${spriteSheetImage.type.replace("image/", "")}`
         : ".png",
-    [spriteSheet?.image.type],
+    [spriteSheetImage?.type],
   );
 
   const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => setSpriteSheetName(event.target.value),
-    [setSpriteSheetName],
+    (event) => setSpriteSheetSettings({ name: event.target.value }),
+    [setSpriteSheetSettings],
   );
 
   return { nameDisabled, nameOnChange, nameTermination, nameValue };
 }
 
 function useRemoveSpriteSheet() {
-  const { removeSpriteSheet, spriteSheet, spriteSheetLoading } =
-    useSpriteSheet();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { removeSpriteSheetImage, spriteSheetImage, spriteSheetImageLoading } =
+    useSpriteSheetImage();
 
   const removeSpriteSheetDisabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url || spriteSheetLoading,
-    [spriteSheet?.image.url, spriteSheetLoading],
+    () =>
+      !spriteSheetImage?.url || spriteSheetImageLoading || spriteSheetLoading,
+    [spriteSheetImage?.url, spriteSheetImageLoading, spriteSheetLoading],
   );
 
   const removeSpriteSheetOnClick = useCallback<Func>(() => {
     if (removeSpriteSheetDisabled) return;
-    removeSpriteSheet();
-  }, [removeSpriteSheet, removeSpriteSheetDisabled]);
+    removeSpriteSheetImage();
+  }, [removeSpriteSheetImage, removeSpriteSheetDisabled]);
 
   useKeyDown("r", removeSpriteSheetOnClick);
 

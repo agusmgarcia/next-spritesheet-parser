@@ -20,7 +20,7 @@ export default class SpriteSelectionSlice extends GlobalSlice<
     super.onInit();
 
     this.slices.spriteSheet.subscribe(
-      (state) => state.response?.sprites,
+      (state) => state.response,
       () => this.unselectAll(),
     );
 
@@ -32,7 +32,7 @@ export default class SpriteSelectionSlice extends GlobalSlice<
 
   select(spriteId: string): void {
     const spriteSheet = this.slices.spriteSheet.response;
-    if (!spriteSheet?.sprites[spriteId])
+    if (!spriteSheet[spriteId])
       throw new Error("The selected sprite is not present in the sprite sheet");
 
     if (this.state.includes(spriteId)) return;
@@ -41,7 +41,7 @@ export default class SpriteSelectionSlice extends GlobalSlice<
 
   toggleSelection(spriteId: string): void {
     const spriteSheet = this.slices.spriteSheet.response;
-    if (!spriteSheet?.sprites[spriteId])
+    if (!spriteSheet[spriteId])
       throw new Error("The selected sprite is not present in the sprite sheet");
 
     this.state = this.state.includes(spriteId)

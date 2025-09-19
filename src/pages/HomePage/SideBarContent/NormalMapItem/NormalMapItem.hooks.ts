@@ -1,7 +1,11 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
-import { useNormalMap, useSpriteSheet } from "#src/store";
+import {
+  useNormalMapImage,
+  useSpriteSheet,
+  useSpriteSheetImage,
+} from "#src/store";
 
 import type NormalMapItemProps from "./NormalMapItem.types";
 
@@ -25,11 +29,11 @@ export default function useNormalMapItem(props: NormalMapItemProps) {
 }
 
 function useSideBarItem() {
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
 
   const disabled = useMemo<boolean>(
-    () => !spriteSheet?.image.url,
-    [spriteSheet?.image.url],
+    () => !spriteSheetImage?.url,
+    [spriteSheetImage?.url],
   );
 
   const defaultCollapsed = useMemo<boolean>(() => true, []);
@@ -40,26 +44,29 @@ function useSideBarItem() {
 function useCreateNormalMap() {
   const { push } = useRouter();
 
-  const { spriteSheet, spriteSheetLoading } = useSpriteSheet();
-  const { normalMap, normalMapLoading } = useNormalMap();
+  const { spriteSheetLoading } = useSpriteSheet();
+  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { normalMapImage, normalMapImageLoading } = useNormalMapImage();
 
   const createNormalMapDisabled = useMemo<boolean>(
     () =>
-      !spriteSheet?.image.url ||
+      !spriteSheetImage?.url ||
+      spriteSheetImageLoading ||
       spriteSheetLoading ||
-      !normalMap?.image.url ||
-      normalMapLoading,
+      !normalMapImage?.url ||
+      normalMapImageLoading,
     [
-      normalMap?.image.url,
-      normalMapLoading,
-      spriteSheet?.image.url,
+      normalMapImage?.url,
+      normalMapImageLoading,
+      spriteSheetImage?.url,
+      spriteSheetImageLoading,
       spriteSheetLoading,
     ],
   );
 
   const createNormalMapLoading = useMemo<boolean>(
-    () => normalMapLoading,
-    [normalMapLoading],
+    () => normalMapImageLoading,
+    [normalMapImageLoading],
   );
 
   const createNormalMapOnClick = useCallback<

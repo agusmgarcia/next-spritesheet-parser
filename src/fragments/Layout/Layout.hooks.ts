@@ -4,7 +4,7 @@ import {
 } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useScale, useSpriteSheet } from "#src/store";
+import { useScale, useSpriteSheetImage } from "#src/store";
 import { useKeyDown, useViewport } from "#src/utils";
 
 import type LayoutProps from "./Layout.types";
@@ -58,7 +58,7 @@ function useScroll({
   const prevScaleRef = useRef(1);
   const prevTopLeftPointRef = useRef(INITIAL_PREV_CENTER);
 
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
   const { scale: scaleFromProps } = useScale();
 
   const scale = useMemo<number>(
@@ -71,7 +71,7 @@ function useScroll({
     if (!children) return;
 
     children.scrollTo({ behavior: "instant", left: 0, top: 0 });
-  }, [spriteSheet?.image.url]);
+  }, [spriteSheetImage?.url]);
 
   useEffect(() => {
     const children = childrenRef.current;
@@ -126,13 +126,13 @@ function useScroll({
 function useSidebarCollapsed({
   sideBarCollapsable: sideBarCollapsableFromProps,
 }: Pick<LayoutProps, "sideBarCollapsable">) {
-  const { spriteSheet } = useSpriteSheet();
+  const { spriteSheetImage } = useSpriteSheetImage();
 
   const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
 
   const sideBarHidden = useMemo<boolean>(
-    () => !sideBarCollapsableFromProps || !spriteSheet?.image.url,
-    [sideBarCollapsableFromProps, spriteSheet?.image.url],
+    () => !sideBarCollapsableFromProps || !spriteSheetImage?.url,
+    [sideBarCollapsableFromProps, spriteSheetImage?.url],
   );
 
   const toggleSideBar = useCallback<Func>(() => {
