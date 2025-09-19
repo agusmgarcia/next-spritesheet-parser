@@ -61,9 +61,7 @@ function useSideBarItem() {
 
 function useImportFile() {
   const { setNotification } = useNotification();
-  const { importJSON } = useUtils();
-  const { setSpriteSheetImage, spriteSheet, spriteSheetLoading } =
-    useSpriteSheet();
+  const { setSpriteSheetImage, spriteSheetLoading } = useSpriteSheet();
   const { normalMapLoading } = useNormalMap();
 
   const [importFileLoading, setImportFileLoading] = useState(false);
@@ -106,27 +104,15 @@ function useImportFile() {
   const importFileOnClick = useCallback<Func>(() => {
     if (importFileDisabled) return;
 
-    importFile(!spriteSheet?.image.url ? "image/*" : "image/*,application/json")
+    importFile("image/*")
       .then((file) => {
         setImportFileLoading(true);
         if (!file) return;
-        return file.type.startsWith("image/")
-          ? setSpriteSheetImage(file)
-          : file
-              .text()
-              .then((text) => JSON.parse(text))
-              .then((jsonFile) => importJSON(jsonFile));
+        return setSpriteSheetImage(file);
       })
       .catch((e) => setNotification("error", errors.getMessage(e) || ""))
       .finally(() => setImportFileLoading(false));
-  }, [
-    importFile,
-    importFileDisabled,
-    importJSON,
-    setNotification,
-    setSpriteSheetImage,
-    spriteSheet?.image.url,
-  ]);
+  }, [importFile, importFileDisabled, setNotification, setSpriteSheetImage]);
 
   useKeyDown("i", importFileOnClick);
 

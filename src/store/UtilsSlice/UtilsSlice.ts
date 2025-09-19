@@ -4,12 +4,8 @@ import { downloadZip } from "client-zip";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import type AnimationsSlice from "../AnimationsSlice";
-import { type AnimationsSliceTypes } from "../AnimationsSlice";
 import type NormalMapSlice from "../NormalMapSlice";
-import { type NormalMapSliceTypes } from "../NormalMapSlice";
-import type NotificationSlice from "../NotificationSlice";
 import type SpriteSheetSlice from "../SpriteSheetSlice";
-import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import { type Utils } from "./UtilsSlice.types";
 
 export default class UtilsSlice extends GlobalSlice<
@@ -17,45 +13,11 @@ export default class UtilsSlice extends GlobalSlice<
   {
     animations: AnimationsSlice;
     normalMap: NormalMapSlice;
-    notification: NotificationSlice;
     spriteSheet: SpriteSheetSlice;
   }
 > {
   constructor() {
     super(undefined);
-  }
-
-  async importJSON(jsonFile: {
-    animations: AnimationsSliceTypes.Animations;
-    normalMap: NormalMapSliceTypes.NormalMap;
-    spriteSheet: SpriteSheetSliceTypes.SpriteSheet;
-  }): Promise<void> {
-    if (
-      this.slices.animations.dirty ||
-      this.slices.normalMap.dirty ||
-      this.slices.spriteSheet.dirty
-    ) {
-      const response = await this.slices.notification.set(
-        "warning",
-        "By loading a new JSON file you may loose all your progress. Are you sure you want to continue?",
-      );
-
-      if (!response) return;
-    }
-
-    await this.slices.spriteSheet.setSettings(jsonFile.spriteSheet.settings);
-    this.slices.spriteSheet.setSprites(jsonFile.spriteSheet.sprites);
-    this.slices.spriteSheet.setName(jsonFile.spriteSheet.image.name);
-
-    await this.slices.normalMap.setSettings(jsonFile.normalMap.settings);
-    this.slices.normalMap.setName(jsonFile.normalMap.image.name);
-
-    await this.slices.animations.setAnimations(jsonFile.animations);
-
-    await this.slices.notification.set(
-      "success",
-      "JSON file loaded succesfully!",
-    );
   }
 
   async exportZip(): Promise<File> {

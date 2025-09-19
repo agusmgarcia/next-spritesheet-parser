@@ -122,6 +122,5 @@ export function useSpriteSheet() {
 export function useUtils() {
   return {
     exportZip: useSelector((state) => state.utils.exportZip),
-    importJSON: useSelector((state) => state.utils.importJSON),
   };
 }
