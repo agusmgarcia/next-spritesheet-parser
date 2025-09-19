@@ -7,17 +7,21 @@ import NotificationSlice, {
   type NotificationSliceTypes,
 } from "./NotificationSlice";
 import ScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
-import SpriteSelectionSlice from "./SpriteSelectionSlice";
+import SpriteSelectionSlice, {
+  type SpriteSelectionSliceTypes,
+} from "./SpriteSelectionSlice";
 import SpriteSheetSlice, {
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
-import UtilsSlice from "./UtilsSlice";
+import UtilsSlice, { type UtilsSliceTypes } from "./UtilsSlice";
 
 export type Animation = AnimationsSliceTypes.Animations[number];
 export type NormalMap = NormalMapSliceTypes.NormalMap;
 export type Notification = NotificationSliceTypes.Notification;
+export type SpriteSelection = SpriteSelectionSliceTypes.SpriteSelection;
 export type Scale = ScaleSliceTypes.Scale;
 export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
+export type Utils = UtilsSliceTypes.Utils;
 
 const { useSelector, ...reactStore } = createReactStore({
   middlewares: (callback, slices) =>

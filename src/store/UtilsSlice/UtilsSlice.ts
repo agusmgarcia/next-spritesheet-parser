@@ -10,9 +10,10 @@ import { type NormalMapSliceTypes } from "../NormalMapSlice";
 import type NotificationSlice from "../NotificationSlice";
 import type SpriteSheetSlice from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
+import { type Utils } from "./UtilsSlice.types";
 
 export default class UtilsSlice extends GlobalSlice<
-  undefined,
+  Utils,
   {
     animations: AnimationsSlice;
     normalMap: NormalMapSlice;
