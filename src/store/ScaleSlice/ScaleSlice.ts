@@ -1,11 +1,11 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
-import type SpriteSheetSlice from "../SpriteSheetSlice";
+import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
 import { type Scale } from "./ScaleSlice.types";
 
 export default class ScaleSlice extends GlobalSlice<
   Scale,
-  { spriteSheet: SpriteSheetSlice }
+  { spriteSheetImage: SpriteSheetImageSlice }
 > {
   constructor() {
     super(1);
@@ -18,8 +18,8 @@ export default class ScaleSlice extends GlobalSlice<
   protected override onInit(): void {
     super.onInit();
 
-    this.slices.spriteSheet.subscribe(
-      (state) => state.response?.image.url,
+    this.slices.spriteSheetImage.subscribe(
+      (state) => state.response,
       () => this.set(1),
     );
   }
