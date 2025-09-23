@@ -3,28 +3,28 @@ import { type Rect } from "blob-detection-ts";
 import { v4 as createUUID } from "uuid";
 
 import type rawGenerateNormalMap from "./generateNormalMap.raw";
+import type rawGetHash from "./getHash.raw";
 import type rawGetRects from "./getRects.raw";
 import type rawRemoveBackground from "./removeBackground.raw";
 
 export default function executeWorker(
   type: "GENERATE_NORMAL_MAP",
-  ...args: [
-    ...Parameters<typeof rawGenerateNormalMap>,
-    signal: AbortSignal | undefined,
-  ]
+  ...args: [...Parameters<typeof rawGenerateNormalMap>, signal: AbortSignal]
 ): Promise<ReturnType<typeof rawGenerateNormalMap> | undefined>;
 
 export default function executeWorker(
+  type: "GET_HASH",
+  ...args: [...Parameters<typeof rawGetHash>, signal: AbortSignal]
+): Promise<ReturnType<typeof rawGetHash> | undefined>;
+
+export default function executeWorker(
   type: "GET_RECTS",
-  ...args: [...Parameters<typeof rawGetRects>, signal: AbortSignal | undefined]
+  ...args: [...Parameters<typeof rawGetRects>, signal: AbortSignal]
 ): Promise<ReturnType<typeof rawGetRects> | undefined>;
 
 export default function executeWorker(
   type: "REMOVE_BACKGROUND",
-  ...args: [
-    ...Parameters<typeof rawRemoveBackground>,
-    signal: AbortSignal | undefined,
-  ]
+  ...args: [...Parameters<typeof rawRemoveBackground>, signal: AbortSignal]
 ): Promise<ReturnType<typeof rawRemoveBackground> | undefined>;
 
 export default async function executeWorker(

@@ -33,6 +33,11 @@ async function processEvent(type: string, ...args: any[]): Promise<any> {
         .then((module) => module.default)
         .then((callback) => callback(...(args as Parameters<typeof callback>)));
 
+    case "GET_HASH":
+      return await import("./getHash.raw")
+        .then((module) => module.default)
+        .then((callback) => callback(...(args as Parameters<typeof callback>)));
+
     case "GET_RECTS":
       return await import("./getRects.raw")
         .then((module) => module.default)

@@ -51,11 +51,14 @@ export default class SpriteSheetImageSlice extends ServerSlice<
         )
         .then((file) => URL.createObjectURL(file));
 
+      const id = await imageDataUtils.getHash(rawImageData, signal);
+
       URL.revokeObjectURL(this.response?.url || "");
 
       return {
         backgroundColor,
         height: rawImageData.height,
+        id,
         name: `${image.name.split(".").slice(0, -1).join(".")}`,
         type: image.type,
         url,
