@@ -1,38 +1,72 @@
-import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
+import { ServerSlice } from "@agusmgarcia/react-essentials-store";
+
+import { SpriteSheetParserClient } from "#src/apis";
 
 import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
-import { type NormalMapSettings } from "./NormalMapSettingsSlice.types";
+import {
+  type NormalMapSettings,
+  type Request,
+} from "./NormalMapSettingsSlice.types";
 
-export default class NormalMapSettingsSlice extends GlobalSlice<
-  NormalMapSettings,
+export default class NormalMapSettingsSlice extends ServerSlice<
+  NormalMapSettings | undefined,
+  Request,
   { spriteSheetImage: SpriteSheetImageSlice }
 > {
   constructor() {
-    super({ ...DEFAULT_SETTINGS, name: "" });
+    super(undefined);
   }
 
-  get dirty(): boolean {
-    return (
-      this.state.colorSpace !== DEFAULT_SETTINGS.colorSpace ||
-      this.state.filterRadius !== DEFAULT_SETTINGS.filterRadius ||
-      this.state.invertX !== DEFAULT_SETTINGS.invertX ||
-      this.state.invertY !== DEFAULT_SETTINGS.invertY ||
-      this.state.invertZ !== DEFAULT_SETTINGS.invertZ ||
-      this.state.name !== (this.slices.spriteSheetImage.response?.name || "") ||
-      this.state.strength !== DEFAULT_SETTINGS.strength
+  protected override onBuildRequest(): Request {
+    return {
+      spriteSheetImage: !!this.slices.spriteSheetImage.response
+        ? {
+            id: this.slices.spriteSheetImage.response.id,
+            name: this.slices.spriteSheetImage.response.name,
+          }
+        : undefined,
+    };
+  }
+
+  protected override async onFetch(
+    { spriteSheetImage }: Request,
+    signal: AbortSignal,
+  ): Promise<NormalMapSettings | undefined> {
+    if (!spriteSheetImage) return undefined;
+
+    const state = await SpriteSheetParserClient.INSTANCE.getState(
+      { id: spriteSheetImage.id },
+      signal,
     );
+
+    if (!!state?.normalMapSettings) return state.normalMapSettings;
+
+    return {
+      colorSpace: "linear",
+      filterRadius: 1,
+      invertX: false,
+      invertY: false,
+      invertZ: false,
+      name: spriteSheetImage.name,
+      strength: 1,
+    };
   }
 
   protected override onInit(signal: AbortSignal): void {
     super.onInit(signal);
 
-    this.slices.spriteSheetImage.subscribe(
+    this.subscribe(
       (state) => state.response,
-      (spriteSheetImage) =>
-        (this.state = {
-          ...DEFAULT_SETTINGS,
-          name: spriteSheetImage?.name || "",
-        }),
+      (normalMapSettings, _, signal) =>
+        !!this.slices.spriteSheetImage.response?.id && !!normalMapSettings
+          ? SpriteSheetParserClient.INSTANCE.patchState(
+              {
+                id: this.slices.spriteSheetImage.response.id,
+                normalMapSettings,
+              },
+              signal,
+            )
+          : undefined,
     );
   }
 
@@ -47,15 +81,7 @@ export default class NormalMapSettingsSlice extends GlobalSlice<
         throw new Error("'Strength' must be lower or equal than 10");
     }
 
-    this.state = { ...this.state, ...settings };
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = { ...this.response, ...settings };
   }
 }
-
-const DEFAULT_SETTINGS: Omit<NormalMapSettings, "name"> = {
-  colorSpace: "linear",
-  filterRadius: 1,
-  invertX: false,
-  invertY: false,
-  invertZ: false,
-  strength: 1,
-};

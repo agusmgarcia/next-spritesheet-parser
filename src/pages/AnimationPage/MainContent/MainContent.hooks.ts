@@ -30,7 +30,7 @@ export default function useMainContent({
     () =>
       animationFromProps.sprites
         .map((s) => {
-          const sprite = spriteSheet[s.id];
+          const sprite = spriteSheet?.[s.id];
           if (!sprite) return undefined;
           return { ...sprite, ...s };
         })

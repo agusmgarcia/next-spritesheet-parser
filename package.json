@@ -17,6 +17,7 @@
   "dependencies": {
     "@agusmgarcia/react-essentials-store": "^0.15.0",
     "@agusmgarcia/react-essentials-utils": "^0.10.2",
+    "async-mutex": "^0.5.0",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",
     "invert-color": "^2.0.0",

@@ -2,6 +2,7 @@ import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 import { strings } from "@agusmgarcia/react-essentials-utils";
 import { type MSEROptions, Rect } from "blob-detection-ts";
 
+import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import type AnimationsSlice from "../AnimationsSlice";
@@ -11,7 +12,7 @@ import type SpriteSheetSettingsSlice from "../SpriteSheetSettingsSlice";
 import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
 
 export default class SpriteSheetSlice extends ServerSlice<
-  SpriteSheet,
+  SpriteSheet | undefined,
   Request,
   {
     animations: AnimationsSlice;
@@ -21,54 +22,76 @@ export default class SpriteSheetSlice extends ServerSlice<
   }
 > {
   constructor() {
-    super({});
-  }
-
-  get dirty(): boolean {
-    return (
-      !!Object.keys(this.response).length &&
-      Object.values(this.response).some(
-        (s) => !!Object.keys(s.subsprites).length,
-      )
-    );
+    super(undefined);
   }
 
   protected override onBuildRequest(): Request {
     return {
-      settings: {
-        delta: this.slices.spriteSheetSettings.state.delta,
-        maxVariation: this.slices.spriteSheetSettings.state.maxVariation,
-        minDiversity: this.slices.spriteSheetSettings.state.minDiversity,
-      },
-      spriteSheetImage: this.slices.spriteSheetImage.response,
+      spriteSheetImage: !!this.slices.spriteSheetImage.response
+        ? {
+            id: this.slices.spriteSheetImage.response.id,
+            url: this.slices.spriteSheetImage.response.url,
+          }
+        : undefined,
+      spriteSheetSettings: !!this.slices.spriteSheetSettings.response
+        ? {
+            delta: this.slices.spriteSheetSettings.response.delta,
+            maxVariation: this.slices.spriteSheetSettings.response.maxVariation,
+            minDiversity: this.slices.spriteSheetSettings.response.minDiversity,
+          }
+        : undefined,
     };
   }
 
   protected override async onFetch(
-    { settings, spriteSheetImage }: Request,
+    { spriteSheetImage, spriteSheetSettings }: Request,
     signal: AbortSignal,
-  ): Promise<SpriteSheet> {
-    if (!spriteSheetImage?.url) return {};
+  ): Promise<SpriteSheet | undefined> {
+    if (!spriteSheetImage || !spriteSheetSettings) return undefined;
+
+    const state = await SpriteSheetParserClient.INSTANCE.getState(
+      { id: spriteSheetImage.id },
+      signal,
+    );
+
+    if (!!state?.spriteSheet) return state.spriteSheet;
 
     return await loadImage(spriteSheetImage.url, signal)
       .then((image) => imageDataUtils.get(image))
-      .then((data) => SpriteSheetSlice.getSprites(data, settings, signal));
+      .then((d) => SpriteSheetSlice.getSprites(d, spriteSheetSettings, signal));
+  }
+
+  protected override onInit(signal: AbortSignal): void {
+    super.onInit(signal);
+
+    this.subscribe(
+      (state) => state.response,
+      (spriteSheet, _, signal) =>
+        !!this.slices.spriteSheetImage.response?.id
+          ? SpriteSheetParserClient.INSTANCE.patchState(
+              { id: this.slices.spriteSheetImage.response.id, spriteSheet },
+              signal,
+            )
+          : undefined,
+    );
   }
 
   async mergeSprites(spriteIds: string[], signal: AbortSignal): Promise<void> {
     if (spriteIds.length <= 1)
       throw new Error("You need to select more than one sprite to merge");
 
-    const animationsThatContainAtLeastOneSprite =
-      this.slices.animations.state.filter((a) =>
-        a.sprites.some((s) => spriteIds.includes(s.id)),
-      );
+    const animations = this.slices.animations.response;
+    if (!animations) throw new Error("You need to provide an image first");
+
+    const animationsThatContainAtLeastOneSprite = animations.filter((a) =>
+      a.sprites.some((s) => spriteIds.includes(s.id)),
+    );
 
     if (!!animationsThatContainAtLeastOneSprite.length) {
       const response = await this.slices.notification.set(
         "warning",
         strings.replace(
-          "By merging selected sprites, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          "By merging selected sprites, the ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
           {
             animations: animationsThatContainAtLeastOneSprite.length,
             animationsName: animationsThatContainAtLeastOneSprite
@@ -82,9 +105,11 @@ export default class SpriteSheetSlice extends ServerSlice<
       if (!response) return;
     }
 
+    if (!this.response) return;
+
     const spriteToAdd = SpriteSheetSlice.toSprite(
       spriteIds
-        .map((sId) => this.response[sId])
+        .map((sId) => this.response![sId])
         .filter((s) => !!s)
         .map((s) => new Rect(s.x, s.y, s.width, s.height))
         .reduce((r1, r2) => {
@@ -92,7 +117,7 @@ export default class SpriteSheetSlice extends ServerSlice<
           return r1;
         }),
       spriteIds.reduce((result, spriteId) => {
-        const sprite = this.response[spriteId];
+        const sprite = this.response![spriteId];
         if (!!sprite) result[spriteId] = sprite;
         return result;
       }, {} as SpriteSheet),
@@ -105,15 +130,18 @@ export default class SpriteSheetSlice extends ServerSlice<
   }
 
   async splitSprite(spriteId: string, signal: AbortSignal): Promise<void> {
-    const animationsThatContainTheSprite = this.slices.animations.state.filter(
-      (a) => a.sprites.some((s) => s.id === spriteId),
+    const animations = this.slices.animations.response;
+    if (!animations) throw new Error("You need to provide an image first");
+
+    const animationsThatContainTheSprite = animations.filter((a) =>
+      a.sprites.some((s) => s.id === spriteId),
     );
 
     if (!!animationsThatContainTheSprite.length) {
       const response = await this.slices.notification.set(
         "warning",
         strings.replace(
-          "By splitting selected sprite, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          "By splitting selected sprite, the ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
           {
             animations: animationsThatContainTheSprite.length,
             animationsName: animationsThatContainTheSprite
@@ -127,6 +155,8 @@ export default class SpriteSheetSlice extends ServerSlice<
       if (!response) return;
     }
 
+    if (!this.response) return;
+
     const subspriteIds = Object.keys(this.response[spriteId].subsprites);
     if (!subspriteIds.length) return;
 
@@ -136,10 +166,6 @@ export default class SpriteSheetSlice extends ServerSlice<
     };
 
     delete sprites[spriteId];
-    this.response = sprites;
-  }
-
-  _setSprites(sprites: SpriteSheet): void {
     this.response = sprites;
   }
 

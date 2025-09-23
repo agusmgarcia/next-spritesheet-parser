@@ -10,6 +10,10 @@ export type NormalMapImage = {
 };
 
 export type Request = {
-  settings: Omit<NormalMapSettingsSliceTypes.NormalMapSettings, "name">;
-  spriteSheetImage: SpriteSheetImageSliceTypes.SpriteSheetImage | undefined;
+  normalMapSettings:
+    | Omit<NormalMapSettingsSliceTypes.NormalMapSettings, "name">
+    | undefined;
+  spriteSheetImage:
+    | Pick<SpriteSheetImageSliceTypes.SpriteSheetImage, "name" | "url">
+    | undefined;
 };

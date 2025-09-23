@@ -34,7 +34,7 @@ function useAnimation() {
   const { animations } = useAnimations();
 
   const animation = useMemo<Animation | undefined>(
-    () => animations.find((a) => a.id === params?.id),
+    () => animations?.find((a) => a.id === params?.id),
     [animations, params?.id],
   );
 

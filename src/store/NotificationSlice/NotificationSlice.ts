@@ -17,10 +17,6 @@ export default class NotificationSlice extends GlobalSlice<
     this.resolves = {};
   }
 
-  get dirty(): boolean {
-    return !!this.state;
-  }
-
   set(
     type: Notification["type"],
     message: Notification["message"],

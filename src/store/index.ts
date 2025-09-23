@@ -64,7 +64,8 @@ export const StoreProvider = reactStore.StoreProvider;
 
 export function useAnimations() {
   return {
-    animations: useSelector((state) => state.animations.state),
+    animations: useSelector((state) => state.animations.response),
+    animationsLoading: useSelector((state) => state.animations.state.loading),
     createAnimation: useSelector((state) => state.animations.create),
     deleteAnimation: useSelector((state) => state.animations.remove),
     resetAnimationCenter: useSelector((state) => state.animations.resetCenter),
@@ -91,7 +92,10 @@ export function useNormalMapImage() {
 
 export function useNormalMapSettings() {
   return {
-    normalMapSettings: useSelector((state) => state.normalMapSettings.state),
+    normalMapSettings: useSelector((state) => state.normalMapSettings.response),
+    normalMapSettingsLoading: useSelector(
+      (state) => state.normalMapSettings.state.loading,
+    ),
     setNormalMapSettings: useSelector(
       (state) => state.normalMapSettings.setSettings,
     ),
@@ -161,7 +165,10 @@ export function useSpriteSheetSettings() {
       (state) => state.spriteSheetSettings.setSettings,
     ),
     spriteSheetSettings: useSelector(
-      (state) => state.spriteSheetSettings.state,
+      (state) => state.spriteSheetSettings.response,
+    ),
+    spriteSheetSettingsLoading: useSelector(
+      (state) => state.spriteSheetSettings.state.loading,
     ),
   };
 }

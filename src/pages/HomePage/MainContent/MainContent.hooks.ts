@@ -47,7 +47,7 @@ export default function useMainContent(props: MainContentProps) {
 
   const sprites = useMemo(
     () =>
-      Object.entries(spriteSheet).map(([id, sprite]) => ({
+      Object.entries(spriteSheet || {}).map(([id, sprite]) => ({
         bottom: sprite.y + sprite.height,
         height: sprite.height,
         id,
@@ -251,7 +251,7 @@ export default function useMainContent(props: MainContentProps) {
     context.scale(scale, scale);
 
     spriteSelection.forEach((spriteId) => {
-      const sprite = spriteSheet[spriteId];
+      const sprite = spriteSheet?.[spriteId];
       if (!sprite) return;
       if (spriteHovered === spriteId) return;
 
@@ -262,7 +262,7 @@ export default function useMainContent(props: MainContentProps) {
     });
 
     if (!!spriteHovered) {
-      const sprite = spriteSheet[spriteHovered];
+      const sprite = spriteSheet?.[spriteHovered];
       if (!sprite) return;
 
       context.globalAlpha = spriteSelection.includes(spriteHovered) ? 0.3 : 0.2;
@@ -272,7 +272,7 @@ export default function useMainContent(props: MainContentProps) {
     }
 
     preSelectedSprites?.forEach((spriteId) => {
-      const sprite = spriteSheet[spriteId];
+      const sprite = spriteSheet?.[spriteId];
       if (!sprite) return;
 
       if (spriteSelection.includes(spriteId)) return;

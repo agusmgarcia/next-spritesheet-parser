@@ -1,16 +1,21 @@
-import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
+import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 import { strings } from "@agusmgarcia/react-essentials-utils";
 
+import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import type AnimationsSlice from "../AnimationsSlice";
 import type NotificationSlice from "../NotificationSlice";
 import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
 import SpriteSheetSlice from "../SpriteSheetSlice";
-import { type SpriteSheetSettings } from "./SpriteSheetSettingsSlice.types";
+import {
+  type Request,
+  type SpriteSheetSettings,
+} from "./SpriteSheetSettingsSlice.types";
 
-export default class SpriteSheetSettingsSlice extends GlobalSlice<
-  SpriteSheetSettings,
+export default class SpriteSheetSettingsSlice extends ServerSlice<
+  SpriteSheetSettings | undefined,
+  Request,
   {
     animations: AnimationsSlice;
     notification: NotificationSlice;
@@ -18,28 +23,56 @@ export default class SpriteSheetSettingsSlice extends GlobalSlice<
   }
 > {
   constructor() {
-    super({ ...DEFAULT_SETTINGS, name: "" });
+    super(undefined);
   }
 
-  get dirty(): boolean {
-    return (
-      this.state.delta !== DEFAULT_SETTINGS.delta ||
-      this.state.maxVariation !== DEFAULT_SETTINGS.maxVariation ||
-      this.state.minDiversity !== DEFAULT_SETTINGS.minDiversity ||
-      this.state.name !== (this.slices.spriteSheetImage.response?.name || "")
+  protected override onBuildRequest(): Request {
+    return {
+      spriteSheetImage: !!this.slices.spriteSheetImage.response
+        ? {
+            id: this.slices.spriteSheetImage.response.id,
+            name: this.slices.spriteSheetImage.response.name,
+          }
+        : undefined,
+    };
+  }
+
+  protected override async onFetch(
+    { spriteSheetImage }: Request,
+    signal: AbortSignal,
+  ): Promise<SpriteSheetSettings | undefined> {
+    if (!spriteSheetImage) return undefined;
+
+    const state = await SpriteSheetParserClient.INSTANCE.getState(
+      { id: spriteSheetImage.id },
+      signal,
     );
+
+    if (!!state?.spriteSheetSettings) return state.spriteSheetSettings;
+
+    return {
+      delta: 5,
+      maxVariation: 0.25,
+      minDiversity: 0.2,
+      name: spriteSheetImage.name,
+    };
   }
 
   protected override onInit(signal: AbortSignal): void {
     super.onInit(signal);
 
-    this.slices.spriteSheetImage.subscribe(
+    this.subscribe(
       (state) => state.response,
-      (spriteSheetImage) =>
-        (this.state = {
-          ...DEFAULT_SETTINGS,
-          name: spriteSheetImage?.name || "",
-        }),
+      (spriteSheetSettings, _, signal) =>
+        !!this.slices.spriteSheetImage.response?.id && !!spriteSheetSettings
+          ? SpriteSheetParserClient.INSTANCE.patchState(
+              {
+                id: this.slices.spriteSheetImage.response.id,
+                spriteSheetSettings,
+              },
+              signal,
+            )
+          : undefined,
     );
   }
 
@@ -50,7 +83,8 @@ export default class SpriteSheetSettingsSlice extends GlobalSlice<
     signal: AbortSignal,
   ): Promise<boolean> {
     if ("name" in settings) {
-      this.state = { ...this.state, name: settings.name };
+      if (!this.response) throw new Error("You need to provide an image first");
+      this.response = { ...this.response, name: settings.name };
       return true;
     }
 
@@ -81,16 +115,18 @@ export default class SpriteSheetSettingsSlice extends GlobalSlice<
       .then((data) => SpriteSheetSlice.getSprites(data, settings, signal))
       .then((sprites) => Object.keys(sprites));
 
-    const animationsThatDoesntContainAtLeastOneSprite =
-      this.slices.animations.state.filter((a) =>
-        a.sprites.some((s) => !spriteIds.includes(s.id)),
-      );
+    const animations = this.slices.animations.response;
+    if (!animations) return false;
+
+    const animationsThatDoesntContainAtLeastOneSprite = animations.filter((a) =>
+      a.sprites.some((s) => !spriteIds.includes(s.id)),
+    );
 
     if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
       const response = await this.slices.notification.set(
         "warning",
         strings.replace(
-          "By modifying this settings, the following ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          "By modifying this settings, the ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
           {
             animations: animationsThatDoesntContainAtLeastOneSprite.length,
             animationsName: animationsThatDoesntContainAtLeastOneSprite
@@ -104,13 +140,8 @@ export default class SpriteSheetSettingsSlice extends GlobalSlice<
       if (!response) return false;
     }
 
-    this.state = { ...settings, name: this.state.name };
+    if (!this.response) return false;
+    this.response = { ...settings, name: this.response.name };
     return true;
   }
 }
-
-const DEFAULT_SETTINGS: Omit<SpriteSheetSettings, "name"> = {
-  delta: 5,
-  maxVariation: 0.25,
-  minDiversity: 0.2,
-};

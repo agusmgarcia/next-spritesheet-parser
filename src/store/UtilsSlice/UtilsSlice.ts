@@ -37,10 +37,19 @@ export default class UtilsSlice extends GlobalSlice<
     if (!spriteSheetImage?.url)
       throw new Error("You need to provide an image first");
 
-    const animations = this.slices.animations.state;
-    const normalMapSettings = this.slices.normalMapSettings.state;
+    const animations = this.slices.animations.response;
+    if (!animations) throw new Error("You need to provide an image first");
+
+    const normalMapSettings = this.slices.normalMapSettings.response;
+    if (!normalMapSettings)
+      throw new Error("You need to provide an image first");
+
     const spriteSheet = this.slices.spriteSheet.response;
-    const spriteSheetSettings = this.slices.spriteSheetSettings.state;
+    if (!spriteSheet) throw new Error("You need to provide an image first");
+
+    const spriteSheetSettings = this.slices.spriteSheetSettings.response;
+    if (!spriteSheetSettings)
+      throw new Error("You need to provide an image first");
 
     const { length, rectangles: updatedSpriteSheet } = stackRectangles(
       animations

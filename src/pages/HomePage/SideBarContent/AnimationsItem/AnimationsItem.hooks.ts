@@ -178,7 +178,7 @@ function useSplitSprite() {
       spriteSheetImageLoading ||
       spriteSheetLoading ||
       spriteSelection.length !== 1 ||
-      !Object.keys(spriteSheet[spriteSelection[0]].subsprites || {}).length,
+      !Object.keys(spriteSheet?.[spriteSelection[0]].subsprites || {}).length,
     [
       spriteSheetImage?.url,
       spriteSheetImageLoading,
@@ -218,15 +218,16 @@ function useAnimationSelector() {
     () => [
       {
         id: "sheet",
-        name: !!spriteSheetImage?.url
-          ? spriteSheetSettings.name
-          : "Sprite sheet",
+        name:
+          !!spriteSheetImage?.url && !!spriteSheetSettings?.name
+            ? spriteSheetSettings.name
+            : "Sprite sheet",
       },
-      ...animations
-        .map((a) => ({ id: a.id, name: a.name }))
-        .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
+      ...(animations
+        ?.map((a) => ({ id: a.id, name: a.name }))
+        .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)) || []),
     ],
-    [animations, spriteSheetImage?.url, spriteSheetSettings.name],
+    [animations, spriteSheetImage?.url, spriteSheetSettings?.name],
   );
 
   const animationSelectorOnChange = useCallback<
@@ -236,7 +237,7 @@ function useAnimationSelector() {
   useEffect(() => {
     if (animationSelectorValue === "sheet") return;
 
-    const animation = animations.find((a) => a.id === animationSelectorValue);
+    const animation = animations?.find((a) => a.id === animationSelectorValue);
     if (!animation) return;
 
     push(`/animations/${animation.id}`);

@@ -1,12 +1,9 @@
 import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 
+import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
-import type AnimationsSlice from "../AnimationsSlice";
-import type NormalMapSettingsSlice from "../NormalMapSettingsSlice";
 import type NotificationSlice from "../NotificationSlice";
-import type SpriteSheetSettingsSlice from "../SpriteSheetSettingsSlice";
-import type SpriteSheetSlice from "../SpriteSheetSlice";
 import {
   type Request,
   type SpriteSheetImage,
@@ -15,20 +12,10 @@ import {
 export default class SpriteSheetImageSlice extends ServerSlice<
   SpriteSheetImage | undefined,
   Request,
-  {
-    animations: AnimationsSlice;
-    normalMapSettings: NormalMapSettingsSlice;
-    notification: NotificationSlice;
-    spriteSheet: SpriteSheetSlice;
-    spriteSheetSettings: SpriteSheetSettingsSlice;
-  }
+  { notification: NotificationSlice }
 > {
   constructor() {
     super(undefined);
-  }
-
-  get dirty(): boolean {
-    return !!this.response;
   }
 
   protected override async onFetch(
@@ -55,6 +42,22 @@ export default class SpriteSheetImageSlice extends ServerSlice<
 
       URL.revokeObjectURL(this.response?.url || "");
 
+      const state = await SpriteSheetParserClient.INSTANCE.getState(
+        { id },
+        signal,
+      );
+
+      if (!!state) {
+        const response = await this.slices.notification.set(
+          "warning",
+          "A backup copy was found. Do you want to load it and resume your work?",
+          signal,
+        );
+
+        if (!response)
+          await SpriteSheetParserClient.INSTANCE.deleteState({ id }, signal);
+      }
+
       return {
         backgroundColor,
         height: rawImageData.height,
@@ -70,40 +73,24 @@ export default class SpriteSheetImageSlice extends ServerSlice<
   }
 
   async removeImage(signal: AbortSignal): Promise<void> {
-    if (
-      this.slices.animations.dirty ||
-      this.slices.normalMapSettings.dirty ||
-      this.slices.spriteSheet.dirty ||
-      this.slices.spriteSheetSettings.dirty
-    ) {
-      const response = await this.slices.notification.set(
-        "warning",
-        "By removing the image you may loose all your progress. Are you sure you want to continue?",
+    const response = await this.slices.notification.set(
+      "warning",
+      "By removing the image you may loose all your progress. Are you sure you want to continue?",
+      signal,
+    );
+
+    if (!response) return;
+
+    if (!!this.response?.id)
+      await SpriteSheetParserClient.INSTANCE.deleteState(
+        { id: this.response.id },
         signal,
       );
-
-      if (!response) return;
-    }
 
     this.response = undefined;
   }
 
   async setImage(image: File, signal: AbortSignal): Promise<void> {
-    if (
-      this.slices.animations.dirty ||
-      this.slices.normalMapSettings.dirty ||
-      this.slices.spriteSheet.dirty ||
-      this.slices.spriteSheetSettings.dirty
-    ) {
-      const response = await this.slices.notification.set(
-        "warning",
-        "By loading a new image you may loose all your progress. Are you sure you want to continue?",
-        signal,
-      );
-
-      if (!response) return;
-    }
-
     await this.reload(image, signal);
   }
 }

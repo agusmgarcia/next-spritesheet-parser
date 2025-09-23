@@ -39,9 +39,9 @@ function useAnimationSelector({
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
       { id: "sheet", name: spriteSheetImage?.name || "Sprite sheet" },
-      ...animations
-        .map((a) => ({ id: a.id, name: a.name }))
-        .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)),
+      ...(animations
+        ?.map((a) => ({ id: a.id, name: a.name }))
+        .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)) || []),
     ],
     [animations, spriteSheetImage?.name],
   );
@@ -60,7 +60,7 @@ function useAnimationSelector({
       return;
     }
 
-    const animation = animations.find((a) => a.id === animationSelectorValue);
+    const animation = animations?.find((a) => a.id === animationSelectorValue);
     if (!animation) return;
 
     push(`/animations/${animation.id}`);

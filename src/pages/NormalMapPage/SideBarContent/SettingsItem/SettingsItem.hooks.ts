@@ -111,20 +111,20 @@ function useSettings() {
 
   useEffect(() => {
     setSettingsValue({
-      colorSpace: (normalMapSettings.colorSpace as "linear") || "linear",
-      filterRadius: normalMapSettings.filterRadius.toString() || "0",
-      invertX: !!normalMapSettings.invertX,
-      invertY: !!normalMapSettings.invertY,
-      invertZ: !!normalMapSettings.invertZ,
-      strength: normalMapSettings.strength.toString() || "0",
+      colorSpace: (normalMapSettings?.colorSpace as "linear") || "linear",
+      filterRadius: normalMapSettings?.filterRadius.toString() || "0",
+      invertX: !!normalMapSettings?.invertX,
+      invertY: !!normalMapSettings?.invertY,
+      invertZ: !!normalMapSettings?.invertZ,
+      strength: normalMapSettings?.strength.toString() || "0",
     });
   }, [
-    normalMapSettings.colorSpace,
-    normalMapSettings.filterRadius,
-    normalMapSettings.invertX,
-    normalMapSettings.invertY,
-    normalMapSettings.invertZ,
-    normalMapSettings.strength,
+    normalMapSettings?.colorSpace,
+    normalMapSettings?.filterRadius,
+    normalMapSettings?.invertX,
+    normalMapSettings?.invertY,
+    normalMapSettings?.invertZ,
+    normalMapSettings?.strength,
   ]);
 
   return {

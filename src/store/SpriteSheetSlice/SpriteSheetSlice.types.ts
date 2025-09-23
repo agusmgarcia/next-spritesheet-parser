@@ -1,18 +1,17 @@
+import { type SpriteSheetParserClientTypes } from "#src/apis";
+
 import { type SpriteSheetImageSliceTypes } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSliceTypes } from "../SpriteSheetSettingsSlice";
 
-export type SpriteSheet = Record<
-  string,
-  {
-    height: number;
-    subsprites: SpriteSheet;
-    width: number;
-    x: number;
-    y: number;
-  }
+export type SpriteSheet = NonNullable<
+  SpriteSheetParserClientTypes.GetStateResponse["spriteSheet"]
 >;
 
 export type Request = {
-  settings: Omit<SpriteSheetSettingsSliceTypes.SpriteSheetSettings, "name">;
-  spriteSheetImage: SpriteSheetImageSliceTypes.SpriteSheetImage | undefined;
+  spriteSheetImage:
+    | Pick<SpriteSheetImageSliceTypes.SpriteSheetImage, "id" | "url">
+    | undefined;
+  spriteSheetSettings:
+    | Omit<SpriteSheetSettingsSliceTypes.SpriteSheetSettings, "name">
+    | undefined;
 };

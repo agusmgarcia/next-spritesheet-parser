@@ -34,8 +34,8 @@ function useName() {
   const { normalMapSettings } = useNormalMapSettings();
 
   const nameValue = useMemo<string>(
-    () => normalMapSettings.name || "",
-    [normalMapSettings.name],
+    () => normalMapSettings?.name || "",
+    [normalMapSettings?.name],
   );
 
   const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(

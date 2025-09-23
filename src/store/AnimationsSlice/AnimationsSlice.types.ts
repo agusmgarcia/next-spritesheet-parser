@@ -1,18 +1,13 @@
-export type Animations = {
-  color: string;
-  fps: number;
-  id: string;
-  name: string;
-  onion: boolean;
-  playing: boolean;
-  sprites: {
-    center: {
-      initialOffsetX: number;
-      initialOffsetY: number;
-      offsetX: number;
-      offsetY: number;
-      visible: boolean;
-    };
-    id: string;
-  }[];
-}[];
+import { type SpriteSheetParserClientTypes } from "#src/apis";
+
+import { type SpriteSheetImageSliceTypes } from "../SpriteSheetImageSlice";
+
+export type Animations = NonNullable<
+  SpriteSheetParserClientTypes.GetStateResponse["animations"]
+>;
+
+export type Request = {
+  spriteSheetImage:
+    | Pick<SpriteSheetImageSliceTypes.SpriteSheetImage, "id">
+    | undefined;
+};

@@ -11,10 +11,6 @@ export default class ScaleSlice extends GlobalSlice<
     super(1);
   }
 
-  get dirty(): boolean {
-    return this.state !== 1;
-  }
-
   protected override onInit(signal: AbortSignal): void {
     super.onInit(signal);
 

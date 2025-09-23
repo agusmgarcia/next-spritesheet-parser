@@ -1,9 +1,13 @@
-export type NormalMapSettings = {
-  colorSpace: "linear" | "sRGB";
-  filterRadius: number;
-  invertX: boolean;
-  invertY: boolean;
-  invertZ: boolean;
-  name: string;
-  strength: number;
+import { type SpriteSheetParserClientTypes } from "#src/apis";
+
+import { type SpriteSheetImageSliceTypes } from "../SpriteSheetImageSlice";
+
+export type NormalMapSettings = NonNullable<
+  SpriteSheetParserClientTypes.GetStateResponse["normalMapSettings"]
+>;
+
+export type Request = {
+  spriteSheetImage:
+    | Pick<SpriteSheetImageSliceTypes.SpriteSheetImage, "id" | "name">
+    | undefined;
 };

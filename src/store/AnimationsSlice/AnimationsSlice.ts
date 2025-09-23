@@ -1,15 +1,18 @@
-import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
-import { type Func, strings } from "@agusmgarcia/react-essentials-utils";
+import { ServerSlice } from "@agusmgarcia/react-essentials-store";
+import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
+
+import { SpriteSheetParserClient } from "#src/apis";
 
 import type NotificationSlice from "../NotificationSlice";
 import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
 import type SpriteSheetSlice from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import { type Animations } from "./AnimationsSlice.types";
+import { type Animations, type Request } from "./AnimationsSlice.types";
 
-export default class AnimationsSlice extends GlobalSlice<
-  Animations,
+export default class AnimationsSlice extends ServerSlice<
+  Animations | undefined,
+  Request,
   {
     notification: NotificationSlice;
     spriteSheet: SpriteSheetSlice;
@@ -17,11 +20,31 @@ export default class AnimationsSlice extends GlobalSlice<
   }
 > {
   constructor() {
-    super([]);
+    super(undefined);
   }
 
-  get dirty(): boolean {
-    return !!this.state.length;
+  protected override onBuildRequest(): Request {
+    return {
+      spriteSheetImage: !!this.slices.spriteSheetImage.response
+        ? { id: this.slices.spriteSheetImage.response.id }
+        : undefined,
+    };
+  }
+
+  protected override async onFetch(
+    { spriteSheetImage }: Request,
+    signal: AbortSignal,
+  ): Promise<Animations | undefined> {
+    if (!spriteSheetImage) return undefined;
+
+    const state = await SpriteSheetParserClient.INSTANCE.getState(
+      { id: spriteSheetImage.id },
+      signal,
+    );
+
+    if (!!state?.animations) return state.animations;
+
+    return [];
   }
 
   protected override onInit(signal: AbortSignal): void {
@@ -30,9 +53,20 @@ export default class AnimationsSlice extends GlobalSlice<
     this.slices.spriteSheet.subscribe(
       (state) => state.response,
       (sprites) =>
-        (this.state = this.state.filter((a) =>
-          a.sprites.every((s) => !!sprites[s.id]),
+        (this.response = this.response?.filter((a) =>
+          a.sprites.every((s) => !!sprites?.[s.id]),
         )),
+    );
+
+    this.subscribe(
+      (state) => state.response,
+      (animations, _, signal) =>
+        !!this.slices.spriteSheetImage.response?.id && !!animations
+          ? SpriteSheetParserClient.INSTANCE.patchState(
+              { animations, id: this.slices.spriteSheetImage.response.id },
+              signal,
+            )
+          : undefined,
     );
   }
 
@@ -45,12 +79,15 @@ export default class AnimationsSlice extends GlobalSlice<
       throw new Error("You need to provide an image first");
 
     const spriteSheet = this.slices.spriteSheet.response;
+    if (!spriteSheet) throw new Error("You need to provide an image first");
+
+    if (!this.response) throw new Error("You need to provide an image first");
 
     const animation: Animations[number] = {
       color: spriteSheetImage.backgroundColor,
       fps: 12,
       id: createUUID(),
-      name: `New animation ${getLatestAnimationOrder(this.state) + 1}`,
+      name: `New animation ${getLatestAnimationOrder(this.response) + 1}`,
       onion: false,
       playing: spriteIds.length > 1,
       sprites: spriteIds
@@ -58,12 +95,12 @@ export default class AnimationsSlice extends GlobalSlice<
         .map(mapSprites(spriteIds, spriteSheet)),
     };
 
-    this.state = [...this.state, animation];
+    this.response = [...this.response, animation];
     return animation.id;
   }
 
   async remove(id: string, signal: AbortSignal): Promise<boolean> {
-    const animation = this.state.find((a) => a.id === id);
+    const animation = this.response?.find((a) => a.id === id);
     if (!animation) return true;
 
     const response = await this.slices.notification.set(
@@ -73,13 +110,16 @@ export default class AnimationsSlice extends GlobalSlice<
     );
     if (!response) return false;
 
-    this.state = this.state.filter((a) => a.id !== id);
+    if (!this.response) return false;
+    this.response = this.response.filter((a) => a.id !== id);
+
     await this.slices.notification.set("success", "Animation deleted!", signal);
     return true;
   }
 
   setFPS(id: string, fps: React.SetStateAction<number>): void {
-    this.state = this.state.map((a) =>
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -90,11 +130,17 @@ export default class AnimationsSlice extends GlobalSlice<
   }
 
   setColor(id: string, color: string): void {
-    this.state = this.state.map((a) => (a.id === id ? { ...a, color } : a));
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
+      a.id === id ? { ...a, color } : a,
+    );
   }
 
   setName(id: string, name: string): void {
-    this.state = this.state.map((a) => (a.id === id ? { ...a, name } : a));
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
+      a.id === id ? { ...a, name } : a,
+    );
   }
 
   setCenter(
@@ -113,7 +159,8 @@ export default class AnimationsSlice extends GlobalSlice<
           [center: Animations[number]["sprites"][number]["center"]]
         >,
   ): void {
-    this.state = this.state.map((a) =>
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -147,7 +194,8 @@ export default class AnimationsSlice extends GlobalSlice<
   }
 
   toggleCenterVisibility(id: string): void {
-    this.state = this.state.map((a) =>
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -161,7 +209,8 @@ export default class AnimationsSlice extends GlobalSlice<
   }
 
   setOnion(id: string, onion: React.SetStateAction<boolean>): void {
-    this.state = this.state.map((a) =>
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -172,7 +221,8 @@ export default class AnimationsSlice extends GlobalSlice<
   }
 
   setPlaying(id: string, playing: React.SetStateAction<boolean>): void {
-    this.state = this.state.map((a) =>
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -180,30 +230,6 @@ export default class AnimationsSlice extends GlobalSlice<
           }
         : a,
     );
-  }
-
-  _setAnimations(animations: Animations): void {
-    const spriteSheet = this.slices.spriteSheet.response;
-
-    const animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet = animations.filter(
-      (a) => a.sprites.some((s) => !spriteSheet[s.id]),
-    );
-
-    if (!!animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length)
-      throw new Error(
-        strings.replace(
-          "The following ${animations?animation:animations}: ${animationsName} ${animations?contains:contain} at least one sprite that is not part of the sprite sheet",
-          {
-            animations:
-              animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet.length,
-            animationsName: animationsWhoseAtLeastOneSpriteIsNotInSpriteSheet
-              .map((a) => `**"${a.name}"**`)
-              .join(", "),
-          },
-        ),
-      );
-
-    this.state = animations;
   }
 }
 
