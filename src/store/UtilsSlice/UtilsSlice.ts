@@ -1,7 +1,8 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
+import { filters } from "@agusmgarcia/react-essentials-utils";
 import { downloadZip } from "client-zip";
 
-import { imageDataUtils, loadImage } from "#src/utils";
+import { imageDataUtils, loadImage, stackRectangles } from "#src/utils";
 
 import type AnimationsSlice from "../AnimationsSlice";
 import type NormalMapImageSlice from "../NormalMapImageSlice";
@@ -9,6 +10,7 @@ import type NormalMapSettingsSlice from "../NormalMapSettingsSlice";
 import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
 import type SpriteSheetSettingsSlice from "../SpriteSheetSettingsSlice";
 import type SpriteSheetSlice from "../SpriteSheetSlice";
+import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import { type Utils } from "./UtilsSlice.types";
 
 export default class UtilsSlice extends GlobalSlice<
@@ -40,14 +42,57 @@ export default class UtilsSlice extends GlobalSlice<
     const spriteSheet = this.slices.spriteSheet.response;
     const spriteSheetSettings = this.slices.spriteSheetSettings.state;
 
+    const { length, rectangles: updatedSpriteSheet } = stackRectangles(
+      animations
+        .flatMap((a) => a.sprites)
+        .map((sprites) => sprites.id)
+        .filter(filters.distinct)
+        .map((id) => ({
+          ...spriteSheet[id],
+          id,
+          xOld: spriteSheet[id].x,
+          yOld: spriteSheet[id].y,
+        })),
+    );
+
+    const imageData = await createImageData(
+      spriteSheetImage.url,
+      updatedSpriteSheet,
+      length,
+      signal,
+    );
+
     return await Promise.all([
       fetch(
         "data:text/json;charset=utf-8," +
           encodeURIComponent(
             JSON.stringify({
-              animations,
-              spriteSheet,
-              version: process.env.APP_VERSION || "0.0.0",
+              animations: animations.reduce(
+                (result, animation) => {
+                  result[animation.id] = {
+                    fps: animation.fps,
+                    sprites: animation.sprites.map((s) => ({
+                      id: s.id,
+                      offsetX: s.center.offsetX,
+                      offsetY: s.center.offsetY,
+                    })),
+                  };
+                  return result;
+                },
+                {} as Record<string, any>,
+              ),
+              spriteSheet: updatedSpriteSheet.reduce(
+                (result, sprite) => {
+                  result[sprite.id] = {
+                    height: sprite.height,
+                    width: sprite.width,
+                    x: sprite.x,
+                    y: sprite.y,
+                  };
+                  return result;
+                },
+                {} as Record<string, any>,
+              ),
             }),
           ),
         { signal },
@@ -59,27 +104,66 @@ export default class UtilsSlice extends GlobalSlice<
           name: `${spriteSheetSettings.name}.json`,
         })),
 
-      loadImage(spriteSheetImage.url, signal)
-        .then(imageDataUtils.get)
-        .then((data) =>
+      imageDataUtils.createFile(
+        imageData,
+        `${spriteSheetSettings.name}.${spriteSheetImage.type.replace("image/", "")}`,
+        spriteSheetImage.type,
+        signal,
+      ),
+
+      imageDataUtils
+        .generateNormalMap(imageData, normalMapSettings, signal)
+        .then((normalMapImageData) =>
           imageDataUtils.createFile(
-            data,
-            `${spriteSheetSettings.name}.${spriteSheetImage.type.replace("image/", "")}`,
-            spriteSheetImage.type,
+            normalMapImageData,
+            `${normalMapSettings.name}.normal.png`,
+            "image/png",
             signal,
           ),
         ),
-
-      fetch(normalMapImage.url, { signal })
-        .then((response) => response.blob())
-        .then((blob) => ({
-          input: blob,
-          lastModified: new Date(),
-          name: `${normalMapSettings.name}.normal.png`,
-        })),
     ])
       .then(downloadZip)
       .then((result) => result.blob())
       .then((blob) => new File([blob], `${spriteSheetSettings.name}.zip`));
   }
+}
+
+async function createImageData(
+  spriteSheetImageURL: string,
+  sprites: (SpriteSheetSliceTypes.SpriteSheet[string] & {
+    xOld: number;
+    yOld: number;
+  })[],
+  length: number,
+  signal: AbortSignal,
+): Promise<ImageData> {
+  const canvas = document.createElement("canvas");
+
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Context is not available");
+
+  context.imageSmoothingEnabled = false;
+  context.imageSmoothingQuality = "high";
+
+  canvas.width = length;
+  canvas.height = length;
+  context.clearRect(0, 0, canvas.width, canvas.height);
+
+  const image = await loadImage(spriteSheetImageURL, signal);
+
+  for (const sprite of sprites) {
+    context.drawImage(
+      image,
+      sprite.xOld,
+      sprite.yOld,
+      sprite.width,
+      sprite.height,
+      sprite.x,
+      sprite.y,
+      sprite.width,
+      sprite.height,
+    );
+  }
+
+  return context.getImageData(0, 0, canvas.width, canvas.height);
 }

@@ -15,12 +15,12 @@
     "test": "react-essentials-commands-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-essentials-store": "file:../react-essentials/packages/react-essentials-store/agusmgarcia-react-essentials-store-0.14.0-rc12.tgz",
+    "@agusmgarcia/react-essentials-store": "^0.14.0",
     "@agusmgarcia/react-essentials-utils": "^0.10.2",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",
     "invert-color": "^2.0.0",
-    "next": "^15.5.2",
+    "next": "^15.5.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-markdown": "^10.1.0",
