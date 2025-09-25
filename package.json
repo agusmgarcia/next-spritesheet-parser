@@ -15,7 +15,7 @@
     "test": "react-essentials-commands-test"
   },
   "dependencies": {
-    "@agusmgarcia/react-essentials-store": "^0.14.0",
+    "@agusmgarcia/react-essentials-store": "^0.15.0",
     "@agusmgarcia/react-essentials-utils": "^0.10.2",
     "blob-detection-ts": "^0.0.8",
     "client-zip": "^2.5.0",

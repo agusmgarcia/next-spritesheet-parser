@@ -15,8 +15,8 @@ export default class ScaleSlice extends GlobalSlice<
     return this.state !== 1;
   }
 
-  protected override onInit(): void {
-    super.onInit();
+  protected override onInit(signal: AbortSignal): void {
+    super.onInit(signal);
 
     this.slices.spriteSheetImage.subscribe(
       (state) => state.response,
