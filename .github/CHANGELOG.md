@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.28.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.28.0)
+
+> September 27, 2025
+
+### Features ✅
+
+- save progress automatically
+- add image id
+- compress output files
+- prevent uploading a json file
+
+### Chores ⚙️
+
+- bump dependencies
+- **store**: add missing types
+
 ## [v0.27.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.27.0)
 
 > September 5, 2025
