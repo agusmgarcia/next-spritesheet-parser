@@ -40,6 +40,14 @@ export default class UtilsSlice extends GlobalSlice<
     const animations = this.slices.animations.response;
     if (!animations) throw new Error("You need to provide an image first");
 
+    const repeatedAnimationName = animations.find((a1) =>
+      animations.some((a2) => a1 !== a2 && a1.name === a2.name),
+    )?.name;
+    if (!!repeatedAnimationName)
+      throw new Error(
+        `There is already an animation called **${repeatedAnimationName}**`,
+      );
+
     const normalMapSettings = this.slices.normalMapSettings.response;
     if (!normalMapSettings)
       throw new Error("You need to provide an image first");
@@ -81,7 +89,7 @@ export default class UtilsSlice extends GlobalSlice<
             JSON.stringify({
               animations: animations.reduce(
                 (result, animation) => {
-                  result[animation.id] = {
+                  result[animation.name] = {
                     fps: animation.fps,
                     sprites: animation.sprites.map((s) => ({
                       id: s.id,
