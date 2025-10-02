@@ -136,7 +136,7 @@ export default class UtilsSlice extends GlobalSlice<
         .then((normalMapImageData) =>
           imageDataUtils.createFile(
             normalMapImageData,
-            `${normalMapSettings.name}.normal.png`,
+            `${normalMapSettings.name || spriteSheetSettings.name}.normal.png`,
             "image/png",
             signal,
           ),
