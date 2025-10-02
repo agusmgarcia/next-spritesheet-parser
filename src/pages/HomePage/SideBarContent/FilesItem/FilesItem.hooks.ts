@@ -201,8 +201,8 @@ function useName() {
 
   const nameValue = useMemo<string>(
     () =>
-      !!spriteSheetImage?.url && !!spriteSheetSettings?.name
-        ? spriteSheetSettings.name
+      !!spriteSheetImage?.url
+        ? spriteSheetSettings?.name || ""
         : "Sprite sheet",
     [spriteSheetImage?.url, spriteSheetSettings?.name],
   );

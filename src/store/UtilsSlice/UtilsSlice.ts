@@ -51,6 +51,9 @@ export default class UtilsSlice extends GlobalSlice<
     if (!spriteSheetSettings)
       throw new Error("You need to provide an image first");
 
+    if (!spriteSheetSettings.name)
+      throw new Error("The name of the sprite sheet cannot be empty");
+
     const { length, rectangles: updatedSpriteSheet } = stackRectangles(
       animations
         .flatMap((a) => a.sprites)
