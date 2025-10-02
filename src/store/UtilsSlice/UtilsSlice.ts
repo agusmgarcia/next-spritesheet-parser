@@ -28,7 +28,7 @@ export default class UtilsSlice extends GlobalSlice<
     super(undefined);
   }
 
-  async exportZip(signal: AbortSignal): Promise<File> {
+  async exportZip(signal: AbortSignal): Promise<File | undefined> {
     const normalMapImage = this.slices.normalMapImage.response;
     if (!normalMapImage?.url)
       throw new Error("You need to provide an image first");

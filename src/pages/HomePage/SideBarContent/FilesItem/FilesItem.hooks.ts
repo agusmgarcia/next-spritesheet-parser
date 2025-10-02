@@ -168,6 +168,7 @@ function useExportFile() {
     setExportFileLoading(true);
     exportZip()
       .then((file) => {
+        if (!file) return;
         const anchor = document.createElement("a");
         const href = URL.createObjectURL(file);
         anchor.href = href;

@@ -39,12 +39,11 @@ export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
 export type Utils = UtilsSliceTypes.Utils;
 
 const { useSelector, ...reactStore } = createReactStore({
-  middlewares: (callback, slices) =>
+  middlewares: (callback, slices, signal) =>
     errors.handle(callback, (error) =>
-      slices.notification.set(
-        "error",
-        errors.getMessage(error) || "Unexpected error",
-      ),
+      slices.notification
+        .set("error", errors.getMessage(error) || "Unexpected error", signal)
+        .then(() => undefined),
     ),
   slices: {
     animations: AnimationsSlice,
