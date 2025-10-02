@@ -119,14 +119,12 @@ export default class AnimationsSlice extends ServerSlice<
 
   setFPS(id: string, fps: React.SetStateAction<number>): void {
     if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            fps: Math.max(fps instanceof Function ? fps(a.fps) : fps, 1),
-          }
-        : a,
-    );
+    this.response = this.response.map((a) => {
+      if (a.id !== id) return a;
+
+      fps = fps instanceof Function ? fps(a.fps) : fps;
+      return { ...a, fps: !isNaN(fps) ? Math.max(fps, 1) : 1 };
+    });
   }
 
   setColor(id: string, color: string): void {
