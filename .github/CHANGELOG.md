@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.29.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.29.0)
+
+> October 2, 2025
+
+### Features ✅
+
+- add 1px of space between sprites
+- export normal map using sprite sheet name when no present
+- group animations by name instead of id
+- **store**: pass signal into the middlewares
+- set parameters in errors to bold
+
+### Fixes 🎯
+
+- **AnimationPage**: limit fps to 1
+- **HomePage**: prevent setting default sprite sheet name
+
 ## [v0.28.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.28.0)
 
 > September 27, 2025
