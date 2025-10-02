@@ -3,21 +3,26 @@ import { sorts } from "@agusmgarcia/react-essentials-utils";
 export default function stackRectangles<TRectangle extends BaseRectangle>(
   input: TRectangle[],
 ): { length: number; rectangles: (TRectangle & Rectangle)[] } {
-  const rectangles = input
+  const aux = input
+    .map((r) => ({ ...r, height: r.height + 1, width: r.width + 1 }))
     .map((r) => ({ ...r, area: r.width * r.height }))
     .sort((r1, r2) => sorts.byNumberDesc(r1.area, r2.area));
 
   let length = 1;
   let image = new Array<boolean>(length * length).fill(true);
 
-  const output: (TRectangle & Rectangle)[] = [];
+  const rectangles: (TRectangle & Rectangle)[] = [];
 
-  for (const rect of rectangles) {
+  for (const rect of aux) {
     while (true) {
-      const updatedRect = insertRectangle(rect, image, length);
+      const updRect = insertRectangle(rect, image, length);
 
-      if (!!updatedRect) {
-        output.push(updatedRect);
+      if (!!updRect) {
+        rectangles.push({
+          ...updRect,
+          height: updRect.height - 1,
+          width: updRect.width - 1,
+        });
         break;
       }
 
@@ -26,7 +31,7 @@ export default function stackRectangles<TRectangle extends BaseRectangle>(
     }
   }
 
-  return { length, rectangles: output };
+  return { length, rectangles };
 }
 
 type BaseRectangle = { height: number; width: number };
