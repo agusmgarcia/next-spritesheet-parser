@@ -93,22 +93,22 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
       throw new Error("You need to provide an image first");
 
     if (settings.delta < 1)
-      throw new Error("'Delta' must be greater or equal than 1");
+      throw new Error("**Delta** must be greater or equal than 1");
 
     if (settings.delta > 20)
-      throw new Error("'Delta' must be lower or equal than 20");
+      throw new Error("**Delta** must be lower or equal than 20");
 
     if (settings.maxVariation < 0.01)
-      throw new Error("'Max variation' must be greater or equal than 0.01");
+      throw new Error("**Max variation** must be greater or equal than 0.01");
 
     if (settings.maxVariation > 1)
-      throw new Error("'Max variation' must be lower or equal than 1");
+      throw new Error("**Max variation** must be lower or equal than 1");
 
     if (settings.minDiversity < 0.01)
-      throw new Error("'Min diversity' must be greater or equal than 0.01");
+      throw new Error("**Min diversity** must be greater or equal than 0.01");
 
     if (settings.minDiversity > 1)
-      throw new Error("'Min diversity' must be lower or equal than 1");
+      throw new Error("**Min diversity** must be lower or equal than 1");
 
     const spriteIds = await loadImage(spriteSheetImage.url, signal)
       .then(imageDataUtils.get)

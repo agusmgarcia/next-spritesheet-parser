@@ -75,10 +75,10 @@ export default class NormalMapSettingsSlice extends ServerSlice<
   ): void {
     if (!("name" in settings)) {
       if (settings.strength < 1)
-        throw new Error("'Strength' must be greater or equal than 1");
+        throw new Error("**Strength** must be greater or equal than 1");
 
       if (settings.strength > 10)
-        throw new Error("'Strength' must be lower or equal than 10");
+        throw new Error("**Strength** must be lower or equal than 10");
     }
 
     if (!this.response) throw new Error("You need to provide an image first");
