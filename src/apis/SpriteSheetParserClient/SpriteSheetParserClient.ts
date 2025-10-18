@@ -1,5 +1,4 @@
 import { type AsyncFunc, type Func } from "@agusmgarcia/react-essentials-utils";
-import { Mutex as AsyncMutex } from "async-mutex";
 
 import {
   type DeleteStateRequest,
@@ -14,11 +13,7 @@ import {
 export default class SpriteSheetParserClient {
   static readonly INSTANCE = new SpriteSheetParserClient();
 
-  private readonly mutex: AsyncMutex;
-
-  private constructor() {
-    this.mutex = new AsyncMutex();
-  }
+  private constructor() {}
 
   async getState(
     { id }: GetStateRequest,
@@ -73,15 +68,18 @@ export default class SpriteSheetParserClient {
       | AsyncFunc<TResult, [signal: AbortSignal]>,
     signal: AbortSignal,
   ): Promise<TResult | undefined> {
-    return await this.mutex.runExclusive(async () => {
-      try {
-        signal.throwIfAborted();
-        return await callback(signal);
-      } catch (error) {
-        if (signal.aborted) return undefined;
-        throw error;
-      }
-    });
+    return await window.navigator.locks.request(
+      "SpriteSheetParserClient",
+      async () => {
+        try {
+          signal.throwIfAborted();
+          return await callback(signal);
+        } catch (error) {
+          if (signal.aborted) return undefined;
+          throw error;
+        }
+      },
+    );
   }
 
   private static getStateRaw(id: string) {
