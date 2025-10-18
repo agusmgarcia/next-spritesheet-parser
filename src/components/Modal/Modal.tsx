@@ -1,7 +1,7 @@
 import { twMerge } from "tailwind-merge";
 
-import { Button, Icon } from "#src/components";
-
+import { Button } from "../Button";
+import { Icon } from "../Icon";
 import useModal from "./Modal.hooks";
 import type ModalProps from "./Modal.types";
 
