@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.29.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.29.1)
+
+> October 18, 2025
+
+### Fixes 🎯
+
+- **SpriteSheetParserClient**: use mutex instead of async-mutex
+
+### Chores ⚙️
+
+- adjust folder structure
+
 ## [v0.29.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.29.0)
 
 > October 2, 2025
