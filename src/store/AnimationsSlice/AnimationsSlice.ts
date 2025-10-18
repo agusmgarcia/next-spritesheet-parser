@@ -4,9 +4,9 @@ import { v4 as createUUID } from "uuid";
 
 import { SpriteSheetParserClient } from "#src/apis";
 
-import type NotificationSlice from "../NotificationSlice";
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
-import type SpriteSheetSlice from "../SpriteSheetSlice";
+import { type NotificationSlice } from "../NotificationSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
+import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import { type Animations, type Request } from "./AnimationsSlice.types";
 

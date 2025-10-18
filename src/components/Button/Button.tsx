@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
-import Markdown from "../Markdown";
+import { Markdown } from "../Markdown";
 import useButton from "./Button.hooks";
 import type ButtonProps from "./Button.types";
 

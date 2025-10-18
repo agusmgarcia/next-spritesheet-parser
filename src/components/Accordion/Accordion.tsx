@@ -1,6 +1,6 @@
 import useAccordion from "./Accordion.hooks";
 import type AccordionProps from "./Accordion.types";
-import AccordionItem from "./AccordionItem";
+import { AccordionItem } from "./AccordionItem";
 
 export default function Accordion(props: AccordionProps) {
   const { children, heading, ...rest } = useAccordion(props);

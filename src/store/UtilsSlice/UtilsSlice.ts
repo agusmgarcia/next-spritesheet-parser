@@ -4,12 +4,12 @@ import { downloadZip } from "client-zip";
 
 import { imageDataUtils, loadImage, stackRectangles } from "#src/utils";
 
-import type AnimationsSlice from "../AnimationsSlice";
-import type NormalMapImageSlice from "../NormalMapImageSlice";
-import type NormalMapSettingsSlice from "../NormalMapSettingsSlice";
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
-import type SpriteSheetSettingsSlice from "../SpriteSheetSettingsSlice";
-import type SpriteSheetSlice from "../SpriteSheetSlice";
+import { type AnimationsSlice } from "../AnimationsSlice";
+import { type NormalMapImageSlice } from "../NormalMapImageSlice";
+import { type NormalMapSettingsSlice } from "../NormalMapSettingsSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
+import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
+import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
 import { type Utils } from "./UtilsSlice.types";
 

@@ -1,4 +1,1 @@
-export {
-  default as SpriteSheetParserClient,
-  type SpriteSheetParserClientTypes,
-} from "./SpriteSheetParserClient";
+export * from "./SpriteSheetParserClient";

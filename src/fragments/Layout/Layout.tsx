@@ -1,10 +1,10 @@
 import { Typography } from "#src/components";
 
-import InstructionsButton from "./InstructionsButton";
+import { InstructionsButton } from "./InstructionsButton";
 import useLayout from "./Layout.hooks";
 import type LayoutProps from "./Layout.types";
-import NotificationHandler from "./NotificationHandler";
-import SideBar from "./SideBar";
+import { NotificationHandler } from "./NotificationHandler";
+import { SideBar } from "./SideBar";
 
 export default function Layout(props: LayoutProps) {
   const {

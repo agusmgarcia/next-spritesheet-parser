@@ -5,10 +5,10 @@ import { type MSEROptions, Rect } from "blob-detection-ts";
 import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
-import type AnimationsSlice from "../AnimationsSlice";
-import type NotificationSlice from "../NotificationSlice";
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
-import type SpriteSheetSettingsSlice from "../SpriteSheetSettingsSlice";
+import { type AnimationsSlice } from "../AnimationsSlice";
+import { type NotificationSlice } from "../NotificationSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
+import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
 import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
 
 export default class SpriteSheetSlice extends ServerSlice<

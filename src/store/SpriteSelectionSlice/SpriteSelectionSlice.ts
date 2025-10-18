@@ -1,7 +1,7 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
-import type AnimationsSlice from "../AnimationsSlice";
-import type SpriteSheetSlice from "../SpriteSheetSlice";
+import { type AnimationsSlice } from "../AnimationsSlice";
+import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSelection } from "./SpriteSelectionSlice.types";
 
 export default class SpriteSelectionSlice extends GlobalSlice<

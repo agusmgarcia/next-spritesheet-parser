@@ -1,30 +1,37 @@
 import { createReactStore } from "@agusmgarcia/react-essentials-store";
 import { errors } from "@agusmgarcia/react-essentials-utils";
 
-import AnimationsSlice, { type AnimationsSliceTypes } from "./AnimationsSlice";
-import NormalMapImageSlice, {
+import { AnimationsSlice, type AnimationsSliceTypes } from "./AnimationsSlice";
+import {
+  NormalMapImageSlice,
   type NormalMapImageSliceTypes,
 } from "./NormalMapImageSlice";
-import NormalMapSettingsSlice, {
+import {
+  NormalMapSettingsSlice,
   type NormalMapSettingsSliceTypes,
 } from "./NormalMapSettingsSlice";
-import NotificationSlice, {
+import {
+  NotificationSlice,
   type NotificationSliceTypes,
 } from "./NotificationSlice";
-import ScaleSlice, { type ScaleSliceTypes } from "./ScaleSlice";
-import SpriteSelectionSlice, {
+import { ScaleSlice, type ScaleSliceTypes } from "./ScaleSlice";
+import {
+  SpriteSelectionSlice,
   type SpriteSelectionSliceTypes,
 } from "./SpriteSelectionSlice";
-import SpriteSheetImageSlice, {
+import {
+  SpriteSheetImageSlice,
   type SpriteSheetImageSliceTypes,
 } from "./SpriteSheetImageSlice";
-import SpriteSheetSettingsSlice, {
+import {
+  SpriteSheetSettingsSlice,
   type SpriteSheetSettingsSliceTypes,
 } from "./SpriteSheetSettingsSlice";
-import SpriteSheetSlice, {
+import {
+  SpriteSheetSlice,
   type SpriteSheetSliceTypes,
 } from "./SpriteSheetSlice";
-import UtilsSlice, { type UtilsSliceTypes } from "./UtilsSlice";
+import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
 export type Animation = AnimationsSliceTypes.Animations[number];
 export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;

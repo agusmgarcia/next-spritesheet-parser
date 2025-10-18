@@ -1,7 +1,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-import Markdown from "../Markdown";
+import { Markdown } from "../Markdown";
 import useTypography from "./Typography.hooks";
 import type TypographyProps from "./Typography.types";
 

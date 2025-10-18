@@ -2,8 +2,8 @@ import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 
 import { imageDataUtils, loadImage } from "#src/utils";
 
-import type NormalMapSettingsSlice from "../NormalMapSettingsSlice";
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
+import { type NormalMapSettingsSlice } from "../NormalMapSettingsSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type NormalMapImage, type Request } from "./NormalMapImageSlice.types";
 
 export default class NormalMapImageSlice extends ServerSlice<

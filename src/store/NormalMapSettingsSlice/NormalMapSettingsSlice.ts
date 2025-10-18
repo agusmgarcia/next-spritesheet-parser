@@ -2,7 +2,7 @@ import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 
 import { SpriteSheetParserClient } from "#src/apis";
 
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import {
   type NormalMapSettings,
   type Request,

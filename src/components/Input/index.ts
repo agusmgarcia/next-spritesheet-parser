@@ -1,2 +1,2 @@
-export { default } from "./Input";
+export { default as Input } from "./Input";
 export { type default as InputProps } from "./Input.types";

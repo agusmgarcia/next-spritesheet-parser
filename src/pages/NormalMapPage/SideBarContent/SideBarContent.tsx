@@ -1,8 +1,8 @@
 import { Accordion, Typography } from "#src/components";
 import { ZoomItem } from "#src/fragments";
 
-import ConfigurationsItem from "./ConfigurationsItem";
-import SettingsItem from "./SettingsItem";
+import { ConfigurationsItem } from "./ConfigurationsItem";
+import { SettingsItem } from "./SettingsItem";
 import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 

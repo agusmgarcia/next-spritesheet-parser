@@ -4,7 +4,7 @@ import { Button, Icon } from "#src/components";
 
 import useInstructionsButton from "./InstructionsButton.hooks";
 import type InstructionsButtonProps from "./InstructionsButton.types";
-import InstructionsModal from "./InstructionsModal";
+import { InstructionsModal } from "./InstructionsModal";
 
 export default function InstructionsButton(props: InstructionsButtonProps) {
   const { className, instructionsModalProps, ...rest } =

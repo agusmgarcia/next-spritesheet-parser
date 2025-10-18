@@ -1,2 +1,2 @@
-export { default } from "./SpriteSheetImageSlice";
+export { default as SpriteSheetImageSlice } from "./SpriteSheetImageSlice";
 export type * as SpriteSheetImageSliceTypes from "./SpriteSheetImageSlice.types";

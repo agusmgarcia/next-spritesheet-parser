@@ -1,10 +1,10 @@
 import { Accordion, Typography } from "#src/components";
 import { ZoomItem } from "#src/fragments";
 
-import AnimationsItem from "./AnimationsItem";
-import CenterItem from "./CenterItem";
-import ConfigurationsItem from "./ConfigurationsItem";
-import PlayingItem from "./PlayingItem";
+import { AnimationsItem } from "./AnimationsItem";
+import { CenterItem } from "./CenterItem";
+import { ConfigurationsItem } from "./ConfigurationsItem";
+import { PlayingItem } from "./PlayingItem";
 import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 

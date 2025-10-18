@@ -1,2 +1,2 @@
-export { default } from "./SideBar";
+export { default as SideBar } from "./SideBar";
 export { type default as SideBarProps } from "./SideBar.types";

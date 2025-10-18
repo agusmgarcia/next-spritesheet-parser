@@ -1,6 +1,6 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type Scale } from "./ScaleSlice.types";
 
 export default class ScaleSlice extends GlobalSlice<

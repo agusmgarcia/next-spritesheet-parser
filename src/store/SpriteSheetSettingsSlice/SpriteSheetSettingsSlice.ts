@@ -4,10 +4,10 @@ import { strings } from "@agusmgarcia/react-essentials-utils";
 import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
-import type AnimationsSlice from "../AnimationsSlice";
-import type NotificationSlice from "../NotificationSlice";
-import type SpriteSheetImageSlice from "../SpriteSheetImageSlice";
-import SpriteSheetSlice from "../SpriteSheetSlice";
+import { type AnimationsSlice } from "../AnimationsSlice";
+import { type NotificationSlice } from "../NotificationSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
+import { SpriteSheetSlice } from "../SpriteSheetSlice";
 import {
   type Request,
   type SpriteSheetSettings,

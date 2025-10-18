@@ -1,2 +1,2 @@
-export { default as Layout, type LayoutProps } from "./Layout";
-export { default as ZoomItem, type ZoomItemProps } from "./ZoomItem";
+export * from "./Layout";
+export * from "./ZoomItem";
