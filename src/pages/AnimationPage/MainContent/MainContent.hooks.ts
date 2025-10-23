@@ -44,9 +44,14 @@ export default function useMainContent({
   );
 
   const prevSprite = useMemo<(typeof sprites)[number] | undefined>(
-    () => (sprites.length > 1 ? sprites.at(indexFromProps - 1) : undefined),
+    () =>
+      sprites.length > 1 && indexFromProps > 0
+        ? sprites[indexFromProps - 1]
+        : undefined,
     [indexFromProps, sprites],
   );
+
+  console.log(indexFromProps, prevSprite);
 
   useEffect(() => {
     if (!image) return;
