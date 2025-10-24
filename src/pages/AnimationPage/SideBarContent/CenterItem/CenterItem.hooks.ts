@@ -122,11 +122,6 @@ function useOnion({
     setAnimationOnion(animationFromProps.id, (prev) => !prev);
   }, [animationFromProps.id, onionDisabled, setAnimationOnion]);
 
-  useEffect(() => {
-    if (!onionDisabled) return;
-    setAnimationOnion(animationFromProps.id, false);
-  }, [animationFromProps.id, onionDisabled, setAnimationOnion]);
-
   useKeyDown("o", onionOnClick);
 
   return { onionActive: animationFromProps.onion, onionDisabled, onionOnClick };

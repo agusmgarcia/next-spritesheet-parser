@@ -224,6 +224,9 @@ export default class AnimationsSlice extends ServerSlice<
       a.id === id
         ? {
             ...a,
+            onion: (playing instanceof Function ? playing(a.playing) : playing)
+              ? false
+              : a.onion,
             playing: playing instanceof Function ? playing(a.playing) : playing,
           }
         : a,
