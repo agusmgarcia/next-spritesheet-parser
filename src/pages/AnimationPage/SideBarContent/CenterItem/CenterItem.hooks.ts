@@ -97,11 +97,17 @@ function useColor({
     [animationFromProps.color],
   );
 
-  const colorDisabled = useMemo<boolean>(() => false, []);
+  const colorDisabled = useMemo<boolean>(
+    () => animationFromProps.playing,
+    [animationFromProps.playing],
+  );
 
   const colorOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => setAnimationColor(animationFromProps.id, event.target.value),
-    [animationFromProps.id, setAnimationColor],
+    (event) => {
+      if (colorDisabled) return;
+      setAnimationColor(animationFromProps.id, event.target.value);
+    },
+    [animationFromProps.id, colorDisabled, setAnimationColor],
   );
 
   return { colorDisabled, colorOnChange, colorValue };
