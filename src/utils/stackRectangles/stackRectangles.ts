@@ -1,5 +1,7 @@
 import { sorts } from "@agusmgarcia/react-essentials-utils";
 
+import { type BaseRectangle, type Rectangle } from "./stackRectangles.types";
+
 export default function stackRectangles<TRectangle extends BaseRectangle>(
   input: TRectangle[],
 ): { length: number; rectangles: (TRectangle & Rectangle)[] } {
@@ -33,10 +35,6 @@ export default function stackRectangles<TRectangle extends BaseRectangle>(
 
   return { length, rectangles };
 }
-
-type BaseRectangle = { height: number; width: number };
-
-type Rectangle = BaseRectangle & { x: number; y: number };
 
 function insertRectangle<TRectangle extends BaseRectangle>(
   rect: TRectangle,

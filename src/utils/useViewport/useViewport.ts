@@ -1,7 +1,7 @@
 import { useMediaQuery } from "@agusmgarcia/react-essentials-utils";
 import { useMemo } from "react";
 
-type Viewport = "Desktop" | "LargeDesktop" | "Mobile" | "Tablet";
+import { type Viewport } from "./useViewport.types";
 
 export default function useViewport(): Viewport {
   const mobile = useMediaQuery("(max-width: 767.98px)", true);

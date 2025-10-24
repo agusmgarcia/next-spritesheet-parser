@@ -5,7 +5,7 @@ export default function useKeyDown(
   key: string,
   callback: Func,
   options?: Partial<{ altKey: true }>,
-) {
+): void {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.target instanceof HTMLInputElement) return;

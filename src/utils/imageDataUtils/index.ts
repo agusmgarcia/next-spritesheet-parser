@@ -1,8 +1,19 @@
-export { default as createFile } from "./createFile";
-export { default as generateNormalMap } from "./generateNormalMap";
-export { default as get } from "./get";
-export { default as getBackground } from "./getBackground";
-export { default as getBackgroundColor } from "./getBackgroundColor";
-export { default as getHash } from "./getHash";
-export { default as getRects } from "./getRects";
-export { default as removeBackground } from "./removeBackground";
+import { default as createFile } from "./createFile";
+import { default as generateNormalMap } from "./generateNormalMap";
+import { default as get } from "./get";
+import { default as getBackground } from "./getBackground";
+import { default as getBackgroundColor } from "./getBackgroundColor";
+import { default as getHash } from "./getHash";
+import { default as getRects } from "./getRects";
+import { default as removeBackground } from "./removeBackground";
+
+export const imageDataUtils = {
+  createFile,
+  generateNormalMap,
+  get,
+  getBackground,
+  getBackgroundColor,
+  getHash,
+  getRects,
+  removeBackground,
+};

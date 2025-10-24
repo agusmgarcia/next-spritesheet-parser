@@ -1,13 +1,8 @@
 import { errors } from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useState } from "react";
 
-import loadImage from "./loadImage";
-
-type UseLoadImageResult = {
-  error: unknown;
-  image: HTMLImageElement | undefined;
-  loading: boolean;
-};
+import { loadImage } from "../loadImage";
+import { type UseLoadImageResult } from "./useLoadImage.types";
 
 const initialLoadImageResult: UseLoadImageResult = {
   error: undefined,
