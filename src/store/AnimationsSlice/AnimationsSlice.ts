@@ -171,13 +171,9 @@ export default class AnimationsSlice extends ServerSlice<
                       ...(center instanceof Function
                         ? center(s.center)
                         : center),
-                      visible: true,
                     },
                   }
-                : {
-                    ...s,
-                    center: { ...s.center, visible: true },
-                  },
+                : s,
             ),
           }
         : a,
