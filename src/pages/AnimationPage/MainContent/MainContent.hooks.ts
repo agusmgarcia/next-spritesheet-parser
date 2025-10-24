@@ -51,8 +51,6 @@ export default function useMainContent({
     [indexFromProps, sprites],
   );
 
-  console.log(indexFromProps, prevSprite);
-
   useEffect(() => {
     if (!image) return;
     if (!currentSprite) return;
@@ -73,9 +71,24 @@ export default function useMainContent({
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+
     context.fillStyle = spriteSheetImage.backgroundColor;
     context.fillRect(0, 0, spriteCanvas.width, spriteCanvas.height);
+
     context.scale(scale, scale);
+
+    if (!!animationFromProps.grid) {
+      context.fillStyle = "#000000";
+      context.globalAlpha = 0.75;
+
+      for (let y = 0; y < spriteCanvas.height; y += 16)
+        context.fillRect(0, y, spriteCanvas.width, 1);
+
+      for (let x = 0; x < spriteCanvas.width; x += 16)
+        context.fillRect(x, 0, 1, spriteCanvas.height);
+
+      context.globalAlpha = 1;
+    }
 
     context.drawImage(
       image,
@@ -126,6 +139,7 @@ export default function useMainContent({
     }
   }, [
     animationFromProps.color,
+    animationFromProps.grid,
     animationFromProps.onion,
     currentSprite,
     devicePixelRatio,

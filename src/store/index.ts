@@ -78,6 +78,7 @@ export function useAnimations() {
     setAnimationCenter: useSelector((state) => state.animations.setCenter),
     setAnimationColor: useSelector((state) => state.animations.setColor),
     setAnimationFPS: useSelector((state) => state.animations.setFPS),
+    setAnimationGrid: useSelector((state) => state.animations.setGrid),
     setAnimationName: useSelector((state) => state.animations.setName),
     setAnimationOnion: useSelector((state) => state.animations.setOnion),
     setAnimationPlaying: useSelector((state) => state.animations.setPlaying),

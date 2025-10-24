@@ -204,9 +204,12 @@ export default function useMainContent(props: MainContentProps) {
     context.imageSmoothingQuality = "high";
 
     context.clearRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
+
     context.fillStyle = spriteSheetImage?.backgroundColor || "#ffffff";
     context.fillRect(0, 0, spriteSheetCanvas.width, spriteSheetCanvas.height);
+
     context.scale(scale, scale);
+
     if (!!image)
       context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
 

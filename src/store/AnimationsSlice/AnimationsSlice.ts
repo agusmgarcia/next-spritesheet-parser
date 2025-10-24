@@ -86,6 +86,7 @@ export default class AnimationsSlice extends ServerSlice<
     const animation: Animations[number] = {
       color: spriteSheetImage.backgroundColor,
       fps: 12,
+      grid: false,
       id: createUUID(),
       name: `New animation ${getLatestAnimationOrder(this.response) + 1}`,
       onion: false,
@@ -131,6 +132,18 @@ export default class AnimationsSlice extends ServerSlice<
     if (!this.response) throw new Error("You need to provide an image first");
     this.response = this.response.map((a) =>
       a.id === id ? { ...a, color } : a,
+    );
+  }
+
+  setGrid(id: string, grid: React.SetStateAction<boolean>): void {
+    if (!this.response) throw new Error("You need to provide an image first");
+    this.response = this.response.map((a) =>
+      a.id === id
+        ? {
+            ...a,
+            grid: grid instanceof Function ? grid(!!a.grid) : grid,
+          }
+        : a,
     );
   }
 

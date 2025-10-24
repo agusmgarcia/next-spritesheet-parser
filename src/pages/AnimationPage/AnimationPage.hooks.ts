@@ -147,6 +147,10 @@ function useInstructions() {
             key: "v",
           },
           {
+            description: "Toggle grid visibility",
+            key: "g",
+          },
+          {
             description: "Center the sprite",
             key: "c",
           },

@@ -8,6 +8,7 @@ export type GetStateResponseV1 = {
   animations: {
     color: string;
     fps: number;
+    grid: boolean | undefined;
     id: string;
     name: string;
     onion: boolean;

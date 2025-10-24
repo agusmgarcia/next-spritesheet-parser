@@ -1,5 +1,5 @@
 import { type Func } from "@agusmgarcia/react-essentials-utils";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
@@ -16,6 +16,10 @@ export default function useCenterItem({
   });
 
   const { colorDisabled, colorOnChange, colorValue } = useColor({
+    animation: animationFromProps,
+  });
+
+  const { gridActive, gridDisabled, gridOnClick } = useGrid({
     animation: animationFromProps,
   });
 
@@ -64,6 +68,9 @@ export default function useCenterItem({
     colorValue,
     defaultCollapsed,
     disabled,
+    gridActive,
+    gridDisabled,
+    gridOnClick,
     onionActive,
     onionDisabled,
     onionOnClick,
@@ -111,6 +118,26 @@ function useColor({
   );
 
   return { colorDisabled, colorOnChange, colorValue };
+}
+
+function useGrid({
+  animation: animationFromProps,
+}: Pick<CenterItemProps, "animation">) {
+  const { setAnimationGrid } = useAnimations();
+
+  const gridDisabled = useMemo<boolean>(
+    () => animationFromProps.playing,
+    [animationFromProps.playing],
+  );
+
+  const gridOnClick = useCallback<Func>(() => {
+    if (gridDisabled) return;
+    setAnimationGrid(animationFromProps.id, (prev) => !prev);
+  }, [animationFromProps.id, gridDisabled, setAnimationGrid]);
+
+  useKeyDown("g", gridOnClick);
+
+  return { gridActive: animationFromProps.grid, gridDisabled, gridOnClick };
 }
 
 function useOnion({

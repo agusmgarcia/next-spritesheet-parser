@@ -17,6 +17,9 @@ export default function CenterItem(props: CenterItemProps) {
     colorDisabled,
     colorOnChange,
     colorValue,
+    gridActive,
+    gridDisabled,
+    gridOnClick,
     onionActive,
     onionDisabled,
     onionOnClick,
@@ -88,6 +91,16 @@ export default function CenterItem(props: CenterItemProps) {
           variant={centerVisible ? "primary" : "secondary"}
         >
           <Icon variant={centerVisible ? "eye" : "eyeClosed"} />
+        </Button>
+
+        {/* GRID */}
+        <Button
+          className="flex w-fit items-center justify-center"
+          disabled={gridDisabled}
+          onClick={gridOnClick}
+          variant={gridActive ? "primary" : "secondary"}
+        >
+          <Icon variant="grid" />
         </Button>
 
         {/* COLOR */}
