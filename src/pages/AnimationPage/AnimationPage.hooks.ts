@@ -151,7 +151,7 @@ function useInstructions() {
             key: "c",
           },
           {
-            description: "Enable/Disable onion feature",
+            description: "Toogle onion visibility",
             key: "o",
           },
         ],
