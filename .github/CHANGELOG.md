@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.29.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.29.3)
+
+> October 24, 2025
+
+### Fixes 🎯
+
+- **AnimationPage**: prevent displaying prev sprite when it's firts
+
+### Chores ⚙️
+
+- **utils**: move folder inside each module
+
 ## [v0.29.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.29.2)
 
 > October 18, 2025
