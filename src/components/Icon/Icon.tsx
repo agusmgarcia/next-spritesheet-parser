@@ -117,6 +117,13 @@ export default function Icon(props: IconProps) {
         </svg>
       );
 
+    case "grid":
+      return (
+        <svg {...rest}>
+          <path d="M14 10h-4v4h4v-4Zm2 0v4h3v-4h-3Zm-2 9v-3h-4v3h4Zm2 0h3v-3h-3v3ZM14 5h-4v3h4V5Zm2 0v3h3V5h-3Zm-8 5H5v4h3v-4Zm0 9v-3H5v3h3ZM8 5H5v3h3V5ZM4 3h16c0.5523 0 1 0.44772 1 1v16c0 0.5523 -0.4477 1 -1 1H4c-0.55228 0 -1 -0.4477 -1 -1V4c0 -0.55228 0.44772 -1 1 -1Z" />
+        </svg>
+      );
+
     case "home":
       return (
         <svg {...rest}>
