@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.30.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.30.0)
+
+> October 24, 2025
+
+### Features ✅
+
+- **AnimationPage**: add grid visibility
+- **Icon**: add grid variant
+
+### Fixes 🎯
+
+- **AnimationPage**: stop enabling center when moving it
+- **AnimationPage**: prevent modifying color when playing
+- **AnimationPage**: adjust labeling for instructions
+
+### Chores ⚙️
+
+- **store**: move onion disabled logic to store
+
 ## [v0.29.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.29.3)
 
 > October 24, 2025
