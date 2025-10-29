@@ -18,7 +18,7 @@ export default class NormalMapImageSlice extends ServerSlice<
     super(undefined);
   }
 
-  protected override onBuildRequest(): Request {
+  protected override onRequestBuild(): Request {
     return {
       normalMapSettings: !!this.slices.normalMapSettings.response
         ? {

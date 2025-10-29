@@ -26,7 +26,7 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
     super(undefined);
   }
 
-  protected override onBuildRequest(): Request {
+  protected override onRequestBuild(): Request {
     return {
       spriteSheetImage: !!this.slices.spriteSheetImage.response
         ? {
@@ -63,7 +63,7 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
 
     this.subscribe(
       (state) => state.response,
-      (spriteSheetSettings, _, signal) =>
+      (spriteSheetSettings, signal) =>
         !!this.slices.spriteSheetImage.response?.id && !!spriteSheetSettings
           ? SpriteSheetParserClient.INSTANCE.patchState(
               {

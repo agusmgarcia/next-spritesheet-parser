@@ -111,8 +111,6 @@ export function useNormalMapSettings() {
 
 export function useNotification() {
   return {
-    acceptNotification: useSelector((state) => state.notification.accept),
-    cancelNotification: useSelector((state) => state.notification.cancel),
     notification: useSelector((state) => state.notification.state),
     setNotification: useSelector((state) => state.notification.set),
   };
