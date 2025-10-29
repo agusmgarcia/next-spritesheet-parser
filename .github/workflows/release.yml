@@ -16,7 +16,6 @@ concurrency:
 jobs:
   release-app:
     name: Release app
-    uses: agusmgarcia/react-essentials/.github/workflows/release-app.yml@v0.12
+    uses: agusmgarcia/react-essentials/.github/workflows/release-app.yml@v0.14
     secrets:
       github-auth-token: ${{ secrets.GITHUB_TOKEN }}
-      node-auth-token: ${{ secrets.GITHUB_TOKEN }}

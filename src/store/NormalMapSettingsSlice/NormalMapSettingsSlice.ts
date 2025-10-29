@@ -17,7 +17,7 @@ export default class NormalMapSettingsSlice extends ServerSlice<
     super(undefined);
   }
 
-  protected override onBuildRequest(): Request {
+  protected override onRequestBuild(): Request {
     return {
       spriteSheetImage: !!this.slices.spriteSheetImage.response
         ? {
@@ -57,7 +57,7 @@ export default class NormalMapSettingsSlice extends ServerSlice<
 
     this.subscribe(
       (state) => state.response,
-      (normalMapSettings, _, signal) =>
+      (normalMapSettings, signal) =>
         !!this.slices.spriteSheetImage.response?.id && !!normalMapSettings
           ? SpriteSheetParserClient.INSTANCE.patchState(
               {

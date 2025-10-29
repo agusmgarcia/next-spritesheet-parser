@@ -1,5 +1,17 @@
+import { type Func } from "@agusmgarcia/react-essentials-utils";
+
 export type Notification = {
+  accept: Func;
+  close: Func;
   id: string;
   message: string;
-  type: "error" | "success" | "warning";
-};
+} & (
+  | {
+      cancel: undefined;
+      type: "error" | "success";
+    }
+  | {
+      cancel: Func;
+      type: "warning";
+    }
+);

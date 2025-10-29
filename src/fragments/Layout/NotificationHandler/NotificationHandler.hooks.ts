@@ -9,23 +9,18 @@ import type NotificationHandlerProps from "./NotificationHandler.types";
 export default function useNotificationHandler(
   props: NotificationHandlerProps,
 ) {
-  const { acceptNotification, cancelNotification, notification } =
-    useNotification();
+  const { notification } = useNotification();
 
   const open = useMemo<boolean>(() => !!notification?.id, [notification?.id]);
 
   const onAccept = useMemo<Func | undefined>(
-    () =>
-      !!notification ? () => acceptNotification(notification.id) : undefined,
-    [acceptNotification, notification],
+    () => (!!notification ? () => notification.accept() : undefined),
+    [notification],
   );
 
   const onCancel = useMemo<Func | undefined>(
-    () =>
-      notification?.type === "warning"
-        ? () => cancelNotification(notification.id)
-        : undefined,
-    [cancelNotification, notification],
+    () => (!!notification?.cancel ? () => notification.cancel() : undefined),
+    [notification],
   );
 
   return {

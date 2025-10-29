@@ -1,5 +1,4 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
-import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
 import { type Notification } from "./NotificationSlice.types";
@@ -7,14 +6,8 @@ import { type Notification } from "./NotificationSlice.types";
 export default class NotificationSlice extends GlobalSlice<
   Notification | undefined
 > {
-  private readonly removeAbortEventLister: Record<string, Func>;
-  private readonly resolves: Record<string, Func<void, [value: boolean]>>;
-
   constructor() {
     super(undefined);
-
-    this.removeAbortEventLister = {};
-    this.resolves = {};
   }
 
   set(
@@ -22,45 +15,32 @@ export default class NotificationSlice extends GlobalSlice<
     message: Notification["message"],
     signal: AbortSignal,
   ): Promise<boolean> {
-    if (signal.aborted) return Promise.resolve(false);
-
-    if (!!this.state?.id) this.close(this.state.id);
-
     return new Promise<boolean>((resolve) => {
       const id = createUUID();
-      this.resolves[id] = resolve;
 
-      const abortHandler = () => this.close(id);
-      signal.addEventListener("abort", abortHandler);
+      const handleResolve = (value: boolean): void => {
+        signal.removeEventListener("abort", handleAbort);
 
-      this.removeAbortEventLister[id] = () =>
-        signal.removeEventListener("abort", abortHandler);
+        if (this.state?.id === id) {
+          this.state = undefined;
+          resolve(value);
+          return;
+        }
 
-      this.state = { id, message, type };
+        resolve(false);
+      };
+
+      const handleAbort = () => handleResolve(false);
+      signal.addEventListener("abort", handleAbort);
+
+      this.state = {
+        accept: () => handleResolve(true),
+        cancel: () => handleResolve(false),
+        close: () => handleResolve(false),
+        id,
+        message,
+        type,
+      } as Notification;
     });
-  }
-
-  accept(id: string): void {
-    this.resolve(id, true);
-  }
-
-  cancel(id: string): void {
-    this.resolve(id, false);
-  }
-
-  close(id: string): void {
-    this.resolve(id, false);
-  }
-
-  private resolve(id: string, value: boolean): void {
-    if (this.state?.id !== id) return;
-
-    this.state = undefined;
-
-    this.removeAbortEventLister[id]();
-    delete this.removeAbortEventLister[id];
-
-    this.resolves[id](value);
-    delete this.resolves[id];
   }
 }
