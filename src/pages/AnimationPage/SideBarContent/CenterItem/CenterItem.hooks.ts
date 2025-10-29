@@ -25,6 +25,7 @@ export default function useCenterItem({
 
   const { onionActive, onionDisabled, onionOnClick } = useOnion({
     animation: animationFromProps,
+    index: indexFromProps,
   });
 
   const { resetCenterDisabled, resetCenterOnClick } = useResetCenter({
@@ -142,12 +143,20 @@ function useGrid({
 
 function useOnion({
   animation: animationFromProps,
-}: Pick<CenterItemProps, "animation">) {
+  index: indexFromProps,
+}: Pick<CenterItemProps, "animation" | "index">) {
   const { setAnimationOnion } = useAnimations();
 
   const onionDisabled = useMemo<boolean>(
-    () => animationFromProps.playing || animationFromProps.sprites.length <= 1,
-    [animationFromProps.playing, animationFromProps.sprites.length],
+    () =>
+      animationFromProps.playing ||
+      animationFromProps.sprites.length <= 1 ||
+      !indexFromProps,
+    [
+      animationFromProps.playing,
+      animationFromProps.sprites.length,
+      indexFromProps,
+    ],
   );
 
   const onionOnClick = useCallback<Func>(() => {
