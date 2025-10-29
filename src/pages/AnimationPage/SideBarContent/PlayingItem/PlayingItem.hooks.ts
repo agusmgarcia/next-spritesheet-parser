@@ -8,6 +8,7 @@ import type PlayingItemProps from "./PlayingItem.types";
 
 export default function usePlayingItem({
   animation: animationFromProps,
+  index: indexFromProps,
   onFirstIndex: onFirstIndexFromProps,
   onLastIndex: onLastIndexFromProps,
   onNextIndex: onNextIndexFromProps,
@@ -28,6 +29,7 @@ export default function usePlayingItem({
     toLastOnClick,
   } = usePlaying({
     animation: animationFromProps,
+    index: indexFromProps,
     onFirstIndex: onFirstIndexFromProps,
     onLastIndex: onLastIndexFromProps,
     onNextIndex: onNextIndexFromProps,
@@ -69,6 +71,7 @@ export default function usePlayingItem({
 
 function usePlaying({
   animation: animationFromProps,
+  index: indexFromProps,
   onFirstIndex: onFirstIndexFromProps,
   onLastIndex: onLastIndexFromProps,
   onNextIndex: onNextIndexFromProps,
@@ -76,6 +79,7 @@ function usePlaying({
 }: Pick<
   PlayingItemProps,
   | "animation"
+  | "index"
   | "onFirstIndex"
   | "onLastIndex"
   | "onNextIndex"
@@ -84,8 +88,14 @@ function usePlaying({
   const { setAnimationPlaying } = useAnimations();
 
   const toFirstDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
+    () =>
+      !animationFromProps.playing &&
+      (animationFromProps.sprites.length <= 1 || !indexFromProps),
+    [
+      animationFromProps.playing,
+      animationFromProps.sprites.length,
+      indexFromProps,
+    ],
   );
 
   const toFirstOnClick = useCallback<Func>(() => {
@@ -100,8 +110,8 @@ function usePlaying({
   ]);
 
   const backwardDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
+    () => !animationFromProps.playing && animationFromProps.sprites.length <= 1,
+    [animationFromProps.playing, animationFromProps.sprites.length],
   );
 
   const backwardOnClick = useCallback<Func>(() => {
@@ -116,8 +126,8 @@ function usePlaying({
   ]);
 
   const playingDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
+    () => !animationFromProps.playing && animationFromProps.sprites.length <= 1,
+    [animationFromProps.playing, animationFromProps.sprites.length],
   );
 
   const playOnClick = useCallback<Func>(() => {
@@ -126,8 +136,8 @@ function usePlaying({
   }, [animationFromProps.id, playingDisabled, setAnimationPlaying]);
 
   const forwardDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
+    () => !animationFromProps.playing && animationFromProps.sprites.length <= 1,
+    [animationFromProps.playing, animationFromProps.sprites.length],
   );
 
   const forwardOnClick = useCallback<Func>(() => {
@@ -142,8 +152,15 @@ function usePlaying({
   ]);
 
   const toLastDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
+    () =>
+      !animationFromProps.playing &&
+      (animationFromProps.sprites.length <= 1 ||
+        indexFromProps === animationFromProps.sprites.length - 1),
+    [
+      animationFromProps.playing,
+      animationFromProps.sprites.length,
+      indexFromProps,
+    ],
   );
 
   const toLastOnClick = useCallback<Func>(() => {

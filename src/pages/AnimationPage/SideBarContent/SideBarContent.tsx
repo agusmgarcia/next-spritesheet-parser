@@ -31,6 +31,7 @@ export default function SideBarContent(props: SideBarContentProps) {
       <ConfigurationsItem animation={animation} />
       <PlayingItem
         animation={animation}
+        index={index}
         onFirstIndex={onFirstIndex}
         onLastIndex={onLastIndex}
         onNextIndex={onNextIndex}

@@ -4,6 +4,7 @@ import { type Animation } from "#src/store";
 
 type PlayingItemProps = {
   animation: Animation;
+  index: number;
   onFirstIndex: Func;
   onLastIndex: Func;
   onNextIndex: Func;
