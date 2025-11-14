@@ -9,10 +9,10 @@ import { type AnimationsSlice } from "../AnimationsSlice";
 import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
-import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
+import { type Request, type Response } from "./SpriteSheetSlice.types";
 
 export default class SpriteSheetSlice extends ServerSlice<
-  SpriteSheet | undefined,
+  Response | undefined,
   Request,
   {
     animations: AnimationsSlice;
@@ -46,7 +46,7 @@ export default class SpriteSheetSlice extends ServerSlice<
   protected override async onFetch(
     { spriteSheetImage, spriteSheetSettings }: Request,
     signal: AbortSignal,
-  ): Promise<SpriteSheet | undefined> {
+  ): Promise<Response | undefined> {
     if (!spriteSheetImage || !spriteSheetSettings) return undefined;
 
     const state = await SpriteSheetParserClient.INSTANCE.getState(
@@ -83,9 +83,9 @@ export default class SpriteSheetSlice extends ServerSlice<
     const animations = this.slices.animations.response;
     if (!animations) throw new Error("You need to provide an image first");
 
-    const animationsThatContainAtLeastOneSprite = animations.filter((a) =>
-      a.sprites.some((s) => spriteIds.includes(s.id)),
-    );
+    const animationsThatContainAtLeastOneSprite = Object.values(
+      animations,
+    ).filter((a) => a.sprites.some((s) => spriteIds.includes(s.id)));
 
     if (!!animationsThatContainAtLeastOneSprite.length) {
       const response = await this.slices.notification.set(
@@ -107,7 +107,7 @@ export default class SpriteSheetSlice extends ServerSlice<
 
     if (!this.response) return;
 
-    const spriteToAdd = SpriteSheetSlice.toSprite(
+    const spriteToAdd = toSprite(
       spriteIds
         .map((sId) => this.response![sId])
         .filter((s) => !!s)
@@ -120,7 +120,7 @@ export default class SpriteSheetSlice extends ServerSlice<
         const sprite = this.response![spriteId];
         if (!!sprite) result[spriteId] = sprite;
         return result;
-      }, {} as SpriteSheet),
+      }, {} as Response),
     );
 
     const sprites = { ...this.response, [spriteToAdd.id]: spriteToAdd };
@@ -133,8 +133,8 @@ export default class SpriteSheetSlice extends ServerSlice<
     const animations = this.slices.animations.response;
     if (!animations) throw new Error("You need to provide an image first");
 
-    const animationsThatContainTheSprite = animations.filter((a) =>
-      a.sprites.some((s) => s.id === spriteId),
+    const animationsThatContainTheSprite = Object.values(animations).filter(
+      (a) => a.sprites.some((s) => s.id === spriteId),
     );
 
     if (!!animationsThatContainTheSprite.length) {
@@ -173,29 +173,29 @@ export default class SpriteSheetSlice extends ServerSlice<
     imageData: ImageData,
     options: Pick<MSEROptions, "delta" | "maxVariation" | "minDiversity">,
     signal: AbortSignal,
-  ): Promise<SpriteSheet> {
+  ): Promise<Response> {
     return imageDataUtils
       .getRects(imageData, { ...options, maxArea: 0.5, minArea: 0 }, signal)
-      .then((rects) => rects.map((r) => SpriteSheetSlice.toSprite(r)))
+      .then((rects) => rects.map((r) => toSprite(r)))
       .then((sprites) =>
         sprites.reduce((result, current) => {
           result[current.id] = current;
           return result;
-        }, {} as SpriteSheet),
+        }, {} as Response),
       );
   }
+}
 
-  private static toSprite(
-    rect: Rect,
-    subsprites?: SpriteSheet,
-  ): SpriteSheet[string] & { id: string } {
-    return {
-      height: rect.bottom - rect.top,
-      id: `${rect.left}:${rect.top}:${rect.right - rect.left}:${rect.bottom - rect.top}`,
-      subsprites: subsprites || {},
-      width: rect.right - rect.left,
-      x: rect.left,
-      y: rect.top,
-    };
-  }
+function toSprite(
+  rect: Rect,
+  subsprites?: Response,
+): Response[string] & { id: string } {
+  return {
+    height: rect.bottom - rect.top,
+    id: `${rect.left}:${rect.top}:${rect.right - rect.left}:${rect.bottom - rect.top}`,
+    subsprites: subsprites || {},
+    width: rect.right - rect.left,
+    x: rect.left,
+    y: rect.top,
+  };
 }

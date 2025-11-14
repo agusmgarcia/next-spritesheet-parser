@@ -1,1 +1,1 @@
-export type Utils = undefined;
+export type State = undefined;

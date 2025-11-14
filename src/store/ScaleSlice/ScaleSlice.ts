@@ -1,10 +1,10 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
-import { type Scale } from "./ScaleSlice.types";
+import { type State } from "./ScaleSlice.types";
 
 export default class ScaleSlice extends GlobalSlice<
-  Scale,
+  State,
   { spriteSheetImage: SpriteSheetImageSlice }
 > {
   constructor() {

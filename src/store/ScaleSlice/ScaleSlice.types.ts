@@ -1,1 +1,1 @@
-export type Scale = number;
+export type State = number;

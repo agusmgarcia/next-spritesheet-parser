@@ -1,12 +1,11 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
-import { type AnimationsSlice } from "../AnimationsSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
-import { type SpriteSelection } from "./SpriteSelectionSlice.types";
+import { type State } from "./SpriteSelectionSlice.types";
 
 export default class SpriteSelectionSlice extends GlobalSlice<
-  SpriteSelection,
-  { animations: AnimationsSlice; spriteSheet: SpriteSheetSlice }
+  State,
+  { spriteSheet: SpriteSheetSlice }
 > {
   constructor() {
     super([]);
@@ -17,11 +16,6 @@ export default class SpriteSelectionSlice extends GlobalSlice<
 
     this.slices.spriteSheet.subscribe(
       (state) => state.response,
-      () => this.unselectAll(),
-    );
-
-    this.slices.animations.subscribe(
-      (state) => state.response?.length,
       () => this.unselectAll(),
     );
   }

@@ -4,10 +4,10 @@ import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type NormalMapSettingsSlice } from "../NormalMapSettingsSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
-import { type NormalMapImage, type Request } from "./NormalMapImageSlice.types";
+import { type Request, type Response } from "./NormalMapImageSlice.types";
 
 export default class NormalMapImageSlice extends ServerSlice<
-  NormalMapImage | undefined,
+  Response | undefined,
   Request,
   {
     normalMapSettings: NormalMapSettingsSlice;
@@ -42,7 +42,7 @@ export default class NormalMapImageSlice extends ServerSlice<
   protected override async onFetch(
     { normalMapSettings, spriteSheetImage }: Request,
     signal: AbortSignal,
-  ): Promise<NormalMapImage | undefined> {
+  ): Promise<Response | undefined> {
     try {
       if (!spriteSheetImage || !normalMapSettings) return undefined;
 
