@@ -5,9 +5,9 @@ import {
   type DeleteStateResponse,
   type GetStateRequest,
   type GetStateResponse,
-  type GetStateResponseV1,
   type PatchStateRequest,
   type PatchStateResponse,
+  type State,
 } from "./SpriteSheetParserClient.types";
 
 export default class SpriteSheetParserClient {
@@ -35,7 +35,7 @@ export default class SpriteSheetParserClient {
 
       const state: GetStateResponse = {
         createdAt: now,
-        version: "v1",
+        version: "v2",
         ...stateFromStorage,
         ...stateFromRequest,
         updatedAt: now,
@@ -82,7 +82,7 @@ export default class SpriteSheetParserClient {
     );
   }
 
-  private static getStateRaw(id: string) {
+  private static getStateRaw(id: string): GetStateResponse | undefined {
     const item = window.localStorage.getItem(id);
     if (!item) return undefined;
 
@@ -92,7 +92,9 @@ export default class SpriteSheetParserClient {
     return SpriteSheetParserClient.migrateState(state);
   }
 
-  private static parseState(item: string): GetStateResponseV1 | undefined {
+  private static parseState(
+    item: string,
+  ): State["v1"] | State["v2"] | undefined {
     try {
       const maybeState = JSON.parse(item);
 
@@ -108,7 +110,10 @@ export default class SpriteSheetParserClient {
         typeof maybeState.updatedAt !== "number"
       )
         return undefined;
-      if (!("version" in maybeState) || maybeState.version !== "v1")
+      if (
+        !("version" in maybeState) ||
+        (maybeState.version !== "v1" && maybeState.version !== "v2")
+      )
         return undefined;
 
       return maybeState;
@@ -118,9 +123,27 @@ export default class SpriteSheetParserClient {
   }
 
   private static migrateState(
-    state: GetStateResponseV1,
+    state: State["v1"] | State["v2"],
   ): GetStateResponse | undefined {
-    if (state.version === "v1") return state;
+    if (state.version === "v1")
+      return {
+        ...state,
+        animations: state.animations?.reduce(
+          (result, a) => {
+            result[a.id] = {
+              color: a.color,
+              fps: a.fps,
+              name: a.name,
+              sprites: a.sprites,
+            };
+            return result;
+          },
+          {} as NonNullable<GetStateResponse["animations"]>,
+        ),
+        version: "v2",
+      };
+
+    if (state.version === "v2") return state;
     return undefined;
   }
 
