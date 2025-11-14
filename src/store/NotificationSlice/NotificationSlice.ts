@@ -1,18 +1,16 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 import { v4 as createUUID } from "uuid";
 
-import { type Notification } from "./NotificationSlice.types";
+import { type State } from "./NotificationSlice.types";
 
-export default class NotificationSlice extends GlobalSlice<
-  Notification | undefined
-> {
+export default class NotificationSlice extends GlobalSlice<State | undefined> {
   constructor() {
     super(undefined);
   }
 
   set(
-    type: Notification["type"],
-    message: Notification["message"],
+    type: State["type"],
+    message: State["message"],
     signal: AbortSignal,
   ): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
@@ -40,7 +38,7 @@ export default class NotificationSlice extends GlobalSlice<
         id,
         message,
         type,
-      } as Notification;
+      } as State;
     });
   }
 }

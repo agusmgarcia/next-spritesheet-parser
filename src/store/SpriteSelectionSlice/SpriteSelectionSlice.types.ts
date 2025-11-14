@@ -1,1 +1,1 @@
-export type SpriteSelection = string[];
+export type State = string[];
