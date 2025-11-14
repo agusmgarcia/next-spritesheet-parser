@@ -14,6 +14,7 @@ import {
   NotificationSlice,
   type NotificationSliceTypes,
 } from "./NotificationSlice";
+import { PlayerSlice, type PlayerSliceTypes } from "./PlayerSlice";
 import { ScaleSlice, type ScaleSliceTypes } from "./ScaleSlice";
 import {
   SpriteSelectionSlice,
@@ -33,17 +34,17 @@ import {
 } from "./SpriteSheetSlice";
 import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
-export type Animation = AnimationsSliceTypes.Animations[number];
-export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;
-export type NormalMapSettings = NormalMapSettingsSliceTypes.NormalMapSettings;
-export type Notification = NotificationSliceTypes.Notification;
-export type SpriteSelection = SpriteSelectionSliceTypes.SpriteSelection;
-export type Scale = ScaleSliceTypes.Scale;
-export type SpriteSheetImage = SpriteSheetImageSliceTypes.SpriteSheetImage;
-export type SpriteSheetSettings =
-  SpriteSheetSettingsSliceTypes.SpriteSheetSettings;
-export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
-export type Utils = UtilsSliceTypes.Utils;
+export type Animation = AnimationsSliceTypes.Response[number];
+export type NormalMapImage = NormalMapImageSliceTypes.Response;
+export type NormalMapSettings = NormalMapSettingsSliceTypes.Response;
+export type Notification = NotificationSliceTypes.State;
+export type Player = PlayerSliceTypes.State;
+export type SpriteSelection = SpriteSelectionSliceTypes.State;
+export type Scale = ScaleSliceTypes.State;
+export type SpriteSheetImage = SpriteSheetImageSliceTypes.Response;
+export type SpriteSheetSettings = SpriteSheetSettingsSliceTypes.Response;
+export type SpriteSheet = SpriteSheetSliceTypes.Response;
+export type Utils = UtilsSliceTypes.State;
 
 const { useSelector, ...reactStore } = createReactStore({
   middlewares: (callback, slices, signal) =>
@@ -57,6 +58,7 @@ const { useSelector, ...reactStore } = createReactStore({
     normalMapImage: NormalMapImageSlice,
     normalMapSettings: NormalMapSettingsSlice,
     notification: NotificationSlice,
+    player: PlayerSlice,
     scale: ScaleSlice,
     spriteSelection: SpriteSelectionSlice,
     spriteSheet: SpriteSheetSlice,
@@ -71,17 +73,14 @@ export const StoreProvider = reactStore.StoreProvider;
 export function useAnimations() {
   return {
     animations: useSelector((state) => state.animations.response),
-    animationsLoading: useSelector((state) => state.animations.state.loading),
+    animationsLoading: useSelector((state) => state.animations.loading),
     createAnimation: useSelector((state) => state.animations.create),
     deleteAnimation: useSelector((state) => state.animations.remove),
     resetAnimationCenter: useSelector((state) => state.animations.resetCenter),
     setAnimationCenter: useSelector((state) => state.animations.setCenter),
     setAnimationColor: useSelector((state) => state.animations.setColor),
     setAnimationFPS: useSelector((state) => state.animations.setFPS),
-    setAnimationGrid: useSelector((state) => state.animations.setGrid),
     setAnimationName: useSelector((state) => state.animations.setName),
-    setAnimationOnion: useSelector((state) => state.animations.setOnion),
-    setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
     toggleAnimationCenterVisibility: useSelector(
       (state) => state.animations.toggleCenterVisibility,
     ),
@@ -91,9 +90,7 @@ export function useAnimations() {
 export function useNormalMapImage() {
   return {
     normalMapImage: useSelector((state) => state.normalMapImage.response),
-    normalMapImageLoading: useSelector(
-      (state) => state.normalMapImage.state.loading,
-    ),
+    normalMapImageLoading: useSelector((state) => state.normalMapImage.loading),
   };
 }
 
@@ -101,7 +98,7 @@ export function useNormalMapSettings() {
   return {
     normalMapSettings: useSelector((state) => state.normalMapSettings.response),
     normalMapSettingsLoading: useSelector(
-      (state) => state.normalMapSettings.state.loading,
+      (state) => state.normalMapSettings.loading,
     ),
     setNormalMapSettings: useSelector(
       (state) => state.normalMapSettings.setSettings,
@@ -115,6 +112,33 @@ export function useNotification() {
     cancelNotification: useSelector((state) => state.notification.cancel),
     notification: useSelector((state) => state.notification.state),
     setNotification: useSelector((state) => state.notification.set),
+  };
+}
+
+export function usePlayer() {
+  return {
+    backward: useSelector((state) => state.player.backward),
+    backwardDisabled: useSelector((state) => state.player.backwardDisabled),
+    forward: useSelector((state) => state.player.forward),
+    forwardDisabled: useSelector((state) => state.player.forwardDisabled),
+    fps: useSelector((state) => state.player.fps),
+    index: useSelector((state) => state.player.state.index),
+    minusFPS: useSelector((state) => state.player.minusFPS),
+    minusFPSDisabled: useSelector((state) => state.player.minusFPSDisabled),
+    playing: useSelector((state) => state.player.state.playing),
+    plusFPS: useSelector((state) => state.player.plusFPS),
+    plusFPSDisabled: useSelector((state) => state.player.plusFPSDisabled),
+    resume: useSelector((state) => state.player.resume),
+    resumeDisabled: useSelector((state) => state.player.resumeDisabled),
+    setAnimationId: useSelector((state) => state.player.setAnimationId),
+    setFPS: useSelector((state) => state.player.setFPS),
+    setFPSDisabled: useSelector((state) => state.player.setFPSDisabled),
+    stop: useSelector((state) => state.player.stop),
+    stopDisabled: useSelector((state) => state.player.stopDisabled),
+    toFirst: useSelector((state) => state.player.toFirst),
+    toFirstDisabled: useSelector((state) => state.player.toFirstDisabled),
+    toLast: useSelector((state) => state.player.toLast),
+    toLastDisabled: useSelector((state) => state.player.toLastDisabled),
   };
 }
 
@@ -147,7 +171,7 @@ export function useSpriteSheet() {
       (state) => state.spriteSheet.splitSprite,
     ),
     spriteSheet: useSelector((state) => state.spriteSheet.response),
-    spriteSheetLoading: useSelector((state) => state.spriteSheet.state.loading),
+    spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),
   };
 }
 
@@ -161,7 +185,7 @@ export function useSpriteSheetImage() {
     ),
     spriteSheetImage: useSelector((state) => state.spriteSheetImage.response),
     spriteSheetImageLoading: useSelector(
-      (state) => state.spriteSheetImage.state.loading,
+      (state) => state.spriteSheetImage.loading,
     ),
   };
 }
@@ -175,7 +199,7 @@ export function useSpriteSheetSettings() {
       (state) => state.spriteSheetSettings.response,
     ),
     spriteSheetSettingsLoading: useSelector(
-      (state) => state.spriteSheetSettings.state.loading,
+      (state) => state.spriteSheetSettings.loading,
     ),
   };
 }

@@ -11,10 +11,10 @@ import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import { type Utils } from "./UtilsSlice.types";
+import { type State } from "./UtilsSlice.types";
 
 export default class UtilsSlice extends GlobalSlice<
-  Utils,
+  State,
   {
     animations: AnimationsSlice;
     normalMapImage: NormalMapImageSlice;
@@ -150,7 +150,7 @@ export default class UtilsSlice extends GlobalSlice<
 
 async function createImageData(
   spriteSheetImageURL: string,
-  sprites: (SpriteSheetSliceTypes.SpriteSheet[string] & {
+  sprites: (SpriteSheetSliceTypes.Response[string] & {
     xOld: number;
     yOld: number;
   })[],

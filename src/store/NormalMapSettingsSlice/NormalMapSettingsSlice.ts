@@ -3,13 +3,10 @@ import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 import { SpriteSheetParserClient } from "#src/apis";
 
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
-import {
-  type NormalMapSettings,
-  type Request,
-} from "./NormalMapSettingsSlice.types";
+import { type Request, type Response } from "./NormalMapSettingsSlice.types";
 
 export default class NormalMapSettingsSlice extends ServerSlice<
-  NormalMapSettings | undefined,
+  Response | undefined,
   Request,
   { spriteSheetImage: SpriteSheetImageSlice }
 > {
@@ -31,7 +28,7 @@ export default class NormalMapSettingsSlice extends ServerSlice<
   protected override async onFetch(
     { spriteSheetImage }: Request,
     signal: AbortSignal,
-  ): Promise<NormalMapSettings | undefined> {
+  ): Promise<Response | undefined> {
     if (!spriteSheetImage) return undefined;
 
     const state = await SpriteSheetParserClient.INSTANCE.getState(
@@ -70,9 +67,7 @@ export default class NormalMapSettingsSlice extends ServerSlice<
     );
   }
 
-  setSettings(
-    settings: Omit<NormalMapSettings, "name"> | Pick<NormalMapSettings, "name">,
-  ): void {
+  setSettings(settings: Omit<Response, "name"> | Pick<Response, "name">): void {
     if (!("name" in settings)) {
       if (settings.strength < 1)
         throw new Error("**Strength** must be greater or equal than 1");

@@ -1,4 +1,6 @@
-export type SpriteSheetImage = {
+export type Request = File;
+
+export type Response = {
   backgroundColor: string;
   height: number;
   id: string;
@@ -7,5 +9,3 @@ export type SpriteSheetImage = {
   url: string;
   width: number;
 };
-
-export type Request = File;

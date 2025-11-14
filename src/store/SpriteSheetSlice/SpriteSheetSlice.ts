@@ -9,10 +9,10 @@ import { type AnimationsSlice } from "../AnimationsSlice";
 import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
-import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
+import { type Request, type Response } from "./SpriteSheetSlice.types";
 
 export default class SpriteSheetSlice extends ServerSlice<
-  SpriteSheet | undefined,
+  Response | undefined,
   Request,
   {
     animations: AnimationsSlice;
@@ -46,7 +46,7 @@ export default class SpriteSheetSlice extends ServerSlice<
   protected override async onFetch(
     { spriteSheetImage, spriteSheetSettings }: Request,
     signal: AbortSignal,
-  ): Promise<SpriteSheet | undefined> {
+  ): Promise<Response | undefined> {
     if (!spriteSheetImage || !spriteSheetSettings) return undefined;
 
     const state = await SpriteSheetParserClient.INSTANCE.getState(
@@ -120,7 +120,7 @@ export default class SpriteSheetSlice extends ServerSlice<
         const sprite = this.response![spriteId];
         if (!!sprite) result[spriteId] = sprite;
         return result;
-      }, {} as SpriteSheet),
+      }, {} as Response),
     );
 
     const sprites = { ...this.response, [spriteToAdd.id]: spriteToAdd };
@@ -173,7 +173,7 @@ export default class SpriteSheetSlice extends ServerSlice<
     imageData: ImageData,
     options: Pick<MSEROptions, "delta" | "maxVariation" | "minDiversity">,
     signal: AbortSignal,
-  ): Promise<SpriteSheet> {
+  ): Promise<Response> {
     return imageDataUtils
       .getRects(imageData, { ...options, maxArea: 0.5, minArea: 0 }, signal)
       .then((rects) => rects.map((r) => SpriteSheetSlice.toSprite(r)))
@@ -181,14 +181,14 @@ export default class SpriteSheetSlice extends ServerSlice<
         sprites.reduce((result, current) => {
           result[current.id] = current;
           return result;
-        }, {} as SpriteSheet),
+        }, {} as Response),
       );
   }
 
   private static toSprite(
     rect: Rect,
-    subsprites?: SpriteSheet,
-  ): SpriteSheet[string] & { id: string } {
+    subsprites?: Response,
+  ): Response[string] & { id: string } {
     return {
       height: rect.bottom - rect.top,
       id: `${rect.left}:${rect.top}:${rect.right - rect.left}:${rect.bottom - rect.top}`,

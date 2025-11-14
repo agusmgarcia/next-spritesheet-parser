@@ -8,10 +8,10 @@ import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import { type Animations, type Request } from "./AnimationsSlice.types";
+import { type Request, type Response } from "./AnimationsSlice.types";
 
 export default class AnimationsSlice extends ServerSlice<
-  Animations | undefined,
+  Response | undefined,
   Request,
   {
     notification: NotificationSlice;
@@ -34,7 +34,7 @@ export default class AnimationsSlice extends ServerSlice<
   protected override async onFetch(
     { spriteSheetImage }: Request,
     signal: AbortSignal,
-  ): Promise<Animations | undefined> {
+  ): Promise<Response | undefined> {
     if (!spriteSheetImage) return undefined;
 
     const state = await SpriteSheetParserClient.INSTANCE.getState(
@@ -43,8 +43,7 @@ export default class AnimationsSlice extends ServerSlice<
     );
 
     if (!!state?.animations) return state.animations;
-
-    return [];
+    return {};
   }
 
   protected override onInit(signal: AbortSignal): void {
@@ -70,27 +69,33 @@ export default class AnimationsSlice extends ServerSlice<
     );
   }
 
+  get createDisabled(): boolean {
+    return (
+      !this.slices.spriteSheetImage.response ||
+      !this.slices.spriteSheet.response ||
+      !this.response
+    );
+  }
+
   create(spriteIds: string[]): string | undefined {
+    if (this.createDisabled) return undefined;
+
     if (spriteIds.length <= 0)
       throw new Error("You need to select at least one sprite");
 
     const spriteSheetImage = this.slices.spriteSheetImage.response;
-    if (!spriteSheetImage)
-      throw new Error("You need to provide an image first");
+    if (!spriteSheetImage) throw new Error("Unexpected scenario");
 
     const spriteSheet = this.slices.spriteSheet.response;
-    if (!spriteSheet) throw new Error("You need to provide an image first");
+    if (!spriteSheet) throw new Error("Unexpected scenario");
 
-    if (!this.response) throw new Error("You need to provide an image first");
+    if (!this.response) throw new Error("Unexpected scenario");
 
-    const animation: Animations[number] = {
+    const animation: Response[number] = {
       color: spriteSheetImage.backgroundColor,
       fps: 12,
-      grid: false,
       id: createUUID(),
       name: `New animation ${getLatestAnimationOrder(this.response) + 1}`,
-      onion: false,
-      playing: spriteIds.length > 1,
       sprites: spriteIds
         .sort(sortSprites(spriteSheet))
         .map(mapSprites(spriteIds, spriteSheet)),
@@ -100,7 +105,13 @@ export default class AnimationsSlice extends ServerSlice<
     return animation.id;
   }
 
+  get removeDisabled(): boolean {
+    return !this.response;
+  }
+
   async remove(id: string, signal: AbortSignal): Promise<boolean> {
+    if (this.removeDisabled) return false;
+
     const animation = this.response?.find((a) => a.id === id);
     if (!animation) return true;
 
@@ -111,16 +122,14 @@ export default class AnimationsSlice extends ServerSlice<
     );
     if (!response) return false;
 
-    if (!this.response) return false;
-    this.response = this.response.filter((a) => a.id !== id);
+    this.response = this.response?.filter((a) => a.id !== id);
 
     await this.slices.notification.set("success", "Animation deleted!", signal);
     return true;
   }
 
-  setFPS(id: string, fps: React.SetStateAction<number>): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) => {
+  setFPS(id: string, fps: number): void {
+    this.response = this.response?.map((a) => {
       if (a.id !== id) return a;
 
       fps = fps instanceof Function ? fps(a.fps) : fps;
@@ -129,27 +138,13 @@ export default class AnimationsSlice extends ServerSlice<
   }
 
   setColor(id: string, color: string): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
+    this.response = this.response?.map((a) =>
       a.id === id ? { ...a, color } : a,
     );
   }
 
-  setGrid(id: string, grid: React.SetStateAction<boolean>): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            grid: grid instanceof Function ? grid(!!a.grid) : grid,
-          }
-        : a,
-    );
-  }
-
   setName(id: string, name: string): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
+    this.response = this.response?.map((a) =>
       a.id === id ? { ...a, name } : a,
     );
   }
@@ -159,19 +154,18 @@ export default class AnimationsSlice extends ServerSlice<
     index: number,
     center:
       | Pick<
-          Animations[number]["sprites"][number]["center"],
+          Response[number]["sprites"][number]["center"],
           "offsetX" | "offsetY"
         >
       | Func<
           Pick<
-            Animations[number]["sprites"][number]["center"],
+            Response[number]["sprites"][number]["center"],
             "offsetX" | "offsetY"
           >,
-          [center: Animations[number]["sprites"][number]["center"]]
+          [center: Response[number]["sprites"][number]["center"]]
         >,
   ): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
+    this.response = this.response?.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -201,8 +195,7 @@ export default class AnimationsSlice extends ServerSlice<
   }
 
   toggleCenterVisibility(id: string): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
+    this.response = this.response?.map((a) =>
       a.id === id
         ? {
             ...a,
@@ -214,37 +207,10 @@ export default class AnimationsSlice extends ServerSlice<
         : a,
     );
   }
-
-  setOnion(id: string, onion: React.SetStateAction<boolean>): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            onion: onion instanceof Function ? onion(a.onion) : onion,
-          }
-        : a,
-    );
-  }
-
-  setPlaying(id: string, playing: React.SetStateAction<boolean>): void {
-    if (!this.response) throw new Error("You need to provide an image first");
-    this.response = this.response.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            onion: (playing instanceof Function ? playing(a.playing) : playing)
-              ? false
-              : a.onion,
-            playing: playing instanceof Function ? playing(a.playing) : playing,
-          }
-        : a,
-    );
-  }
 }
 
 function sortSprites(
-  sprites: SpriteSheetSliceTypes.SpriteSheet,
+  sprites: SpriteSheetSliceTypes.Response,
 ): Func<number, [spriteId1: string, spriteId2: string]> {
   return (spriteId1, spriteId2) => {
     const sprite1 = sprites[spriteId1];
@@ -259,8 +225,8 @@ function sortSprites(
 
 function mapSprites(
   spriteIds: string[],
-  sprites: SpriteSheetSliceTypes.SpriteSheet,
-): Func<Animations[number]["sprites"][number], [spriteId: string]> {
+  sprites: SpriteSheetSliceTypes.Response,
+): Func<Response[number]["sprites"][number], [spriteId: string]> {
   const spritesSelected = spriteIds.map((spriteId) => ({
     id: spriteId,
     ...sprites[spriteId],
@@ -282,13 +248,13 @@ function mapSprites(
       };
       return result;
     },
-    {} as Record<string, Animations[number]["sprites"][number]>,
+    {} as Record<string, Response[number]["sprites"][number]>,
   );
 
   return (spriteId) => result[spriteId];
 }
 
-function getLatestAnimationOrder(animations: Animations): number {
+function getLatestAnimationOrder(animations: Response): number {
   return (
     animations
       .map((a) => +(a.name.match(/^New animation (\d+)$/)?.at(1) || "0"))

@@ -4,13 +4,10 @@ import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type NotificationSlice } from "../NotificationSlice";
-import {
-  type Request,
-  type SpriteSheetImage,
-} from "./SpriteSheetImageSlice.types";
+import { type Request, type Response } from "./SpriteSheetImageSlice.types";
 
 export default class SpriteSheetImageSlice extends ServerSlice<
-  SpriteSheetImage | undefined,
+  Response | undefined,
   Request,
   { notification: NotificationSlice }
 > {
@@ -21,7 +18,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
   protected override async onFetch(
     image: Request,
     signal: AbortSignal,
-  ): Promise<SpriteSheetImage | undefined> {
+  ): Promise<Response | undefined> {
     const rawImageURL = URL.createObjectURL(image);
 
     try {
