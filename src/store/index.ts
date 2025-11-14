@@ -1,6 +1,7 @@
 import { createReactStore } from "@agusmgarcia/react-essentials-store";
 import { errors } from "@agusmgarcia/react-essentials-utils";
 
+import { AnimationSlice, type AnimationSliceTypes } from "./AnimationSlice";
 import { AnimationsSlice, type AnimationsSliceTypes } from "./AnimationsSlice";
 import {
   NormalMapImageSlice,
@@ -14,7 +15,6 @@ import {
   NotificationSlice,
   type NotificationSliceTypes,
 } from "./NotificationSlice";
-import { PlayerSlice, type PlayerSliceTypes } from "./PlayerSlice";
 import { ScaleSlice, type ScaleSliceTypes } from "./ScaleSlice";
 import {
   SpriteSelectionSlice,
@@ -34,11 +34,11 @@ import {
 } from "./SpriteSheetSlice";
 import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
-export type Animation = AnimationsSliceTypes.Response[number];
+export type Animation = AnimationSliceTypes.State;
+export type Animations = AnimationsSliceTypes.Response;
 export type NormalMapImage = NormalMapImageSliceTypes.Response;
 export type NormalMapSettings = NormalMapSettingsSliceTypes.Response;
 export type Notification = NotificationSliceTypes.State;
-export type Player = PlayerSliceTypes.State;
 export type SpriteSelection = SpriteSelectionSliceTypes.State;
 export type Scale = ScaleSliceTypes.State;
 export type SpriteSheetImage = SpriteSheetImageSliceTypes.Response;
@@ -54,11 +54,11 @@ const { useSelector, ...reactStore } = createReactStore({
         .then(() => undefined),
     ),
   slices: {
+    animation: AnimationSlice,
     animations: AnimationsSlice,
     normalMapImage: NormalMapImageSlice,
     normalMapSettings: NormalMapSettingsSlice,
     notification: NotificationSlice,
-    player: PlayerSlice,
     scale: ScaleSlice,
     spriteSelection: SpriteSelectionSlice,
     spriteSheet: SpriteSheetSlice,
@@ -69,6 +69,33 @@ const { useSelector, ...reactStore } = createReactStore({
 });
 
 export const StoreProvider = reactStore.StoreProvider;
+
+export function useAnimation() {
+  return {
+    backward: useSelector((state) => state.animation.backward),
+    backwardDisabled: useSelector((state) => state.animation.backwardDisabled),
+    forward: useSelector((state) => state.animation.forward),
+    forwardDisabled: useSelector((state) => state.animation.forwardDisabled),
+    fps: useSelector((state) => state.animation.fps),
+    index: useSelector((state) => state.animation.state.index),
+    minusFPS: useSelector((state) => state.animation.minusFPS),
+    minusFPSDisabled: useSelector((state) => state.animation.minusFPSDisabled),
+    playing: useSelector((state) => state.animation.state.playing),
+    plusFPS: useSelector((state) => state.animation.plusFPS),
+    plusFPSDisabled: useSelector((state) => state.animation.plusFPSDisabled),
+    resume: useSelector((state) => state.animation.resume),
+    resumeDisabled: useSelector((state) => state.animation.resumeDisabled),
+    setAnimationId: useSelector((state) => state.animation.setAnimationId),
+    setFPS: useSelector((state) => state.animation.setFPS),
+    setFPSDisabled: useSelector((state) => state.animation.setFPSDisabled),
+    stop: useSelector((state) => state.animation.stop),
+    stopDisabled: useSelector((state) => state.animation.stopDisabled),
+    toFirst: useSelector((state) => state.animation.toFirst),
+    toFirstDisabled: useSelector((state) => state.animation.toFirstDisabled),
+    toLast: useSelector((state) => state.animation.toLast),
+    toLastDisabled: useSelector((state) => state.animation.toLastDisabled),
+  };
+}
 
 export function useAnimations() {
   return {
@@ -112,33 +139,6 @@ export function useNotification() {
     cancelNotification: useSelector((state) => state.notification.cancel),
     notification: useSelector((state) => state.notification.state),
     setNotification: useSelector((state) => state.notification.set),
-  };
-}
-
-export function usePlayer() {
-  return {
-    backward: useSelector((state) => state.player.backward),
-    backwardDisabled: useSelector((state) => state.player.backwardDisabled),
-    forward: useSelector((state) => state.player.forward),
-    forwardDisabled: useSelector((state) => state.player.forwardDisabled),
-    fps: useSelector((state) => state.player.fps),
-    index: useSelector((state) => state.player.state.index),
-    minusFPS: useSelector((state) => state.player.minusFPS),
-    minusFPSDisabled: useSelector((state) => state.player.minusFPSDisabled),
-    playing: useSelector((state) => state.player.state.playing),
-    plusFPS: useSelector((state) => state.player.plusFPS),
-    plusFPSDisabled: useSelector((state) => state.player.plusFPSDisabled),
-    resume: useSelector((state) => state.player.resume),
-    resumeDisabled: useSelector((state) => state.player.resumeDisabled),
-    setAnimationId: useSelector((state) => state.player.setAnimationId),
-    setFPS: useSelector((state) => state.player.setFPS),
-    setFPSDisabled: useSelector((state) => state.player.setFPSDisabled),
-    stop: useSelector((state) => state.player.stop),
-    stopDisabled: useSelector((state) => state.player.stopDisabled),
-    toFirst: useSelector((state) => state.player.toFirst),
-    toFirstDisabled: useSelector((state) => state.player.toFirstDisabled),
-    toLast: useSelector((state) => state.player.toLast),
-    toLastDisabled: useSelector((state) => state.player.toLastDisabled),
   };
 }
 

@@ -3,9 +3,9 @@ import { emptyFunction, type Func } from "@agusmgarcia/react-essentials-utils";
 
 import { type AnimationsSlice } from "../AnimationsSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
-import { type State } from "./PlayerSlice.types";
+import { type State } from "./AnimationSlice.types";
 
-export default class PlayerSlice extends GlobalSlice<
+export default class AnimationSlice extends GlobalSlice<
   State,
   { animations: AnimationsSlice; spriteSheetImage: SpriteSheetImageSlice }
 > {
