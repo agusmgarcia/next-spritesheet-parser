@@ -2,12 +2,10 @@ import { type SpriteSheetParserClientTypes } from "#src/apis";
 
 import { type SpriteSheetImageSliceTypes } from "../SpriteSheetImageSlice";
 
-export type Animations = NonNullable<
+export type Request = {
+  spriteSheetImage: Pick<SpriteSheetImageSliceTypes.Response, "id"> | undefined;
+};
+
+export type Response = NonNullable<
   SpriteSheetParserClientTypes.GetStateResponse["animations"]
 >;
-
-export type Request = {
-  spriteSheetImage:
-    | Pick<SpriteSheetImageSliceTypes.SpriteSheetImage, "id">
-    | undefined;
-};

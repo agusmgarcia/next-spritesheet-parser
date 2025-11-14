@@ -8,13 +8,10 @@ import { type AnimationsSlice } from "../AnimationsSlice";
 import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { SpriteSheetSlice } from "../SpriteSheetSlice";
-import {
-  type Request,
-  type SpriteSheetSettings,
-} from "./SpriteSheetSettingsSlice.types";
+import { type Request, type Response } from "./SpriteSheetSettingsSlice.types";
 
 export default class SpriteSheetSettingsSlice extends ServerSlice<
-  SpriteSheetSettings | undefined,
+  Response | undefined,
   Request,
   {
     animations: AnimationsSlice;
@@ -40,7 +37,7 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
   protected override async onFetch(
     { spriteSheetImage }: Request,
     signal: AbortSignal,
-  ): Promise<SpriteSheetSettings | undefined> {
+  ): Promise<Response | undefined> {
     if (!spriteSheetImage) return undefined;
 
     const state = await SpriteSheetParserClient.INSTANCE.getState(
@@ -77,9 +74,7 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
   }
 
   async setSettings(
-    settings:
-      | Omit<SpriteSheetSettings, "name">
-      | Pick<SpriteSheetSettings, "name">,
+    settings: Omit<Response, "name"> | Pick<Response, "name">,
     signal: AbortSignal,
   ): Promise<boolean> {
     if ("name" in settings) {
@@ -118,9 +113,9 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
     const animations = this.slices.animations.response;
     if (!animations) return false;
 
-    const animationsThatDoesntContainAtLeastOneSprite = animations.filter((a) =>
-      a.sprites.some((s) => !spriteIds.includes(s.id)),
-    );
+    const animationsThatDoesntContainAtLeastOneSprite = Object.values(
+      animations,
+    ).filter((a) => a.sprites.some((s) => !spriteIds.includes(s.id)));
 
     if (!!animationsThatDoesntContainAtLeastOneSprite.length) {
       const response = await this.slices.notification.set(
@@ -141,6 +136,7 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
     }
 
     if (!this.response) return false;
+
     this.response = { ...settings, name: this.response.name };
     return true;
   }

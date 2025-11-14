@@ -1,6 +1,6 @@
 import { type Func } from "@agusmgarcia/react-essentials-utils";
 
-export type Notification = {
+export type State = {
   accept: Func;
   close: Func;
   id: string;

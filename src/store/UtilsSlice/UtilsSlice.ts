@@ -11,10 +11,10 @@ import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
-import { type Utils } from "./UtilsSlice.types";
+import { type State } from "./UtilsSlice.types";
 
 export default class UtilsSlice extends GlobalSlice<
-  Utils,
+  State,
   {
     animations: AnimationsSlice;
     normalMapImage: NormalMapImageSlice;
@@ -40,8 +40,10 @@ export default class UtilsSlice extends GlobalSlice<
     const animations = this.slices.animations.response;
     if (!animations) throw new Error("You need to provide an image first");
 
-    const repeatedAnimationName = animations.find((a1) =>
-      animations.some((a2) => a1 !== a2 && a1.name === a2.name),
+    const arrayOfAnimations = Object.values(animations);
+
+    const repeatedAnimationName = arrayOfAnimations.find((a1) =>
+      arrayOfAnimations.some((a2) => a1 !== a2 && a1.name === a2.name),
     )?.name;
     if (!!repeatedAnimationName)
       throw new Error(
@@ -63,7 +65,7 @@ export default class UtilsSlice extends GlobalSlice<
       throw new Error("The name of the sprite sheet cannot be empty");
 
     const { length, rectangles: updatedSpriteSheet } = stackRectangles(
-      animations
+      Object.values(animations)
         .flatMap((a) => a.sprites)
         .map((sprites) => sprites.id)
         .filter(filters.distinct)
@@ -87,7 +89,7 @@ export default class UtilsSlice extends GlobalSlice<
         "data:text/json;charset=utf-8," +
           encodeURIComponent(
             JSON.stringify({
-              animations: animations.reduce(
+              animations: Object.values(animations).reduce(
                 (result, animation) => {
                   result[animation.name] = {
                     fps: animation.fps,
@@ -150,7 +152,7 @@ export default class UtilsSlice extends GlobalSlice<
 
 async function createImageData(
   spriteSheetImageURL: string,
-  sprites: (SpriteSheetSliceTypes.SpriteSheet[string] & {
+  sprites: (SpriteSheetSliceTypes.Response[string] & {
     xOld: number;
     yOld: number;
   })[],

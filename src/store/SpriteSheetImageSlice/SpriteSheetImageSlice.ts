@@ -4,13 +4,10 @@ import { SpriteSheetParserClient } from "#src/apis";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type NotificationSlice } from "../NotificationSlice";
-import {
-  type Request,
-  type SpriteSheetImage,
-} from "./SpriteSheetImageSlice.types";
+import { type Request, type Response } from "./SpriteSheetImageSlice.types";
 
 export default class SpriteSheetImageSlice extends ServerSlice<
-  SpriteSheetImage | undefined,
+  Response | undefined,
   Request,
   { notification: NotificationSlice }
 > {
@@ -21,7 +18,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
   protected override async onFetch(
     image: Request,
     signal: AbortSignal,
-  ): Promise<SpriteSheetImage | undefined> {
+  ): Promise<Response | undefined> {
     const rawImageURL = URL.createObjectURL(image);
 
     try {
@@ -72,7 +69,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
     }
   }
 
-  async removeImage(signal: AbortSignal): Promise<void> {
+  async remove(signal: AbortSignal): Promise<void> {
     const response = await this.slices.notification.set(
       "warning",
       "By removing the image you may loose all your progress. Are you sure you want to continue?",
@@ -90,7 +87,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
     this.response = undefined;
   }
 
-  async setImage(image: File, signal: AbortSignal): Promise<void> {
+  async set(image: File, signal: AbortSignal): Promise<void> {
     await this.reloadWithRequest(image, signal);
   }
 }

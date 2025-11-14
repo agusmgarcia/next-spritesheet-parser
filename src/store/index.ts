@@ -1,6 +1,7 @@
 import { createReactStore } from "@agusmgarcia/react-essentials-store";
 import { errors } from "@agusmgarcia/react-essentials-utils";
 
+import { AnimationSlice, type AnimationSliceTypes } from "./AnimationSlice";
 import { AnimationsSlice, type AnimationsSliceTypes } from "./AnimationsSlice";
 import {
   NormalMapImageSlice,
@@ -33,17 +34,18 @@ import {
 } from "./SpriteSheetSlice";
 import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
-export type Animation = AnimationsSliceTypes.Animations[number];
-export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;
-export type NormalMapSettings = NormalMapSettingsSliceTypes.NormalMapSettings;
-export type Notification = NotificationSliceTypes.Notification;
-export type SpriteSelection = SpriteSelectionSliceTypes.SpriteSelection;
-export type Scale = ScaleSliceTypes.Scale;
-export type SpriteSheetImage = SpriteSheetImageSliceTypes.SpriteSheetImage;
-export type SpriteSheetSettings =
-  SpriteSheetSettingsSliceTypes.SpriteSheetSettings;
-export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
-export type Utils = UtilsSliceTypes.Utils;
+export type Animation = AnimationsSliceTypes.Response[string] &
+  AnimationSliceTypes.State;
+export type Animations = AnimationsSliceTypes.Response;
+export type NormalMapImage = NormalMapImageSliceTypes.Response;
+export type NormalMapSettings = NormalMapSettingsSliceTypes.Response;
+export type Notification = NotificationSliceTypes.State;
+export type SpriteSelection = SpriteSelectionSliceTypes.State;
+export type Scale = ScaleSliceTypes.State;
+export type SpriteSheetImage = SpriteSheetImageSliceTypes.Response;
+export type SpriteSheetSettings = SpriteSheetSettingsSliceTypes.Response;
+export type SpriteSheet = SpriteSheetSliceTypes.Response;
+export type Utils = UtilsSliceTypes.State;
 
 const { useSelector, ...reactStore } = createReactStore({
   middlewares: (callback, slices, signal) =>
@@ -53,6 +55,7 @@ const { useSelector, ...reactStore } = createReactStore({
         .then(() => undefined),
     ),
   slices: {
+    animation: AnimationSlice,
     animations: AnimationsSlice,
     normalMapImage: NormalMapImageSlice,
     normalMapSettings: NormalMapSettingsSlice,
@@ -68,32 +71,106 @@ const { useSelector, ...reactStore } = createReactStore({
 
 export const StoreProvider = reactStore.StoreProvider;
 
+export function useAnimation() {
+  return {
+    animation: useSelector((state) => state.animation.state),
+    backwardAnimationIndex: useSelector(
+      (state) => state.animation.backwardIndex,
+    ),
+    backwardAnimationIndexDisabled: useSelector(
+      (state) => state.animation.backwardIndexDisabled,
+    ),
+    deleteAnimation: useSelector((state) => state.animation.remove),
+    deleteAnimationDisabled: useSelector(
+      (state) => state.animation.removeDisabled,
+    ),
+    disableAnimationCenter: useSelector(
+      (state) => state.animation.disableCenter,
+    ),
+    disableAnimationCenterDisabled: useSelector(
+      (state) => state.animation.disableCenterDisabled,
+    ),
+    disableAnimationGrid: useSelector((state) => state.animation.disableGrid),
+    disableAnimationGridDisabled: useSelector(
+      (state) => state.animation.disableGridDisabled,
+    ),
+    disableAnimationOnion: useSelector((state) => state.animation.disableOnion),
+    disableAnimationOnionDisabled: useSelector(
+      (state) => state.animation.disableOnionDisabled,
+    ),
+    enableAnimationCenter: useSelector((state) => state.animation.enableCenter),
+    enableAnimationCenterDisabled: useSelector(
+      (state) => state.animation.enableCenterDisabled,
+    ),
+    enableAnimationGrid: useSelector((state) => state.animation.enableGrid),
+    enableAnimationGridDisabled: useSelector(
+      (state) => state.animation.enableGridDisabled,
+    ),
+    enableAnimationOnion: useSelector((state) => state.animation.enableOnion),
+    enableAnimationOnionDisabled: useSelector(
+      (state) => state.animation.enableOnionDisabled,
+    ),
+    forwardAnimationIndex: useSelector((state) => state.animation.forwardIndex),
+    forwardAnimationIndexDisabled: useSelector(
+      (state) => state.animation.forwardIndexDisabled,
+    ),
+    minusAnimationFPS: useSelector((state) => state.animation.minusFPS),
+    minusAnimationFPSDisabled: useSelector(
+      (state) => state.animation.minusFPSDisabled,
+    ),
+    plusAnimationFPS: useSelector((state) => state.animation.plusFPS),
+    plusAnimationFPSDisabled: useSelector(
+      (state) => state.animation.plusFPSDisabled,
+    ),
+    resetAnimationCenter: useSelector((state) => state.animation.resetCenter),
+    resetAnimationCenterDisabled: useSelector(
+      (state) => state.animation.resetCenterDisabled,
+    ),
+    resumeAnimation: useSelector((state) => state.animation.resume),
+    resumeAnimationDisabled: useSelector(
+      (state) => state.animation.resumeDisabled,
+    ),
+    setAnimationColor: useSelector((state) => state.animation.setColor),
+    setAnimationColorDisabled: useSelector(
+      (state) => state.animation.setColorDisabled,
+    ),
+    setAnimationFPS: useSelector((state) => state.animation.setFPS),
+    setAnimationFPSDisabled: useSelector(
+      (state) => state.animation.setFPSDisabled,
+    ),
+    setAnimationId: useSelector((state) => state.animation.setId),
+    setAnimationIdDisabled: useSelector(
+      (state) => state.animation.setIdDisabled,
+    ),
+    setAnimationName: useSelector((state) => state.animation.setName),
+    setAnimationNameDisabled: useSelector(
+      (state) => state.animation.setNameDisabled,
+    ),
+    stopAnimation: useSelector((state) => state.animation.stop),
+    stopAnimationDisabled: useSelector((state) => state.animation.stopDisabled),
+    toFirstAnimationIndex: useSelector((state) => state.animation.toFirstIndex),
+    toFirstAnimationIndexDisabled: useSelector(
+      (state) => state.animation.toFirstIndexDisabled,
+    ),
+    toLastAnimationIndex: useSelector((state) => state.animation.toLastIndex),
+    toLastAnimationIndexDisabled: useSelector(
+      (state) => state.animation.toLastIndexDisabled,
+    ),
+  };
+}
+
 export function useAnimations() {
   return {
     animations: useSelector((state) => state.animations.response),
-    animationsLoading: useSelector((state) => state.animations.state.loading),
+    animationsLoading: useSelector((state) => state.animations.loading),
     createAnimation: useSelector((state) => state.animations.create),
-    deleteAnimation: useSelector((state) => state.animations.remove),
-    resetAnimationCenter: useSelector((state) => state.animations.resetCenter),
-    setAnimationCenter: useSelector((state) => state.animations.setCenter),
-    setAnimationColor: useSelector((state) => state.animations.setColor),
-    setAnimationFPS: useSelector((state) => state.animations.setFPS),
-    setAnimationGrid: useSelector((state) => state.animations.setGrid),
-    setAnimationName: useSelector((state) => state.animations.setName),
-    setAnimationOnion: useSelector((state) => state.animations.setOnion),
-    setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
-    toggleAnimationCenterVisibility: useSelector(
-      (state) => state.animations.toggleCenterVisibility,
-    ),
   };
 }
 
 export function useNormalMapImage() {
   return {
     normalMapImage: useSelector((state) => state.normalMapImage.response),
-    normalMapImageLoading: useSelector(
-      (state) => state.normalMapImage.state.loading,
-    ),
+    normalMapImageLoading: useSelector((state) => state.normalMapImage.loading),
   };
 }
 
@@ -101,10 +178,11 @@ export function useNormalMapSettings() {
   return {
     normalMapSettings: useSelector((state) => state.normalMapSettings.response),
     normalMapSettingsLoading: useSelector(
-      (state) => state.normalMapSettings.state.loading,
+      (state) => state.normalMapSettings.loading,
     ),
-    setNormalMapSettings: useSelector(
-      (state) => state.normalMapSettings.setSettings,
+    setNormalMapSettings: useSelector((state) => state.normalMapSettings.set),
+    setNormalMapSettingsDisabled: useSelector(
+      (state) => state.normalMapSettings.setDisabled,
     ),
   };
 }
@@ -145,21 +223,19 @@ export function useSpriteSheet() {
       (state) => state.spriteSheet.splitSprite,
     ),
     spriteSheet: useSelector((state) => state.spriteSheet.response),
-    spriteSheetLoading: useSelector((state) => state.spriteSheet.state.loading),
+    spriteSheetLoading: useSelector((state) => state.spriteSheet.loading),
   };
 }
 
 export function useSpriteSheetImage() {
   return {
     removeSpriteSheetImage: useSelector(
-      (state) => state.spriteSheetImage.removeImage,
+      (state) => state.spriteSheetImage.remove,
     ),
-    setSpriteSheetImage: useSelector(
-      (state) => state.spriteSheetImage.setImage,
-    ),
+    setSpriteSheetImage: useSelector((state) => state.spriteSheetImage.set),
     spriteSheetImage: useSelector((state) => state.spriteSheetImage.response),
     spriteSheetImageLoading: useSelector(
-      (state) => state.spriteSheetImage.state.loading,
+      (state) => state.spriteSheetImage.loading,
     ),
   };
 }
@@ -173,7 +249,7 @@ export function useSpriteSheetSettings() {
       (state) => state.spriteSheetSettings.response,
     ),
     spriteSheetSettingsLoading: useSelector(
-      (state) => state.spriteSheetSettings.state.loading,
+      (state) => state.spriteSheetSettings.loading,
     ),
   };
 }
