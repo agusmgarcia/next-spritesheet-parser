@@ -1,5 +1,5 @@
 export type State = {
-  animationId: string;
+  id: string;
   index: number;
   playing: boolean;
 };

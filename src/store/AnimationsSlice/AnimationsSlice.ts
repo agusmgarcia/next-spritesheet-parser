@@ -1,10 +1,11 @@
 import { ServerSlice } from "@agusmgarcia/react-essentials-store";
-import { type Func } from "@agusmgarcia/react-essentials-utils";
+import { equals, type Func } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
 import { SpriteSheetParserClient } from "#src/apis";
 
 import { type NotificationSlice } from "../NotificationSlice";
+import { type SpriteSelectionSlice } from "../SpriteSelectionSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSheetSliceTypes } from "../SpriteSheetSlice";
@@ -15,6 +16,7 @@ export default class AnimationsSlice extends ServerSlice<
   Request,
   {
     notification: NotificationSlice;
+    spriteSelection: SpriteSelectionSlice;
     spriteSheet: SpriteSheetSlice;
     spriteSheetImage: SpriteSheetImageSlice;
   }
@@ -51,10 +53,19 @@ export default class AnimationsSlice extends ServerSlice<
 
     this.slices.spriteSheet.subscribe(
       (state) => state.response,
-      (sprites) =>
-        (this.response = this.response?.filter((a) =>
-          a.sprites.every((s) => !!sprites?.[s.id]),
-        )),
+      (sprites) => {
+        if (!this.response) return;
+
+        const animationIdsToDelete = Object.keys(this.response).filter(
+          (id) => !!this.response?.[id].sprites.every((s) => !!sprites?.[s.id]),
+        );
+
+        if (!animationIdsToDelete.length) return;
+
+        const newResponse = { ...this.response };
+        animationIdsToDelete.forEach((aId) => delete newResponse[aId]);
+        this.response = newResponse;
+      },
     );
 
     this.subscribe(
@@ -73,15 +84,13 @@ export default class AnimationsSlice extends ServerSlice<
     return (
       !this.slices.spriteSheetImage.response ||
       !this.slices.spriteSheet.response ||
+      !this.slices.spriteSelection.state.length ||
       !this.response
     );
   }
 
-  create(spriteIds: string[]): string | undefined {
+  create(): string | undefined {
     if (this.createDisabled) return undefined;
-
-    if (spriteIds.length <= 0)
-      throw new Error("You need to select at least one sprite");
 
     const spriteSheetImage = this.slices.spriteSheetImage.response;
     if (!spriteSheetImage) throw new Error("Unexpected scenario");
@@ -90,19 +99,23 @@ export default class AnimationsSlice extends ServerSlice<
     if (!spriteSheet) throw new Error("Unexpected scenario");
 
     if (!this.response) throw new Error("Unexpected scenario");
+    const spriteIds = this.slices.spriteSelection.state;
 
-    const animation: Response[number] = {
-      color: spriteSheetImage.backgroundColor,
-      fps: 12,
-      id: createUUID(),
-      name: `New animation ${getLatestAnimationOrder(this.response) + 1}`,
-      sprites: spriteIds
-        .sort(sortSprites(spriteSheet))
-        .map(mapSprites(spriteIds, spriteSheet)),
+    const id = createUUID();
+    this.response = {
+      ...this.response,
+      [id]: {
+        color: spriteSheetImage.backgroundColor,
+        fps: 12,
+        name: `New animation ${getLatestAnimationOrder(this.response) + 1}`,
+        sprites: spriteIds
+          .sort(sortSprites(spriteSheet))
+          .map(mapSprites(spriteIds, spriteSheet)),
+      },
     };
 
-    this.response = [...this.response, animation];
-    return animation.id;
+    this.slices.spriteSelection.unselectAll();
+    return id;
   }
 
   get removeDisabled(): boolean {
@@ -112,7 +125,7 @@ export default class AnimationsSlice extends ServerSlice<
   async remove(id: string, signal: AbortSignal): Promise<boolean> {
     if (this.removeDisabled) return false;
 
-    const animation = this.response?.find((a) => a.id === id);
+    const animation = this.response?.[id];
     if (!animation) return true;
 
     const response = await this.slices.notification.set(
@@ -122,90 +135,25 @@ export default class AnimationsSlice extends ServerSlice<
     );
     if (!response) return false;
 
-    this.response = this.response?.filter((a) => a.id !== id);
+    const newResponse = { ...this.response };
+    delete newResponse[id];
+    this.response = newResponse;
 
     await this.slices.notification.set("success", "Animation deleted!", signal);
     return true;
   }
 
-  setFPS(id: string, fps: number): void {
-    this.response = this.response?.map((a) => {
-      if (a.id !== id) return a;
-
-      fps = fps instanceof Function ? fps(a.fps) : fps;
-      return { ...a, fps: !isNaN(fps) ? Math.max(fps, 1) : 1 };
-    });
-  }
-
-  setColor(id: string, color: string): void {
-    this.response = this.response?.map((a) =>
-      a.id === id ? { ...a, color } : a,
-    );
-  }
-
-  setName(id: string, name: string): void {
-    this.response = this.response?.map((a) =>
-      a.id === id ? { ...a, name } : a,
-    );
-  }
-
-  setCenter(
+  set(
     id: string,
-    index: number,
-    center:
-      | Pick<
-          Response[number]["sprites"][number]["center"],
-          "offsetX" | "offsetY"
-        >
-      | Func<
-          Pick<
-            Response[number]["sprites"][number]["center"],
-            "offsetX" | "offsetY"
-          >,
-          [center: Response[number]["sprites"][number]["center"]]
-        >,
+    factory: Func<Response[number], [animation: Response[number]]>,
   ): void {
-    this.response = this.response?.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            sprites: a.sprites.map((s, i) =>
-              i === index
-                ? {
-                    ...s,
-                    center: {
-                      ...s.center,
-                      ...(center instanceof Function
-                        ? center(s.center)
-                        : center),
-                    },
-                  }
-                : s,
-            ),
-          }
-        : a,
-    );
-  }
+    const animation = this.response?.[id];
+    if (!animation) return;
 
-  resetCenter(id: string, index: number): void {
-    this.setCenter(id, index, (center) => ({
-      offsetX: center.initialOffsetX,
-      offsetY: center.initialOffsetY,
-    }));
-  }
+    const newAnimation = factory(animation);
+    if (equals.strict(animation, newAnimation)) return;
 
-  toggleCenterVisibility(id: string): void {
-    this.response = this.response?.map((a) =>
-      a.id === id
-        ? {
-            ...a,
-            sprites: a.sprites.map((s) => ({
-              ...s,
-              center: { ...s.center, visible: !s.center.visible },
-            })),
-          }
-        : a,
-    );
+    this.response = { ...this.response, [id]: newAnimation };
   }
 }
 
@@ -256,7 +204,7 @@ function mapSprites(
 
 function getLatestAnimationOrder(animations: Response): number {
   return (
-    animations
+    Object.values(animations)
       .map((a) => +(a.name.match(/^New animation (\d+)$/)?.at(1) || "0"))
       .sort()
       .at(-1) || 0

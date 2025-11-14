@@ -12,7 +12,7 @@ export default class AnimationSlice extends GlobalSlice<
   private cancelIndexInterval: Func;
 
   constructor() {
-    super({ animationId: "", index: 0, playing: false });
+    super({ id: "", index: 0, playing: false });
 
     this.cancelIndexInterval = emptyFunction;
   }
@@ -22,17 +22,16 @@ export default class AnimationSlice extends GlobalSlice<
 
     this.slices.spriteSheetImage.subscribe(
       (state) => state.response,
-      () => (this.state = { animationId: "", index: 0, playing: false }),
+      () => (this.state = { id: "", index: 0, playing: false }),
     );
 
     this.slices.animations.subscribe(
       (state) => state.response,
       (animations) => {
-        if (!this.state.animationId) return;
-        const animation = animations?.[this.state.animationId];
+        if (!this.state.id) return;
+        const animation = animations?.[this.state.id];
 
-        if (!animation)
-          this.state = { animationId: "", index: 0, playing: false };
+        if (!animation) this.state = { id: "", index: 0, playing: false };
         else if (animation.sprites.length >= this.state.index)
           this.state = { ...this.state, index: animation.sprites.length - 1 };
       },
@@ -40,18 +39,15 @@ export default class AnimationSlice extends GlobalSlice<
   }
 
   private get spritesLength(): number {
-    return (
-      this.slices.animations.response?.[this.state.animationId].sprites
-        .length || 0
-    );
+    return this.slices.animations.response?.[this.state.id].sprites.length || 0;
   }
 
-  get backwardDisabled(): boolean {
+  get backwardIndexDisabled(): boolean {
     return this.spritesLength <= 1;
   }
 
-  backward(): void {
-    if (this.backwardDisabled) return;
+  backwardIndex(): void {
+    if (this.backwardIndexDisabled) return;
 
     this.cancelIndexInterval();
 
@@ -63,12 +59,12 @@ export default class AnimationSlice extends GlobalSlice<
     };
   }
 
-  get forwardDisabled(): boolean {
+  get forwardIndexDisabled(): boolean {
     return this.spritesLength <= 1;
   }
 
-  forward(): void {
-    if (this.forwardDisabled) return;
+  forwardIndex(): void {
+    if (this.forwardIndexDisabled) return;
 
     this.cancelIndexInterval();
 
@@ -81,7 +77,7 @@ export default class AnimationSlice extends GlobalSlice<
   }
 
   get fps(): number {
-    return this.slices.animations.response?.[this.state.animationId].fps || 0;
+    return this.slices.animations.response?.[this.state.id].fps || 0;
   }
 
   get minusFPSDisabled(): boolean {
@@ -92,7 +88,11 @@ export default class AnimationSlice extends GlobalSlice<
     if (this.minusFPSDisabled) return;
 
     this.cancelIndexInterval();
-    this.slices.animations.setFPS(this.state.animationId, this.fps - 1);
+
+    this.slices.animations.set(this.state.id, (animation) => ({
+      ...animation,
+      fps: animation.fps - 1,
+    }));
 
     if (this.state.playing) this.setIndexInterval(signal);
   }
@@ -105,7 +105,11 @@ export default class AnimationSlice extends GlobalSlice<
     if (this.plusFPSDisabled) return;
 
     this.cancelIndexInterval();
-    this.slices.animations.setFPS(this.state.animationId, this.fps + 1);
+
+    this.slices.animations.set(this.state.id, (animation) => ({
+      ...animation,
+      fps: animation.fps + 1,
+    }));
 
     if (this.state.playing) this.setIndexInterval(signal);
   }
@@ -121,17 +125,17 @@ export default class AnimationSlice extends GlobalSlice<
     this.setIndexInterval(signal);
   }
 
-  setAnimationId(animationId: string, signal: AbortSignal): void {
-    if (this.state.animationId === animationId) return;
+  setId(id: string, signal: AbortSignal): void {
+    if (this.state.id === id) return;
 
     this.cancelIndexInterval();
 
     this.state = {
-      animationId,
+      id: id,
       index: 0,
       playing:
-        (this.slices.animations.response?.[this.state.animationId].sprites
-          .length || 0) > 1,
+        (this.slices.animations.response?.[this.state.id].sprites.length || 0) >
+        1,
     };
 
     if (this.state.playing) this.setIndexInterval(signal);
@@ -145,7 +149,11 @@ export default class AnimationSlice extends GlobalSlice<
     if (this.setFPSDisabled || this.fps === fps || fps <= 0) return;
 
     this.cancelIndexInterval();
-    this.slices.animations.setFPS(this.state.animationId, fps);
+
+    this.slices.animations.set(this.state.id, (animation) => ({
+      ...animation,
+      fps,
+    }));
 
     if (this.state.playing) this.setIndexInterval(signal);
   }
@@ -161,25 +169,25 @@ export default class AnimationSlice extends GlobalSlice<
     this.state = { ...this.state, playing: false };
   }
 
-  get toFirstDisabled(): boolean {
+  get toFirstIndexDisabled(): boolean {
     return this.spritesLength <= 1 || !this.state.index;
   }
 
-  toFirst(): void {
-    if (this.toFirstDisabled) return;
+  toFirstIndex(): void {
+    if (this.toFirstIndexDisabled) return;
 
     this.cancelIndexInterval();
     this.state = { ...this.state, index: 0, playing: false };
   }
 
-  get toLastDisabled(): boolean {
+  get toLastIndexDisabled(): boolean {
     return (
       this.spritesLength <= 1 || this.spritesLength - 1 === this.state.index
     );
   }
 
-  toLast(): void {
-    if (this.toLastDisabled) return;
+  toLastIndex(): void {
+    if (this.toLastIndexDisabled) return;
 
     this.cancelIndexInterval();
 

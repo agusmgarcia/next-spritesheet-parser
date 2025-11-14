@@ -1,5 +1,6 @@
 import { createReactStore } from "@agusmgarcia/react-essentials-store";
 import { errors } from "@agusmgarcia/react-essentials-utils";
+import { useMemo } from "react";
 
 import { AnimationSlice, type AnimationSliceTypes } from "./AnimationSlice";
 import { AnimationsSlice, type AnimationsSliceTypes } from "./AnimationsSlice";
@@ -34,7 +35,8 @@ import {
 } from "./SpriteSheetSlice";
 import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
-export type Animation = AnimationSliceTypes.State;
+export type Animation = AnimationsSliceTypes.Response[string] &
+  AnimationSliceTypes.State;
 export type Animations = AnimationsSliceTypes.Response;
 export type NormalMapImage = NormalMapImageSliceTypes.Response;
 export type NormalMapSettings = NormalMapSettingsSliceTypes.Response;
@@ -71,29 +73,59 @@ const { useSelector, ...reactStore } = createReactStore({
 export const StoreProvider = reactStore.StoreProvider;
 
 export function useAnimation() {
+  const id = useSelector((state) => state.animation.state.id);
+  const index = useSelector((state) => state.animation.state.index);
+  const playing = useSelector((state) => state.animation.state.playing);
+  const fps = useSelector((state) => state.animation.fps);
+
+  const incompleteAnimation = useSelector(
+    (state) => state.animations.response?.[id],
+  );
+
+  const animation = useMemo<Animation | undefined>(() => {
+    if (!incompleteAnimation) return undefined;
+    return { ...incompleteAnimation, fps, id, index, playing };
+  }, [fps, id, incompleteAnimation, index, playing]);
+
   return {
-    backward: useSelector((state) => state.animation.backward),
-    backwardDisabled: useSelector((state) => state.animation.backwardDisabled),
-    forward: useSelector((state) => state.animation.forward),
-    forwardDisabled: useSelector((state) => state.animation.forwardDisabled),
-    fps: useSelector((state) => state.animation.fps),
-    index: useSelector((state) => state.animation.state.index),
-    minusFPS: useSelector((state) => state.animation.minusFPS),
-    minusFPSDisabled: useSelector((state) => state.animation.minusFPSDisabled),
-    playing: useSelector((state) => state.animation.state.playing),
-    plusFPS: useSelector((state) => state.animation.plusFPS),
-    plusFPSDisabled: useSelector((state) => state.animation.plusFPSDisabled),
-    resume: useSelector((state) => state.animation.resume),
-    resumeDisabled: useSelector((state) => state.animation.resumeDisabled),
-    setAnimationId: useSelector((state) => state.animation.setAnimationId),
-    setFPS: useSelector((state) => state.animation.setFPS),
-    setFPSDisabled: useSelector((state) => state.animation.setFPSDisabled),
-    stop: useSelector((state) => state.animation.stop),
-    stopDisabled: useSelector((state) => state.animation.stopDisabled),
-    toFirst: useSelector((state) => state.animation.toFirst),
-    toFirstDisabled: useSelector((state) => state.animation.toFirstDisabled),
-    toLast: useSelector((state) => state.animation.toLast),
-    toLastDisabled: useSelector((state) => state.animation.toLastDisabled),
+    animation,
+    backwardAnimationIndex: useSelector(
+      (state) => state.animation.backwardIndex,
+    ),
+    backwardAnimationIndexDisabled: useSelector(
+      (state) => state.animation.backwardIndexDisabled,
+    ),
+    forwardAnimationIndex: useSelector((state) => state.animation.forwardIndex),
+    forwardAnimationIndexDisabled: useSelector(
+      (state) => state.animation.forwardIndexDisabled,
+    ),
+    minusAnimationFPS: useSelector((state) => state.animation.minusFPS),
+    minusAnimationFPSDisabled: useSelector(
+      (state) => state.animation.minusFPSDisabled,
+    ),
+    plusAnimationFPS: useSelector((state) => state.animation.plusFPS),
+    plusAnimationFPSDisabled: useSelector(
+      (state) => state.animation.plusFPSDisabled,
+    ),
+    resumeAnimation: useSelector((state) => state.animation.resume),
+    resumeAnimationDisabled: useSelector(
+      (state) => state.animation.resumeDisabled,
+    ),
+    setAnimationFPS: useSelector((state) => state.animation.setFPS),
+    setAnimationFPSDisabled: useSelector(
+      (state) => state.animation.setFPSDisabled,
+    ),
+    setAnimationId: useSelector((state) => state.animation.setId),
+    stopAnimation: useSelector((state) => state.animation.stop),
+    stopAnimationDisabled: useSelector((state) => state.animation.stopDisabled),
+    toFirstAnimationIndex: useSelector((state) => state.animation.toFirstIndex),
+    toFirstAnimationIndexDisabled: useSelector(
+      (state) => state.animation.toFirstIndexDisabled,
+    ),
+    toLastAnimationIndex: useSelector((state) => state.animation.toLastIndex),
+    toLastAnimationIndexDisabled: useSelector(
+      (state) => state.animation.toLastIndexDisabled,
+    ),
   };
 }
 
@@ -103,14 +135,6 @@ export function useAnimations() {
     animationsLoading: useSelector((state) => state.animations.loading),
     createAnimation: useSelector((state) => state.animations.create),
     deleteAnimation: useSelector((state) => state.animations.remove),
-    resetAnimationCenter: useSelector((state) => state.animations.resetCenter),
-    setAnimationCenter: useSelector((state) => state.animations.setCenter),
-    setAnimationColor: useSelector((state) => state.animations.setColor),
-    setAnimationFPS: useSelector((state) => state.animations.setFPS),
-    setAnimationName: useSelector((state) => state.animations.setName),
-    toggleAnimationCenterVisibility: useSelector(
-      (state) => state.animations.toggleCenterVisibility,
-    ),
   };
 }
 
