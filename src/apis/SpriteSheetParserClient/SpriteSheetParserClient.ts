@@ -133,7 +133,13 @@ export default class SpriteSheetParserClient {
             result[a.id] = {
               fps: a.fps,
               name: a.name,
-              sprites: a.sprites,
+              sprites: a.sprites.map((s) => ({
+                center: {
+                  offsetX: s.center.offsetX,
+                  offsetY: s.center.offsetY,
+                },
+                id: s.id,
+              })),
             };
             return result;
           },

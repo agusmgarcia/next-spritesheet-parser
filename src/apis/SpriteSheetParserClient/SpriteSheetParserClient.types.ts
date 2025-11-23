@@ -59,10 +59,17 @@ export type State = {
   } & Partial<{
     animations: Record<
       string,
-      Pick<
-        NonNullable<State["v1"]["animations"]>[number],
-        "fps" | "name" | "sprites"
-      >
+      {
+        fps: number;
+        name: string;
+        sprites: {
+          center: {
+            offsetX: number;
+            offsetY: number;
+          };
+          id: string;
+        }[];
+      }
     >;
     normalMapSettings: NonNullable<State["v1"]["normalMapSettings"]>;
     spriteSheet: NonNullable<State["v1"]["spriteSheet"]>;
