@@ -2,31 +2,27 @@ import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-import { useAnimations } from "#src/store";
+import { useAnimation } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
-export default function useConfigurationsItem({
-  animation: animationFromProps,
-  ...rest
-}: ConfigurationsItemProps) {
-  const { homeOnClick } = useHome();
+export default function useConfigurationsItem(props: ConfigurationsItemProps) {
+  const { goToHome } = useHome();
 
-  const { nameOnChange, nameValue } = useName({
-    animation: animationFromProps,
-  });
+  const { animationName, setAnimationName, setAnimationNameDisabled } =
+    useAnimationName();
 
-  const { deleteAnimationOnClick } = useDeleteAnimation({
-    animation: animationFromProps,
-  });
+  const { deleteAnimation, deleteAnimationDisabled } = useDeleteAnimation();
 
   return {
-    ...rest,
-    deleteAnimationOnClick,
-    homeOnClick,
-    nameOnChange,
-    nameValue,
+    ...props,
+    animationName,
+    deleteAnimation,
+    deleteAnimationDisabled,
+    goToHome,
+    setAnimationName,
+    setAnimationNameDisabled,
   };
 }
 
@@ -38,37 +34,37 @@ function useHome() {
     [push],
   );
 
-  return { homeOnClick };
+  return { goToHome: homeOnClick };
 }
 
-function useName({
-  animation: animationFromProps,
-}: Pick<ConfigurationsItemProps, "animation">) {
-  const { setAnimationName } = useAnimations();
+function useAnimationName() {
+  const { animation, setAnimationName, setAnimationNameDisabled } =
+    useAnimation();
 
-  const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => setAnimationName(animationFromProps.id, event.target.value),
-    [animationFromProps.id, setAnimationName],
-  );
+  const setAnimationNameOnChange = useCallback<
+    React.ChangeEventHandler<HTMLInputElement>
+  >((event) => setAnimationName(event.target.value), [setAnimationName]);
 
-  return { nameOnChange, nameValue: animationFromProps.name };
+  return {
+    animationName: animation.name,
+    setAnimationName: setAnimationNameOnChange,
+    setAnimationNameDisabled,
+  };
 }
 
-function useDeleteAnimation({
-  animation: animationFromProps,
-}: Pick<ConfigurationsItemProps, "animation">) {
+function useDeleteAnimation() {
   const { replace } = useRouter();
 
-  const { deleteAnimation } = useAnimations();
+  const { deleteAnimation, deleteAnimationDisabled } = useAnimation();
 
   const deleteAnimationOnClick = useCallback<Func>(() => {
-    deleteAnimation(animationFromProps.id).then((result) => {
+    deleteAnimation().then((result) => {
       if (!result) return;
       return replace("/");
     });
-  }, [animationFromProps.id, deleteAnimation, replace]);
+  }, [deleteAnimation, replace]);
 
   useKeyDown("r", deleteAnimationOnClick);
 
-  return { deleteAnimationOnClick };
+  return { deleteAnimation: deleteAnimationOnClick, deleteAnimationDisabled };
 }

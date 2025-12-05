@@ -1,7 +1,3 @@
-import { type Animation } from "#src/store";
-
-type ConfigurationsItemProps = {
-  animation: Animation;
-};
+type ConfigurationsItemProps = {};
 
 export default ConfigurationsItemProps;

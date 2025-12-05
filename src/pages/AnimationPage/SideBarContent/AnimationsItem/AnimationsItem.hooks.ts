@@ -2,45 +2,41 @@ import { sorts } from "@agusmgarcia/react-essentials-utils";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useAnimations, useSpriteSheetImage } from "#src/store";
+import { useAnimation, useAnimations, useSpriteSheetImage } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
-export default function useAnimationsItem({
-  animation: animationFromProps,
-  ...rest
-}: AnimationsItemProps) {
+export default function useAnimationsItem(props: AnimationsItemProps) {
   const {
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
-  } = useAnimationSelector({ animation: animationFromProps });
+  } = useAnimationSelector();
 
   return {
-    ...rest,
+    ...props,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
   };
 }
 
-function useAnimationSelector({
-  animation: animationFromProps,
-}: Pick<AnimationsItemProps, "animation">) {
+function useAnimationSelector() {
   const { push } = useRouter();
 
   const { spriteSheetImage } = useSpriteSheetImage();
   const { animations } = useAnimations();
+  const { animation } = useAnimation();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState(
-    animationFromProps.id,
+    animation.id,
   );
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
       { id: "sheet", name: spriteSheetImage?.name || "Sprite sheet" },
-      ...(animations
-        ?.map((a) => ({ id: a.id, name: a.name }))
+      ...(Object.keys(animations || {})
+        ?.map((aId) => ({ id: aId, name: animations![aId].name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)) || []),
     ],
     [animations, spriteSheetImage?.name],
@@ -51,8 +47,8 @@ function useAnimationSelector({
   >((event) => setAnimationSelectorValue(event.target.value), []);
 
   useEffect(() => {
-    setAnimationSelectorValue(animationFromProps.id);
-  }, [animationFromProps.id]);
+    setAnimationSelectorValue(animation.id);
+  }, [animation.id]);
 
   useEffect(() => {
     if (animationSelectorValue === "sheet") {
@@ -60,10 +56,13 @@ function useAnimationSelector({
       return;
     }
 
-    const animation = animations?.find((a) => a.id === animationSelectorValue);
-    if (!animation) return;
+    const animation = animations?.[animationSelectorValue];
+    if (!animation) {
+      push("/");
+      return;
+    }
 
-    push(`/animations/${animation.id}`);
+    push(`/animations/${animationSelectorValue}`);
   }, [animationSelectorValue, animations, push]);
 
   return {

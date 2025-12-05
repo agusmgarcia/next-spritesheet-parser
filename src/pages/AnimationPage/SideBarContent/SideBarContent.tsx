@@ -9,36 +9,21 @@ import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
 
 export default function SideBarContent(props: SideBarContentProps) {
-  const {
-    animation,
-    index,
-    onFirstIndex,
-    onLastIndex,
-    onNextIndex,
-    onPreviousIndex,
-    ...rest
-  } = useSideBarContent(props);
+  const { heading, ...rest } = useSideBarContent(props);
 
   return (
     <Accordion
       {...rest}
       heading={
         <Typography className="text-white" variant="h1">
-          {animation.name || "Animation"}
+          {heading}
         </Typography>
       }
     >
-      <ConfigurationsItem animation={animation} />
-      <PlayingItem
-        animation={animation}
-        index={index}
-        onFirstIndex={onFirstIndex}
-        onLastIndex={onLastIndex}
-        onNextIndex={onNextIndex}
-        onPreviousIndex={onPreviousIndex}
-      />
-      <AnimationsItem animation={animation} />
-      <CenterItem animation={animation} index={index} />
+      <ConfigurationsItem />
+      <PlayingItem />
+      <AnimationsItem />
+      <CenterItem />
       <ZoomItem />
     </Accordion>
   );

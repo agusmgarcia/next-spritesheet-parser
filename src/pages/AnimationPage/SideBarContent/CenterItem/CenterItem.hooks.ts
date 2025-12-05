@@ -1,37 +1,35 @@
 import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useMemo } from "react";
 
-import { useAnimations } from "#src/store";
+import { useAnimation, useAnimations } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type CenterItemProps from "./CenterItem.types";
 
-export default function useCenterItem({
-  animation: animationFromProps,
-  index: indexFromProps,
-  ...rest
-}: CenterItemProps) {
-  const { defaultCollapsed, disabled } = useSideBarItem({
-    animation: animationFromProps,
-  });
+export default function useCenterItem(props: CenterItemProps) {
+  const { defaultCollapsed, disabled } = useSideBarItem();
 
-  const { colorDisabled, colorOnChange, colorValue } = useColor({
-    animation: animationFromProps,
-  });
+  const { animationColor, setAnimationColor, setAnimationColorDisabled } =
+    useAnimationColor();
 
-  const { gridActive, gridDisabled, gridOnClick } = useGrid({
-    animation: animationFromProps,
-  });
+  const {
+    animationGrid,
+    disableAnimationGrid,
+    disableAnimationGridDisabled,
+    enableAnimationGrid,
+    enableAnimationGridDisabled,
+  } = useAnimationGrid();
 
-  const { onionActive, onionDisabled, onionOnClick } = useOnion({
-    animation: animationFromProps,
-    index: indexFromProps,
-  });
+  const {
+    animationOnion,
+    disableAnimationOnion,
+    disableAnimationOnionDisabled,
+    enableAnimationOnion,
+    enableAnimationOnionDisabled,
+  } = useAnimationOnion();
 
-  const { resetCenterDisabled, resetCenterOnClick } = useResetCenter({
-    animation: animationFromProps,
-    index: indexFromProps,
-  });
+  const { resetAnimationCenter, resetAnimationCenterDisabled } =
+    useResetAnimationCenter();
 
   const {
     centerToDownDisabled,
@@ -47,47 +45,47 @@ export default function useCenterItem({
     index: indexFromProps,
   });
 
-  const { centerVisible, toggleVisibilityDisabled, toggleVisibilityOnClick } =
-    useVisibility({
-      animation: animationFromProps,
-      index: indexFromProps,
-    });
+  const {
+    animationCenterVisible,
+    disableAnimationCenter,
+    disableAnimationCenterDisabled,
+    enableAnimationCenter,
+    enableAnimationCenterDisabled,
+  } = useAnimationCenterVisibility();
 
   return {
-    ...rest,
-    centerToDownDisabled,
-    centerToDownOnClick,
-    centerToLeftDisabled,
-    centerToLeftOnClick,
-    centerToRightDisabled,
-    centerToRightOnClick,
-    centerToUpDisabled,
-    centerToUpOnClick,
-    centerVisible,
-    colorDisabled,
-    colorOnChange,
-    colorValue,
+    ...props,
+    animationCenterVisible,
+    animationColor,
+    animationGrid,
+    animationOnion,
     defaultCollapsed,
+    disableAnimationCenter,
+    disableAnimationCenterDisabled,
+    disableAnimationGrid,
+    disableAnimationGridDisabled,
+    disableAnimationOnion,
+    disableAnimationOnionDisabled,
     disabled,
-    gridActive,
-    gridDisabled,
-    gridOnClick,
-    onionActive,
-    onionDisabled,
-    onionOnClick,
-    resetCenterDisabled,
-    resetCenterOnClick,
-    toggleVisibilityDisabled,
-    toggleVisibilityOnClick,
+    enableAnimationCenter,
+    enableAnimationCenterDisabled,
+    enableAnimationGrid,
+    enableAnimationGridDisabled,
+    enableAnimationOnion,
+    enableAnimationOnionDisabled,
+    resetAnimationCenter,
+    resetAnimationCenterDisabled,
+    setAnimationColor,
+    setAnimationColorDisabled,
   };
 }
 
-function useSideBarItem({
-  animation: animationFromProps,
-}: Pick<CenterItemProps, "animation">) {
+function useSideBarItem() {
+  const { animation } = useAnimation();
+
   const disabled = useMemo<boolean>(
-    () => animationFromProps.playing,
-    [animationFromProps.playing],
+    () => animation.playing,
+    [animation.playing],
   );
 
   const defaultCollapsed = useMemo<boolean>(() => disabled, [disabled]);
@@ -95,110 +93,71 @@ function useSideBarItem({
   return { defaultCollapsed, disabled };
 }
 
-function useColor({
-  animation: animationFromProps,
-}: Pick<CenterItemProps, "animation">) {
-  const { setAnimationColor } = useAnimations();
-
-  const colorValue = useMemo<string>(
-    () => animationFromProps.color,
-    [animationFromProps.color],
-  );
-
-  const colorDisabled = useMemo<boolean>(
-    () => animationFromProps.playing,
-    [animationFromProps.playing],
-  );
+function useAnimationColor() {
+  const { animation, setAnimationColor, setAnimationColorDisabled } =
+    useAnimation();
 
   const colorOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => {
-      if (colorDisabled) return;
-      setAnimationColor(animationFromProps.id, event.target.value);
-    },
-    [animationFromProps.id, colorDisabled, setAnimationColor],
+    (event) => setAnimationColor(event.target.value),
+    [setAnimationColor],
   );
 
-  return { colorDisabled, colorOnChange, colorValue };
+  return {
+    animationColor: animation.color,
+    setAnimationColor: colorOnChange,
+    setAnimationColorDisabled,
+  };
 }
 
-function useGrid({
-  animation: animationFromProps,
-}: Pick<CenterItemProps, "animation">) {
-  const { setAnimationGrid } = useAnimations();
+function useAnimationGrid() {
+  const {
+    animation,
+    disableAnimationGrid,
+    disableAnimationGridDisabled,
+    enableAnimationGrid,
+    enableAnimationGridDisabled,
+  } = useAnimation();
 
-  const gridDisabled = useMemo<boolean>(
-    () => animationFromProps.playing,
-    [animationFromProps.playing],
-  );
+  useKeyDown("g", animation.grid ? disableAnimationGrid : enableAnimationGrid);
 
-  const gridOnClick = useCallback<Func>(() => {
-    if (gridDisabled) return;
-    setAnimationGrid(animationFromProps.id, (prev) => !prev);
-  }, [animationFromProps.id, gridDisabled, setAnimationGrid]);
-
-  useKeyDown("g", gridOnClick);
-
-  return { gridActive: animationFromProps.grid, gridDisabled, gridOnClick };
+  return {
+    animationGrid: animation.grid,
+    disableAnimationGrid,
+    disableAnimationGridDisabled,
+    enableAnimationGrid,
+    enableAnimationGridDisabled,
+  };
 }
 
-function useOnion({
-  animation: animationFromProps,
-  index: indexFromProps,
-}: Pick<CenterItemProps, "animation" | "index">) {
-  const { setAnimationOnion } = useAnimations();
+function useAnimationOnion() {
+  const {
+    animation,
+    disableAnimationOnion,
+    disableAnimationOnionDisabled,
+    enableAnimationOnion,
+    enableAnimationOnionDisabled,
+  } = useAnimation();
 
-  const onionDisabled = useMemo<boolean>(
-    () =>
-      animationFromProps.playing ||
-      animationFromProps.sprites.length <= 1 ||
-      !indexFromProps,
-    [
-      animationFromProps.playing,
-      animationFromProps.sprites.length,
-      indexFromProps,
-    ],
+  useKeyDown(
+    "o",
+    animation.onion ? disableAnimationOnion : enableAnimationOnion,
   );
 
-  const onionOnClick = useCallback<Func>(() => {
-    if (onionDisabled) return;
-    setAnimationOnion(animationFromProps.id, (prev) => !prev);
-  }, [animationFromProps.id, onionDisabled, setAnimationOnion]);
-
-  useKeyDown("o", onionOnClick);
-
-  return { onionActive: animationFromProps.onion, onionDisabled, onionOnClick };
+  return {
+    animationOnion: animation.onion,
+    disableAnimationOnion,
+    disableAnimationOnionDisabled,
+    enableAnimationOnion,
+    enableAnimationOnionDisabled,
+  };
 }
 
-function useResetCenter({
-  animation: animationFromProps,
-  index: indexFromProps,
-}: Pick<CenterItemProps, "animation" | "index">) {
-  const { resetAnimationCenter } = useAnimations();
+function useResetAnimationCenter() {
+  const { resetAnimationCenter, resetAnimationCenterDisabled } = useAnimation();
 
-  const resetCenterDisabled = useMemo<boolean>(
-    () =>
-      animationFromProps.playing ||
-      !animationFromProps.sprites[indexFromProps] ||
-      (animationFromProps.sprites[indexFromProps].center.offsetX ===
-        animationFromProps.sprites[indexFromProps].center.initialOffsetX &&
-        animationFromProps.sprites[indexFromProps].center.offsetY ===
-          animationFromProps.sprites[indexFromProps].center.initialOffsetY),
-    [animationFromProps.playing, animationFromProps.sprites, indexFromProps],
-  );
+  useKeyDown("c", resetAnimationCenter);
 
-  const resetCenterOnClick = useCallback<Func>(() => {
-    if (resetCenterDisabled) return;
-    resetAnimationCenter(animationFromProps.id, indexFromProps);
-  }, [
-    animationFromProps.id,
-    indexFromProps,
-    resetAnimationCenter,
-    resetCenterDisabled,
-  ]);
-
-  useKeyDown("c", resetCenterOnClick);
-
-  return { resetCenterDisabled, resetCenterOnClick };
+  return { resetAnimationCenter, resetAnimationCenterDisabled };
 }
 
 function useCenter({
@@ -296,32 +255,30 @@ function useCenter({
   };
 }
 
-function useVisibility({
-  animation: animationFromProps,
-  index: indexFromProps,
-}: Pick<CenterItemProps, "animation" | "index">) {
-  const { toggleAnimationCenterVisibility } = useAnimations();
+function useAnimationCenterVisibility() {
+  const {
+    animation,
+    disableAnimationCenter,
+    disableAnimationCenterDisabled,
+    enableAnimationCenter,
+    enableAnimationCenterDisabled,
+  } = useAnimation();
 
-  const toggleVisibilityDisabled = useMemo<boolean>(
-    () => animationFromProps.playing,
-    [animationFromProps.playing],
+  const animationCenterVisible = useMemo<boolean>(
+    () => animation.sprites[animation.index].center.visible,
+    [animation.index, animation.sprites],
   );
 
-  const centerVisible = useMemo<boolean>(
-    () => !!animationFromProps.sprites[indexFromProps]?.center.visible,
-    [animationFromProps.sprites, indexFromProps],
+  useKeyDown(
+    "v",
+    animationCenterVisible ? disableAnimationCenter : enableAnimationCenter,
   );
 
-  const toggleVisibilityOnClick = useCallback<Func>(() => {
-    if (toggleVisibilityDisabled) return;
-    toggleAnimationCenterVisibility(animationFromProps.id);
-  }, [
-    animationFromProps.id,
-    toggleAnimationCenterVisibility,
-    toggleVisibilityDisabled,
-  ]);
-
-  useKeyDown("v", toggleVisibilityOnClick);
-
-  return { centerVisible, toggleVisibilityDisabled, toggleVisibilityOnClick };
+  return {
+    animationCenterVisible,
+    disableAnimationCenter,
+    disableAnimationCenterDisabled,
+    enableAnimationCenter,
+    enableAnimationCenterDisabled,
+  };
 }

@@ -5,10 +5,12 @@ import type ConfigurationsItemProps from "./ConfigurationsItem.types";
 
 export default function ConfigurationsItem(props: ConfigurationsItemProps) {
   const {
-    deleteAnimationOnClick,
-    homeOnClick,
-    nameOnChange,
-    nameValue,
+    animationName,
+    deleteAnimation,
+    deleteAnimationDisabled,
+    goToHome,
+    setAnimationName,
+    setAnimationNameDisabled,
     ...rest
   } = useConfigurationsItem(props);
 
@@ -25,7 +27,7 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
       {/* HOME */}
       <Button
         className="flex w-fit items-center justify-center"
-        onClick={homeOnClick}
+        onClick={goToHome}
         variant="secondary"
       >
         <Icon variant="home" />
@@ -36,16 +38,18 @@ export default function ConfigurationsItem(props: ConfigurationsItemProps) {
         aria-label="Name"
         autoComplete="off"
         className="text-center"
+        disabled={setAnimationNameDisabled}
         name="name"
-        onChange={nameOnChange}
+        onChange={setAnimationName}
         placeholder="Animation name..."
-        value={nameValue}
+        value={animationName}
       />
 
       {/* DELETE ANIMATION */}
       <Button
         className="flex w-fit items-center justify-center"
-        onClick={deleteAnimationOnClick}
+        disabled={deleteAnimationDisabled}
+        onClick={deleteAnimation}
         variant="secondary"
       >
         <Icon variant="trash" />

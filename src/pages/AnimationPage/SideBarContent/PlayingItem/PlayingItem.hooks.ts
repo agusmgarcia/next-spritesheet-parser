@@ -1,268 +1,125 @@
-import { type Func } from "@agusmgarcia/react-essentials-utils";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback } from "react";
 
-import { useAnimations } from "#src/store";
+import { useAnimation } from "#src/store";
 import { useKeyDown } from "#src/utils";
 
 import type PlayingItemProps from "./PlayingItem.types";
 
-export default function usePlayingItem({
-  animation: animationFromProps,
-  index: indexFromProps,
-  onFirstIndex: onFirstIndexFromProps,
-  onLastIndex: onLastIndexFromProps,
-  onNextIndex: onNextIndexFromProps,
-  onPreviousIndex: onPreviousIndexFromProps,
-  ...rest
-}: PlayingItemProps) {
+export default function usePlayingItem(props: PlayingItemProps) {
   const {
-    backwardDisabled,
-    backwardOnClick,
-    forwardDisabled,
-    forwardOnClick,
-    playing,
-    playingDisabled,
-    playOnClick,
-    toFirstDisabled,
-    toFirstOnClick,
-    toLastDisabled,
-    toLastOnClick,
-  } = usePlaying({
-    animation: animationFromProps,
-    index: indexFromProps,
-    onFirstIndex: onFirstIndexFromProps,
-    onLastIndex: onLastIndexFromProps,
-    onNextIndex: onNextIndexFromProps,
-    onPreviousIndex: onPreviousIndexFromProps,
-  });
+    animationPlaying,
+    backwardAnimationIndex,
+    backwardAnimationIndexDisabled,
+    forwardAnimationIndex,
+    forwardAnimationIndexDisabled,
+    resumeAnimation,
+    resumeAnimationDisabled,
+    stopAnimation,
+    stopAnimationDisabled,
+    toFirstAnimationIndex,
+    toFirstAnimationIndexDisabled,
+    toLastAnimationIndex,
+    toLastAnimationIndexDisabled,
+  } = useAnimationPlaying();
 
   const {
-    fps,
-    fpsDisabled,
-    fpsOnChange,
-    minusFPSDisabled,
-    minusFPSOnClick,
-    plusFPSDisabled,
-    plusFPSOnClick,
-  } = useFPS({ animation: animationFromProps });
+    animationFPS,
+    minusAnimationFPS,
+    minusAnimationFPSDisabled,
+    plusAnimationFPS,
+    plusAnimationFPSDisabled,
+    setAnimationFPS,
+    setAnimationFPSDisabled,
+  } = useAnimationFPS();
 
   return {
-    ...rest,
-    backwardDisabled,
-    backwardOnClick,
-    forwardDisabled,
-    forwardOnClick,
-    fps,
-    fpsDisabled,
-    fpsOnChange,
-    minusFPSDisabled,
-    minusFPSOnClick,
-    playing,
-    playingDisabled,
-    playOnClick,
-    plusFPSDisabled,
-    plusFPSOnClick,
-    toFirstDisabled,
-    toFirstOnClick,
-    toLastDisabled,
-    toLastOnClick,
+    ...props,
+    animationFPS,
+    animationPlaying,
+    backwardAnimationIndex,
+    backwardAnimationIndexDisabled,
+    forwardAnimationIndex,
+    forwardAnimationIndexDisabled,
+    minusAnimationFPS,
+    minusAnimationFPSDisabled,
+    plusAnimationFPS,
+    plusAnimationFPSDisabled,
+    resumeAnimation,
+    resumeAnimationDisabled,
+    setAnimationFPS,
+    setAnimationFPSDisabled,
+    stopAnimation,
+    stopAnimationDisabled,
+    toFirstAnimationIndex,
+    toFirstAnimationIndexDisabled,
+    toLastAnimationIndex,
+    toLastAnimationIndexDisabled,
   };
 }
 
-function usePlaying({
-  animation: animationFromProps,
-  index: indexFromProps,
-  onFirstIndex: onFirstIndexFromProps,
-  onLastIndex: onLastIndexFromProps,
-  onNextIndex: onNextIndexFromProps,
-  onPreviousIndex: onPreviousIndexFromProps,
-}: Pick<
-  PlayingItemProps,
-  | "animation"
-  | "index"
-  | "onFirstIndex"
-  | "onLastIndex"
-  | "onNextIndex"
-  | "onPreviousIndex"
->) {
-  const { setAnimationPlaying } = useAnimations();
+function useAnimationPlaying() {
+  const {
+    animation,
+    backwardAnimationIndex,
+    backwardAnimationIndexDisabled,
+    forwardAnimationIndex,
+    forwardAnimationIndexDisabled,
+    resumeAnimation,
+    resumeAnimationDisabled,
+    stopAnimation,
+    stopAnimationDisabled,
+    toFirstAnimationIndex,
+    toFirstAnimationIndexDisabled,
+    toLastAnimationIndex,
+    toLastAnimationIndexDisabled,
+  } = useAnimation();
 
-  const toFirstDisabled = useMemo<boolean>(
-    () =>
-      !animationFromProps.playing &&
-      (animationFromProps.sprites.length <= 1 || !indexFromProps),
-    [
-      animationFromProps.playing,
-      animationFromProps.sprites.length,
-      indexFromProps,
-    ],
-  );
-
-  const toFirstOnClick = useCallback<Func>(() => {
-    if (toFirstDisabled) return;
-    setAnimationPlaying(animationFromProps.id, false);
-    onFirstIndexFromProps();
-  }, [
-    animationFromProps.id,
-    onFirstIndexFromProps,
-    setAnimationPlaying,
-    toFirstDisabled,
-  ]);
-
-  const backwardDisabled = useMemo<boolean>(
-    () => !animationFromProps.playing && animationFromProps.sprites.length <= 1,
-    [animationFromProps.playing, animationFromProps.sprites.length],
-  );
-
-  const backwardOnClick = useCallback<Func>(() => {
-    if (backwardDisabled) return;
-    setAnimationPlaying(animationFromProps.id, false);
-    onPreviousIndexFromProps();
-  }, [
-    animationFromProps.id,
-    backwardDisabled,
-    onPreviousIndexFromProps,
-    setAnimationPlaying,
-  ]);
-
-  const playingDisabled = useMemo<boolean>(
-    () => !animationFromProps.playing && animationFromProps.sprites.length <= 1,
-    [animationFromProps.playing, animationFromProps.sprites.length],
-  );
-
-  const playOnClick = useCallback<Func>(() => {
-    if (playingDisabled) return;
-    setAnimationPlaying(animationFromProps.id, (prev) => !prev);
-  }, [animationFromProps.id, playingDisabled, setAnimationPlaying]);
-
-  const forwardDisabled = useMemo<boolean>(
-    () => !animationFromProps.playing && animationFromProps.sprites.length <= 1,
-    [animationFromProps.playing, animationFromProps.sprites.length],
-  );
-
-  const forwardOnClick = useCallback<Func>(() => {
-    if (forwardDisabled) return;
-    setAnimationPlaying(animationFromProps.id, false);
-    onNextIndexFromProps();
-  }, [
-    animationFromProps.id,
-    forwardDisabled,
-    onNextIndexFromProps,
-    setAnimationPlaying,
-  ]);
-
-  const toLastDisabled = useMemo<boolean>(
-    () =>
-      !animationFromProps.playing &&
-      (animationFromProps.sprites.length <= 1 ||
-        indexFromProps === animationFromProps.sprites.length - 1),
-    [
-      animationFromProps.playing,
-      animationFromProps.sprites.length,
-      indexFromProps,
-    ],
-  );
-
-  const toLastOnClick = useCallback<Func>(() => {
-    if (toLastDisabled) return;
-    setAnimationPlaying(animationFromProps.id, false);
-    onLastIndexFromProps();
-  }, [
-    animationFromProps.id,
-    onLastIndexFromProps,
-    setAnimationPlaying,
-    toLastDisabled,
-  ]);
-
-  useEffect(() => {
-    if (!animationFromProps.playing) return;
-    if (forwardDisabled) return;
-
-    const handler = setInterval(
-      onNextIndexFromProps,
-      1000 / animationFromProps.fps,
-    );
-
-    return () => clearInterval(handler);
-  }, [
-    animationFromProps.fps,
-    animationFromProps.playing,
-    forwardDisabled,
-    onNextIndexFromProps,
-  ]);
-
-  useEffect(() => {
-    if (playingDisabled) return;
-    setAnimationPlaying(animationFromProps.id, true);
-  }, [animationFromProps.id, playingDisabled, setAnimationPlaying]);
-
-  useKeyDown(" ", playOnClick);
-  useKeyDown("ArrowLeft", backwardOnClick);
-  useKeyDown("ArrowRight", forwardOnClick);
+  useKeyDown(" ", animation.playing ? stopAnimation : resumeAnimation);
+  useKeyDown("ArrowLeft", backwardAnimationIndex);
+  useKeyDown("ArrowRight", forwardAnimationIndex);
 
   return {
-    backwardDisabled,
-    backwardOnClick,
-    forwardDisabled,
-    forwardOnClick,
-    playing: animationFromProps.playing,
-    playingDisabled,
-    playOnClick,
-    toFirstDisabled,
-    toFirstOnClick,
-    toLastDisabled,
-    toLastOnClick,
+    animationPlaying: animation.playing,
+    backwardAnimationIndex,
+    backwardAnimationIndexDisabled,
+    forwardAnimationIndex,
+    forwardAnimationIndexDisabled,
+    resumeAnimation,
+    resumeAnimationDisabled,
+    stopAnimation,
+    stopAnimationDisabled,
+    toFirstAnimationIndex,
+    toFirstAnimationIndexDisabled,
+    toLastAnimationIndex,
+    toLastAnimationIndexDisabled,
   };
 }
 
-function useFPS({
-  animation: animationFromProps,
-}: Pick<PlayingItemProps, "animation">) {
-  const { setAnimationFPS } = useAnimations();
+function useAnimationFPS() {
+  const {
+    animation,
+    minusAnimationFPS,
+    minusAnimationFPSDisabled,
+    plusAnimationFPS,
+    plusAnimationFPSDisabled,
+    setAnimationFPS,
+    setAnimationFPSDisabled,
+  } = useAnimation();
 
-  const minusFPSDisabled = useMemo<boolean>(
-    () => animationFromProps.fps <= 1 || animationFromProps.sprites.length <= 1,
-    [animationFromProps.fps, animationFromProps.sprites.length],
-  );
+  const setAnimationFPSOnChange = useCallback<
+    React.ChangeEventHandler<HTMLInputElement>
+  >((event) => setAnimationFPS(event.target.valueAsNumber), [setAnimationFPS]);
 
-  const minusFPSOnClick = useCallback<Func>(() => {
-    if (minusFPSDisabled) return;
-    setAnimationFPS(animationFromProps.id, (fps) => fps - 1);
-  }, [animationFromProps.id, minusFPSDisabled, setAnimationFPS]);
-
-  const fpsDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
-  );
-
-  const fpsOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (event) => {
-      if (fpsDisabled) return;
-      setAnimationFPS(animationFromProps.id, event.target.valueAsNumber);
-    },
-    [animationFromProps.id, fpsDisabled, setAnimationFPS],
-  );
-
-  const plusFPSDisabled = useMemo<boolean>(
-    () => animationFromProps.sprites.length <= 1,
-    [animationFromProps.sprites.length],
-  );
-
-  const plusFPSOnClick = useCallback<Func>(() => {
-    if (plusFPSDisabled) return;
-    setAnimationFPS(animationFromProps.id, (fps) => fps + 1);
-  }, [animationFromProps.id, plusFPSDisabled, setAnimationFPS]);
-
-  useKeyDown("-", minusFPSOnClick);
-  useKeyDown("+", plusFPSOnClick);
+  useKeyDown("-", minusAnimationFPS);
+  useKeyDown("+", plusAnimationFPS);
 
   return {
-    fps: animationFromProps.fps,
-    fpsDisabled,
-    fpsOnChange,
-    minusFPSDisabled,
-    minusFPSOnClick,
-    plusFPSDisabled,
-    plusFPSOnClick,
+    animationFPS: animation.fps,
+    minusAnimationFPS,
+    minusAnimationFPSDisabled,
+    plusAnimationFPS,
+    plusAnimationFPSDisabled,
+    setAnimationFPS: setAnimationFPSOnChange,
+    setAnimationFPSDisabled,
   };
 }

@@ -5,28 +5,26 @@ import type CenterItemProps from "./CenterItem.types";
 
 export default function CenterItem(props: CenterItemProps) {
   const {
-    centerToDownDisabled,
-    centerToDownOnClick,
-    centerToLeftDisabled,
-    centerToLeftOnClick,
-    centerToRightDisabled,
-    centerToRightOnClick,
-    centerToUpDisabled,
-    centerToUpOnClick,
-    centerVisible,
-    colorDisabled,
-    colorOnChange,
-    colorValue,
-    gridActive,
-    gridDisabled,
-    gridOnClick,
-    onionActive,
-    onionDisabled,
-    onionOnClick,
-    resetCenterDisabled,
-    resetCenterOnClick,
-    toggleVisibilityDisabled,
-    toggleVisibilityOnClick,
+    animationCenterVisible,
+    animationColor,
+    animationGrid,
+    animationOnion,
+    disableAnimationCenter,
+    disableAnimationCenterDisabled,
+    disableAnimationGrid,
+    disableAnimationGridDisabled,
+    disableAnimationOnion,
+    disableAnimationOnionDisabled,
+    enableAnimationCenter,
+    enableAnimationCenterDisabled,
+    enableAnimationGrid,
+    enableAnimationGridDisabled,
+    enableAnimationOnion,
+    enableAnimationOnionDisabled,
+    resetAnimationCenter,
+    resetAnimationCenterDisabled,
+    setAnimationColor,
+    setAnimationColorDisabled,
     ...rest
   } = useCenterItem(props);
 
@@ -106,32 +104,46 @@ export default function CenterItem(props: CenterItemProps) {
         {/* COLOR */}
         <Input
           aria-label="Color"
-          disabled={colorDisabled}
+          disabled={setAnimationColorDisabled}
           name="color"
-          onChange={colorOnChange}
+          onChange={setAnimationColor}
           type="color"
-          value={colorValue}
+          value={animationColor}
         />
 
         {/* RESET CENTER */}
         <Button
           className="flex w-fit items-center justify-center"
-          disabled={resetCenterDisabled}
-          onClick={resetCenterOnClick}
+          disabled={resetAnimationCenterDisabled}
+          onClick={resetAnimationCenter}
           variant="secondary"
         >
           <Icon variant="center" />
         </Button>
 
-        {/* ONION */}
-        <Button
-          className="flex w-fit items-center justify-center"
-          disabled={onionDisabled}
-          onClick={onionOnClick}
-          variant={onionActive ? "primary" : "secondary"}
-        >
-          <Icon variant="stack" />
-        </Button>
+        {/* DISABLE ANIMATION ONION */}
+        {animationOnion && (
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={disableAnimationOnionDisabled}
+            onClick={disableAnimationOnion}
+            variant="primary"
+          >
+            <Icon variant="stack" />
+          </Button>
+        )}
+
+        {/* ENABLE ANIMATION ONION */}
+        {!animationOnion && (
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={enableAnimationOnionDisabled}
+            onClick={enableAnimationOnion}
+            variant="primary"
+          >
+            <Icon variant="stack" />
+          </Button>
+        )}
       </div>
     </Accordion.Item>
   );

@@ -1,30 +1,20 @@
-import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 import { type LayoutProps } from "#src/fragments";
-import { type Animation, useAnimations } from "#src/store";
+import {
+  useAnimation as useAnimationFromStore,
+  useAnimations,
+} from "#src/store";
 
 import type AnimationPageProps from "./AnimationPage.types";
 
 export default function useAnimationPage(props: AnimationPageProps) {
-  const { animation } = useAnimation();
-
-  const { index, onFirstIndex, onLastIndex, onNextIndex, onPreviousIndex } =
-    useIndex({ animation });
+  const {} = useAnimation();
 
   const { instructions } = useInstructions();
 
-  return {
-    ...props,
-    animation,
-    index,
-    instructions,
-    onFirstIndex,
-    onLastIndex,
-    onNextIndex,
-    onPreviousIndex,
-  };
+  return { ...props, instructions };
 }
 
 function useAnimation() {
@@ -32,55 +22,22 @@ function useAnimation() {
   const { replace } = useRouter();
 
   const { animations } = useAnimations();
-
-  const animation = useMemo<Animation | undefined>(
-    () => animations?.find((a) => a.id === params?.id),
-    [animations, params?.id],
-  );
+  const { setAnimationId } = useAnimationFromStore();
 
   useEffect(() => {
-    if (!params) return;
-    if (!!animation) return;
+    if (!params?.id) return;
+    if (Array.isArray(params.id)) return;
+    setAnimationId(params.id);
+  }, [params?.id, setAnimationId]);
+
+  useEffect(() => {
+    if (!params?.id) return; // TODO: does param start with undefined?
+    if (Array.isArray(params.id)) return;
+    if (!!animations?.[params.id]) return;
     replace("/");
-  }, [animation, params, replace]);
+  }, [animations, params?.id, replace]);
 
-  return { animation };
-}
-
-function useIndex({
-  animation: animationFromProps,
-}: Pick<ReturnType<typeof useAnimation>, "animation">) {
-  const [index, setIndex] = useState(0);
-
-  const onFirstIndex = useCallback<Func>(() => setIndex(0), []);
-
-  const onPreviousIndex = useCallback<Func>(
-    () =>
-      setIndex((prev) =>
-        prev > 0 ? prev - 1 : (animationFromProps?.sprites.length || 1) - 1,
-      ),
-    [animationFromProps?.sprites.length],
-  );
-
-  const onNextIndex = useCallback<Func>(
-    () =>
-      setIndex((prev) =>
-        prev < (animationFromProps?.sprites.length || 1) - 1 ? prev + 1 : 0,
-      ),
-    [animationFromProps?.sprites.length],
-  );
-
-  const onLastIndex = useCallback<Func>(
-    () => setIndex((animationFromProps?.sprites.length || 1) - 1),
-    [animationFromProps?.sprites.length],
-  );
-
-  useEffect(() => {
-    if (!animationFromProps?.id) return;
-    onFirstIndex();
-  }, [animationFromProps?.id, onFirstIndex]);
-
-  return { index, onFirstIndex, onLastIndex, onNextIndex, onPreviousIndex };
+  return {};
 }
 
 function useInstructions() {

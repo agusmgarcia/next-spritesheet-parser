@@ -5,24 +5,26 @@ import type PlayingItemProps from "./PlayingItem.types";
 
 export default function PlayingItem(props: PlayingItemProps) {
   const {
-    backwardDisabled,
-    backwardOnClick,
-    forwardDisabled,
-    forwardOnClick,
-    fps,
-    fpsDisabled,
-    fpsOnChange,
-    minusFPSDisabled,
-    minusFPSOnClick,
-    playing,
-    playingDisabled,
-    playOnClick,
-    plusFPSDisabled,
-    plusFPSOnClick,
-    toFirstDisabled,
-    toFirstOnClick,
-    toLastDisabled,
-    toLastOnClick,
+    animationFPS,
+    animationPlaying,
+    backwardAnimationIndex,
+    backwardAnimationIndexDisabled,
+    forwardAnimationIndex,
+    forwardAnimationIndexDisabled,
+    minusAnimationFPS,
+    minusAnimationFPSDisabled,
+    plusAnimationFPS,
+    plusAnimationFPSDisabled,
+    resumeAnimation,
+    resumeAnimationDisabled,
+    setAnimationFPS,
+    setAnimationFPSDisabled,
+    stopAnimation,
+    stopAnimationDisabled,
+    toFirstAnimationIndex,
+    toFirstAnimationIndexDisabled,
+    toLastAnimationIndex,
+    toLastAnimationIndexDisabled,
     ...rest
   } = usePlayingItem(props);
 
@@ -40,8 +42,8 @@ export default function PlayingItem(props: PlayingItemProps) {
         {/* TO FIRST */}
         <Button
           className="flex items-center justify-center"
-          disabled={toFirstDisabled}
-          onClick={toFirstOnClick}
+          disabled={toFirstAnimationIndexDisabled}
+          onClick={toFirstAnimationIndex}
           variant="secondary"
         >
           <Icon variant="backwardFast" />
@@ -50,28 +52,42 @@ export default function PlayingItem(props: PlayingItemProps) {
         {/* BACKWARD */}
         <Button
           className="flex items-center justify-center"
-          disabled={backwardDisabled}
-          onClick={backwardOnClick}
+          disabled={backwardAnimationIndexDisabled}
+          onClick={backwardAnimationIndex}
           variant="secondary"
         >
           <Icon variant="backward" />
         </Button>
 
-        {/* PLAY / PAUSE */}
-        <Button
-          className="flex items-center justify-center"
-          disabled={playingDisabled}
-          onClick={playOnClick}
-          variant="primary"
-        >
-          <Icon variant={!playing ? "play" : "pause"} />
-        </Button>
+        {/* PAUSE */}
+        {animationPlaying && (
+          <Button
+            className="flex items-center justify-center"
+            disabled={stopAnimationDisabled}
+            onClick={stopAnimation}
+            variant="primary"
+          >
+            <Icon variant="pause" />
+          </Button>
+        )}
+
+        {/* PLAY */}
+        {!animationPlaying && (
+          <Button
+            className="flex items-center justify-center"
+            disabled={resumeAnimationDisabled}
+            onClick={resumeAnimation}
+            variant="primary"
+          >
+            <Icon variant="play" />
+          </Button>
+        )}
 
         {/* FORWARD */}
         <Button
           className="flex items-center justify-center"
-          disabled={forwardDisabled}
-          onClick={forwardOnClick}
+          disabled={forwardAnimationIndexDisabled}
+          onClick={forwardAnimationIndex}
           variant="secondary"
         >
           <Icon variant="forward" />
@@ -80,8 +96,8 @@ export default function PlayingItem(props: PlayingItemProps) {
         {/* TO LAST */}
         <Button
           className="flex items-center justify-center"
-          disabled={toLastDisabled}
-          onClick={toLastOnClick}
+          disabled={toLastAnimationIndexDisabled}
+          onClick={toLastAnimationIndex}
           variant="secondary"
         >
           <Icon variant="forwardFast" />
@@ -92,8 +108,8 @@ export default function PlayingItem(props: PlayingItemProps) {
         {/* MINUS FPS */}
         <Button
           className="flex w-fit items-center justify-center"
-          disabled={minusFPSDisabled}
-          onClick={minusFPSOnClick}
+          disabled={minusAnimationFPSDisabled}
+          onClick={minusAnimationFPS}
           variant="secondary"
         >
           <Icon variant="minus" />
@@ -103,19 +119,19 @@ export default function PlayingItem(props: PlayingItemProps) {
         <Input
           aria-label="FPS"
           className="text-center"
-          disabled={fpsDisabled}
+          disabled={setAnimationFPSDisabled}
           min={1}
           name="fps"
-          onChange={fpsOnChange}
+          onChange={setAnimationFPS}
           type="number"
-          value={fps}
+          value={animationFPS}
         />
 
         {/* PLUS FPS */}
         <Button
           className="flex w-fit items-center justify-center"
-          disabled={plusFPSDisabled}
-          onClick={plusFPSOnClick}
+          disabled={plusAnimationFPSDisabled}
+          onClick={plusAnimationFPS}
           variant="secondary"
         >
           <Icon variant="plus" />
