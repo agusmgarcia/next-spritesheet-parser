@@ -5,7 +5,7 @@ import type CenterItemProps from "./CenterItem.types";
 
 export default function CenterItem(props: CenterItemProps) {
   const {
-    animationCenterVisible,
+    animationCenter,
     animationColor,
     animationGrid,
     animationOnion,
@@ -81,27 +81,55 @@ export default function CenterItem(props: CenterItemProps) {
       </div>
 
       <div className="flex gap-1">
-        {/* TOOGLE CENTER VISIBILITY */}
-        <Button
-          className="flex w-fit items-center justify-center"
-          disabled={toggleVisibilityDisabled}
-          onClick={toggleVisibilityOnClick}
-          variant={centerVisible ? "primary" : "secondary"}
-        >
-          <Icon variant={centerVisible ? "eye" : "eyeClosed"} />
-        </Button>
+        {/* DISABLE ANIMATION CENTER */}
+        {animationCenter && (
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={disableAnimationCenterDisabled}
+            onClick={disableAnimationCenter}
+            variant="primary"
+          >
+            <Icon variant="eye" />
+          </Button>
+        )}
 
-        {/* GRID */}
-        <Button
-          className="flex w-fit items-center justify-center"
-          disabled={gridDisabled}
-          onClick={gridOnClick}
-          variant={gridActive ? "primary" : "secondary"}
-        >
-          <Icon variant="grid" />
-        </Button>
+        {/* ENABLE ANIMATION CENTER */}
+        {!animationCenter && (
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={enableAnimationCenterDisabled}
+            onClick={enableAnimationCenter}
+            variant="primary"
+          >
+            <Icon variant="eyeClosed" />
+          </Button>
+        )}
 
-        {/* COLOR */}
+        {/* DISABLE ANIMATION GRID */}
+        {animationGrid && (
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={disableAnimationGridDisabled}
+            onClick={disableAnimationGrid}
+            variant="primary"
+          >
+            <Icon variant="grid" />
+          </Button>
+        )}
+
+        {/* ENABLE ANIMATION GRID */}
+        {!animationGrid && (
+          <Button
+            className="flex w-fit items-center justify-center"
+            disabled={enableAnimationGridDisabled}
+            onClick={enableAnimationGrid}
+            variant="secondary"
+          >
+            <Icon variant="grid" />
+          </Button>
+        )}
+
+        {/* ANIMATION COLOR */}
         <Input
           aria-label="Color"
           disabled={setAnimationColorDisabled}
@@ -111,7 +139,7 @@ export default function CenterItem(props: CenterItemProps) {
           value={animationColor}
         />
 
-        {/* RESET CENTER */}
+        {/* RESET ANIMATION CENTER */}
         <Button
           className="flex w-fit items-center justify-center"
           disabled={resetAnimationCenterDisabled}
@@ -139,7 +167,7 @@ export default function CenterItem(props: CenterItemProps) {
             className="flex w-fit items-center justify-center"
             disabled={enableAnimationOnionDisabled}
             onClick={enableAnimationOnion}
-            variant="primary"
+            variant="secondary"
           >
             <Icon variant="stack" />
           </Button>

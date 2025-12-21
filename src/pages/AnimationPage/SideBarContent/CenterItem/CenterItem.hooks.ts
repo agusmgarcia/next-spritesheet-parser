@@ -46,16 +46,16 @@ export default function useCenterItem(props: CenterItemProps) {
   });
 
   const {
-    animationCenterVisible,
+    animationCenter,
     disableAnimationCenter,
     disableAnimationCenterDisabled,
     enableAnimationCenter,
     enableAnimationCenterDisabled,
-  } = useAnimationCenterVisibility();
+  } = useAnimationCenter();
 
   return {
     ...props,
-    animationCenterVisible,
+    animationCenter,
     animationColor,
     animationGrid,
     animationOnion,
@@ -255,7 +255,7 @@ function useCenter({
   };
 }
 
-function useAnimationCenterVisibility() {
+function useAnimationCenter() {
   const {
     animation,
     disableAnimationCenter,
@@ -264,18 +264,18 @@ function useAnimationCenterVisibility() {
     enableAnimationCenterDisabled,
   } = useAnimation();
 
-  const animationCenterVisible = useMemo<boolean>(
+  const animationCenter = useMemo<boolean>(
     () => animation.sprites[animation.index].center.visible,
     [animation.index, animation.sprites],
   );
 
   useKeyDown(
     "v",
-    animationCenterVisible ? disableAnimationCenter : enableAnimationCenter,
+    animationCenter ? disableAnimationCenter : enableAnimationCenter,
   );
 
   return {
-    animationCenterVisible,
+    animationCenter,
     disableAnimationCenter,
     disableAnimationCenterDisabled,
     enableAnimationCenter,
