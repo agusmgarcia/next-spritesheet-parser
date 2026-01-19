@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.30.1](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.30.1)
+
+> January 19, 2026
+
+### Fixes 🎯
+
+- **AnimationPage**: disable first and last sprites
+- **AnimationPage**: disable onion for the first sprite
+
+### Chores ⚙️
+
+- bump dependencies
+
 ## [v0.30.0](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.30.0)
 
 > October 24, 2025
