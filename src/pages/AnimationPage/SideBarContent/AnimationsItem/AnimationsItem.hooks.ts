@@ -51,6 +51,7 @@ function useAnimationSelector({
   >((event) => setAnimationSelectorValue(event.target.value), []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAnimationSelectorValue(animationFromProps.id);
   }, [animationFromProps.id]);
 

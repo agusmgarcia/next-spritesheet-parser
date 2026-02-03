@@ -15,6 +15,7 @@ export default function useLoadImage(imageURL: string): UseLoadImageResult {
 
   useEffect(() => {
     if (!imageURL) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setResult(initialLoadImageResult);
       return;
     }

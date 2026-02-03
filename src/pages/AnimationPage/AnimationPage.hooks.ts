@@ -77,6 +77,7 @@ function useIndex({
 
   useEffect(() => {
     if (!animationFromProps?.id) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     onFirstIndex();
   }, [animationFromProps?.id, onFirstIndex]);
 

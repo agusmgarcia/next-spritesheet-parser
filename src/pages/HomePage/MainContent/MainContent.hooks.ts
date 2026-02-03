@@ -42,7 +42,7 @@ export default function useMainContent(props: MainContentProps) {
       spriteSheetImage?.backgroundColor
         ? invert(spriteSheetImage.backgroundColor)
         : "",
-    [spriteSheetImage?.backgroundColor],
+    [spriteSheetImage],
   );
 
   const sprites = useMemo(

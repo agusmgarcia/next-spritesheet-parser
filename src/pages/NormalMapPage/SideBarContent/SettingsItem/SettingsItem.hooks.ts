@@ -110,6 +110,7 @@ function useSettings() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSettingsValue({
       colorSpace: (normalMapSettings?.colorSpace as "linear") || "linear",
       filterRadius: normalMapSettings?.filterRadius.toString() || "0",

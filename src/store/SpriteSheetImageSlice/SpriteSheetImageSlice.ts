@@ -91,6 +91,6 @@ export default class SpriteSheetImageSlice extends ServerSlice<
   }
 
   async setImage(image: File, signal: AbortSignal): Promise<void> {
-    await this.reloadWithRequest(image, undefined, signal);
+    await this.reloadWithRequest(image, signal);
   }
 }

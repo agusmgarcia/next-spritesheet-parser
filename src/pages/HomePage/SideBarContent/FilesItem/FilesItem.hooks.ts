@@ -212,7 +212,7 @@ function useName() {
       !!spriteSheetImage?.type
         ? `.${spriteSheetImage.type.replace("image/", "")}`
         : ".png",
-    [spriteSheetImage?.type],
+    [spriteSheetImage],
   );
 
   const nameOnChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(

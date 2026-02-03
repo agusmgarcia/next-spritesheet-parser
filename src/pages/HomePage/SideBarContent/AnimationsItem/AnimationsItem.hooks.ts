@@ -227,7 +227,7 @@ function useAnimationSelector() {
         ?.map((a) => ({ id: a.id, name: a.name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)) || []),
     ],
-    [animations, spriteSheetImage?.url, spriteSheetSettings?.name],
+    [animations, spriteSheetImage?.url, spriteSheetSettings],
   );
 
   const animationSelectorOnChange = useCallback<

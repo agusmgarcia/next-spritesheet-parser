@@ -44,6 +44,7 @@ export default function useAccordionItem({
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setExpanded(!defaultCollapsedFromProps);
   }, [defaultCollapsedFromProps, disabledFromProps]);
 

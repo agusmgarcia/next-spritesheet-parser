@@ -143,6 +143,7 @@ function useSidebarCollapsed({
   useKeyDown("t", toggleSideBar);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSideBarCollapsed((prev) => (sideBarHidden ? false : prev));
   }, [sideBarHidden]);
 

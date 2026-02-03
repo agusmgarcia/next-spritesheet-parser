@@ -58,6 +58,7 @@ export default function useModal({
     );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState((prevState) => {
       switch (prevState) {
         case "closing":

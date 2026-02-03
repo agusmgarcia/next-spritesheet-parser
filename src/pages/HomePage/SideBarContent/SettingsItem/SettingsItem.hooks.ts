@@ -136,6 +136,7 @@ function useSettings() {
   ]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSettingsValue({
       delta: spriteSheetSettings?.delta.toString() || "0",
       maxVariation: spriteSheetSettings?.maxVariation.toString() || "0",
