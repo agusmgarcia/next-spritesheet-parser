@@ -1,6 +1,6 @@
 import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 
-import { SpriteSheetParserClient } from "#src/apis";
+import { SpriteSheetParserClient } from "#src/clients";
 
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import {

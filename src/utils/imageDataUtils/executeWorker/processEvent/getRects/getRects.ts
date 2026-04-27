@@ -1,11 +1,10 @@
-import MSER, { type MSEROptions, type Rect } from "blob-detection-ts";
+import MSER from "blob-detection-ts";
 
-import getBackground from "./getBackground";
+// eslint-disable-next-line project-structure/independent-modules
+import { getBackground } from "../getBackground";
+import { type Input, type Output } from "./getRects.types";
 
-export default function rawGetRects(
-  imageData: ImageData,
-  options: MSEROptions,
-): Rect[] {
+export default function getRects(...[imageData, options]: Input): Output {
   const background = getBackground(imageData);
 
   imageData = new ImageData(

@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { Icon } from "../Icon";
+import { Icon } from "#src/components";
+
 import type SelectProps from "./Select.types";
 
 export default function useSelect(props: SelectProps) {

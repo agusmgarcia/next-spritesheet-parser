@@ -1,7 +1,7 @@
 import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 import { strings } from "@agusmgarcia/react-essentials-utils";
 
-import { SpriteSheetParserClient } from "#src/apis";
+import { SpriteSheetParserClient } from "#src/clients";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSlice } from "../AnimationsSlice";

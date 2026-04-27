@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
+// eslint-disable-next-line project-structure/independent-modules
 import { Markdown } from "../Markdown";
 import useButton from "./Button.hooks";
 import type ButtonProps from "./Button.types";

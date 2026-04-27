@@ -1,9 +1,8 @@
 import { children } from "@agusmgarcia/react-essentials-utils";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button } from "../../Button";
-import { Icon } from "../../Icon";
-import { Typography } from "../../Typography";
+import { Button, Icon, Typography } from "#src/components";
+
 import type AccordionItemProps from "./AccordionItem.types";
 
 export default function useAccordionItem({

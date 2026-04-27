@@ -15,7 +15,7 @@ import {
 import type ModalProps from "./Modal.types";
 import { ModalsHandler } from "./Modal.utils";
 
-const ModalsHandlerContext = createContext(new ModalsHandler());
+const MODALS_HANDLER_CONTEXT = createContext(new ModalsHandler());
 
 export default function useModal({
   children: childrenFromProps,
@@ -25,7 +25,7 @@ export default function useModal({
   open: openFromProps,
   ...rest
 }: ModalProps) {
-  const modalsHandler = useContext(ModalsHandlerContext);
+  const modalsHandler = useContext(MODALS_HANDLER_CONTEXT);
 
   const id = useId();
 
@@ -157,7 +157,7 @@ export default function useModal({
 
         const body = document.body;
 
-        body.dataset.overflow = body.style.overflow;
+        body.dataset["overflow"] = body.style.overflow;
         body.style.overflow = "hidden";
         break;
       }
@@ -167,12 +167,12 @@ export default function useModal({
         if (modalsCount > 0) break;
 
         const body = document.body;
-        const overflow = body.dataset.overflow;
+        const overflow = body.dataset["overflow"];
 
         if (body.style.overflow === "hidden" && !!overflow)
           body.style.overflow = overflow;
 
-        delete body.dataset.overflow;
+        delete body.dataset["overflow"];
         break;
       }
     }

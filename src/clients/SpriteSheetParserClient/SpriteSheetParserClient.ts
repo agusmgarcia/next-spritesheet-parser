@@ -5,7 +5,7 @@ import {
   type DeleteStateResponse,
   type GetStateRequest,
   type GetStateResponse,
-  type GetStateResponseV1,
+  type GetV1StateResponse,
   type PatchStateRequest,
   type PatchStateResponse,
 } from "./SpriteSheetParserClient.types";
@@ -92,7 +92,7 @@ export default class SpriteSheetParserClient {
     return SpriteSheetParserClient.migrateState(state);
   }
 
-  private static parseState(item: string): GetStateResponseV1 | undefined {
+  private static parseState(item: string): GetV1StateResponse | undefined {
     try {
       const maybeState = JSON.parse(item);
 
@@ -118,7 +118,7 @@ export default class SpriteSheetParserClient {
   }
 
   private static migrateState(
-    state: GetStateResponseV1,
+    state: GetV1StateResponse,
   ): GetStateResponse | undefined {
     if (state.version === "v1") return state;
     return undefined;

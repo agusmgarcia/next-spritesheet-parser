@@ -33,9 +33,11 @@ function useAnimation() {
 
   const { animations } = useAnimations();
 
+  const animationIdFromParams = useMemo(() => params?.["id"], [params]);
+
   const animation = useMemo<Animation | undefined>(
-    () => animations?.find((a) => a.id === params?.id),
-    [animations, params?.id],
+    () => animations?.find((a) => a.id === animationIdFromParams),
+    [animations, animationIdFromParams],
   );
 
   useEffect(() => {

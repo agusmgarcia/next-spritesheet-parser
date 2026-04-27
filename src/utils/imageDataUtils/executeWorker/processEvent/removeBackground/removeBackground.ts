@@ -1,6 +1,8 @@
-import getBackground from "./getBackground";
+// eslint-disable-next-line project-structure/independent-modules
+import { getBackground } from "../getBackground";
+import { type Input, type Output } from "./removeBackground.types";
 
-export default function rawRemoveBackground(imageData: ImageData): ImageData {
+export default function removeBackground(...[imageData]: Input): Output {
   const background = getBackground(imageData);
 
   imageData = new ImageData(

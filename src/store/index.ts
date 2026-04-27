@@ -37,15 +37,15 @@ export type Animation = AnimationsSliceTypes.Animations[number];
 export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;
 export type NormalMapSettings = NormalMapSettingsSliceTypes.NormalMapSettings;
 export type Notification = NotificationSliceTypes.Notification;
-export type SpriteSelection = SpriteSelectionSliceTypes.SpriteSelection;
 export type Scale = ScaleSliceTypes.Scale;
+export type SpriteSelection = SpriteSelectionSliceTypes.SpriteSelection;
+export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
 export type SpriteSheetImage = SpriteSheetImageSliceTypes.SpriteSheetImage;
 export type SpriteSheetSettings =
   SpriteSheetSettingsSliceTypes.SpriteSheetSettings;
-export type SpriteSheet = SpriteSheetSliceTypes.SpriteSheet;
 export type Utils = UtilsSliceTypes.Utils;
 
-const { useSelector, ...reactStore } = createReactStore({
+const reactStore = createReactStore({
   middlewares: (callback, slices, signal) =>
     errors.handle(callback, (error) =>
       slices.notification
@@ -67,6 +67,8 @@ const { useSelector, ...reactStore } = createReactStore({
 });
 
 export const StoreProvider = reactStore.StoreProvider;
+
+const useSelector = reactStore.useSelector;
 
 export function useAnimations() {
   return {

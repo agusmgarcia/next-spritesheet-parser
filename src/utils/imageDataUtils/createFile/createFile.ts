@@ -1,9 +1,8 @@
+import { type Input, type Output } from "./createFile.types";
+
 export default async function createFile(
-  imageData: ImageData,
-  name: string,
-  type: string | undefined,
-  signal: AbortSignal,
-): Promise<File> {
+  ...[imageData, name, type, signal]: Input
+): Promise<Output> {
   const canvas = document.createElement("canvas");
   canvas.width = imageData.width;
   canvas.height = imageData.height;

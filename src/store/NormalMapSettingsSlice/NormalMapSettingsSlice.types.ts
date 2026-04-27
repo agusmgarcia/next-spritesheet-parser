@@ -1,4 +1,4 @@
-import { type SpriteSheetParserClientTypes } from "#src/apis";
+import { type SpriteSheetParserClientTypes } from "#src/clients";
 
 import { type SpriteSheetImageSliceTypes } from "../SpriteSheetImageSlice";
 

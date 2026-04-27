@@ -1,6 +1,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
+// eslint-disable-next-line project-structure/independent-modules
 import { Markdown } from "../Markdown";
 import useTypography from "./Typography.hooks";
 import type TypographyProps from "./Typography.types";

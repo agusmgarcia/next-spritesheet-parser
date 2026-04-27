@@ -1,7 +1,8 @@
 import { errors } from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useState } from "react";
 
-import { loadImage } from "../loadImage";
+import { loadImage } from "#src/utils";
+
 import { type UseLoadImageResult } from "./useLoadImage.types";
 
 const initialLoadImageResult: UseLoadImageResult = {

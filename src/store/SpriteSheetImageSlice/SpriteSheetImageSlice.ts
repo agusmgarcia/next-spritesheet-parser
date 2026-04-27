@@ -1,6 +1,6 @@
 import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 
-import { SpriteSheetParserClient } from "#src/apis";
+import { SpriteSheetParserClient } from "#src/clients";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type NotificationSlice } from "../NotificationSlice";
@@ -29,7 +29,10 @@ export default class SpriteSheetImageSlice extends ServerSlice<
         imageDataUtils.get,
       );
 
-      const backgroundColor = imageDataUtils.getBackgroundColor(rawImageData);
+      const backgroundColor = await imageDataUtils.getBackgroundColor(
+        rawImageData,
+        signal,
+      );
 
       const url = await imageDataUtils
         .removeBackground(rawImageData, signal)

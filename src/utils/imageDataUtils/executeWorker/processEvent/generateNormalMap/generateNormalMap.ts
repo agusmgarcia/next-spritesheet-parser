@@ -1,7 +1,11 @@
-export default function rawGenerateNormalMap(
-  imageData: ImageData,
-  { colorSpace, filterRadius, invertX, invertY, invertZ, strength }: Settings,
-): ImageData {
+import { type Input, type Output } from "./generateNormalMap.types";
+
+export default function generateNormalMap(
+  ...[
+    imageData,
+    { colorSpace, filterRadius, invertX, invertY, invertZ, strength },
+  ]: Input
+): Output {
   const data = imageData.data;
 
   imageData = new ImageData(
@@ -94,12 +98,3 @@ function getIntensity(
 
   return (r + g + b) / 3;
 }
-
-type Settings = {
-  colorSpace: "linear" | "sRGB";
-  filterRadius: number;
-  invertX: boolean;
-  invertY: boolean;
-  invertZ: boolean;
-  strength: number;
-};

@@ -2,7 +2,7 @@ import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
-import { SpriteSheetParserClient } from "#src/apis";
+import { SpriteSheetParserClient } from "#src/clients";
 
 import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";

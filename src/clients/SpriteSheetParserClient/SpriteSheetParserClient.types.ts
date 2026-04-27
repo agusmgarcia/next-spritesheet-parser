@@ -1,6 +1,6 @@
 export type GetStateRequest = { id: string };
 
-export type GetStateResponseV1 = {
+export type GetV1StateResponse = {
   createdAt: number;
   updatedAt: number;
   version: "v1";
@@ -37,7 +37,7 @@ export type GetStateResponseV1 = {
     string,
     {
       height: number;
-      subsprites: NonNullable<GetStateResponseV1["spriteSheet"]>;
+      subsprites: NonNullable<GetV1StateResponse["spriteSheet"]>;
       width: number;
       x: number;
       y: number;
@@ -51,7 +51,7 @@ export type GetStateResponseV1 = {
   };
 }>;
 
-export type GetStateResponse = GetStateResponseV1;
+export type GetStateResponse = GetV1StateResponse;
 
 export type PatchStateRequest = { id: string } & Partial<
   Omit<GetStateResponse, "createdAt" | "updatedAt" | "version">

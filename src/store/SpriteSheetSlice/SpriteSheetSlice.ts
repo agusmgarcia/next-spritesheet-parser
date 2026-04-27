@@ -2,7 +2,7 @@ import { ServerSlice } from "@agusmgarcia/react-essentials-store";
 import { strings } from "@agusmgarcia/react-essentials-utils";
 import { type MSEROptions, Rect } from "blob-detection-ts";
 
-import { SpriteSheetParserClient } from "#src/apis";
+import { SpriteSheetParserClient } from "#src/clients";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSlice } from "../AnimationsSlice";
@@ -57,7 +57,7 @@ export default class SpriteSheetSlice extends ServerSlice<
     if (!!state?.spriteSheet) return state.spriteSheet;
 
     return await loadImage(spriteSheetImage.url, signal)
-      .then((image) => imageDataUtils.get(image))
+      .then(imageDataUtils.get)
       .then((d) => SpriteSheetSlice.getSprites(d, spriteSheetSettings, signal));
   }
 

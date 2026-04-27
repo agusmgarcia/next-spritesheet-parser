@@ -17,7 +17,7 @@ export default function useSideBar({
   const onClick = useCallback<React.MouseEventHandler<HTMLButtonElement>>(
     (event) =>
       onCollapsedChangeFromProps?.(
-        event.currentTarget.dataset.collapsed !== "true",
+        event.currentTarget.dataset["collapsed"] !== "true",
       ),
     [onCollapsedChangeFromProps],
   );

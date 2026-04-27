@@ -1,4 +1,6 @@
-export default function get(image: HTMLImageElement): ImageData {
+import { type Input, type Output } from "./get.types";
+
+export default function get(...[image]: Input): Output {
   const canvas = document.createElement("canvas");
   canvas.width = image.naturalWidth;
   canvas.height = image.naturalHeight;
