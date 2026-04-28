@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [v0.30.3](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.30.3)
+
+> April 28, 2026
+
+### Chores ⚙️
+
+- bump dependencies
+
 ## [v0.30.2](https://github.com/agusmgarcia/next-spritesheet-parser/tree/v0.30.2)
 
 > February 3, 2026
