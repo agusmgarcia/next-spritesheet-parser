@@ -76,7 +76,7 @@ export default class SpriteSheetSettingsSlice extends ServerSlice<
     );
   }
 
-  async setSettings(
+  async set(
     settings:
       | Omit<SpriteSheetSettings, "name">
       | Pick<SpriteSheetSettings, "name">,

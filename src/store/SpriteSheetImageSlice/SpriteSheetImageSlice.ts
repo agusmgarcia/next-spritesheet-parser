@@ -75,7 +75,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
     }
   }
 
-  async removeImage(signal: AbortSignal): Promise<void> {
+  async remove(signal: AbortSignal): Promise<void> {
     const response = await this.slices.notification.set(
       "warning",
       "By removing the image you may loose all your progress. Are you sure you want to continue?",
@@ -93,7 +93,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
     this.response = undefined;
   }
 
-  async setImage(image: File, signal: AbortSignal): Promise<void> {
+  async set(image: File, signal: AbortSignal): Promise<void> {
     await this.reloadWithRequest(image, signal);
   }
 }

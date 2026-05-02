@@ -70,7 +70,7 @@ export default class NormalMapSettingsSlice extends ServerSlice<
     );
   }
 
-  setSettings(
+  set(
     settings: Omit<NormalMapSettings, "name"> | Pick<NormalMapSettings, "name">,
   ): void {
     if (!("name" in settings)) {

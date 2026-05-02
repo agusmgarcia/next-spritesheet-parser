@@ -17,16 +17,16 @@ export default class SpriteSelectionSlice extends GlobalSlice<
 
     this.slices.spriteSheet.subscribe(
       (state) => state.response,
-      () => this.unselectAll(),
+      () => this.clear(),
     );
 
     this.slices.animations.subscribe(
       (state) => state.response?.length,
-      () => this.unselectAll(),
+      () => this.clear(),
     );
   }
 
-  select(spriteId: string): void {
+  set(spriteId: string): void {
     const spriteSheet = this.slices.spriteSheet.response;
     if (!spriteSheet) throw new Error("You need to provide an image first");
 
@@ -37,7 +37,7 @@ export default class SpriteSelectionSlice extends GlobalSlice<
     this.state = [...this.state, spriteId];
   }
 
-  toggleSelection(spriteId: string): void {
+  toggle(spriteId: string): void {
     const spriteSheet = this.slices.spriteSheet.response;
     if (!spriteSheet) throw new Error("You need to provide an image first");
 
@@ -49,7 +49,7 @@ export default class SpriteSelectionSlice extends GlobalSlice<
       : [...this.state, spriteId];
   }
 
-  unselectAll(): void {
+  clear(): void {
     this.state = [];
   }
 }

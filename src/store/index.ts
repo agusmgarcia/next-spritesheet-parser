@@ -105,9 +105,7 @@ export function useNormalMapSettings() {
     normalMapSettingsLoading: useSelector(
       (state) => state.normalMapSettings.state.loading,
     ),
-    setNormalMapSettings: useSelector(
-      (state) => state.normalMapSettings.setSettings,
-    ),
+    setNormalMapSettings: useSelector((state) => state.normalMapSettings.set),
   };
 }
 
@@ -127,14 +125,10 @@ export function useScale() {
 
 export function useSpriteSelection() {
   return {
-    selectSprite: useSelector((state) => state.spriteSelection.select),
+    selectSprite: useSelector((state) => state.spriteSelection.set),
     spriteSelection: useSelector((state) => state.spriteSelection.state),
-    toggleSpriteSelection: useSelector(
-      (state) => state.spriteSelection.toggleSelection,
-    ),
-    unselectAllSprites: useSelector(
-      (state) => state.spriteSelection.unselectAll,
-    ),
+    toggleSpriteSelection: useSelector((state) => state.spriteSelection.toggle),
+    unselectAllSprites: useSelector((state) => state.spriteSelection.clear),
   };
 }
 
@@ -154,11 +148,9 @@ export function useSpriteSheet() {
 export function useSpriteSheetImage() {
   return {
     removeSpriteSheetImage: useSelector(
-      (state) => state.spriteSheetImage.removeImage,
+      (state) => state.spriteSheetImage.remove,
     ),
-    setSpriteSheetImage: useSelector(
-      (state) => state.spriteSheetImage.setImage,
-    ),
+    setSpriteSheetImage: useSelector((state) => state.spriteSheetImage.set),
     spriteSheetImage: useSelector((state) => state.spriteSheetImage.response),
     spriteSheetImageLoading: useSelector(
       (state) => state.spriteSheetImage.state.loading,
@@ -169,7 +161,7 @@ export function useSpriteSheetImage() {
 export function useSpriteSheetSettings() {
   return {
     setSpriteSheetSettings: useSelector(
-      (state) => state.spriteSheetSettings.setSettings,
+      (state) => state.spriteSheetSettings.set,
     ),
     spriteSheetSettings: useSelector(
       (state) => state.spriteSheetSettings.response,
