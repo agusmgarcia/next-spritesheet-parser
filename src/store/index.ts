@@ -3,6 +3,10 @@ import { errors } from "@agusmgarcia/react-essentials-utils";
 
 import { AnimationsSlice, type AnimationsSliceTypes } from "./AnimationsSlice";
 import {
+  DeletedSpritesSlice,
+  type DeletedSpritesSliceTypes,
+} from "./DeletedSpritesSlice";
+import {
   NormalMapImageSlice,
   type NormalMapImageSliceTypes,
 } from "./NormalMapImageSlice";
@@ -34,6 +38,7 @@ import {
 import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
 export type Animation = AnimationsSliceTypes.Animations[number];
+export type DeletedSprites = DeletedSpritesSliceTypes.DeletedSprites;
 export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;
 export type NormalMapSettings = NormalMapSettingsSliceTypes.NormalMapSettings;
 export type Notification = NotificationSliceTypes.Notification;
@@ -54,6 +59,7 @@ const reactStore = createReactStore({
     ),
   slices: {
     animations: AnimationsSlice,
+    deletedSprites: DeletedSpritesSlice,
     normalMapImage: NormalMapImageSlice,
     normalMapSettings: NormalMapSettingsSlice,
     notification: NotificationSlice,
@@ -87,6 +93,13 @@ export function useAnimations() {
     toggleAnimationCenterVisibility: useSelector(
       (state) => state.animations.toggleCenterVisibility,
     ),
+  };
+}
+
+export function useDeletedSprites() {
+  return {
+    deletedSprites: useSelector((state) => state.deletedSprites.response),
+    deletedSpritesLoading: useSelector((state) => state.deletedSprites.loading),
   };
 }
 
@@ -134,6 +147,9 @@ export function useSpriteSelection() {
 
 export function useSpriteSheet() {
   return {
+    deleteSpriteSheetSprites: useSelector(
+      (state) => state.spriteSheet.deleteSprites,
+    ),
     mergeSpriteSheetSprites: useSelector(
       (state) => state.spriteSheet.mergeSprites,
     ),

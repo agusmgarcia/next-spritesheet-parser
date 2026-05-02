@@ -5,13 +5,14 @@ import {
 import { useEffect, useRef } from "react";
 
 import { Layout } from "#src/fragments";
-import { useNormalMapImage, useScale } from "#src/store";
+import { useDeletedSprites, useNormalMapImage, useScale } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
 export default function useMainContent(props: MainContentProps) {
   const { normalMapImage } = useNormalMapImage();
+  const { deletedSprites } = useDeletedSprites();
   const { scale: scaleFromStore } = useScale();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -47,12 +48,19 @@ export default function useMainContent(props: MainContentProps) {
     context.fillRect(0, 0, normalMapCanvas.width, normalMapCanvas.height);
     context.scale(scale, scale);
     context.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight);
+
+    deletedSprites?.forEach((sprite) => {
+      context.globalAlpha = 1;
+      context.fillStyle = normalMapImage.backgroundColor;
+      context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
+    });
   }, [
     image,
     normalMapImage?.backgroundColor,
     dimensions.height,
     dimensions.width,
     scale,
+    deletedSprites,
   ]);
 
   return { ...props, normalMapCanvasRef, ref };

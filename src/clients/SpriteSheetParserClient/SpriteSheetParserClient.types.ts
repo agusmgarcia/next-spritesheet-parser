@@ -51,7 +51,18 @@ export type GetV1StateResponse = {
   };
 }>;
 
-export type GetStateResponse = GetV1StateResponse;
+export type GetV2StateResponse = Omit<GetV1StateResponse, "version"> &
+  Partial<{
+    deletedSprites: {
+      height: number;
+      id: string;
+      width: number;
+      x: number;
+      y: number;
+    }[];
+  }> & { version: "v2" };
+
+export type GetStateResponse = GetV2StateResponse;
 
 export type PatchStateRequest = { id: string } & Partial<
   Omit<GetStateResponse, "createdAt" | "updatedAt" | "version">

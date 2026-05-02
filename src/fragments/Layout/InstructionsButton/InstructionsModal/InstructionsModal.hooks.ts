@@ -70,6 +70,9 @@ function transformKey(key: string): React.ReactNode {
     case "ArrowLeft":
       return React.createElement(Icon, { variant: "arrowLeft" });
 
+    case "Backspace":
+      return React.createElement(Icon, { variant: "backspace" });
+
     default:
       return key.toUpperCase();
   }

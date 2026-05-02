@@ -6,6 +6,7 @@ import {
   type GetStateRequest,
   type GetStateResponse,
   type GetV1StateResponse,
+  type GetV2StateResponse,
   type PatchStateRequest,
   type PatchStateResponse,
 } from "./SpriteSheetParserClient.types";
@@ -35,7 +36,7 @@ export default class SpriteSheetParserClient {
 
       const state: GetStateResponse = {
         createdAt: now,
-        version: "v1",
+        version: "v2",
         ...stateFromStorage,
         ...stateFromRequest,
         updatedAt: now,
@@ -82,7 +83,7 @@ export default class SpriteSheetParserClient {
     );
   }
 
-  private static getStateRaw(id: string) {
+  private static getStateRaw(id: string): GetStateResponse | undefined {
     const item = window.localStorage.getItem(id);
     if (!item) return undefined;
 
@@ -92,7 +93,9 @@ export default class SpriteSheetParserClient {
     return SpriteSheetParserClient.migrateState(state);
   }
 
-  private static parseState(item: string): GetV1StateResponse | undefined {
+  private static parseState(
+    item: string,
+  ): GetV1StateResponse | GetV2StateResponse | undefined {
     try {
       const maybeState = JSON.parse(item);
 
@@ -108,7 +111,10 @@ export default class SpriteSheetParserClient {
         typeof maybeState.updatedAt !== "number"
       )
         return undefined;
-      if (!("version" in maybeState) || maybeState.version !== "v1")
+      if (
+        !("version" in maybeState) ||
+        (maybeState.version !== "v1" && maybeState.version !== "v2")
+      )
         return undefined;
 
       return maybeState;
@@ -118,9 +124,10 @@ export default class SpriteSheetParserClient {
   }
 
   private static migrateState(
-    state: GetV1StateResponse,
+    state: GetV1StateResponse | GetV2StateResponse,
   ): GetStateResponse | undefined {
-    if (state.version === "v1") return state;
+    if (state.version === "v1") return { ...state, version: "v2" };
+    if (state.version === "v2") return state;
     return undefined;
   }
 

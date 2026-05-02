@@ -6,6 +6,7 @@ import { SpriteSheetParserClient } from "#src/clients";
 import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSlice } from "../AnimationsSlice";
+import { type DeletedSpritesSlice } from "../DeletedSpritesSlice";
 import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
@@ -16,6 +17,7 @@ export default class SpriteSheetSlice extends ServerSlice<
   Request,
   {
     animations: AnimationsSlice;
+    deletedSprites: DeletedSpritesSlice;
     notification: NotificationSlice;
     spriteSheetImage: SpriteSheetImageSlice;
     spriteSheetSettings: SpriteSheetSettingsSlice;
@@ -166,6 +168,45 @@ export default class SpriteSheetSlice extends ServerSlice<
     };
 
     delete sprites[spriteId];
+    this.response = sprites;
+  }
+
+  async deleteSprites(spriteIds: string[], signal: AbortSignal): Promise<void> {
+    if (spriteIds.length <= 0)
+      throw new Error("You need to select at least one sprite to delete");
+
+    const animations = this.slices.animations.response;
+    if (!animations) throw new Error("You need to provide an image first");
+
+    const animationsThatContainAtLeastOneSprite = animations.filter((a) =>
+      a.sprites.some((s) => spriteIds.includes(s.id)),
+    );
+
+    if (!!animationsThatContainAtLeastOneSprite.length) {
+      const response = await this.slices.notification.set(
+        "warning",
+        strings.replace(
+          "By deleting selected sprites, the ${animations?animation:animations}: ${animationsName} ${animations?is:are} going to be deleted. Are you sure you want to continue?",
+          {
+            animations: animationsThatContainAtLeastOneSprite.length,
+            animationsName: animationsThatContainAtLeastOneSprite
+              .map((a) => `**"${a.name}"**`)
+              .join(", "),
+          },
+        ),
+        signal,
+      );
+
+      if (!response) return;
+    }
+
+    if (!this.response) return;
+
+    this.slices.deletedSprites.set(spriteIds);
+
+    const sprites = { ...this.response };
+    spriteIds.forEach((spriteId) => delete sprites[spriteId]);
+
     this.response = sprites;
   }
 

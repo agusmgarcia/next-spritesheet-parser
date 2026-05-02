@@ -9,6 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Layout } from "#src/fragments";
 import {
+  useDeletedSprites,
   useScale,
   useSpriteSelection,
   useSpriteSheet,
@@ -21,6 +22,7 @@ import type MainContentProps from "./MainContent.types";
 export default function useMainContent(props: MainContentProps) {
   const { scale: scaleFromStore } = useScale();
   const { spriteSheet } = useSpriteSheet();
+  const { deletedSprites } = useDeletedSprites();
   const { spriteSheetImage } = useSpriteSheetImage();
   const { selectSprite, spriteSelection, toggleSpriteSelection } =
     useSpriteSelection();
@@ -222,8 +224,15 @@ export default function useMainContent(props: MainContentProps) {
         context.strokeStyle = color;
         context.strokeRect(r.left, r.top, r.width, r.height);
       });
+
+    deletedSprites?.forEach((sprite) => {
+      context.globalAlpha = 1;
+      context.fillStyle = spriteSheetImage?.backgroundColor || "#ffffff";
+      context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
+    });
   }, [
     color,
+    deletedSprites,
     dimensions.height,
     dimensions.width,
     image,
@@ -305,16 +314,16 @@ export default function useMainContent(props: MainContentProps) {
       );
     }
   }, [
-    scale,
-    image,
-    spriteSelection,
-    selectedArea,
-    preSelectedSprites,
+    color,
     dimensions.height,
     dimensions.width,
-    spriteSheet,
+    image,
+    preSelectedSprites,
+    scale,
+    selectedArea,
     spriteHovered,
-    color,
+    spriteSelection,
+    spriteSheet,
   ]);
 
   return {

@@ -11,12 +11,6 @@ export default function AnimationsItem(props: AnimationsItemProps) {
     animationSelectorValue,
     createAnimationDisabled,
     createAnimationOnClick,
-    mergeSpritesDisabled,
-    mergeSpritesOnClick,
-    resetSelectionDisabled,
-    resetSelectionOnClick,
-    splitSpriteDisabled,
-    splitSpriteOnClick,
     ...rest
   } = useAnimationsItem(props);
 
@@ -30,54 +24,6 @@ export default function AnimationsItem(props: AnimationsItemProps) {
         </Typography>
       }
     >
-      {/* CREATE ANIMATION */}
-      <Button
-        className="flex items-center justify-center gap-1"
-        disabled={createAnimationDisabled}
-        onClick={createAnimationOnClick}
-        variant="primary"
-      >
-        Create
-        <Icon variant="roundedPlus" />
-      </Button>
-
-      {/* SPLIT SPRITES */}
-      {!splitSpriteDisabled && (
-        <Button
-          className="flex items-center justify-center gap-1"
-          disabled={splitSpriteDisabled}
-          onClick={splitSpriteOnClick}
-          variant="secondary"
-        >
-          Split
-          <Icon variant="split" />
-        </Button>
-      )}
-
-      {/* MERGE SPRITES */}
-      {splitSpriteDisabled && (
-        <Button
-          className="flex items-center justify-center gap-1"
-          disabled={mergeSpritesDisabled}
-          onClick={mergeSpritesOnClick}
-          variant="secondary"
-        >
-          Merge
-          <Icon variant="merge" />
-        </Button>
-      )}
-
-      {/* RESET SELECTION */}
-      <Button
-        className="flex items-center justify-center gap-1"
-        disabled={resetSelectionDisabled}
-        onClick={resetSelectionOnClick}
-        variant="secondary"
-      >
-        Clear
-        <Icon variant="eraser" />
-      </Button>
-
       {/* ANIMATION SELECTOR */}
       <Select
         className="text-center [text-align-last:center]"
@@ -92,6 +38,17 @@ export default function AnimationsItem(props: AnimationsItemProps) {
           </option>
         ))}
       </Select>
+
+      {/* CREATE ANIMATION */}
+      <Button
+        className="flex items-center justify-center gap-1"
+        disabled={createAnimationDisabled}
+        onClick={createAnimationOnClick}
+        variant="primary"
+      >
+        Create
+        <Icon variant="roundedPlus" />
+      </Button>
     </Accordion.Item>
   );
 }
