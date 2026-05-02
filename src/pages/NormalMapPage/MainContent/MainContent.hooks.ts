@@ -29,8 +29,10 @@ export default function useMainContent(props: MainContentProps) {
     if (!normalMapCanvas) return;
 
     normalMapCanvas.width = Math.max(dimensions.width, image.width * scale);
-    normalMapCanvas.width +=
-      Layout.SIDEBAR_WIDTH - (normalMapCanvas.width - image.width * scale);
+    normalMapCanvas.width += Math.max(
+      Layout.SIDEBAR_WIDTH - (normalMapCanvas.width - image.width * scale),
+      0,
+    );
 
     normalMapCanvas.height = Math.max(dimensions.height, image.height * scale);
 
