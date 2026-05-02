@@ -2,6 +2,7 @@ import { isSSR } from "@agusmgarcia/react-essentials-utils";
 import { v4 as createUUID } from "uuid";
 
 import { type Data } from "./executeWorker.types";
+import { processEvent } from "./processEvent";
 
 export default async function executeWorker(
   type: string,
@@ -10,7 +11,8 @@ export default async function executeWorker(
   const signal: AbortSignal | undefined = argsWithSignal.at(-1);
   signal?.throwIfAborted();
 
-  if (isSSR() || !window.Worker) return undefined;
+  if (isSSR() || !window.Worker)
+    return await processEvent(type, ...argsWithSignal);
 
   return await new Promise((resolve, reject) => {
     const worker = (window.__GET_SPRITES_WORKER__ ??= new Worker(
