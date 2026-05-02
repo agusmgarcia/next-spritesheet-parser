@@ -1,4 +1,7 @@
-import { type Func } from "@agusmgarcia/react-essentials-utils";
+import {
+  type Func,
+  useDevicePixelRatio,
+} from "@agusmgarcia/react-essentials-utils";
 import { useCallback, useMemo } from "react";
 
 import { useAnimations } from "#src/store";
@@ -205,6 +208,8 @@ function useCenter({
   animation: animationFromProps,
   index: indexFromProps,
 }: Pick<CenterItemProps, "animation" | "index">) {
+  const devicePixelRatio = useDevicePixelRatio();
+
   const { setAnimationCenter } = useAnimations();
 
   const centerToUpDisabled = useMemo<boolean>(
@@ -236,6 +241,7 @@ function useCenter({
   }, [
     animationFromProps.id,
     centerToUpDisabled,
+    devicePixelRatio,
     indexFromProps,
     setAnimationCenter,
   ]);
@@ -249,6 +255,7 @@ function useCenter({
   }, [
     animationFromProps.id,
     centerToRightDisabled,
+    devicePixelRatio,
     indexFromProps,
     setAnimationCenter,
   ]);
@@ -262,6 +269,7 @@ function useCenter({
   }, [
     animationFromProps.id,
     centerToDownDisabled,
+    devicePixelRatio,
     indexFromProps,
     setAnimationCenter,
   ]);
@@ -275,6 +283,7 @@ function useCenter({
   }, [
     animationFromProps.id,
     centerToLeftDisabled,
+    devicePixelRatio,
     indexFromProps,
     setAnimationCenter,
   ]);

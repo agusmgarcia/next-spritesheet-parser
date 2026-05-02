@@ -78,7 +78,7 @@ export default class SpriteSheetImageSlice extends ServerSlice<
   async remove(signal: AbortSignal): Promise<void> {
     const response = await this.slices.notification.set(
       "warning",
-      "By removing the image you may loose all your progress. Are you sure you want to continue?",
+      "By removing the image you may lose all your progress. Are you sure you want to continue?",
       signal,
     );
 

@@ -6,6 +6,6 @@ export default function getBackgroundColor(...[imageData]: Input): Output {
   const backgroundColor = getBackground(imageData);
   return `#${backgroundColor
     .slice(0, -1)
-    .map((i: number) => i.toString(16).padEnd(2, "0"))
+    .map((i: number) => i.toString(16).padStart(2, "0"))
     .join("")}`;
 }
