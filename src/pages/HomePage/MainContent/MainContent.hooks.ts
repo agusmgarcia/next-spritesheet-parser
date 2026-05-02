@@ -189,9 +189,13 @@ export default function useMainContent(props: MainContentProps) {
       dimensions.width,
       (image?.width || 0) * scale,
     );
-    spriteSheetCanvas.width +=
+
+    spriteSheetCanvas.width += Math.max(
       (!!image ? Layout.SIDEBAR_WIDTH : 0) -
-      (spriteSheetCanvas.width - (image?.width || 0) * scale);
+        (spriteSheetCanvas.width - (image?.width || 0) * scale),
+      0,
+    );
+
     spriteSheetCanvas.height = Math.max(
       dimensions.height,
       (image?.height || 0) * scale,
@@ -236,9 +240,13 @@ export default function useMainContent(props: MainContentProps) {
       dimensions.width,
       (image?.width || 0) * scale,
     );
-    selectionCanvas.width +=
+
+    selectionCanvas.width += Math.max(
       (!!image ? Layout.SIDEBAR_WIDTH : 0) -
-      (selectionCanvas.width - (image?.width || 0) * scale);
+        (selectionCanvas.width - (image?.width || 0) * scale),
+      0,
+    );
+
     selectionCanvas.height = Math.max(
       dimensions.height,
       (image?.height || 0) * scale,
