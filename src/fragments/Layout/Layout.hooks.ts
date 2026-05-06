@@ -7,6 +7,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useScale, useSpriteSheetImage } from "#src/store";
 import { useKeyDown, useViewport } from "#src/utils";
 
+// eslint-disable-next-line project-structure/independent-modules
+import Layout from "./Layout";
 import type LayoutProps from "./Layout.types";
 
 export default function useLayout({
@@ -78,7 +80,9 @@ function useScroll({
     if (!children) return;
 
     const halfWidth =
-      (children.clientWidth - (!sideBarCollapsedFromProps ? 360 : 0)) * 0.5;
+      (children.clientWidth -
+        (!sideBarCollapsedFromProps ? Layout.SIDEBAR_WIDTH : 0)) *
+      0.5;
     const halfHeight = children.clientHeight * 0.5;
 
     const prevCenter = [
