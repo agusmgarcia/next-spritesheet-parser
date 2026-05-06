@@ -33,6 +33,15 @@ export default function useHomePage(props: HomePageProps) {
             description: "Create a new animation",
             key: "c",
           },
+        ],
+        title: "Animations",
+      },
+      {
+        keys: [
+          {
+            description: "Clear sprite selection",
+            key: "l",
+          },
           {
             description: "Merge sprite selection into single one",
             key: "m",
@@ -41,12 +50,8 @@ export default function useHomePage(props: HomePageProps) {
             description: "Split sprite selection into multiple ones",
             key: "s",
           },
-          {
-            description: "Clear sprite selection",
-            key: "l",
-          },
         ],
-        title: "Animations",
+        title: "Sprites",
       },
       {
         keys: [

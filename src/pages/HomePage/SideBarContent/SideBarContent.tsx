@@ -7,6 +7,7 @@ import { NormalMapItem } from "./NormalMapItem";
 import { SettingsItem } from "./SettingsItem";
 import useSideBarContent from "./SideBarContent.hooks";
 import type SideBarContentProps from "./SideBarContent.types";
+import { SpritesItem } from "./SpritesItem";
 
 export default function SideBarContent(props: SideBarContentProps) {
   const { ...rest } = useSideBarContent(props);
@@ -22,6 +23,7 @@ export default function SideBarContent(props: SideBarContentProps) {
     >
       <FilesItem />
       <AnimationsItem />
+      <SpritesItem />
       <SettingsItem />
       <NormalMapItem />
       <ZoomItem />
