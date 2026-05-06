@@ -7,17 +7,8 @@ import { NotificationHandler } from "./NotificationHandler";
 import { SideBar } from "./SideBar";
 
 export default function Layout(props: LayoutProps) {
-  const {
-    children,
-    childrenRef,
-    instructions,
-    sideBar,
-    sideBarCollapsed,
-    sideBarCollapsedOnChange,
-    version,
-    viewport,
-    ...rest
-  } = useLayout(props);
+  const { children, instructions, sideBar, version, viewport, ...rest } =
+    useLayout(props);
 
   return (
     <main
@@ -39,18 +30,10 @@ export default function Layout(props: LayoutProps) {
       {viewport !== "Mobile" && (
         <>
           {/* CHILDREN */}
-          <div ref={childrenRef} className="size-full overflow-auto">
-            {children}
-          </div>
+          {children}
 
           {/* SIDEBAR */}
-          <SideBar
-            className="absolute right-0 h-full"
-            collapsed={sideBarCollapsed}
-            onCollapsedChange={sideBarCollapsedOnChange}
-            style={{ width: `${Layout.SIDEBAR_WIDTH}px` }}
-            version={version}
-          >
+          <SideBar className="h-full flex-[0_0_400px]" version={version}>
             {sideBar}
           </SideBar>
 
@@ -69,5 +52,3 @@ export default function Layout(props: LayoutProps) {
     </main>
   );
 }
-
-Layout.SIDEBAR_WIDTH = 400;

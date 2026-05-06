@@ -1,33 +1,11 @@
-import {
-  type Func,
-  useDevicePixelRatio,
-} from "@agusmgarcia/react-essentials-utils";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 
-import { useScale, useSpriteSheetImage } from "#src/store";
-import { useKeyDown, useViewport } from "#src/utils";
+import { useViewport } from "#src/utils";
 
-// eslint-disable-next-line project-structure/independent-modules
-import Layout from "./Layout";
 import type LayoutProps from "./Layout.types";
 
-export default function useLayout({
-  instructions: instructionsFromProps,
-  sideBarCollapsable: sideBarCollapsableFromProps,
-  ...rest
-}: LayoutProps) {
+export default function useLayout(props: LayoutProps) {
   const viewport = useViewport();
-
-  const { sideBarCollapsed, sideBarCollapsedOnChange } = useSidebarCollapsed({
-    sideBarCollapsable: sideBarCollapsableFromProps,
-  });
-
-  const { childrenRef } = useScroll({ sideBarCollapsed });
-
-  const { instructions } = useInstructions({
-    instructions: instructionsFromProps,
-    sideBarCollapsed,
-  });
 
   const version = useMemo<string>(() => {
     const maybeVersion = process.env["APP_VERSION"];
@@ -36,148 +14,8 @@ export default function useLayout({
   }, []);
 
   return {
-    ...rest,
-    childrenRef,
-    instructions,
-    sideBarCollapsed,
-    sideBarCollapsedOnChange,
+    ...props,
     version,
     viewport,
   };
-}
-
-const INITIAL_PREV_CENTER = [0, 0];
-
-function useScroll({
-  sideBarCollapsed: sideBarCollapsedFromProps,
-}: {
-  sideBarCollapsed: boolean | undefined;
-}) {
-  const viewport = useViewport();
-  const devicePixelratio = useDevicePixelRatio();
-
-  const childrenRef = useRef<HTMLDivElement>(null);
-  const prevScaleRef = useRef(1);
-  const prevTopLeftPointRef = useRef(INITIAL_PREV_CENTER);
-
-  const { spriteSheetImage } = useSpriteSheetImage();
-  const { scale: scaleFromProps } = useScale();
-
-  const scale = useMemo<number>(
-    () => scaleFromProps * devicePixelratio,
-    [devicePixelratio, scaleFromProps],
-  );
-
-  useEffect(() => {
-    const children = childrenRef.current;
-    if (!children) return;
-
-    children.scrollTo({ behavior: "instant", left: 0, top: 0 });
-  }, [spriteSheetImage?.url]);
-
-  useEffect(() => {
-    const children = childrenRef.current;
-    if (!children) return;
-
-    const halfWidth =
-      (children.clientWidth -
-        (!sideBarCollapsedFromProps ? Layout.SIDEBAR_WIDTH : 0)) *
-      0.5;
-    const halfHeight = children.clientHeight * 0.5;
-
-    const prevCenter = [
-      prevTopLeftPointRef.current[0] + halfWidth,
-      prevTopLeftPointRef.current[1] + halfHeight,
-    ];
-
-    const newCenter = [
-      (prevCenter[0] * scale) / prevScaleRef.current,
-      (prevCenter[1] * scale) / prevScaleRef.current,
-    ];
-
-    children.scrollTo({
-      behavior: "instant",
-      left: newCenter[0] - halfWidth,
-      top: newCenter[1] - halfHeight,
-    });
-
-    prevScaleRef.current = scale;
-    prevTopLeftPointRef.current = [
-      newCenter[0] - halfWidth,
-      newCenter[1] - halfHeight,
-    ];
-  }, [scale, sideBarCollapsedFromProps]);
-
-  useEffect(() => {
-    if (viewport === "Mobile") return;
-
-    const children = childrenRef.current;
-    if (!children) return;
-
-    const handleScroll = () => {
-      prevTopLeftPointRef.current = [children.scrollLeft, children.scrollTop];
-    };
-
-    handleScroll();
-
-    children.addEventListener("scroll", handleScroll);
-    return () => children.removeEventListener("scroll", handleScroll);
-  }, [viewport]);
-
-  return { childrenRef };
-}
-
-function useSidebarCollapsed({
-  sideBarCollapsable: sideBarCollapsableFromProps,
-}: Pick<LayoutProps, "sideBarCollapsable">) {
-  const { spriteSheetImage } = useSpriteSheetImage();
-
-  const [sideBarCollapsed, setSideBarCollapsed] = useState(false);
-
-  const sideBarHidden = useMemo<boolean>(
-    () => !sideBarCollapsableFromProps || !spriteSheetImage?.url,
-    [sideBarCollapsableFromProps, spriteSheetImage?.url],
-  );
-
-  const toggleSideBar = useCallback<Func>(() => {
-    if (sideBarHidden) return;
-    setSideBarCollapsed((prev) => !prev);
-  }, [sideBarHidden]);
-
-  useKeyDown("t", toggleSideBar);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSideBarCollapsed((prev) => (sideBarHidden ? false : prev));
-  }, [sideBarHidden]);
-
-  return {
-    sideBarCollapsed: !sideBarHidden ? sideBarCollapsed : undefined,
-    sideBarCollapsedOnChange: !sideBarHidden ? setSideBarCollapsed : undefined,
-  };
-}
-
-function useInstructions({
-  instructions: instructionsFromProps,
-  sideBarCollapsed: sideBarCollapsedFromProps,
-}: Pick<LayoutProps, "instructions"> & {
-  sideBarCollapsed: boolean | undefined;
-}) {
-  const instructions = useMemo<LayoutProps["instructions"]>(
-    () =>
-      typeof sideBarCollapsedFromProps !== "undefined"
-        ? instructionsFromProps?.concat({
-            keys: [
-              {
-                description: "Collapse/Expand the side bar",
-                key: "t",
-              },
-            ],
-            title: "Others",
-          })
-        : instructionsFromProps,
-    [instructionsFromProps, sideBarCollapsedFromProps],
-  );
-
-  return { instructions };
 }

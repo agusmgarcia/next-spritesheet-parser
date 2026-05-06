@@ -4,7 +4,6 @@ import {
 } from "@agusmgarcia/react-essentials-utils";
 import { useEffect, useMemo, useRef } from "react";
 
-import { Layout } from "#src/fragments";
 import { useScale, useSpriteSheet, useSpriteSheetImage } from "#src/store";
 import { useLoadImage } from "#src/utils";
 
@@ -79,11 +78,10 @@ export default function useMainContent({
 
     const scale = scaleFromStore * devicePixelRatio;
 
-    spriteCanvas.width =
-      Math.max(
-        dimensions.width - Layout.SIDEBAR_WIDTH,
-        maxSpriteSize.width * scale,
-      ) + Layout.SIDEBAR_WIDTH;
+    spriteCanvas.width = Math.max(
+      dimensions.width,
+      maxSpriteSize.width * scale,
+    );
 
     spriteCanvas.height = Math.max(
       dimensions.height,
@@ -119,7 +117,7 @@ export default function useMainContent({
       currentSprite.y,
       currentSprite.width,
       currentSprite.height,
-      (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
+      spriteCanvas.width / (2 * scale) -
         currentSprite.width / 2 -
         currentSprite.center.offsetX,
       spriteCanvas.height / (2 * scale) -
@@ -137,7 +135,7 @@ export default function useMainContent({
         prevSprite.y,
         prevSprite.width,
         prevSprite.height,
-        (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
+        spriteCanvas.width / (2 * scale) -
           prevSprite.width / 2 -
           prevSprite.center.offsetX,
         spriteCanvas.height / (2 * scale) -
@@ -152,7 +150,7 @@ export default function useMainContent({
     if (currentSprite.center.visible) {
       context.beginPath();
       context.strokeStyle = animationFromProps.color;
-      const centerX = (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
+      const centerX = spriteCanvas.width / (2 * scale);
       const centerY = spriteCanvas.height / (2 * scale);
       context.moveTo(centerX, centerY - 6);
       context.lineTo(centerX, centerY + 6);

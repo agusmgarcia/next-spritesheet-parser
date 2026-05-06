@@ -7,7 +7,6 @@ import {
 import invert from "invert-color";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Layout } from "#src/fragments";
 import {
   useScale,
   useSpriteSelection,
@@ -190,12 +189,6 @@ export default function useMainContent(props: MainContentProps) {
       (image?.width || 0) * scale,
     );
 
-    spriteSheetCanvas.width += Math.max(
-      (!!image ? Layout.SIDEBAR_WIDTH : 0) -
-        (spriteSheetCanvas.width - (image?.width || 0) * scale),
-      0,
-    );
-
     spriteSheetCanvas.height = Math.max(
       dimensions.height,
       (image?.height || 0) * scale,
@@ -239,12 +232,6 @@ export default function useMainContent(props: MainContentProps) {
     selectionCanvas.width = Math.max(
       dimensions.width,
       (image?.width || 0) * scale,
-    );
-
-    selectionCanvas.width += Math.max(
-      (!!image ? Layout.SIDEBAR_WIDTH : 0) -
-        (selectionCanvas.width - (image?.width || 0) * scale),
-      0,
     );
 
     selectionCanvas.height = Math.max(

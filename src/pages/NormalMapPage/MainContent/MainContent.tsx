@@ -5,7 +5,7 @@ export default function MainContent(props: MainContentProps) {
   const { normalMapCanvasRef, ...rest } = useMainContent(props);
 
   return (
-    <div {...rest} className="size-full">
+    <div {...rest} className="size-full overflow-auto">
       {/* NORMAL MAP */}
       <canvas ref={normalMapCanvasRef} />
     </div>
