@@ -2,6 +2,7 @@ import { Accordion, Button, Icon, Typography } from "#src/components";
 
 import useZoomItem from "./ZoomItem.hooks";
 import type ZoomItemProps from "./ZoomItem.types";
+import { INSTRUCTIONS } from "./ZoomItem.utils";
 
 export default function ZoomItem(props: ZoomItemProps) {
   const {
@@ -56,3 +57,5 @@ export default function ZoomItem(props: ZoomItemProps) {
     </Accordion.Item>
   );
 }
+
+ZoomItem.INSTRUCTIONS = INSTRUCTIONS;

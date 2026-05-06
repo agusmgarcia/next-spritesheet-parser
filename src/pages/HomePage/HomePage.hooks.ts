@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 
-import { type LayoutProps } from "#src/fragments";
+import { type LayoutProps, ZoomItem } from "#src/fragments";
 import { useSpriteSelection } from "#src/store";
 
 import type HomePageProps from "./HomePage.types";
@@ -53,23 +53,7 @@ export default function useHomePage(props: HomePageProps) {
         ],
         title: "Sprites",
       },
-      {
-        keys: [
-          {
-            description: "Zoom in",
-            key: "ArrowUp",
-          },
-          {
-            description: "Zoom out",
-            key: "ArrowDown",
-          },
-          {
-            description: "Reset zoom",
-            key: "z",
-          },
-        ],
-        title: "Zoom",
-      },
+      ZoomItem.INSTRUCTIONS,
     ],
     [],
   );

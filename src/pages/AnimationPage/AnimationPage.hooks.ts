@@ -2,7 +2,7 @@ import { type Func } from "@agusmgarcia/react-essentials-utils";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { type LayoutProps } from "#src/fragments";
+import { type LayoutProps, ZoomItem } from "#src/fragments";
 import { type Animation, useAnimations } from "#src/store";
 
 import type AnimationPageProps from "./AnimationPage.types";
@@ -164,23 +164,7 @@ function useInstructions() {
         ],
         title: "Center",
       },
-      {
-        keys: [
-          {
-            description: "Zoom in",
-            key: "ArrowUp",
-          },
-          {
-            description: "Zoom out",
-            key: "ArrowDown",
-          },
-          {
-            description: "Reset zoom",
-            key: "z",
-          },
-        ],
-        title: "Zoom",
-      },
+      ZoomItem.INSTRUCTIONS,
     ],
     [],
   );
