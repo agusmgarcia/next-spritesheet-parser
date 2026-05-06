@@ -82,7 +82,7 @@ export default class SpriteSheetParserClient {
     );
   }
 
-  private static getStateRaw(id: string) {
+  private static getStateRaw(id: string): GetStateResponse | undefined {
     const item = window.localStorage.getItem(id);
     if (!item) return undefined;
 
