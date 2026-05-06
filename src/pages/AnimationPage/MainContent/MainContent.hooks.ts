@@ -51,6 +51,21 @@ export default function useMainContent({
     [indexFromProps, sprites],
   );
 
+  const maxSpriteSize = useMemo(() => {
+    let maxWidth = -1;
+    let maxHeight = -1;
+
+    for (const sprite of sprites) {
+      const width = sprite.width + Math.abs(sprite.center.offsetX) * 2;
+      if (width > maxWidth) maxWidth = width;
+
+      const height = sprite.height + Math.abs(sprite.center.offsetY) * 2;
+      if (height > maxHeight) maxHeight = height;
+    }
+
+    return { height: maxHeight, width: maxWidth };
+  }, [sprites]);
+
   useEffect(() => {
     if (!image) return;
     if (!currentSprite) return;
@@ -64,8 +79,16 @@ export default function useMainContent({
 
     const scale = scaleFromStore * devicePixelRatio;
 
-    spriteCanvas.width = dimensions.width - Layout.SIDEBAR_WIDTH;
-    spriteCanvas.height = dimensions.height;
+    spriteCanvas.width =
+      Math.max(
+        dimensions.width - Layout.SIDEBAR_WIDTH,
+        maxSpriteSize.width * scale,
+      ) + Layout.SIDEBAR_WIDTH;
+
+    spriteCanvas.height = Math.max(
+      dimensions.height,
+      maxSpriteSize.height * scale,
+    );
 
     context.imageSmoothingEnabled = false;
     context.imageSmoothingQuality = "high";
@@ -96,10 +119,10 @@ export default function useMainContent({
       currentSprite.y,
       currentSprite.width,
       currentSprite.height,
-      (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
+      (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
         currentSprite.width / 2 -
         currentSprite.center.offsetX,
-      dimensions.height / (2 * scale) -
+      spriteCanvas.height / (2 * scale) -
         currentSprite.height / 2 +
         currentSprite.center.offsetY,
       currentSprite.width,
@@ -114,10 +137,10 @@ export default function useMainContent({
         prevSprite.y,
         prevSprite.width,
         prevSprite.height,
-        (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
+        (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale) -
           prevSprite.width / 2 -
           prevSprite.center.offsetX,
-        dimensions.height / (2 * scale) -
+        spriteCanvas.height / (2 * scale) -
           prevSprite.height / 2 +
           prevSprite.center.offsetY,
         prevSprite.width,
@@ -129,8 +152,8 @@ export default function useMainContent({
     if (currentSprite.center.visible) {
       context.beginPath();
       context.strokeStyle = animationFromProps.color;
-      const centerX = (dimensions.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
-      const centerY = dimensions.height / (2 * scale);
+      const centerX = (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
+      const centerY = spriteCanvas.height / (2 * scale);
       context.moveTo(centerX, centerY - 6);
       context.lineTo(centerX, centerY + 6);
       context.moveTo(centerX - 6, centerY);
@@ -146,6 +169,8 @@ export default function useMainContent({
     dimensions.height,
     dimensions.width,
     image,
+    maxSpriteSize.height,
+    maxSpriteSize.width,
     prevSprite,
     scaleFromStore,
     spriteSheetImage,
