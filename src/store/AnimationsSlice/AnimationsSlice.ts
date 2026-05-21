@@ -4,6 +4,7 @@ import { v4 as createUUID } from "uuid";
 
 import { SpriteSheetParserClient } from "#src/clients";
 
+import { type IndexSlice } from "../IndexSlice";
 import { type NotificationSlice } from "../NotificationSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
@@ -14,6 +15,7 @@ export default class AnimationsSlice extends ServerSlice<
   Animations | undefined,
   Request,
   {
+    index: IndexSlice;
     notification: NotificationSlice;
     spriteSheet: SpriteSheetSlice;
     spriteSheetImage: SpriteSheetImageSlice;
@@ -97,6 +99,9 @@ export default class AnimationsSlice extends ServerSlice<
     };
 
     this.response = [...this.response, animation];
+
+    this.slices.index.stop();
+
     return animation.id;
   }
 
@@ -114,6 +119,8 @@ export default class AnimationsSlice extends ServerSlice<
     if (!this.response) return false;
     this.response = this.response.filter((a) => a.id !== id);
 
+    this.slices.index.stop();
+
     await this.slices.notification.set("success", "Animation deleted!", signal);
     return true;
   }
@@ -126,6 +133,12 @@ export default class AnimationsSlice extends ServerSlice<
       fps = fps instanceof Function ? fps(a.fps) : fps;
       return { ...a, fps: !isNaN(fps) ? Math.max(fps, 1) : 1 };
     });
+
+    const animation = this.response.find((a) => a.id === id);
+    if (animation)
+      if (animation.playing)
+        this.slices.index.play(animation.sprites.length, animation.fps);
+      else this.slices.index.stop();
   }
 
   setColor(id: string, color: string): void {
@@ -240,6 +253,17 @@ export default class AnimationsSlice extends ServerSlice<
           }
         : a,
     );
+
+    const animation = this.response.find((a) => a.id === id);
+    if (animation)
+      if (animation.playing)
+        this.slices.index.play(animation.sprites.length, animation.fps);
+      else this.slices.index.stop();
+  }
+
+  setIndex(id: string, index: React.SetStateAction<number>): void {
+    this.setPlaying(id, false);
+    this.slices.index.set(index);
   }
 }
 

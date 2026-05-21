@@ -1,7 +1,8 @@
 import { createReactStore } from "@agusmgarcia/react-essentials-store";
-import { errors } from "@agusmgarcia/react-essentials-utils";
+import { equals, errors } from "@agusmgarcia/react-essentials-utils";
 
 import { AnimationsSlice, type AnimationsSliceTypes } from "./AnimationsSlice";
+import { IndexSlice, type IndexSliceTypes } from "./IndexSlice";
 import {
   NormalMapImageSlice,
   type NormalMapImageSliceTypes,
@@ -34,6 +35,7 @@ import {
 import { UtilsSlice, type UtilsSliceTypes } from "./UtilsSlice";
 
 export type Animation = AnimationsSliceTypes.Animations[number];
+export type Index = IndexSliceTypes.Index;
 export type NormalMapImage = NormalMapImageSliceTypes.NormalMapImage;
 export type NormalMapSettings = NormalMapSettingsSliceTypes.NormalMapSettings;
 export type Notification = NotificationSliceTypes.Notification;
@@ -46,6 +48,16 @@ export type SpriteSheetSettings =
 export type Utils = UtilsSliceTypes.Utils;
 
 const reactStore = createReactStore({
+  devTools: {
+    equality: (newState, prevState) => {
+      // eslint-disable-next-line project-structure/file-composition
+      const { index: _newIndex, ...newRest } = newState;
+      // eslint-disable-next-line project-structure/file-composition
+      const { index: _prevIndex, ...prevRest } = prevState;
+
+      return equals.shallow(newRest, prevRest, 2);
+    },
+  },
   middlewares: (callback, slices, signal) =>
     errors.handle(callback, (error) =>
       slices.notification
@@ -54,6 +66,7 @@ const reactStore = createReactStore({
     ),
   slices: {
     animations: AnimationsSlice,
+    index: IndexSlice,
     normalMapImage: NormalMapImageSlice,
     normalMapSettings: NormalMapSettingsSlice,
     notification: NotificationSlice,
@@ -81,12 +94,19 @@ export function useAnimations() {
     setAnimationColor: useSelector((state) => state.animations.setColor),
     setAnimationFPS: useSelector((state) => state.animations.setFPS),
     setAnimationGrid: useSelector((state) => state.animations.setGrid),
+    setAnimationIndex: useSelector((state) => state.animations.setIndex),
     setAnimationName: useSelector((state) => state.animations.setName),
     setAnimationOnion: useSelector((state) => state.animations.setOnion),
     setAnimationPlaying: useSelector((state) => state.animations.setPlaying),
     toggleAnimationCenterVisibility: useSelector(
       (state) => state.animations.toggleCenterVisibility,
     ),
+  };
+}
+
+export function useIndex() {
+  return {
+    index: useSelector((state) => state.index.state),
   };
 }
 

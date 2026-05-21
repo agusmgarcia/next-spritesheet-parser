@@ -1,8 +1,3 @@
-import { type Animation } from "#src/store";
-
-type MainContentProps = {
-  animation: Animation;
-  index: number;
-};
+type MainContentProps = {};
 
 export default MainContentProps;

@@ -1,39 +1,37 @@
 import { sorts } from "@agusmgarcia/react-essentials-utils";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import { AnimationContext } from "#src/fragments";
 import { useAnimations, useSpriteSheetImage } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
-export default function useAnimationsItem({
-  animation: animationFromProps,
-  ...rest
-}: AnimationsItemProps) {
+export default function useAnimationsItem(props: AnimationsItemProps) {
   const {
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
-  } = useAnimationSelector({ animation: animationFromProps });
+  } = useAnimationSelector();
 
   return {
-    ...rest,
+    ...props,
     animationSelectorOnChange,
     animationSelectorOptions,
     animationSelectorValue,
   };
 }
 
-function useAnimationSelector({
-  animation: animationFromProps,
-}: Pick<AnimationsItemProps, "animation">) {
+function useAnimationSelector() {
   const { push } = useRouter();
+
+  const animation = useContext(AnimationContext.Context);
 
   const { spriteSheetImage } = useSpriteSheetImage();
   const { animations } = useAnimations();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState(
-    animationFromProps.id,
+    animation?.id || "sheet",
   );
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
@@ -52,8 +50,8 @@ function useAnimationSelector({
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAnimationSelectorValue(animationFromProps.id);
-  }, [animationFromProps.id]);
+    setAnimationSelectorValue(animation?.id || "sheet");
+  }, [animation?.id]);
 
   useEffect(() => {
     if (animationSelectorValue === "sheet") {

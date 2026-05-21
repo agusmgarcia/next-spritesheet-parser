@@ -2,22 +2,26 @@ import {
   useDevicePixelRatio,
   useDimensions,
 } from "@agusmgarcia/react-essentials-utils";
-import { useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 
-import { Layout } from "#src/fragments";
-import { useScale, useSpriteSheet, useSpriteSheetImage } from "#src/store";
+import { AnimationContext, Layout } from "#src/fragments";
+import {
+  useIndex,
+  useScale,
+  useSpriteSheet,
+  useSpriteSheetImage,
+} from "#src/store";
 import { useLoadImage } from "#src/utils";
 
 import type MainContentProps from "./MainContent.types";
 
-export default function useMainContent({
-  animation: animationFromProps,
-  index: indexFromProps,
-  ...rest
-}: MainContentProps) {
+export default function useMainContent(props: MainContentProps) {
+  const { index } = useIndex();
   const { spriteSheetImage } = useSpriteSheetImage();
   const { spriteSheet } = useSpriteSheet();
   const { scale: scaleFromStore } = useScale();
+
+  const animation = useContext(AnimationContext.Context);
 
   const ref = useRef<HTMLDivElement>(null);
   const spriteCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,27 +32,24 @@ export default function useMainContent({
 
   const sprites = useMemo(
     () =>
-      animationFromProps.sprites
+      animation?.sprites
         .map((s) => {
           const sprite = spriteSheet?.[s.id];
           if (!sprite) return undefined;
           return { ...sprite, ...s };
         })
-        .filter((s) => !!s),
-    [animationFromProps.sprites, spriteSheet],
+        .filter((s) => !!s) || [],
+    [animation?.sprites, spriteSheet],
   );
 
   const currentSprite = useMemo<(typeof sprites)[number] | undefined>(
-    () => sprites.at(indexFromProps),
-    [indexFromProps, sprites],
+    () => sprites.at(index),
+    [index, sprites],
   );
 
   const prevSprite = useMemo<(typeof sprites)[number] | undefined>(
-    () =>
-      sprites.length > 1 && indexFromProps > 0
-        ? sprites[indexFromProps - 1]
-        : undefined,
-    [indexFromProps, sprites],
+    () => (sprites.length > 1 && index > 0 ? sprites[index - 1] : undefined),
+    [index, sprites],
   );
 
   const maxSpriteSize = useMemo(() => {
@@ -100,7 +101,7 @@ export default function useMainContent({
 
     context.scale(scale, scale);
 
-    if (!!animationFromProps.grid) {
+    if (!!animation?.grid) {
       context.fillStyle = "#000000";
       context.globalAlpha = 0.75;
 
@@ -129,7 +130,7 @@ export default function useMainContent({
       currentSprite.height,
     );
 
-    if (!!prevSprite && animationFromProps.onion) {
+    if (!!prevSprite && animation?.onion) {
       context.globalAlpha = 0.4;
       context.drawImage(
         image,
@@ -151,7 +152,7 @@ export default function useMainContent({
 
     if (currentSprite.center.visible) {
       context.beginPath();
-      context.strokeStyle = animationFromProps.color;
+      context.strokeStyle = animation?.color || "#ffffff";
       const centerX = (spriteCanvas.width - Layout.SIDEBAR_WIDTH) / (2 * scale);
       const centerY = spriteCanvas.height / (2 * scale);
       context.moveTo(centerX, centerY - 6);
@@ -161,9 +162,9 @@ export default function useMainContent({
       context.stroke();
     }
   }, [
-    animationFromProps.color,
-    animationFromProps.grid,
-    animationFromProps.onion,
+    animation?.color,
+    animation?.grid,
+    animation?.onion,
     currentSprite,
     devicePixelRatio,
     dimensions.height,
@@ -176,5 +177,5 @@ export default function useMainContent({
     spriteSheetImage,
   ]);
 
-  return { ...rest, ref, spriteCanvasRef };
+  return { ...props, ref, spriteCanvasRef };
 }

@@ -1,8 +1,3 @@
-import { type Animation } from "#src/store";
-
-type CenterItemProps = {
-  animation: Animation;
-  index: number;
-};
+type CenterItemProps = {};
 
 export default CenterItemProps;
