@@ -90,33 +90,13 @@ function useMergeSprites() {
 }
 
 function useSplitSprite() {
-  const { spriteSelection } = useSpriteSelection();
-  const { splitSpriteSheetSprite, spriteSheet, spriteSheetLoading } =
+  const { splitSpriteSheetSprite, splitSpriteSheetSpriteDisabled } =
     useSpriteSheet();
-  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
 
-  const splitSpriteDisabled = useMemo<boolean>(
-    () =>
-      !spriteSheetImage?.url ||
-      spriteSheetImageLoading ||
-      spriteSheetLoading ||
-      spriteSelection.length !== 1 ||
-      !Object.keys(spriteSheet?.[spriteSelection[0]].subsprites || {}).length,
-    [
-      spriteSheetImage?.url,
-      spriteSheetImageLoading,
-      spriteSheetLoading,
-      spriteSelection,
-      spriteSheet,
-    ],
-  );
+  useKeyDown("s", splitSpriteSheetSprite);
 
-  const splitSpriteOnClick = useCallback<Func>(() => {
-    if (splitSpriteDisabled) return;
-    splitSpriteSheetSprite(spriteSelection[0]);
-  }, [splitSpriteSheetSprite, splitSpriteDisabled, spriteSelection]);
-
-  useKeyDown("s", splitSpriteOnClick);
-
-  return { splitSpriteDisabled, splitSpriteOnClick };
+  return {
+    splitSpriteDisabled: splitSpriteSheetSpriteDisabled,
+    splitSpriteOnClick: splitSpriteSheetSprite,
+  };
 }

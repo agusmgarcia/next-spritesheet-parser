@@ -143,7 +143,22 @@ export default class SpriteSheetSlice extends ServerSlice<
     this.response = sprites;
   }
 
-  async splitSprite(spriteId: string, signal: AbortSignal): Promise<void> {
+  get splitSpriteDisabled(): boolean {
+    return (
+      !this.slices.spriteSheetImage.response?.url ||
+      this.slices.spriteSheetImage.loading ||
+      this.loading ||
+      this.slices.spriteSelection.state.length !== 1 ||
+      !Object.keys(
+        this.response?.[this.slices.spriteSelection.state[0]].subsprites || {},
+      ).length
+    );
+  }
+
+  async splitSprite(signal: AbortSignal): Promise<void> {
+    if (this.splitSpriteDisabled) return;
+    const spriteId = this.slices.spriteSelection.state[0];
+
     const animations = this.slices.animations.response;
     if (!animations) throw new Error("You need to provide an image first");
 

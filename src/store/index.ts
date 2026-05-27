@@ -163,6 +163,9 @@ export function useSpriteSheet() {
     splitSpriteSheetSprite: useSelector(
       (state) => state.spriteSheet.splitSprite,
     ),
+    splitSpriteSheetSpriteDisabled: useSelector(
+      (state) => state.spriteSheet.splitSpriteDisabled,
+    ),
     spriteSheet: useSelector((state) => state.spriteSheet.response),
     spriteSheetLoading: useSelector((state) => state.spriteSheet.state.loading),
   };
