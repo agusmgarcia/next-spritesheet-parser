@@ -157,6 +157,9 @@ export function useSpriteSheet() {
     mergeSpriteSheetSprites: useSelector(
       (state) => state.spriteSheet.mergeSprites,
     ),
+    mergeSpriteSheetSpritesDisabled: useSelector(
+      (state) => state.spriteSheet.mergeSpritesDisabled,
+    ),
     splitSpriteSheetSprite: useSelector(
       (state) => state.spriteSheet.splitSprite,
     ),

@@ -78,33 +78,14 @@ function useResetSelection() {
 }
 
 function useMergeSprites() {
-  const { spriteSelection } = useSpriteSelection();
-  const { mergeSpriteSheetSprites, spriteSheetLoading } = useSpriteSheet();
-  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { mergeSpriteSheetSprites, mergeSpriteSheetSpritesDisabled } =
+    useSpriteSheet();
 
-  const mergeSpritesDisabled = useMemo<boolean>(
-    () =>
-      !spriteSheetImage?.url ||
-      spriteSheetImageLoading ||
-      spriteSheetLoading ||
-      spriteSelection.length <= 1,
-    [
-      spriteSelection.length,
-      spriteSheetImage?.url,
-      spriteSheetImageLoading,
-      spriteSheetLoading,
-    ],
-  );
-
-  const mergeSpritesOnClick = useCallback<Func>(() => {
-    mergeSpriteSheetSprites(spriteSelection);
-  }, [mergeSpriteSheetSprites, spriteSelection]);
-
-  useKeyDown("m", mergeSpritesOnClick);
+  useKeyDown("m", mergeSpriteSheetSprites);
 
   return {
-    mergeSpritesDisabled,
-    mergeSpritesOnClick,
+    mergeSpritesDisabled: mergeSpriteSheetSpritesDisabled,
+    mergeSpritesOnClick: mergeSpriteSheetSprites,
   };
 }
 

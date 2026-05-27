@@ -7,6 +7,7 @@ import { imageDataUtils, loadImage } from "#src/utils";
 
 import { type AnimationsSlice } from "../AnimationsSlice";
 import { type NotificationSlice } from "../NotificationSlice";
+import { type SpriteSelectionSlice } from "../SpriteSelectionSlice";
 import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSettingsSlice } from "../SpriteSheetSettingsSlice";
 import { type Request, type SpriteSheet } from "./SpriteSheetSlice.types";
@@ -17,6 +18,7 @@ export default class SpriteSheetSlice extends ServerSlice<
   {
     animations: AnimationsSlice;
     notification: NotificationSlice;
+    spriteSelection: SpriteSelectionSlice;
     spriteSheetImage: SpriteSheetImageSlice;
     spriteSheetSettings: SpriteSheetSettingsSlice;
   }
@@ -76,7 +78,19 @@ export default class SpriteSheetSlice extends ServerSlice<
     );
   }
 
-  async mergeSprites(spriteIds: string[], signal: AbortSignal): Promise<void> {
+  get mergeSpritesDisabled(): boolean {
+    return (
+      !this.slices.spriteSheetImage.response?.url ||
+      this.slices.spriteSheetImage.loading ||
+      this.loading ||
+      this.slices.spriteSelection.state.length <= 1
+    );
+  }
+
+  async mergeSprites(signal: AbortSignal): Promise<void> {
+    if (this.mergeSpritesDisabled) return;
+    const spriteIds = this.slices.spriteSelection.state;
+
     if (spriteIds.length <= 1)
       throw new Error("You need to select more than one sprite to merge");
 
