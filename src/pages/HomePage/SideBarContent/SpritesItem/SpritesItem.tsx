@@ -24,6 +24,28 @@ export default function SpritesItem(props: SpritesItemProps) {
         </Typography>
       }
     >
+      {/* MERGE SPRITES */}
+      <Button
+        className="flex items-center justify-center gap-1"
+        disabled={mergeSpritesDisabled}
+        onClick={mergeSpritesOnClick}
+        variant="secondary"
+      >
+        Merge
+        <Icon variant="merge" />
+      </Button>
+
+      {/* SPLIT SPRITES */}
+      <Button
+        className="flex items-center justify-center gap-1"
+        disabled={splitSpriteDisabled}
+        onClick={splitSpriteOnClick}
+        variant="secondary"
+      >
+        Split
+        <Icon variant="split" />
+      </Button>
+
       {/* RESET SELECTION */}
       <Button
         className="flex items-center justify-center gap-1"
@@ -34,32 +56,6 @@ export default function SpritesItem(props: SpritesItemProps) {
         Clear
         <Icon variant="eraser" />
       </Button>
-
-      {/* SPLIT SPRITES */}
-      {!splitSpriteDisabled && (
-        <Button
-          className="flex items-center justify-center gap-1"
-          disabled={splitSpriteDisabled}
-          onClick={splitSpriteOnClick}
-          variant="secondary"
-        >
-          Split
-          <Icon variant="split" />
-        </Button>
-      )}
-
-      {/* MERGE SPRITES */}
-      {splitSpriteDisabled && (
-        <Button
-          className="flex items-center justify-center gap-1"
-          disabled={mergeSpritesDisabled}
-          onClick={mergeSpritesOnClick}
-          variant="secondary"
-        >
-          Merge
-          <Icon variant="merge" />
-        </Button>
-      )}
     </Accordion.Item>
   );
 }
