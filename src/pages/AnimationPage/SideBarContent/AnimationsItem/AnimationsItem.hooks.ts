@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { AnimationContext } from "#src/fragments";
-import { useAnimations, useSpriteSheetImage } from "#src/store";
+import { useAnimations, useSpriteSheetSettings } from "#src/store";
 
 import type AnimationsItemProps from "./AnimationsItem.types";
 
@@ -27,7 +27,7 @@ function useAnimationSelector() {
 
   const animation = useContext(AnimationContext.Context);
 
-  const { spriteSheetImage } = useSpriteSheetImage();
+  const { spriteSheetSettings } = useSpriteSheetSettings();
   const { animations } = useAnimations();
 
   const [animationSelectorValue, setAnimationSelectorValue] = useState(
@@ -36,12 +36,12 @@ function useAnimationSelector() {
 
   const animationSelectorOptions = useMemo<{ id: string; name: string }[]>(
     () => [
-      { id: "sheet", name: spriteSheetImage?.name || "Sprite sheet" },
+      { id: "sheet", name: spriteSheetSettings?.name || "Sprite sheet" },
       ...(animations
         ?.map((a) => ({ id: a.id, name: a.name }))
         .sort((a1, a2) => sorts.byStringAsc(a1.name, a2.name)) || []),
     ],
-    [animations, spriteSheetImage?.name],
+    [animations, spriteSheetSettings?.name],
   );
 
   const animationSelectorOnChange = useCallback<
