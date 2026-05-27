@@ -137,52 +137,24 @@ function useImportFile() {
 }
 
 function useExportFile() {
-  const { spriteSheetLoading } = useSpriteSheet();
-  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
-  const { normalMapImage, normalMapImageLoading } = useNormalMapImage();
-  const { exportZip } = useUtils();
-
-  const [exportFileLoading, setExportFileLoading] = useState(false);
-
-  const exportFileDisabled = useMemo<boolean>(
-    () =>
-      exportFileLoading ||
-      !spriteSheetImage?.url ||
-      spriteSheetImageLoading ||
-      spriteSheetLoading ||
-      !normalMapImage?.url ||
-      normalMapImageLoading,
-    [
-      exportFileLoading,
-      normalMapImage?.url,
-      normalMapImageLoading,
-      spriteSheetImage?.url,
-      spriteSheetImageLoading,
-      spriteSheetLoading,
-    ],
-  );
+  const { exportZip, exportZipDisabled } = useUtils();
 
   const exportFileOnClick = useCallback<Func>(() => {
-    if (exportFileDisabled) return;
-
-    setExportFileLoading(true);
-    exportZip()
-      .then((file) => {
-        if (!file) return;
-        const anchor = document.createElement("a");
-        const href = URL.createObjectURL(file);
-        anchor.href = href;
-        anchor.setAttribute("download", file.name);
-        anchor.click();
-        URL.revokeObjectURL(href);
-      })
-      .finally(() => setExportFileLoading(false));
-  }, [exportFileDisabled, exportZip]);
+    exportZip().then((file) => {
+      if (!file) return;
+      const anchor = document.createElement("a");
+      const href = URL.createObjectURL(file);
+      anchor.href = href;
+      anchor.setAttribute("download", file.name);
+      anchor.click();
+      URL.revokeObjectURL(href);
+    });
+  }, [exportZip]);
 
   useKeyDown("e", exportFileOnClick);
 
   return {
-    exportFileDisabled,
+    exportFileDisabled: exportZipDisabled,
     exportFileOnClick,
   };
 }

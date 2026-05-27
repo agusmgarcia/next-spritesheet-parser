@@ -195,5 +195,7 @@ export function useSpriteSheetSettings() {
 export function useUtils() {
   return {
     exportZip: useSelector((state) => state.utils.exportZip),
+    exportZipDisabled: useSelector((state) => state.utils.exportZipDisabled),
+    exportZipLoading: useSelector((state) => state.utils.state.loading),
   };
 }

@@ -1,1 +1,1 @@
-export type Utils = undefined;
+export type Utils = { loading: boolean };
