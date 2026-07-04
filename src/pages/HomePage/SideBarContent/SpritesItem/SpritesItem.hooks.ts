@@ -1,5 +1,4 @@
-import { type Func } from "@agusmgarcia/react-essentials-utils";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
 import {
   useSpriteSelection,
@@ -46,34 +45,14 @@ function useSideBarItem() {
 }
 
 function useResetSelection() {
-  const { spriteSelection, unselectAllSprites } = useSpriteSelection();
-  const { spriteSheetLoading } = useSpriteSheet();
-  const { spriteSheetImage, spriteSheetImageLoading } = useSpriteSheetImage();
+  const { unselectAllSprites, unselectAllSpritesDisabled } =
+    useSpriteSelection();
 
-  const resetSelectionDisabled = useMemo<boolean>(
-    () =>
-      !spriteSheetImage?.url ||
-      spriteSheetImageLoading ||
-      spriteSheetLoading ||
-      !spriteSelection.length,
-    [
-      spriteSelection.length,
-      spriteSheetImage?.url,
-      spriteSheetImageLoading,
-      spriteSheetLoading,
-    ],
-  );
-
-  const resetSelectionOnClick = useCallback<Func>(() => {
-    if (resetSelectionDisabled) return;
-    unselectAllSprites();
-  }, [resetSelectionDisabled, unselectAllSprites]);
-
-  useKeyDown("l", resetSelectionOnClick);
+  useKeyDown("l", unselectAllSprites);
 
   return {
-    resetSelectionDisabled,
-    resetSelectionOnClick,
+    resetSelectionDisabled: unselectAllSpritesDisabled,
+    resetSelectionOnClick: unselectAllSprites,
   };
 }
 

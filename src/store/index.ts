@@ -149,6 +149,9 @@ export function useSpriteSelection() {
     spriteSelection: useSelector((state) => state.spriteSelection.state),
     toggleSpriteSelection: useSelector((state) => state.spriteSelection.toggle),
     unselectAllSprites: useSelector((state) => state.spriteSelection.clear),
+    unselectAllSpritesDisabled: useSelector(
+      (state) => state.spriteSelection.clearDisabled,
+    ),
   };
 }
 

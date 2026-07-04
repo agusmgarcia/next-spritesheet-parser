@@ -1,12 +1,17 @@
 import { GlobalSlice } from "@agusmgarcia/react-essentials-store";
 
 import { type AnimationsSlice } from "../AnimationsSlice";
+import { type SpriteSheetImageSlice } from "../SpriteSheetImageSlice";
 import { type SpriteSheetSlice } from "../SpriteSheetSlice";
 import { type SpriteSelection } from "./SpriteSelectionSlice.types";
 
 export default class SpriteSelectionSlice extends GlobalSlice<
   SpriteSelection,
-  { animations: AnimationsSlice; spriteSheet: SpriteSheetSlice }
+  {
+    animations: AnimationsSlice;
+    spriteSheet: SpriteSheetSlice;
+    spriteSheetImage: SpriteSheetImageSlice;
+  }
 > {
   constructor() {
     super([]);
@@ -49,7 +54,17 @@ export default class SpriteSelectionSlice extends GlobalSlice<
       : [...this.state, spriteId];
   }
 
+  get clearDisabled(): boolean {
+    return (
+      !this.slices.spriteSheetImage.response?.url ||
+      this.slices.spriteSheetImage.loading ||
+      this.slices.spriteSheet.loading ||
+      !this.state.length
+    );
+  }
+
   clear(): void {
+    if (this.clearDisabled) return;
     this.state = [];
   }
 }
